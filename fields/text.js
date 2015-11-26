@@ -5,12 +5,20 @@ var m      = require("mithril"),
     
     db = require("../lib/firebase");
 
+function update(db, name, val) {
+    var args = {};
+    
+    args[name] = val;
+    
+    db.update(args);
+}
+
 module.exports = {
     display : {
         controller : function(options) {
             var ctrl  = this,
-                field = db.child("fields/" + options.id),
-                data  = db.child("data/" + options.id);
+                field = db.child("fields/" + options.field),
+                data  = db.child("data/" + options.data);
             
             ctrl.field = null;
             ctrl.data  = {
@@ -37,8 +45,6 @@ module.exports = {
         },
 
         view : function(ctrl) {
-            console.log(ctrl);
-            
             if(!ctrl.field) {
                 return m("span", "Loading...");
             }
@@ -54,7 +60,7 @@ module.exports = {
     edit : {
         controller : function(options) {
             var ctrl  = this,
-                field = db.child("fields/" + options.id);;
+                field = db.child("fields/" + options.field);
             
             ctrl.options = options;
             ctrl.field   = null;
@@ -65,29 +71,10 @@ module.exports = {
                 m.redraw();
             });
 
-            ctrl.nameChange = function(name) {
-                field.update({
-                    name : name
-                });
-            };
-
-            ctrl.placeholderChange = function(placeholder) {
-                field.update({
-                    placeholder : placeholder
-                });
-            };
-
-            ctrl.disabledChange = function(disabled) {
-                field.update({
-                    disabled : disabled
-                });
-            };
-
-            ctrl.readonlyChange = function(readonly) {
-                field.update({
-                    readonly : readonly
-                });
-            };
+            ctrl.nameChange        = update.bind(null, field, "name");
+            ctrl.placeholderChange = update.bind(null, field, "placeholder");
+            ctrl.disabledChange    = update.bind(null, field, "disabled");
+            ctrl.readonlyChange    = update.bind(null, field, "readonly");
         },
 
         view : function(ctrl) {
