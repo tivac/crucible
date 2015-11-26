@@ -1,0 +1,28 @@
+{
+  "name": "crucible",
+  "version": "0.0.1",
+  "description": "cms thing",
+  "main": "index.js",
+  "scripts": {
+    "build": "browserify ./index.js -o ./gen/client.js",
+    "watch": "watchify ./index.js -o ./gen/client.js",
+    "start": "wzrd index.js --pushstate"
+  },
+  "keywords": [
+    "cms",
+    "mithril",
+    "firebase"
+  ],
+  "author": "Pat Cavit <npm@patcavit.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "browserify": "^12.0.1",
+    "modular-css": "^0.5.0",
+    "wzrd": "^1.3.1"
+  },
+  "dependencies": {
+    "firebase": "^2.3.2",
+    "lodash.assign": "^3.2.0",
+    "mithril": "^0.2.0"
+  }
+}
