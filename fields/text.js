@@ -1,18 +1,17 @@
 "use strict";
 
-var m        = require("mithril"),
-    Firebase = require("firebase"),
-    assign   = require("lodash.assign"),
+var m      = require("mithril"),
+    assign = require("lodash.assign"),
     
-    db = new Firebase("https://blazing-torch-6027.firebaseio.com");
+    db = require("../lib/firebase");
 
 module.exports = {
     display : {
         controller : function(options) {
-            var ctrl = this,
-                field = db.child("field/" + options.id),
+            var ctrl  = this,
+                field = db.child("fields/" + options.id),
                 data  = db.child("data/" + options.id);
-
+            
             ctrl.field = null;
             ctrl.data  = {
                 value : ""
@@ -20,10 +19,14 @@ module.exports = {
             
             field.on("value", function(snap) {
                 ctrl.field = snap.val();
+                
+                m.redraw();
             });
 
             data.on("value", function(snap) {
                 ctrl.data = snap.val();
+                
+                m.redraw();
             });
 
             ctrl.oninput = function(value) {
@@ -34,6 +37,8 @@ module.exports = {
         },
 
         view : function(ctrl) {
+            console.log(ctrl);
+            
             if(!ctrl.field) {
                 return m("span", "Loading...");
             }
@@ -50,11 +55,14 @@ module.exports = {
         controller : function(options) {
             var ctrl  = this,
                 field = db.child("fields/" + options.id);;
-
-            ctrl.field = null;
+            
+            ctrl.options = options;
+            ctrl.field   = null;
             
             field.on("value", function(snap) {
                 ctrl.field = snap.val();
+                
+                m.redraw();
             });
 
             ctrl.nameChange = function(name) {
@@ -77,7 +85,7 @@ module.exports = {
 
             ctrl.readonlyChange = function(readonly) {
                 field.update({
-                    readonly : disabled
+                    readonly : readonly
                 });
             };
         },
@@ -88,22 +96,31 @@ module.exports = {
             }
 
             return m("div",
-                m("input", assign({}, ctrl.field)),
+                m.component(module.exports.display, ctrl.options),
                 m("ul",
                     m("li",
                         m("label",
+                            "Name",
                             m("input", {
                                 oninput : m.withAttr("value", ctrl.nameChange),
-                                value   : ctrl.field.name
-                            }),
-                            "Name"
+                                value   : ctrl.field.name || ""
+                            })
+                        )
+                    ),
+                    m("li",
+                        m("label",
+                            "Placeholder",
+                            m("input", {
+                                oninput : m.withAttr("value", ctrl.placeholderChange),
+                                value   : ctrl.field.placeholder || ""
+                            })
                         )
                     ),
                     m("li",
                         m("label",
                             m("input[type=checkbox]", {
                                 onclick : m.withAttr("checked", ctrl.disabledChange),
-                                checked : ctrl.field.disabled
+                                checked : ctrl.field.disabled || false
                             }),
                             "Disabled"
                         )
@@ -112,18 +129,9 @@ module.exports = {
                         m("label",
                             m("input[type=checkbox]", {
                                 onclick : m.withAttr("checked", ctrl.readonlyChange),
-                                checked : ctrl.field.readonly
+                                checked : ctrl.field.readonly || false
                             }),
                             "Read-Only"
-                        )
-                    ),
-                    m("li",
-                        m("label",
-                            m("input", {
-                                oninput : m.withAttr("value", ctrl.placeholderChange),
-                                value   : ctrl.field.placeholder
-                            }),
-                            "Placeholder"
                         )
                     )
                 )

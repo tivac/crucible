@@ -67,10 +67,11 @@ module.exports = {
         if(!ctrl.type) {
             return m("h1", "Loading...");
         }
-
+        
         return [
             m("h1", "Editing " + ctrl.type.name),
             m("form",
+                m("strong", "Add a field"),
                 Object.keys(fields).map(function(type) {
                     if(type === "Loading") {
                         return null;
@@ -82,25 +83,18 @@ module.exports = {
                 Object.keys(ctrl.type.fields || {}).map(function(ref) {
                     var id    = ctrl.type.fields[ref],
                         field = ctrl.fields[id];
-
+                    
                     if(!field) {
-                        return m("div", { key : "loading-" + id },
-                            "Loading..."
-                        );
+                        return m("div");
                     }
 
                     if(ctrl.edit !== id) {
-                        return m("div", {
-                                key : "display-" + id,
-                                onclick : ctrl.editing.bind(ctrl, id)
-                            },
+                        return m("div", { onclick : ctrl.editing.bind(ctrl, id) },
                             m.component(fields[field.type].display, field)
                         );
                     }
 
-                    return m("div", { key : "edit-" + id },
-                        m.component(fields[field.type].edit, field)
-                    );
+                    return m("div", m.component(fields[field.type].edit, field));
                 })
             )
         ];
