@@ -9,10 +9,10 @@ module.exports = {
     controller : function() {
         var ctrl = this,
             type, fields;
+            ctrl.fields = {};
 
         ctrl.id     = m.route.param("id");
         ctrl.type   = null;
-        ctrl.fields = {};
         ctrl.edit   = null;
 
         type   = db.child("types/" + ctrl.id);
@@ -28,8 +28,7 @@ module.exports = {
             var id = snap.val();
 
             fields.child(id).on("value", function(snap) {
-                ctrl.fields[id]    = snap.val();
-                ctrl.fields[id].id = id;
+                ctrl.fields[id] = snap.val();
 
                 m.redraw();
             });
@@ -37,17 +36,17 @@ module.exports = {
 
         type.child("fields").on("child_removed", function(snap) {
             delete ctrl.fields[snap.val()];
-
+            
             m.redraw();
         });
-
+        
         ctrl.add = function(field, e) {
             var id;
 
             e.preventDefault();
 
             // Create the field
-            id = fields.push({
+            id = db.child("fields").push({
                 type : field,
                 name : field
             });
@@ -60,6 +59,12 @@ module.exports = {
             e.preventDefault();
 
             ctrl.edit = id;
+        };
+        
+        ctrl.remove = function(id, e) {
+            e.preventDefault();
+            
+            type.child("fields").child(id).remove();
         };
     },
 
@@ -85,16 +90,19 @@ module.exports = {
                         field = ctrl.fields[id];
                     
                     if(!field) {
-                        return m("div");
+                        return null;
                     }
-
+                    
                     if(ctrl.edit !== id) {
                         return m("div", { onclick : ctrl.editing.bind(ctrl, id) },
-                            m.component(fields[field.type].display, field)
+                            m.component(fields[field.type].display, { field : id })
                         );
                     }
 
-                    return m("div", m.component(fields[field.type].edit, field));
+                    return m("div",
+                        m.component(fields[field.type].edit, { field : id }),
+                        m("button", { onclick : ctrl.remove.bind(ctrl, ref) }, "Remove")
+                    );
                 })
             )
         ];
