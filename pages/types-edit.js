@@ -1,11 +1,9 @@
 "use strict";
 
 var m = require("mithril"),
-    Firebase = require("firebase"),
 
     fields = require("../fields"),
-    
-    db = new Firebase("https://blazing-torch-6027.firebaseio.com");
+    db     = require("../lib/firebase");
 
 module.exports = {
     controller : function() {

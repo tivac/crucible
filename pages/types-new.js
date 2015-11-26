@@ -1,15 +1,13 @@
 "use strict";
 
 var m = require("mithril"),
-    Firebase = require("firebase"),
 
-    fields = require("../fields"),
-    
-    db = new Firebase("https://blazing-torch-6027.firebaseio.com/types");
+    db = require("../lib/firebase");
 
 module.exports = {
     controller : function() {
-        var ctrl = this;
+        var ctrl  = this,
+            types = db.child("types");
 
         ctrl.name = m.prop("");
 
@@ -18,9 +16,8 @@ module.exports = {
 
             e.preventDefault();
 
-            id = db.push({
-                name   : ctrl.name(),
-                fields : {}
+            id = types.push({
+                name : ctrl.name()
             });
 
             m.route("/types/" + id.key());
