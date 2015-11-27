@@ -8,6 +8,10 @@ var m      = require("mithril"),
 function update(db, name, val) {
     var args = {};
     
+    if(!val) {
+        return db.child(name).remove();
+    }
+    
     args[name] = val;
     
     db.update(args);
