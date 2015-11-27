@@ -82,44 +82,41 @@ module.exports = {
                 return m("span", "Loading...");
             }
 
-            return m("div",
-                m.component(module.exports.display, ctrl.options),
-                m("ul",
-                    m("li",
-                        m("label",
-                            "Name",
-                            m("input", {
-                                oninput : m.withAttr("value", ctrl.nameChange),
-                                value   : ctrl.field.name || ""
-                            })
-                        )
-                    ),
-                    m("li",
-                        m("label",
-                            "Placeholder",
-                            m("input", {
-                                oninput : m.withAttr("value", ctrl.placeholderChange),
-                                value   : ctrl.field.placeholder || ""
-                            })
-                        )
-                    ),
-                    m("li",
-                        m("label",
-                            m("input[type=checkbox]", {
-                                onclick : m.withAttr("checked", ctrl.disabledChange),
-                                checked : ctrl.field.disabled || false
-                            }),
-                            "Disabled"
-                        )
-                    ),
-                    m("li",
-                        m("label",
-                            m("input[type=checkbox]", {
-                                onclick : m.withAttr("checked", ctrl.readonlyChange),
-                                checked : ctrl.field.readonly || false
-                            }),
-                            "Read-Only"
-                        )
+            return m("ul",
+                m("li",
+                    m("label",
+                        "Name",
+                        m("input", {
+                            oninput : m.withAttr("value", ctrl.nameChange),
+                            value   : ctrl.field.name || ""
+                        })
+                    )
+                ),
+                m("li",
+                    m("label",
+                        "Placeholder",
+                        m("input", {
+                            oninput : m.withAttr("value", ctrl.placeholderChange),
+                            value   : ctrl.field.placeholder || ""
+                        })
+                    )
+                ),
+                m("li",
+                    m("label",
+                        m("input[type=checkbox]", {
+                            onclick : m.withAttr("checked", ctrl.disabledChange),
+                            checked : ctrl.field.disabled || false
+                        }),
+                        "Disabled"
+                    )
+                ),
+                m("li",
+                    m("label",
+                        m("input[type=checkbox]", {
+                            onclick : m.withAttr("checked", ctrl.readonlyChange),
+                            checked : ctrl.field.readonly || false
+                        }),
+                        "Read-Only"
                     )
                 )
             );

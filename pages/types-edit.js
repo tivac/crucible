@@ -8,15 +8,14 @@ var m = require("mithril"),
 module.exports = {
     controller : function() {
         var ctrl = this,
-            type, fields;
-            ctrl.fields = {};
+            id   = m.route.param("id"),
+            
+            type   = db.child("types/" + id),
+            fields = db.child("fields");
 
-        ctrl.id     = m.route.param("id");
         ctrl.type   = null;
         ctrl.edit   = null;
-
-        type   = db.child("types/" + ctrl.id);
-        fields = db.child("fields");
+        ctrl.fields = {};
 
         type.on("value", function(snap) {
             ctrl.type = snap.val();
@@ -64,6 +63,7 @@ module.exports = {
         ctrl.remove = function(id, e) {
             e.preventDefault();
             
+            fields.child(ctrl.type.fields[id]).remove();
             type.child("fields").child(id).remove();
         };
     },
@@ -100,6 +100,7 @@ module.exports = {
                     }
 
                     return m("div",
+                        m.component(fields[field.type].display, { field : id }),
                         m.component(fields[field.type].edit, { field : id }),
                         m("button", { onclick : ctrl.remove.bind(ctrl, ref) }, "Remove")
                     );
