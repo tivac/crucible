@@ -6,9 +6,8 @@ var m = require("mithril"),
 
 module.exports = {
     controller : function() {
-        var ctrl    = this,
-            types   = db.child("types"),
-            entries = db.child("entries");
+        var ctrl  = this,
+            types = db.child("types");
         
         ctrl.types = null;
         ctrl.name  = m.prop("");
@@ -26,7 +25,7 @@ module.exports = {
 
             e.preventDefault();
 
-            id = entries.push({
+            id = db.child("content").push({
                 name : ctrl.name(),
                 type : ctrl.type(),
                 data : {}
@@ -40,8 +39,6 @@ module.exports = {
         if(!ctrl.types) {
             return m("h1", "Loading...");
         }
-        
-        console.log(ctrl.name(), ctrl.type());
         
         return [
             m("h1", "Add Content"),
