@@ -25,9 +25,7 @@ module.exports = {
                 data  = db.child("data/" + options.data);
             
             ctrl.field = null;
-            ctrl.data  = {
-                value : ""
-            };
+            ctrl.data  = null;
             
             field.on("value", function(snap) {
                 ctrl.field = snap.val();
@@ -41,20 +39,18 @@ module.exports = {
                 m.redraw();
             });
 
-            ctrl.oninput = function(value) {
-                data.update({
-                    value : value
-                });
-            };
+            ctrl.oninput = data.set.bind(data);
         },
 
         view : function(ctrl) {
+            console.log(ctrl);
+            
             if(!ctrl.field) {
                 return m("span", "Loading...");
             }
 
             return m("label", ctrl.field.name,
-                m("input", assign({}, ctrl.field, ctrl.data, {
+                m("input", assign({}, ctrl.field, { value : ctrl.data || "" }, {
                     oninput : m.withAttr("value", ctrl.oninput)
                 }))
             );
