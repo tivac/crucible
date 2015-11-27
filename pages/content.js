@@ -1,13 +1,37 @@
 "use strict";
 
-var m = require("mithril");
+var m = require("mithril"),
+    
+    db = require("../lib/firebase");
 
 module.exports = {
     controller : function() {
-
+        var ctrl    = this,
+            content = db.child("content");
+        
+        ctrl.content = null;
+        
+        content.on("value", function(snap) {
+            ctrl.content = snap.val();
+            
+            m.redraw();
+        });
     },
 
     view : function(ctrl) {
-        return m("h1", "CONTENT");
+        if(!ctrl.content) {
+            return m("LOADING");
+        }
+        
+        return [
+            m("h1", "CONTENT"),
+            m("ul",
+                Object.keys(ctrl.content).map(function(id) {
+                    return m("li",
+                        m("a", { href : "/content/" + id, config : m.route }, ctrl.content[id].name)
+                    );
+                })
+            )
+        ];
     }
 };
