@@ -17,6 +17,7 @@ function update(db, name, val) {
     db.update(args);
 }
 
+// TODO: change field/data to actual firebase refs
 module.exports = {
     display : {
         controller : function(options) {
