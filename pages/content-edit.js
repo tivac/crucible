@@ -51,8 +51,6 @@ module.exports = {
     },
 
     view : function(ctrl) {
-        console.log(ctrl);
-        
         if(!ctrl.entry || !ctrl.type || !Object.keys(ctrl.fields).length) {
             return m("h1", "Loading...");
         }
@@ -62,7 +60,13 @@ module.exports = {
             
             m("div",
                 m("label",
-                    "Name:",
+                    "Type: ",
+                    m("a", { href : "/types/" + ctrl.entry.type, config : m.route }, ctrl.type.name)
+                )
+            ),
+            m("div",
+                m("label",
+                    "Name: ",
                     m("input", { value : ctrl.entry.name, oninput : m.withAttr("value", ctrl.namechange) })
                 )
             ),

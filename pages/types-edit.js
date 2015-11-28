@@ -16,6 +16,7 @@ module.exports = {
         ctrl.type   = null;
         ctrl.edit   = null;
         ctrl.fields = {};
+        ctrl.recent = {};
 
         type.on("value", function(snap) {
             ctrl.type = snap.val();
@@ -35,6 +36,13 @@ module.exports = {
 
         type.child("fields").on("child_removed", function(snap) {
             delete ctrl.fields[snap.val()];
+            
+            m.redraw();
+        });
+        
+        // get 5 latest entries using this type to display
+        db.child("content").orderByChild("type").equalTo(id).limitToLast(5).on("value", function(snap) {
+            ctrl.recent = snap.val() ;
             
             m.redraw();
         });
@@ -104,6 +112,15 @@ module.exports = {
                         m.component(fields[field.type].display, { field : ref }),
                         m.component(fields[field.type].edit, { field : ref }),
                         m("button", { onclick : ctrl.remove.bind(ctrl, key) }, "Remove")
+                    );
+                })
+            ),
+            m("hr"),
+            m("h2", "Recent Entries"),
+            m("ul",
+                Object.keys(ctrl.recent || {}).map(function(key) {
+                    return m("li",
+                        m("a", { href : "/content/" + key, config : m.route }, ctrl.recent[key].name)
                     );
                 })
             )
