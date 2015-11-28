@@ -17,13 +17,14 @@ function update(db, name, val) {
     db.update(args);
 }
 
-// TODO: change field/data to actual firebase refs
 module.exports = {
     display : {
         controller : function(options) {
             var ctrl = this;
             
             ctrl.field = {};
+            
+            console.log(options.field.toString());
             
             options.field.on("value", function(snap) {
                 ctrl.field = snap.val();
@@ -37,9 +38,11 @@ module.exports = {
                     
                     m.redraw();
                 });
-
-                ctrl.oninput = options.data.set.bind(options.data);
             }
+            
+            ctrl.oninput = function(value) {
+                options.callback(value);
+            };
         },
 
         view : function(ctrl) {
@@ -47,7 +50,7 @@ module.exports = {
                 return m("span", "Loading...");
             }
 
-            return m("label", ctrl.field.name,
+            return m("label", ctrl.field.name + ": ",
                 m("input", assign({}, ctrl.field, { value : ctrl.data || "" }, {
                     oninput : m.withAttr("value", ctrl.oninput)
                 }))
@@ -81,7 +84,7 @@ module.exports = {
             return m("ul",
                 m("li",
                     m("label",
-                        "Name",
+                        "Name: ",
                         m("input", {
                             oninput : m.withAttr("value", ctrl.nameChange),
                             value   : ctrl.field.name || ""
@@ -90,7 +93,7 @@ module.exports = {
                 ),
                 m("li",
                     m("label",
-                        "Placeholder",
+                        "Placeholder: ",
                         m("input", {
                             oninput : m.withAttr("value", ctrl.placeholderChange),
                             value   : ctrl.field.placeholder || ""
@@ -103,7 +106,7 @@ module.exports = {
                             onclick : m.withAttr("checked", ctrl.disabledChange),
                             checked : ctrl.field.disabled || false
                         }),
-                        "Disabled"
+                        " Disabled"
                     )
                 ),
                 m("li",
@@ -112,7 +115,7 @@ module.exports = {
                             onclick : m.withAttr("checked", ctrl.readonlyChange),
                             checked : ctrl.field.readonly || false
                         }),
-                        "Read-Only"
+                        " Read-Only"
                     )
                 )
             );
