@@ -32,13 +32,17 @@ module.exports = {
         });
         
         ctrl.add = function(field, e) {
+            var result;
+            
             e.preventDefault();
 
-            // Create the field
-            type.child("fields").push({
+            // Create the field & start editing it
+            result = type.child("fields").push({
                 type : field,
                 name : field
             });
+            
+            ctrl.edit = result.key();
         };
 
         ctrl.editing = function(key, e) {
@@ -58,6 +62,8 @@ module.exports = {
         if(!ctrl.type) {
             return m("h1", "Loading...");
         }
+        
+        console.log(ctrl);
         
         return [
             m("h1", "Editing " + ctrl.type.name),

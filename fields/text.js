@@ -24,8 +24,6 @@ module.exports = {
             
             ctrl.field = {};
             
-            console.log(options.field.toString());
-            
             options.field.on("value", function(snap) {
                 ctrl.field = snap.val();
                 
@@ -87,7 +85,14 @@ module.exports = {
                         "Name: ",
                         m("input", {
                             oninput : m.withAttr("value", ctrl.nameChange),
-                            value   : ctrl.field.name || ""
+                            value   : ctrl.field.name || "",
+                            config  : function(el, init) {
+                                if(init) {
+                                    return;
+                                }
+                                
+                                el.select();
+                            }
                         })
                     )
                 ),

@@ -19,7 +19,6 @@ module.exports = {
         ctrl.id     = id;
         ctrl.entry  = null;
         ctrl.type   = null;
-        ctrl.fields = {};
         
         entry.on("value", function(snap) {
             ctrl.entry = snap.val();
@@ -31,16 +30,6 @@ module.exports = {
             db.child("types/" + ctrl.entry.type).on("value", function(snap) {
                 ctrl.type = snap.val();
                 
-                Object.keys(ctrl.type.fields).forEach(function(key) {
-                    var field = db.child("fields/" + ctrl.type.fields[key]);
-                    
-                    field.on("value", function(snap) {
-                        ctrl.fields[field.key()] = snap.val();
-                        
-                        m.redraw();
-                    });
-                });
-
                 m.redraw();
             });
             
@@ -73,12 +62,11 @@ module.exports = {
             
             m("hr"),
             
-            Object.keys(ctrl.fields).map(function(key) {
-                var field = ctrl.fields[key];
+            Object.keys(ctrl.type.fields).map(function(key) {
+                var field = ctrl.type.fields[key];
                 
-                // TODO: Send along actual refs here
                 return m.component(fields[field.type].display, {
-                    field : db.child("fields/" + key),
+                    field : db.child("types/" + ctrl.entry.type + "/fields/" + key),
                     data  : db.child("content/" + ctrl.id + "/data/" + key)
                 });
             })
