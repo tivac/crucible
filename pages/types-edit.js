@@ -85,9 +85,10 @@ module.exports = {
                     return m("a[href=/types/new/add-field]", { onclick : ctrl.add.bind(ctrl, type) }, type);
                 }),
                 m("hr"),
-                Object.keys(ctrl.type.fields || {}).map(function(ref) {
-                    var id    = ctrl.type.fields[ref],
-                        field = ctrl.fields[id];
+                Object.keys(ctrl.type.fields || {}).map(function(key) {
+                    var id    = ctrl.type.fields[key],
+                        field = ctrl.fields[id],
+                        ref   = db.child("fields/" + id);
                     
                     if(!field) {
                         return null;
@@ -95,14 +96,14 @@ module.exports = {
                     
                     if(ctrl.edit !== id) {
                         return m("div", { onclick : ctrl.editing.bind(ctrl, id) },
-                            m.component(fields[field.type].display, { field : id })
+                            m.component(fields[field.type].display, { field : ref })
                         );
                     }
 
                     return m("div",
-                        m.component(fields[field.type].display, { field : id }),
-                        m.component(fields[field.type].edit, { field : id }),
-                        m("button", { onclick : ctrl.remove.bind(ctrl, ref) }, "Remove")
+                        m.component(fields[field.type].display, { field : ref }),
+                        m.component(fields[field.type].edit, { field : ref }),
+                        m("button", { onclick : ctrl.remove.bind(ctrl, key) }, "Remove")
                     );
                 })
             )

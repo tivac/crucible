@@ -11,16 +11,15 @@ module.exports = {
             id   = m.route.param("id"),
             
             entry  = db.child("content/" + id),
-            data   = db.child("data"),
             name   = entry.child("name"),
             
             // Will be filled out once the entry has loaded
             type;
         
+        ctrl.id     = id;
         ctrl.entry  = null;
         ctrl.type   = null;
         ctrl.fields = {};
-        ctrl.data   = {};
         
         entry.on("value", function(snap) {
             ctrl.entry = snap.val();
@@ -75,8 +74,8 @@ module.exports = {
                 
                 // TODO: Send along actual refs here
                 return m.component(fields[field.type].display, {
-                    field : key,
-                    data  : db.child()
+                    field : db.child("fields/" + key),
+                    data  : db.child("content/" + ctrl.id + "/data/" + key)
                 });
             })
         ];

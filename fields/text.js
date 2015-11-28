@@ -21,31 +21,28 @@ function update(db, name, val) {
 module.exports = {
     display : {
         controller : function(options) {
-            var ctrl  = this,
-                field = db.child("fields/" + options.field),
-                data  = db.child("data/" + options.data);
+            var ctrl = this;
             
-            ctrl.field = null;
-            ctrl.data  = null;
+            ctrl.field = {};
             
-            field.on("value", function(snap) {
+            options.field.on("value", function(snap) {
                 ctrl.field = snap.val();
                 
                 m.redraw();
             });
+            
+            if(options.data) {
+                options.data.on("value", function(snap) {
+                    ctrl.data = snap.val();
+                    
+                    m.redraw();
+                });
 
-            data.on("value", function(snap) {
-                ctrl.data = snap.val();
-                
-                m.redraw();
-            });
-
-            ctrl.oninput = data.set.bind(data);
+                ctrl.oninput = options.data.set.bind(options.data);
+            }
         },
 
         view : function(ctrl) {
-            console.log(ctrl);
-            
             if(!ctrl.field) {
                 return m("span", "Loading...");
             }
@@ -60,22 +57,20 @@ module.exports = {
 
     edit : {
         controller : function(options) {
-            var ctrl  = this,
-                field = db.child("fields/" + options.field);
+            var ctrl  = this;
             
-            ctrl.options = options;
-            ctrl.field   = null;
+            ctrl.field = null;
             
-            field.on("value", function(snap) {
+            options.field.on("value", function(snap) {
                 ctrl.field = snap.val();
                 
                 m.redraw();
             });
 
-            ctrl.nameChange        = update.bind(null, field, "name");
-            ctrl.placeholderChange = update.bind(null, field, "placeholder");
-            ctrl.disabledChange    = update.bind(null, field, "disabled");
-            ctrl.readonlyChange    = update.bind(null, field, "readonly");
+            ctrl.nameChange        = update.bind(null, options.field, "name");
+            ctrl.placeholderChange = update.bind(null, options.field, "placeholder");
+            ctrl.disabledChange    = update.bind(null, options.field, "disabled");
+            ctrl.readonlyChange    = update.bind(null, options.field, "readonly");
         },
 
         view : function(ctrl) {
