@@ -43,7 +43,10 @@ module.exports = {
         return [
             m("h1", "Add Content"),
             m("form", { onsubmit : ctrl.onsubmit },
-                m("input[name=name]", { oninput : m.withAttr("value", ctrl.name), value : ctrl.name() }),
+                m("label",
+                    "Name: ",
+                    m("input[name=name]", { oninput : m.withAttr("value", ctrl.name), value : ctrl.name() })
+                ),
                 m("fieldset",
                     m("legend", "Content type"),
                     Object.keys(ctrl.types).map(function(type, idx) {
