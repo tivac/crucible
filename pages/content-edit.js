@@ -77,7 +77,7 @@ module.exports = {
                     var field = ctrl.type.fields[key];
                     
                     return m("div",
-                        m.component(fields[field.type].display, {
+                        m.component(fields[field.type].show, {
                             field    : db.child("types/" + ctrl.entry.type + "/fields/" + key),
                             data     : ctrl.entry.data[key],
                             callback : ctrl.fieldchange.bind(ctrl, key)

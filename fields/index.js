@@ -1,7 +1,10 @@
 "use strict";
 
 module.exports = {
-    "Loading" : require("./loading"),
+    "loading" : require("./loading"),
 
-    "Text" : require("./text")
+    "text" : {
+        edit : require("./text-edit"),
+        show : require("./text-show")
+    }
 };

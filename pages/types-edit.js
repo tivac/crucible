@@ -85,12 +85,12 @@ module.exports = {
                     
                     if(ctrl.edit !== key) {
                         return m("div", { onclick : ctrl.editing.bind(ctrl, key) },
-                            m.component(fields[field.type].display, { field : ref })
+                            m.component(fields[field.type].show, { field : ref })
                         );
                     }
 
                     return m("div",
-                        m.component(fields[field.type].display, { field : ref }),
+                        m.component(fields[field.type].show, { field : ref }),
                         m.component(fields[field.type].edit, { field : ref }),
                         m("button", { onclick : ctrl.remove.bind(ctrl, key) }, "Remove")
                     );
