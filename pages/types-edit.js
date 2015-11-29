@@ -63,8 +63,6 @@ module.exports = {
             return m("h1", "Loading...");
         }
         
-        console.log(ctrl);
-        
         return [
             m("h1", "Editing " + ctrl.type.name),
             m("form",

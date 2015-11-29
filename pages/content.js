@@ -12,7 +12,7 @@ module.exports = {
         ctrl.content = null;
         
         content.on("value", function(snap) {
-            ctrl.content = snap.val();
+            ctrl.content = snap.val() || {};
             
             m.redraw();
         });
@@ -20,11 +20,14 @@ module.exports = {
 
     view : function(ctrl) {
         if(!ctrl.content) {
-            return m("LOADING");
+            return m("h1", "LOADING...");
         }
         
         return [
             m("h1", "CONTENT"),
+            m("p",
+                m("a", { href : "/content/new", config : m.route }, "Add Content")
+            ),
             m("ul",
                 Object.keys(ctrl.content).map(function(id) {
                     return m("li",
