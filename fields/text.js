@@ -53,6 +53,9 @@ module.exports = {
             ctrl.update = function(name, val) {
                 var args = {};
                 
+                // This feels gross, FYI
+                options.field.parent().parent().child("updated").set(db.TIMESTAMP);
+                
                 if(!val) {
                     return options.field.child(name).remove();
                 }

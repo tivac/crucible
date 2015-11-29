@@ -43,6 +43,8 @@ module.exports = {
             });
             
             ctrl.edit = result.key();
+            
+            type.child("updated").set(db.TIMESTAMP);
         };
 
         ctrl.editing = function(key, e) {
@@ -55,6 +57,8 @@ module.exports = {
             e.preventDefault();
             
             type.child("fields").child(key).remove();
+            
+            type.child("updated").set(db.TIMESTAMP);
         };
     },
 

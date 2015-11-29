@@ -40,8 +40,10 @@ module.exports = {
             ctrl.entry.data[key] = value;
         };
         
-        ctrl.onsubmit = function() {
+        ctrl.onsubmit = function(e) {
             e.preventDefault();
+            
+            ctrl.entry.updated = db.TIMESTAMP;
             
             entry.update(ctrl.entry);
         };
