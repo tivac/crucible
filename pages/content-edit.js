@@ -10,15 +10,11 @@ module.exports = {
         var ctrl = this,
             id   = m.route.param("id"),
             
-            entry  = db.child("content/" + id),
-            name   = entry.child("name"),
-            
-            // Will be filled out once the entry has loaded
-            type;
+            entry  = db.child("content/" + id);
         
-        ctrl.id     = id;
-        ctrl.entry  = null;
-        ctrl.type   = null;
+        ctrl.id    = id;
+        ctrl.entry = null;
+        ctrl.type  = null;
         
         entry.on("value", function(snap) {
             ctrl.entry = snap.val();
@@ -36,11 +32,23 @@ module.exports = {
             m.redraw();
         });
         
-        ctrl.namechange = name.set.bind(name);
+        ctrl.namechange = function(name) {
+            ctrl.entry.name = name;
+        };
+        
+        ctrl.fieldchange = function(key, value) {
+            ctrl.entry.data[key] = value;
+        };
+        
+        ctrl.onsubmit = function() {
+            e.preventDefault();
+            
+            entry.update(ctrl.entry);
+        };
     },
 
     view : function(ctrl) {
-        if(!ctrl.entry || !ctrl.type || !Object.keys(ctrl.fields).length) {
+        if(!ctrl.entry || !ctrl.type) {
             return m("h1", "Loading...");
         }
         
@@ -53,23 +61,32 @@ module.exports = {
                     m("a", { href : "/types/" + ctrl.entry.type, config : m.route }, ctrl.type.name)
                 )
             ),
-            m("div",
-                m("label",
-                    "Name: ",
-                    m("input", { value : ctrl.entry.name, oninput : m.withAttr("value", ctrl.namechange) })
-                )
-            ),
-            
-            m("hr"),
-            
-            Object.keys(ctrl.type.fields).map(function(key) {
-                var field = ctrl.type.fields[key];
+            m("form", { onsubmit : ctrl.onsubmit },
+                m("div",
+                    m("label",
+                        "Name: ",
+                        m("input", { value : ctrl.entry.name, oninput : m.withAttr("value", ctrl.namechange) })
+                    )
+                ),
                 
-                return m.component(fields[field.type].display, {
-                    field : db.child("types/" + ctrl.entry.type + "/fields/" + key),
-                    data  : db.child("content/" + ctrl.id + "/data/" + key)
-                });
-            })
+                m("hr"),
+                
+                Object.keys(ctrl.type.fields).map(function(key) {
+                    var field = ctrl.type.fields[key];
+                    
+                    return m("div",
+                        m.component(fields[field.type].display, {
+                            field    : db.child("types/" + ctrl.entry.type + "/fields/" + key),
+                            data     : ctrl.entry.data[key],
+                            callback : ctrl.fieldchange.bind(ctrl, key)
+                        })
+                    );
+                }),
+                
+                m("hr"),
+                
+                m("input[type=submit]", { value : "Update" })
+            )
         ];
     }
 };
