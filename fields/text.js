@@ -5,18 +5,6 @@ var m      = require("mithril"),
     
     db = require("../lib/firebase");
 
-function update(db, name, val) {
-    var args = {};
-    
-    if(!val) {
-        return db.child(name).remove();
-    }
-    
-    args[name] = val;
-    
-    db.update(args);
-}
-
 module.exports = {
     display : {
         controller : function(options) {
@@ -67,11 +55,18 @@ module.exports = {
                 
                 m.redraw();
             });
-
-            ctrl.nameChange        = update.bind(null, options.field, "name");
-            ctrl.placeholderChange = update.bind(null, options.field, "placeholder");
-            ctrl.disabledChange    = update.bind(null, options.field, "disabled");
-            ctrl.readonlyChange    = update.bind(null, options.field, "readonly");
+            
+            ctrl.update = function(name, val) {
+                var args = {};
+                
+                if(!val) {
+                    return options.field.child(name).remove();
+                }
+                
+                args[name] = val;
+                
+                options.field.update(args);
+            }
         },
 
         view : function(ctrl) {
@@ -84,7 +79,7 @@ module.exports = {
                     m("label",
                         "Name: ",
                         m("input", {
-                            oninput : m.withAttr("value", ctrl.nameChange),
+                            oninput : m.withAttr("value", ctrl.update.bind(ctrl, "name")),
                             value   : ctrl.field.name || "",
                             config  : function(el, init) {
                                 if(init) {
@@ -100,7 +95,7 @@ module.exports = {
                     m("label",
                         "Placeholder: ",
                         m("input", {
-                            oninput : m.withAttr("value", ctrl.placeholderChange),
+                            oninput : m.withAttr("value", ctrl.update.bind(ctrl, "placeholder")),
                             value   : ctrl.field.placeholder || ""
                         })
                     )
@@ -108,7 +103,7 @@ module.exports = {
                 m("li",
                     m("label",
                         m("input[type=checkbox]", {
-                            onclick : m.withAttr("checked", ctrl.disabledChange),
+                            onclick : m.withAttr("checked", ctrl.update.bind(ctrl, "disabled")),
                             checked : ctrl.field.disabled || false
                         }),
                         " Disabled"
@@ -117,7 +112,7 @@ module.exports = {
                 m("li",
                     m("label",
                         m("input[type=checkbox]", {
-                            onclick : m.withAttr("checked", ctrl.readonlyChange),
+                            onclick : m.withAttr("checked", ctrl.update.bind(ctrl, "readonly")),
                             checked : ctrl.field.readonly || false
                         }),
                         " Read-Only"
