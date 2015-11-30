@@ -21,5 +21,10 @@ module.exports.components = {
     "number" : {
         edit : require("./number-edit"),
         show : require("./number-show")
+    },
+
+    "tabs" : {
+        edit : require("./tabs-edit"),
+        show : require("./tabs-show")
     }
 };
