@@ -6,5 +6,10 @@ module.exports = {
     "text" : {
         edit : require("./text-edit"),
         show : require("./text-show")
+    },
+    
+    "select" : {
+        edit : require("./select-edit"),
+        show : require("./select-show")
     }
 };
