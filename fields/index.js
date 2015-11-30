@@ -11,5 +11,10 @@ module.exports = {
     "select" : {
         edit : require("./select-edit"),
         show : require("./select-show")
+    },
+    
+    "number" : {
+        edit : require("./number-edit"),
+        show : require("./number-show")
     }
 };
