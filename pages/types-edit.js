@@ -70,13 +70,12 @@ module.exports = {
         return [
             m("h1", "Editing " + ctrl.type.name),
             m("form",
-                m("strong", "Add a field"),
-                Object.keys(fields).map(function(type) {
-                    if(type === "Loading") {
-                        return null;
-                    }
-
-                    return m("a[href=/types/new/add-field]", { onclick : ctrl.add.bind(ctrl, type) }, type);
+                m("strong", "Add a field: "),
+                fields.map(function(field) {
+                    return m("span",
+                        m("a[href=/types/new/add-field]", { onclick : ctrl.add.bind(ctrl, field) }, field),
+                        " | "
+                    );
                 }),
                 m("hr"),
                 Object.keys(ctrl.type.fields || {}).map(function(key) {
@@ -85,13 +84,13 @@ module.exports = {
                     
                     if(ctrl.edit !== key) {
                         return m("div", { onclick : ctrl.editing.bind(ctrl, key) },
-                            m.component(fields[field.type].show, { field : ref })
+                            m.component(fields.components[field.type].show, { field : ref })
                         );
                     }
 
                     return m("div",
-                        m.component(fields[field.type].show, { field : ref }),
-                        m.component(fields[field.type].edit, { field : ref }),
+                        m.component(fields.components[field.type].show, { field : ref }),
+                        m.component(fields.components[field.type].edit, { field : ref }),
                         m("button", { onclick : ctrl.remove.bind(ctrl, key) }, "Remove")
                     );
                 })

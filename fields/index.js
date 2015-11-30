@@ -1,8 +1,13 @@
 "use strict";
 
-module.exports = {
-    "loading" : require("./loading"),
+module.exports = [
+    "text",
+    "number",
+    "select",
+    "tabs"
+];
 
+module.exports.components = {
     "text" : {
         edit : require("./text-edit"),
         show : require("./text-show")

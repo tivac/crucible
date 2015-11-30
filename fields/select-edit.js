@@ -2,8 +2,8 @@
 
 var m      = require("mithril"),
     
-    db     = require("../lib/firebase"),
-    fields = require("./index");
+    db      = require("../lib/firebase"),
+    loading = require("./loading");
 
 module.exports = {
     controller : function(options) {
@@ -67,7 +67,7 @@ module.exports = {
 
     view : function(ctrl) {
         if(!ctrl.field) {
-            return m.component(fields.loading);
+            return m.component(loading);
         }
 
         return m("ul",
