@@ -3,7 +3,7 @@
 var m      = require("mithril"),
     assign = require("lodash.assign"),
     
-    fields = require("./index");
+    loading = require("./loading");
 
 module.exports = {
     controller : function(options) {
@@ -31,7 +31,7 @@ module.exports = {
 
     view : function(ctrl, options) {
         if(!ctrl.field) {
-            return m.component(fields.loading);
+            return m.component(loading);
         }
         
         return m("label", ctrl.field.name + ": ",

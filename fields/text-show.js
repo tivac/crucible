@@ -3,14 +3,12 @@
 var m      = require("mithril"),
     assign = require("lodash.assign"),
     
-    fields = require("./index");
+    loading = require("./loading");
 
 module.exports = {
     controller : function(options) {
         var ctrl = this;
         
-        ctrl.field = {};
-                
         options.field.on("value", function(snap) {
             ctrl.field = snap.val();
             
@@ -25,8 +23,12 @@ module.exports = {
     },
 
     view : function(ctrl, options) {
-        if(!ctrl.field) {
-            return m.component(fields.loading);
+        if(!("field" in ctrl)) {
+            return m.component(loading);
+        }
+        
+        if(ctrl.field === null) {
+            return m("span", "BYE!");
         }
         
         return m("label", ctrl.field.name + ": ",
