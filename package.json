@@ -23,6 +23,7 @@
   "dependencies": {
     "firebase": "^2.3.2",
     "lodash.assign": "^3.2.0",
+    "lodash.set": "^3.7.4",
     "mithril": "^0.2.0"
   }
 }

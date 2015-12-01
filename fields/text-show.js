@@ -18,7 +18,7 @@ module.exports = {
         var field = options.field;
 
         return m("label", field.name + ": ",
-            m("input", assign({}, field, { value : options.data || "" }, {
+            m("input", assign({}, field.attrs || {}, { value : options.data || "" }, {
                 oninput : m.withAttr("value", ctrl.oninput)
             }))
         );

@@ -1,6 +1,7 @@
 "use strict";
 
-var m = require("mithril"),
+var m      = require("mithril"),
+    assign = require("lodash.assign"),
 
     fields = require("../fields"),
     db     = require("../lib/firebase");
@@ -10,8 +11,8 @@ module.exports = {
         var ctrl = this,
             id   = m.route.param("id"),
             
-            type   = db.child("types/" + id),
-            fields = db.child("fields");
+            typeRef   = db.child("types/" + id),
+            fieldsRef = db.child("fields");
         
         ctrl.id     = id;
         ctrl.type   = null;
@@ -19,22 +20,22 @@ module.exports = {
         ctrl.fields = null;
         ctrl.recent = null;
 
-        type.on("value", function(snap) {
+        typeRef.on("value", function(snap) {
             ctrl.type = snap.val();
 
             m.redraw();
         });
 
         // get fields for this type
-        fields.orderByChild("type").equalTo(id).on("value", function(snap) {
+        fieldsRef.orderByChild("type").equalTo(id).on("value", function(snap) {
             ctrl.fields = snap.val();
-
+            
             m.redraw();
         });
         
         // get 5 latest entries using this type to display
         db.child("content").orderByChild("type").equalTo(id).limitToLast(5).on("value", function(snap) {
-            ctrl.recent = snap.val() ;
+            ctrl.recent = snap.val();
             
             m.redraw();
         });
@@ -46,22 +47,20 @@ module.exports = {
             e.preventDefault();
 
             // Create the field & start editing it
-            result = fields.push({
+            result = fieldsRef.push(assign({}, fields.defaults[field], {
                 field   : field,
-                name    : field,
                 type    : ctrl.id,
                 updated : db.TIMESTAMP
-            });
+            }));
             
             key = result.key();
 
             update[key] = true;
 
-            type.child("fields").update(update);
-            type.child("updated").set(db.TIMESTAMP);
-
-            ctrl.edit = key;
+            typeRef.child("fields").update(update);
+            typeRef.child("updated").set(db.TIMESTAMP);
             
+            ctrl.edit = key;
         };
 
         ctrl.editing = function(key, e) {
@@ -73,10 +72,10 @@ module.exports = {
         ctrl.remove = function(key, e) {
             e.preventDefault();
             
-            fields.child(key)
-            type.child("fields").child(key).remove();
+            fieldsRef.child(key)
+            typeRef.child("fields").child(key).remove();
             
-            type.child("updated").set(db.TIMESTAMP);
+            typeRef.child("updated").set(db.TIMESTAMP);
         };
     },
 
@@ -102,16 +101,22 @@ module.exports = {
                     if(!field) {
                         return null;
                     }
+                    
+                    // Firebase won't populate an empty object, so make sure this exists
+                    if(!field.attrs) {
+                        field.attrs = {};
+                    }
 
-                    if(ctrl.edit !== key) {
-                        return m("div", { onclick : ctrl.editing.bind(ctrl, key) },
+                    if(key !== ctrl.edit) {
+                        return m("div", { key : "show-" + key, onclick : ctrl.editing.bind(ctrl, key) },
                             m.component(fields.components[field.field].show, { field : field })
                         );
                     }
-
-                    return m("div",
+                    
+                    return m("div", { key : "edit-" + key },
                         m.component(fields.components[field.field].show, { field : field }),
-                        m.component(fields.components[field.field].edit, { ref : db.child("fields/" + key), field : field }),
+                        m.component(fields.components[field.field].edit, { field : field, ref : db.child("fields/" + key) }),
+                        
                         m("button", { onclick : ctrl.remove.bind(ctrl, key) }, "Remove")
                     );
                 })

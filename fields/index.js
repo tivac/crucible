@@ -7,6 +7,10 @@ module.exports = [
     "tabs"
 ];
 
+module.exports.defaults = {
+    text : require("./text-defaults")
+};
+
 module.exports.components = {
     "text" : {
         edit : require("./text-edit"),

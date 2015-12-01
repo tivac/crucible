@@ -2,6 +2,7 @@
 
 var m      = require("mithril"),
     assign = require("lodash.assign"),
+    set    = require("lodash.set"),
     
     db      = require("../lib/firebase"),
     loading = require("./loading");
@@ -11,24 +12,15 @@ module.exports = {
         var ctrl = this,
             ref  = options.ref;
         
-        ctrl.update = function(name, val) {
-            var args = {};
-            
+        ctrl.update = function(path, val) {
             ref.child("updated").set(db.TIMESTAMP);
-            
-            if(!val) {
-                return ref.child(name).remove();
-            }
-            
-            args[name] = val;
-            
-            ref.update(args);
+            ref.child(path).set(val);
         }
     },
 
     view : function(ctrl, options) {
         var field = options.field;
-
+        
         return m("ul",
             m("li",
                 m("label",
@@ -50,16 +42,16 @@ module.exports = {
                 m("label",
                     "Placeholder: ",
                     m("input", {
-                        oninput : m.withAttr("value", ctrl.update.bind(ctrl, "placeholder")),
-                        value   : field.placeholder || ""
+                        oninput : m.withAttr("value", ctrl.update.bind(ctrl, "attrs/placeholder")),
+                        value   : field.attrs.placeholder || ""
                     })
                 )
             ),
             m("li",
                 m("label",
                     m("input[type=checkbox]", {
-                        onclick : m.withAttr("checked", ctrl.update.bind(ctrl, "disabled")),
-                        checked : field.disabled || false
+                        onclick : m.withAttr("checked", ctrl.update.bind(ctrl, "attrs/disabled")),
+                        checked : field.attrs.disabled || false
                     }),
                     " Disabled"
                 )
@@ -67,8 +59,8 @@ module.exports = {
             m("li",
                 m("label",
                     m("input[type=checkbox]", {
-                        onclick : m.withAttr("checked", ctrl.update.bind(ctrl, "readonly")),
-                        checked : field.readonly || false
+                        onclick : m.withAttr("checked", ctrl.update.bind(ctrl, "attrs/readonly")),
+                        checked : field.attrs.readonly || false
                     }),
                     " Read-Only"
                 )
