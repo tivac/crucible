@@ -70,8 +70,8 @@ module.exports = {
         ctrl.remove = function(key, e) {
             e.preventDefault();
             
-            fieldsRef.child(key)
-            typeRef.child("fields").child(key).remove();
+            fieldsRef.child(key).remove();
+            typeRef.child("fields/" + key).remove();
             
             typeRef.child("updated").set(db.TIMESTAMP);
         };
