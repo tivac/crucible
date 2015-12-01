@@ -62,8 +62,6 @@ module.exports = {
         };
 
         ctrl.editing = function(key, e) {
-            e.preventDefault();
-
             ctrl.edit = key;
         };
         
