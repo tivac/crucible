@@ -42,8 +42,7 @@ module.exports = {
         });
 
         ctrl.add = function(field, e) {
-            var update = {},
-                key, result;
+            var key, result;
             
             e.preventDefault();
 
@@ -56,9 +55,7 @@ module.exports = {
             
             key = result.key();
 
-            update[key] = true;
-
-            typeRef.child("fields").update(update);
+            typeRef.child("fields/" + key).set(true);
             typeRef.child("updated").set(db.TIMESTAMP);
             
             ctrl.edit = key;
