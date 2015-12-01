@@ -16,10 +16,18 @@ module.exports = {
         ctrl.id     = id;
         ctrl.type   = null;
         ctrl.edit   = null;
-        ctrl.recent = {};
+        ctrl.fields = null;
+        ctrl.recent = null;
 
         type.on("value", function(snap) {
             ctrl.type = snap.val();
+
+            m.redraw();
+        });
+
+        // get fields for this type
+        fields.orderByChild("type").equalTo(id).on("value", function(snap) {
+            ctrl.fields = snap.val();
 
             m.redraw();
         });
@@ -30,21 +38,30 @@ module.exports = {
             
             m.redraw();
         });
-        
+
         ctrl.add = function(field, e) {
-            var result;
+            var update = {},
+                key, result;
             
             e.preventDefault();
 
             // Create the field & start editing it
-            result = type.child("fields").push({
-                type : field,
-                name : field
+            result = fields.push({
+                field   : field,
+                name    : field,
+                type    : ctrl.id,
+                updated : db.TIMESTAMP
             });
             
-            ctrl.edit = result.key();
-            
+            key = result.key();
+
+            update[key] = true;
+
+            type.child("fields").update(update);
             type.child("updated").set(db.TIMESTAMP);
+
+            ctrl.edit = key;
+            
         };
 
         ctrl.editing = function(key, e) {
@@ -56,6 +73,7 @@ module.exports = {
         ctrl.remove = function(key, e) {
             e.preventDefault();
             
+            fields.child(key)
             type.child("fields").child(key).remove();
             
             type.child("updated").set(db.TIMESTAMP);
@@ -79,18 +97,21 @@ module.exports = {
                 }),
                 m("hr"),
                 Object.keys(ctrl.type.fields || {}).map(function(key) {
-                    var ref   = db.child("types/" + ctrl.id + "/fields/" + key),
-                        field = ctrl.type.fields[key];
+                    var field = ctrl.fields && ctrl.fields[key];
                     
+                    if(!field) {
+                        return null;
+                    }
+
                     if(ctrl.edit !== key) {
                         return m("div", { onclick : ctrl.editing.bind(ctrl, key) },
-                            m.component(fields.components[field.type].show, { field : ref })
+                            m.component(fields.components[field.field].show, { field : field })
                         );
                     }
 
                     return m("div",
-                        m.component(fields.components[field.type].show, { field : ref }),
-                        m.component(fields.components[field.type].edit, { field : ref }),
+                        m.component(fields.components[field.field].show, { field : field }),
+                        m.component(fields.components[field.field].edit, { ref : db.child("fields/" + key), field : field }),
                         m("button", { onclick : ctrl.remove.bind(ctrl, key) }, "Remove")
                     );
                 })

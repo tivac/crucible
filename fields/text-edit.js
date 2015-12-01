@@ -8,36 +8,26 @@ var m      = require("mithril"),
 
 module.exports = {
     controller : function(options) {
-        var ctrl  = this;
-        
-        ctrl.field = null;
-        
-        options.field.on("value", function(snap) {
-            ctrl.field = snap.val();
-            
-            m.redraw();
-        });
+        var ctrl = this,
+            ref  = options.ref;
         
         ctrl.update = function(name, val) {
             var args = {};
             
-            // This feels gross, FYI
-            options.field.parent().parent().child("updated").set(db.TIMESTAMP);
+            ref.child("updated").set(db.TIMESTAMP);
             
             if(!val) {
-                return options.field.child(name).remove();
+                return ref.child(name).remove();
             }
             
             args[name] = val;
             
-            options.field.update(args);
+            ref.update(args);
         }
     },
 
-    view : function(ctrl) {
-        if(!ctrl.field) {
-            return m.component(loading);
-        }
+    view : function(ctrl, options) {
+        var field = options.field;
 
         return m("ul",
             m("li",
@@ -45,7 +35,7 @@ module.exports = {
                     "Name: ",
                     m("input", {
                         oninput : m.withAttr("value", ctrl.update.bind(ctrl, "name")),
-                        value   : ctrl.field.name || "",
+                        value   : field.name || "",
                         config  : function(el, init) {
                             if(init) {
                                 return;
@@ -61,7 +51,7 @@ module.exports = {
                     "Placeholder: ",
                     m("input", {
                         oninput : m.withAttr("value", ctrl.update.bind(ctrl, "placeholder")),
-                        value   : ctrl.field.placeholder || ""
+                        value   : field.placeholder || ""
                     })
                 )
             ),
@@ -69,7 +59,7 @@ module.exports = {
                 m("label",
                     m("input[type=checkbox]", {
                         onclick : m.withAttr("checked", ctrl.update.bind(ctrl, "disabled")),
-                        checked : ctrl.field.disabled || false
+                        checked : field.disabled || false
                     }),
                     " Disabled"
                 )
@@ -78,7 +68,7 @@ module.exports = {
                 m("label",
                     m("input[type=checkbox]", {
                         onclick : m.withAttr("checked", ctrl.update.bind(ctrl, "readonly")),
-                        checked : ctrl.field.readonly || false
+                        checked : field.readonly || false
                     }),
                     " Read-Only"
                 )

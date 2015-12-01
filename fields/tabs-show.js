@@ -3,13 +3,16 @@
 var m      = require("mithril"),
     assign = require("lodash.assign"),
     
+    db      = require("../lib/firebase"),
     loading = require("./loading");
 
 module.exports = {
     controller : function(options) {
-        var ctrl = this;
+        var ctrl   = this,
+            ref    = options.ref,
+            fields = db.child("fields");
         
-        options.field.on("value", function(snap) {
+        ref.on("value", function(snap) {
             ctrl.field = snap.val();
 
             if(ctrl.field && !ctrl.field.tabs) {
