@@ -30,7 +30,8 @@ module.exports = {
         fieldsRef.orderByChild("type").equalTo(id).on("value", function(snap) {
             ctrl.fields = snap.val();
             
-            m.redraw();
+            // Removed redraw here because it screws up editing cursor position
+            // Unsure if that's a safe move, but seems ok for now?
         });
         
         // get 5 latest entries using this type to display
