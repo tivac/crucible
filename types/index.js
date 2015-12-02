@@ -5,7 +5,8 @@ module.exports = [
     "number",
     "select",
     "tabs",
-    "repeating"
+    "repeating",
+    "instructions"
 ];
 
 module.exports.defaults = {
@@ -49,5 +50,10 @@ module.exports.components = {
     "option" : {
         edit : require("./option-edit"),
         show : require("./option-show")
+    },
+
+    "instructions" : {
+        edit : require("./instructions-edit"),
+        show : require("./instructions-show")
     }
 };
