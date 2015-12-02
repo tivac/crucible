@@ -22,7 +22,7 @@ module.exports = {
             e.preventDefault();
 
             // Create the field & start editing it
-            result = ref.child("fields").push(assign({ type : type }, types.defaults[type]));
+            result = ref.child("fields").push(assign({ type : type }, types.defaults[type] || { name : type }));
             
             ctrl.edit = result.key();
         };
