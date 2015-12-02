@@ -1,6 +1,7 @@
 "use strict";
 
-var m = require("mithril"),
+var m      = require("mithril"),
+    sluggo = require("sluggo"),
 
     db = require("../lib/firebase");
 
@@ -8,20 +9,24 @@ module.exports = {
     controller : function() {
         var ctrl  = this;
 
-        ctrl.name = m.prop("");
+        ctrl.name = "";
+        ctrl.slug = "";
+
+        ctrl.oninput = function(name) {
+            ctrl.name = name;
+            ctrl.slug = sluggo(name);
+        };
 
         ctrl.onsubmit = function(e) {
-            var result;
-
             e.preventDefault();
 
-            result = db.child("schemas/" + ctrl.name()).set({
-                name    : ctrl.name(),
+            db.child("schemas/" + ctrl.slug).set({
+                name    : ctrl.name,
                 created : db.TIMESTAMP,
                 updated : db.TIMESTAMP
             });
 
-            m.route("/schemas/" + result.key());
+            m.route("/schemas/" + ctrl.slug);
         };
     },
 
@@ -29,7 +34,13 @@ module.exports = {
         return [
             m("h1", "Add a Type"),
             m("form", { onsubmit : ctrl.onsubmit },
-                m("input[name=name]", { oninput : m.withAttr("value", ctrl.name), value : ctrl.name() }),
+                m("input[name=name]", {
+                    oninput : m.withAttr("value", ctrl.oninput),
+                    value   : ctrl.name
+                }),
+                m("p",
+                    "Slug: " + ctrl.slug
+                ),
                 m("input[type=submit]", { value : "Add" })
             )
         ];

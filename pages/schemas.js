@@ -24,7 +24,11 @@ module.exports = {
         }
         
         return [
-            m("h1", "schemas"),
+            m("h1", "Schemas"),
+            m("p",
+                m("a[href=/schemas/new]", { config : m.route }, "Create a new Schema")
+            ),
+            m("h2", "Current Schemas"),
             m("ul",
                 Object.keys(ctrl.schemas).map(function(id) {
                     return m("li",
