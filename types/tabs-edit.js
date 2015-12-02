@@ -5,7 +5,9 @@ var m      = require("mithril"),
     set    = require("lodash.set"),
 
     db     = require("../lib/firebase"),
-    types = require("./index");
+    types = require("./index"),
+    
+    css = require("./tabs.css");
 
 module.exports = {
     controller : function(options) {
@@ -13,6 +15,7 @@ module.exports = {
             ref  = options.ref;
         
         ctrl.ref = ref;
+        ctrl.tab = "tab-0";
 
         ctrl.update = function(path, val) {
             ref.child(path).set(val);
@@ -20,11 +23,23 @@ module.exports = {
         };
 
         ctrl.addtab = function(e) {
+            e.preventDefault();
+            
             ref.child("tabs").once("value", function(snap) {
-                snap.ref().child("tab-" + snap.numChildren()).setWithPriority({
+                var id = "tab-" + snap.numChildren();
+                
+                snap.ref().child(id).setWithPriority({
                     name : "Tab"
                 }, snap.numChildren());
+                
+                ctrl.tab = id;
             });
+        };
+        
+        ctrl.switchtab = function(tab, e) {
+            e.preventDefault();
+            
+            ctrl.tab = tab;
         };
     },
 
@@ -49,13 +64,30 @@ module.exports = {
                 )
             ),
             m("div",
-                m("p",
-                    m("button", { onclick : ctrl.addtab }, "Add Tab")
+                m("div", { class : css.nav.join(" ") },
+                    m("ul", { class : css.list.join(" ") },
+                        Object.keys(details.tabs || {}).map(function(key) {
+                            return m("li", { class : css[key === ctrl.tab ? "item-active" : "item"].join(" ") },
+                                m("a", {
+                                    href    : "#" + key,
+                                    class   : css.link.join(" "),
+                                    onclick : ctrl.switchtab.bind(ctrl, key)
+                                }, details.tabs[key].name)
+                            );
+                        }),
+                        m("li", { class : css["item-new"].join(" ") },
+                            m("a", {
+                                href    : "#add-tab",
+                                class   : css.link.join(" "),
+                                onclick : ctrl.addtab
+                            }, "Add Tab")
+                        )
+                    )
                 ),
                 Object.keys(details.tabs || {}).map(function(key) {
                     var tab = details.tabs[key];
 
-                    return m("div",
+                    return m("div", { class : css[key === ctrl.tab ? "contents-active" : "contents"].join(" ") },
                         m("p",
                             m("label",
                                 "Tab Name: ",

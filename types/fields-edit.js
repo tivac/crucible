@@ -71,7 +71,8 @@ module.exports = {
                 }
 
                 if(key !== ctrl.edit) {
-                    return m("div", { key : "show-" + key, "data-key" : key, onclick : m.withAttr("data-key", ctrl.editing) },
+                    return m("div", { key : "show-" + key },
+                        m("button", { "data-key" : key, onclick : m.withAttr("data-key", ctrl.editing) }, "Edit"),
                         m.component(types.components[field.type].show, { details : field })
                     );
                 }

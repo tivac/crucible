@@ -1,0 +1,48 @@
+.nav {
+    composes: global(pure-menu), global(pure-menu-horizontal);
+}
+
+.list {
+    composes: global(pure-menu-list);
+}
+
+.item {
+    composes: global(pure-menu-item);
+    
+    border: 1px solid #000;
+    border-bottom: 0;
+    border-right: 0;
+}
+
+.item:last-child {
+    border-right: 1px solid #000;
+}
+
+.item-new {
+    composes: item;
+    
+    border: 0;
+}
+
+.item-active {
+    composes: item, global(pure-menu-selected);
+    
+    background: #DDD;
+}
+
+.link {
+    composes: global(pure-menu-link);
+}
+
+.contents {
+    border: 1px solid #000;
+    padding: 10px;
+    
+    display: none;
+}
+
+.contents-active {
+    composes: contents;
+    
+    display: block;
+}
