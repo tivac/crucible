@@ -2,7 +2,7 @@
 
 var m = require("mithril"),
     
-    fields = require("../fields"),
+    types  = require("../types"),
     db     = require("../lib/firebase");
 
 module.exports = {

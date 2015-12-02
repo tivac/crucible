@@ -15,12 +15,13 @@ module.exports = {
     },
 
     view : function(ctrl, options) {
-        var field = options.field;
+        var details = options.details;
 
-        return m("label", field.name + ": ",
-            m("input", assign({}, field.attrs || {}, { value : options.data || "" }, {
-                oninput : m.withAttr("value", ctrl.oninput)
-            }))
+        return m("label", details.name + ": ",
+            m("input", assign(
+                { value : options.data || "", oninput : m.withAttr("value", ctrl.oninput) },
+                details.attrs || {}
+            ))
         );
     }
 };

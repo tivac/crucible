@@ -8,7 +8,8 @@ module.exports = [
 ];
 
 module.exports.defaults = {
-    text : require("./text-defaults")
+    text : require("./text-defaults"),
+    tabs : require("./tabs-defaults")
 };
 
 module.exports.components = {
@@ -30,5 +31,10 @@ module.exports.components = {
     "tabs" : {
         edit : require("./tabs-edit"),
         show : require("./tabs-show")
+    },
+
+    "collection" : {
+        edit : require("./collection-edit"),
+        show : require("./collection-show")
     }
 };

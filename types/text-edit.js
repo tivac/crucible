@@ -13,21 +13,21 @@ module.exports = {
             ref  = options.ref;
         
         ctrl.update = function(path, val) {
-            ref.child("updated").set(db.TIMESTAMP);
             ref.child(path).set(val);
-        }
+            options.root.child("updated").set(db.TIMESTAMP);
+        };
     },
 
     view : function(ctrl, options) {
-        var field = options.field;
+        var details = options.details;
         
         return m("ul",
             m("li",
                 m("label",
                     "Name: ",
                     m("input", {
+                        value   : details.name || "",
                         oninput : m.withAttr("value", ctrl.update.bind(ctrl, "name")),
-                        value   : field.name || "",
                         config  : function(el, init) {
                             if(init) {
                                 return;
@@ -43,7 +43,7 @@ module.exports = {
                     "Placeholder: ",
                     m("input", {
                         oninput : m.withAttr("value", ctrl.update.bind(ctrl, "attrs/placeholder")),
-                        value   : field.attrs.placeholder || ""
+                        value   : details.attrs.placeholder || ""
                     })
                 )
             ),
@@ -51,7 +51,7 @@ module.exports = {
                 m("label",
                     m("input[type=checkbox]", {
                         onclick : m.withAttr("checked", ctrl.update.bind(ctrl, "attrs/disabled")),
-                        checked : field.attrs.disabled || false
+                        checked : details.attrs.disabled || false
                     }),
                     " Disabled"
                 )
@@ -60,7 +60,7 @@ module.exports = {
                 m("label",
                     m("input[type=checkbox]", {
                         onclick : m.withAttr("checked", ctrl.update.bind(ctrl, "attrs/readonly")),
-                        checked : field.attrs.readonly || false
+                        checked : details.attrs.readonly || false
                     }),
                     " Read-Only"
                 )

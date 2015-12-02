@@ -7,20 +7,22 @@ var m = require("mithril"),
 module.exports = {
     controller : function() {
         var ctrl  = this,
-            types = db.child("types");
+            ref   = db.child("schemas");
 
         ctrl.name = m.prop("");
 
         ctrl.onsubmit = function(e) {
-            var id;
+            var result;
 
             e.preventDefault();
 
-            id = types.push({
-                name : ctrl.name()
+            result = ref.push({
+                name    : ctrl.name(),
+                created : db.TIMESTAMP,
+                updated : db.TIMESTAMP
             });
 
-            m.route("/types/" + id.key());
+            m.route("/types/" + result.key());
         };
     },
 
