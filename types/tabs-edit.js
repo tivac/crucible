@@ -20,11 +20,11 @@ module.exports = {
         };
 
         ctrl.addtab = function(e) {
-            e.preventDefault();
-
-            ref.child("tabs").push().setWithPriority({
-                name : "Tab"
-            }, 9999);
+            ref.child("tabs").once("value", function(snap) {
+                snap.ref().child("tab-" + snap.numChildren()).setWithPriority({
+                    name : "Tab"
+                }, snap.numChildren());
+            });
         };
     },
 
