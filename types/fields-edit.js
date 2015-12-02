@@ -17,14 +17,21 @@ module.exports = {
 
         // Add a new field to this collection
         ctrl.add = function(type, e) {
-            var result;
-
             e.preventDefault();
-
-            // Create the field & start editing it
-            result = ref.child("fields").push(assign({ type : type }, types.defaults[type] || { name : type }));
             
-            ctrl.edit = result.key();
+            // Create the field & start editing it
+            ref.child("fields").once("value", function(snap) {
+                var key = type + "-" + snap.numChildren();
+                
+                ref.child("fields/" + key).setWithPriority(
+                    assign({ type : type }, types.defaults[type] || { name : type }),
+                    snap.numChildren()
+                );
+                
+                ctrl.edit = key;
+                
+                m.redraw();
+            });
         };
 
         // Remove the targetted field
