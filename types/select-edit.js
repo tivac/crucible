@@ -1,82 +1,39 @@
 "use strict";
 
 var m      = require("mithril"),
-    
-    db      = require("../lib/firebase"),
-    loading = require("./loading");
+
+    db     = require("../lib/firebase"),
+    update = require("../lib/update"),
+    fields = require("./");
 
 module.exports = {
     controller : function(options) {
-        var ctrl  = this;
+        var ctrl = this,
+            ref  = options.ref;
         
-        ctrl.field = null;
-        
-        options.field.on("value", function(snap) {
-            ctrl.field = snap.val();
-            
-            if(!ctrl.field.options) {
-                ctrl.field.options = {};
-            }
-            
-            m.redraw();
-        });
-        
-        ctrl.update = function(name, value) {
-            var args = {};
-            
-            // This feels gross, FYI
-            options.field.parent().parent().child("updated").set(db.TIMESTAMP);
-            
-            if(!value) {
-                return options.field.child(name).remove();
-            }
-            
-            args[name] = value;
-            
-            options.field.update(args);
-        };
-        
-        ctrl.option = function(key, field, value) {
-            var ref = options.field.child("options");
-            
-            // Selected is a radio button, so clear everyone else out
-            if(field === "selected") {
-                ref.orderByChild(field).equalTo(true).once("child_added", function(snap) {
-                    if(snap.key() === key) {
-                        return;
-                    }
-                    
-                    ref.child(snap.key()).update({
-                        selected : false
-                    });
-                });
-            }
-            
-            ref.child(key + "/" + field).set(value);
-        };
-        
-        ctrl.add = function(e) {
+        ctrl.addoption = function(e) {
             e.preventDefault();
             
-            options.field.child("options").push({
-                name  : "",
-                value : ""
+            ref.child("options").once("value", function(snap) {
+                var id = "option-" + snap.numChildren();
+
+                snap.ref().child(id).setWithPriority({
+                    name  : "Option"
+                }, snap.numChildren());
             });
         };
     },
 
-    view : function(ctrl) {
-        if(!ctrl.field) {
-            return m.component(loading);
-        }
+    view : function(ctrl, options) {
+        var details = options.details;
 
         return m("ul",
             m("li",
                 m("label",
                     "Name: ",
                     m("input", {
-                        oninput : m.withAttr("value", ctrl.update.bind(ctrl, "name")),
-                        value   : ctrl.field.name || "",
+                        oninput : m.withAttr("value", update.bind(null, options.ref, "name")),
+                        value   : details.name || "",
                         config  : function(el, init) {
                             if(init) {
                                 return;
@@ -90,17 +47,17 @@ module.exports = {
             m("li",
                 m("label",
                     "Size: ",
-                    m("input[type=number][min=0][max=100][step=1]", {
-                        oninput : m.withAttr("value", ctrl.update.bind(ctrl, "size")),
-                        value   : ctrl.field.size || 0
+                    m("input[type=number][min=1][max=100][step=1]", {
+                        oninput : m.withAttr("value", update.bind(null, options.ref, "attrs/size")),
+                        value   : details.attrs.size
                     })
                 )
             ),
             m("li",
                 m("label",
                     m("input[type=checkbox]", {
-                        onclick : m.withAttr("checked", ctrl.update.bind(ctrl, "disabled")),
-                        checked : ctrl.field.disabled || false
+                        onclick : m.withAttr("checked", update.bind(null, options.ref, "attrs/disabled")),
+                        checked : details.attrs.disabled || false
                     }),
                     " Disabled"
                 )
@@ -108,8 +65,8 @@ module.exports = {
             m("li",
                 m("label",
                     m("input[type=checkbox]", {
-                        onclick : m.withAttr("checked", ctrl.update.bind(ctrl, "readonly")),
-                        checked : ctrl.field.readonly || false
+                        onclick : m.withAttr("checked", update.bind(null, options.ref, "attrs/readonly")),
+                        checked : details.attrs.readonly || false
                     }),
                     " Read-Only"
                 )
@@ -117,44 +74,24 @@ module.exports = {
             m("li",
                 m("label",
                     m("input[type=checkbox]", {
-                        onclick : m.withAttr("checked", ctrl.update.bind(ctrl, "multiple")),
-                        checked : ctrl.field.multiple || false
+                        onclick : m.withAttr("checked", update.bind(null, options.ref, "attrs/multiple")),
+                        checked : details.attrs.multiple || false
                     }),
                     " Multiple selection allowed"
                 )
             ),
             m("hr"),
             m("ul",
-                Object.keys(ctrl.field.options).map(function(key) {
-                    var option = ctrl.field.options[key];
-                    
+                Object.keys(details.options || {}).map(function(key) {
                     return m("li",
-                        m("label",
-                            "Name: ",
-                            m("input", {
-                                value   : option.name || "",
-                                oninput : m.withAttr("value", ctrl.option.bind(ctrl, key, "name"))
-                            })
-                        ),
-                        m("label",
-                            "Value: ",
-                            m("input", {
-                                value   : option.value || "",
-                                oninput : m.withAttr("value", ctrl.option.bind(ctrl, key, "value"))
-                            })
-                        ),
-                        m("label",
-                            m("input[type=radio]", {
-                                name    : key + "-selected",
-                                onclick : m.withAttr("checked", ctrl.option.bind(ctrl, key, "selected")),
-                                checked : option.selected || false
-                            }),
-                            " Default selection?"
-                        )
+                        m.component(fields.components.option.edit, {
+                            details : details.options[key],
+                            ref     : options.ref.child("options/" + key)
+                        })
                     );
                 })
             ),
-            m("button", { onclick : ctrl.add }, "Add Option")
+            m("button", { onclick : ctrl.addoption }, "Add Option")
         );
     }
 };

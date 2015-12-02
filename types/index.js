@@ -11,7 +11,8 @@ module.exports = [
 module.exports.defaults = {
     text   : require("./text-defaults"),
     number : require("./number-defaults"),
-    tabs   : require("./tabs-defaults")
+    tabs   : require("./tabs-defaults"),
+    select : require("./select-defaults")
 };
 
 module.exports.components = {
@@ -43,5 +44,10 @@ module.exports.components = {
     "repeating" : {
         edit : require("./repeating-edit"),
         show : require("./repeating-show")
+    },
+
+    "option" : {
+        edit : require("./option-edit"),
+        show : require("./option-show")
     }
 };
