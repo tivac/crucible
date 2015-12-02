@@ -6,8 +6,7 @@ var m = require("mithril"),
 
 module.exports = {
     controller : function() {
-        var ctrl  = this,
-            ref   = db.child("schemas");
+        var ctrl  = this;
 
         ctrl.name = m.prop("");
 
@@ -16,13 +15,13 @@ module.exports = {
 
             e.preventDefault();
 
-            result = ref.push({
+            result = db.child("schemas/" + ctrl.name()).set({
                 name    : ctrl.name(),
                 created : db.TIMESTAMP,
                 updated : db.TIMESTAMP
             });
 
-            m.route("/types/" + result.key());
+            m.route("/schemas/" + result.key());
         };
     },
 

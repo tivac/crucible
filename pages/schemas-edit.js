@@ -21,7 +21,7 @@ module.exports = {
 
         ref.on("value", function(snap) {
             ctrl.schema = snap.val();
-
+            
             m.redraw();
         });
 
