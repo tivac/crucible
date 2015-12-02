@@ -9,8 +9,9 @@ module.exports = [
 ];
 
 module.exports.defaults = {
-    text : require("./text-defaults"),
-    tabs : require("./tabs-defaults")
+    text   : require("./text-defaults"),
+    number : require("./number-defaults"),
+    tabs   : require("./tabs-defaults")
 };
 
 module.exports.components = {

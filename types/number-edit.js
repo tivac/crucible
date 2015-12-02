@@ -8,36 +8,17 @@ var m      = require("mithril"),
 
 module.exports = {
     controller : function(options) {
-        var ctrl  = this;
+        var ctrl = this,
+            ref  = options.ref;
         
-        ctrl.field = null;
-        
-        options.field.on("value", function(snap) {
-            ctrl.field = snap.val();
-            
-            m.redraw();
-        });
-        
-        ctrl.update = function(name, val) {
-            var args = {};
-            
-            // This feels gross, FYI
-            options.field.parent().parent().child("updated").set(db.TIMESTAMP);
-            
-            if(!val) {
-                return options.field.child(name).remove();
-            }
-            
-            args[name] = val;
-            
-            options.field.update(args);
-        }
+        ctrl.update = function(path, val) {
+            ref.child(path).set(val);
+            options.root.child("updated").set(db.TIMESTAMP);
+        };
     },
 
-    view : function(ctrl) {
-        if(!ctrl.field) {
-            return m.component(loading);
-        }
+    view : function(ctrl, options) {
+        var details = options.details;
 
         return m("ul",
             m("li",
@@ -45,7 +26,7 @@ module.exports = {
                     "Name: ",
                     m("input", {
                         oninput : m.withAttr("value", ctrl.update.bind(ctrl, "name")),
-                        value   : ctrl.field.name || "",
+                        value   : details.name || "",
                         config  : function(el, init) {
                             if(init) {
                                 return;
@@ -60,8 +41,8 @@ module.exports = {
                 m("label",
                     "Placeholder: ",
                     m("input", {
-                        oninput : m.withAttr("value", ctrl.update.bind(ctrl, "placeholder")),
-                        value   : ctrl.field.placeholder || ""
+                        oninput : m.withAttr("value", ctrl.update.bind(ctrl, "attrs/placeholder")),
+                        value   : details.attrs.placeholder || ""
                     })
                 )
             ),
@@ -69,8 +50,8 @@ module.exports = {
                 m("label",
                     "Min: ",
                     m("input[type=number]", {
-                        oninput : m.withAttr("value", ctrl.update.bind(ctrl, "min")),
-                        value   : ctrl.field.min || ""
+                        oninput : m.withAttr("value", ctrl.update.bind(ctrl, "attrs/min")),
+                        value   : details.attrs.min || ""
                     })
                 )
             ),
@@ -78,8 +59,8 @@ module.exports = {
                 m("label",
                     "Max: ",
                     m("input[type=number]", {
-                        oninput : m.withAttr("value", ctrl.update.bind(ctrl, "max")),
-                        value   : ctrl.field.max || ""
+                        oninput : m.withAttr("value", ctrl.update.bind(ctrl, "attrs/max")),
+                        value   : details.attrs.max || ""
                     })
                 )
             ),
@@ -87,16 +68,16 @@ module.exports = {
                 m("label",
                     "Step: ",
                     m("input[type=number]", {
-                        oninput : m.withAttr("value", ctrl.update.bind(ctrl, "step")),
-                        value   : ctrl.field.step || ""
+                        oninput : m.withAttr("value", ctrl.update.bind(ctrl, "attrs/step")),
+                        value   : details.attrs.step || ""
                     })
                 )
             ),
             m("li",
                 m("label",
                     m("input[type=checkbox]", {
-                        onclick : m.withAttr("checked", ctrl.update.bind(ctrl, "disabled")),
-                        checked : ctrl.field.disabled || false
+                        onclick : m.withAttr("checked", ctrl.update.bind(ctrl, "attrs/disabled")),
+                        checked : details.attrs.disabled || false
                     }),
                     " Disabled"
                 )
@@ -104,8 +85,8 @@ module.exports = {
             m("li",
                 m("label",
                     m("input[type=checkbox]", {
-                        onclick : m.withAttr("checked", ctrl.update.bind(ctrl, "readonly")),
-                        checked : ctrl.field.readonly || false
+                        onclick : m.withAttr("checked", ctrl.update.bind(ctrl, "attrs/readonly")),
+                        checked : details.attrs.readonly || false
                     }),
                     " Read-Only"
                 )
