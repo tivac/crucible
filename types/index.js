@@ -33,8 +33,8 @@ module.exports.components = {
         show : require("./tabs-show")
     },
 
-    "collection" : {
-        edit : require("./collection-edit"),
-        show : require("./collection-show")
+    "fields" : {
+        edit : require("./fields-edit"),
+        show : require("./fields-show")
     }
 };

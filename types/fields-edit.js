@@ -71,12 +71,12 @@ module.exports = {
                 
                 return m("div", { key : "edit-" + key },
                     m.component(types.components[field.type].show, { details : field }),
+                    m("button", { "data-key" : key, onclick : m.withAttr("data-key", ctrl.remove) }, "Remove"),
                     m.component(types.components[field.type].edit, {
                         details : field,
                         root    : options.root,
                         ref     : ctrl.ref.child("fields/" + key)
-                    }),
-                    m("button", { "data-key" : key, onclick : m.withAttr("data-key", ctrl.remove) }, "Remove")
+                    })
                 );
             })
         );

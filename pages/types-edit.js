@@ -48,7 +48,7 @@ module.exports = {
                     );
                 })
             ),
-            m.component(types.components.collection.edit, {
+            m.component(types.components.fields.edit, {
                 details : ctrl.schema,
                 root    : ctrl.ref,
                 ref     : ctrl.ref

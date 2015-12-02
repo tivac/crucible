@@ -65,7 +65,7 @@ module.exports = {
                                 })
                             )
                         ),
-                        m.component(types.components.collection.edit, {
+                        m.component(types.components.fields.edit, {
                             details : tab,
                             root    : options.root,
                             ref     : options.ref.child("tabs/" + key)
