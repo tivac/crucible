@@ -4,7 +4,8 @@ module.exports = [
     "text",
     "number",
     "select",
-    "tabs"
+    "tabs",
+    "repeating"
 ];
 
 module.exports.defaults = {
@@ -36,5 +37,10 @@ module.exports.components = {
     "fields" : {
         edit : require("./fields-edit"),
         show : require("./fields-show")
+    },
+
+    "repeating" : {
+        edit : require("./repeating-edit"),
+        show : require("./repeating-show")
     }
 };
