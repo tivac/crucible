@@ -25,6 +25,15 @@ module.exports = {
             m.redraw();
         });
 
+        // Ensure the updated timestamp is always accurate-ish
+        ref.on("child_changed", function(snap) {
+            if(snap.key() === "updated") {
+                return;
+            }
+
+            ref.child("updated").set(db.TIMESTAMP);
+        });
+
         // get 5 latest entries using this type to display
         db.child("content").orderByChild("type").equalTo(id).limitToLast(5).on("value", function(snap) {
             ctrl.recent = snap.val();
@@ -50,7 +59,6 @@ module.exports = {
             ),
             m.component(types.components.fields.edit, {
                 details : ctrl.schema,
-                root    : ctrl.ref,
                 ref     : ctrl.ref
             })
         ];
