@@ -65,11 +65,6 @@ module.exports = {
                     return null;
                 }
                 
-                // Firebase won't populate an empty object, so make sure this exists
-                if(!field.attrs) {
-                    field.attrs = {};
-                }
-
                 if(key !== ctrl.edit) {
                     return m("div", { key : "show-" + key },
                         m("button", { "data-key" : key, onclick : m.withAttr("data-key", ctrl.editing) }, "Edit"),
@@ -82,7 +77,6 @@ module.exports = {
                     m("button", { "data-key" : key, onclick : m.withAttr("data-key", ctrl.remove) }, "Remove"),
                     m.component(types.components[field.type].edit, {
                         details : field,
-                        root    : options.root,
                         ref     : ctrl.ref.child("fields/" + key)
                     })
                 );

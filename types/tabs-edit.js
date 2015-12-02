@@ -5,7 +5,8 @@ var m      = require("mithril"),
     set    = require("lodash.set"),
 
     db     = require("../lib/firebase"),
-    types = require("./index"),
+    update = require("../lib/update"),
+    types  = require("./index"),
     
     css = require("./tabs.css");
 
@@ -14,13 +15,7 @@ module.exports = {
         var ctrl = this,
             ref  = options.ref;
         
-        ctrl.ref = ref;
         ctrl.tab = "tab-0";
-
-        ctrl.update = function(path, val) {
-            ref.child(path).set(val);
-            options.root.child("updated").set(db.TIMESTAMP);
-        };
 
         ctrl.addtab = function(e) {
             e.preventDefault();
@@ -51,7 +46,7 @@ module.exports = {
                 m("label",
                     "Name: ",
                     m("input", {
-                        oninput : m.withAttr("value", ctrl.update.bind(ctrl, "name")),
+                        oninput : m.withAttr("value", update.bind(null, options.ref, "name")),
                         value   : details.name || "",
                         config  : function(el, init) {
                             if(init) {
@@ -93,13 +88,12 @@ module.exports = {
                                 "Tab Name: ",
                                 m("input", {
                                     value   : tab.name || "",
-                                    oninput : m.withAttr("value", ctrl.update.bind(ctrl, "tabs/" + key + "/name"))
+                                    oninput : m.withAttr("value", update.bind(null, options.ref, "tabs/" + key + "/name"))
                                 })
                             )
                         ),
                         m.component(types.components.fields.edit, {
                             details : tab,
-                            root    : options.root,
                             ref     : options.ref.child("tabs/" + key)
                         })
                     );

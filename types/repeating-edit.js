@@ -5,21 +5,10 @@ var m      = require("mithril"),
     set    = require("lodash.set"),
 
     db     = require("../lib/firebase"),
-    types = require("./index");
+    update = require("../lib/update"),
+    types  = require("./index");
 
 module.exports = {
-    controller : function(options) {
-        var ctrl = this,
-            ref  = options.ref;
-        
-        ctrl.ref = ref;
-
-        ctrl.update = function(path, val) {
-            ref.child(path).set(val);
-            options.root.child("updated").set(db.TIMESTAMP);
-        };
-    },
-
     view : function(ctrl, options) {
         var details = options.details;
 
@@ -28,7 +17,7 @@ module.exports = {
                 m("label",
                     "Name: ",
                     m("input", {
-                        oninput : m.withAttr("value", ctrl.update.bind(ctrl, "name")),
+                        oninput : m.withAttr("value", update.bind(null, options.ref, "name")),
                         value   : details.name || "",
                         config  : function(el, init) {
                             if(init) {
@@ -44,14 +33,13 @@ module.exports = {
                 m("label",
                     "Max: ",
                     m("input[type=number]", {
-                        oninput : m.withAttr("value", ctrl.update.bind(ctrl, "max")),
+                        oninput : m.withAttr("value", update.bind(null, options.ref, "max")),
                         value   : details.max || ""
                     })
                 )
             ),
             m.component(types.components.fields.edit, {
                 details : details,
-                root    : options.root,
                 ref     : options.ref
             })
         );

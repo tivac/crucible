@@ -3,20 +3,9 @@
 var m      = require("mithril"),
     assign = require("lodash.assign"),
     
-    db      = require("../lib/firebase"),
-    loading = require("./loading");
+    update = require("../lib/update");
 
 module.exports = {
-    controller : function(options) {
-        var ctrl = this,
-            ref  = options.ref;
-        
-        ctrl.update = function(path, val) {
-            ref.child(path).set(val);
-            options.root.child("updated").set(db.TIMESTAMP);
-        };
-    },
-
     view : function(ctrl, options) {
         var details = options.details;
 
@@ -25,7 +14,7 @@ module.exports = {
                 m("label",
                     "Name: ",
                     m("input", {
-                        oninput : m.withAttr("value", ctrl.update.bind(ctrl, "name")),
+                        oninput : m.withAttr("value", update.bind(null, options.ref, "name")),
                         value   : details.name || "",
                         config  : function(el, init) {
                             if(init) {
@@ -41,7 +30,7 @@ module.exports = {
                 m("label",
                     "Placeholder: ",
                     m("input", {
-                        oninput : m.withAttr("value", ctrl.update.bind(ctrl, "attrs/placeholder")),
+                        oninput : m.withAttr("value", update.bind(null, options.ref, "attrs/placeholder")),
                         value   : details.attrs.placeholder || ""
                     })
                 )
@@ -50,7 +39,7 @@ module.exports = {
                 m("label",
                     "Min: ",
                     m("input[type=number]", {
-                        oninput : m.withAttr("value", ctrl.update.bind(ctrl, "attrs/min")),
+                        oninput : m.withAttr("value", update.bind(null, options.ref, "attrs/min")),
                         value   : details.attrs.min || ""
                     })
                 )
@@ -59,7 +48,7 @@ module.exports = {
                 m("label",
                     "Max: ",
                     m("input[type=number]", {
-                        oninput : m.withAttr("value", ctrl.update.bind(ctrl, "attrs/max")),
+                        oninput : m.withAttr("value", update.bind(null, options.ref, "attrs/max")),
                         value   : details.attrs.max || ""
                     })
                 )
@@ -68,7 +57,7 @@ module.exports = {
                 m("label",
                     "Step: ",
                     m("input[type=number]", {
-                        oninput : m.withAttr("value", ctrl.update.bind(ctrl, "attrs/step")),
+                        oninput : m.withAttr("value", update.bind(null, options.ref, "attrs/step")),
                         value   : details.attrs.step || ""
                     })
                 )
@@ -76,7 +65,7 @@ module.exports = {
             m("li",
                 m("label",
                     m("input[type=checkbox]", {
-                        onclick : m.withAttr("checked", ctrl.update.bind(ctrl, "attrs/disabled")),
+                        onclick : m.withAttr("checked", update.bind(null, options.ref, "attrs/disabled")),
                         checked : details.attrs.disabled || false
                     }),
                     " Disabled"
@@ -85,7 +74,7 @@ module.exports = {
             m("li",
                 m("label",
                     m("input[type=checkbox]", {
-                        onclick : m.withAttr("checked", ctrl.update.bind(ctrl, "attrs/readonly")),
+                        onclick : m.withAttr("checked", update.bind(null, options.ref, "attrs/readonly")),
                         checked : details.attrs.readonly || false
                     }),
                     " Read-Only"
