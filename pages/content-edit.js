@@ -3,7 +3,8 @@
 var m = require("mithril"),
     
     types  = require("../types"),
-    db     = require("../lib/firebase");
+    db     = require("../lib/firebase"),
+    update = require("../lib/update");
 
 module.exports = {
     controller : function() {
@@ -55,7 +56,7 @@ module.exports = {
         }
 
         return [
-            m("h1", "Content - Editing \"" + (ctrl.entry.name || "") + "\""),
+            m("h1", "Content - Editing \"" + (ctrl.entry._name || "") + "\""),
             
             m("div",
                 m("label",
@@ -63,6 +64,17 @@ module.exports = {
                     m("a", { href : "/schemas/" + ctrl.entry._schema, config : m.route }, ctrl.schema.name)
                 )
             ),
+            m("hr"),
+            m("div",
+                m("label",
+                    "Name: ",
+                    m("input", {
+                        value   : ctrl.entry._name || "",
+                        oninput : m.withAttr("value", update.bind(null, ctrl.ref, "_name"))
+                    })
+                )
+            ),
+            m("br"),
             m.component(types.components.fields.show, { details : ctrl.schema, ref : ctrl.ref, data : ctrl.entry })
         ];
     }

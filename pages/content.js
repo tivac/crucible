@@ -14,7 +14,7 @@ module.exports = {
             ctrl.schemas = snap.val() || {};
 
             snap.forEach(function(schema) {
-                db.child("content").orderByChild("schema").equalTo(schema.key()).on("value", function(content) {
+                db.child("content").orderByChild("_schema").equalTo(schema.key()).on("value", function(content) {
                     ctrl.content[schema.key()] = content.val();
 
                     m.redraw();
@@ -49,7 +49,7 @@ module.exports = {
                             var content = ctrl.content[schemaKey][contentKey];
 
                             return m("li",
-                                m("a", { href : "/content/" + schemaKey + "/" + contentKey, config : m.route }, content.name)
+                                m("a", { href : "/content/" + schemaKey + "/" + contentKey, config : m.route }, content._name)
                             );
                         })
                     )

@@ -57,6 +57,7 @@ module.exports = {
                     );
                 })
             ),
+            m("hr"),
             m.component(types.components.fields.edit, {
                 details : ctrl.schema,
                 ref     : ctrl.ref
