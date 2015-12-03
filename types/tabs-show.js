@@ -46,7 +46,7 @@ module.exports = {
 
                         return m("div",
                             m.component(types.components[field.type].show, {
-                                ref     : options.ref.child(key).child(fieldKey),
+                                ref     : options.ref && options.ref.child(key).child(fieldKey),
                                 data    : get(options.data, key + "." + fieldKey),
                                 details : field
                             })

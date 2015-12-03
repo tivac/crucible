@@ -1,16 +1,11 @@
 "use strict";
 
-var m = require("mithril"),
+var m   = require("mithril"),
+    get = require("lodash.get"),
 
-    types = require("../types"),
-    db    = require("../lib/firebase");
+    types = require("../types");
 
 module.exports = {
-    controller : function(options) {
-        var ctrl = this,
-            ref  = options.ref;
-    },
-
     view : function(ctrl, options) {
         var details = options.details;
 
@@ -21,8 +16,8 @@ module.exports = {
                 return m("div", { key : "show-" + key },
                     m.component(types.components[field.type].show, {
                         details : field,
-                        data    : options.data[key],
-                        ref     : options.ref.child(key)
+                        data    : get(options, "data." + key),
+                        ref     : options.ref && options.ref.child(key)
                     })
                 );
             })
