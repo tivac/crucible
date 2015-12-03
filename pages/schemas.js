@@ -6,12 +6,9 @@ var m = require("mithril"),
 
 module.exports = {
     controller : function() {
-        var ctrl  = this,
-            schemas = db.child("schemas");
+        var ctrl = this;
         
-        ctrl.schemas = null;
-        
-        schemas.on("value", function(snap) {
+        db.child("schemas").on("value", function(snap) {
             ctrl.schemas = snap.val();
             
             m.redraw();
@@ -19,10 +16,6 @@ module.exports = {
     },
 
     view : function(ctrl) {
-        if(!ctrl.schemas) {
-            return m("LOADING");
-        }
-        
         return [
             m("h1", "Schemas"),
             m("p",
@@ -30,7 +23,7 @@ module.exports = {
             ),
             m("h2", "Current Schemas"),
             m("ul",
-                Object.keys(ctrl.schemas).map(function(id) {
+                Object.keys(ctrl.schemas || {}).map(function(id) {
                     return m("li",
                         m("a", { href : "/schemas/" + id, config : m.route }, ctrl.schemas[id].name)
                     );
