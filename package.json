@@ -6,7 +6,7 @@
   "scripts": {
     "build": "browserify ./index.js -o ./gen/client.js -p [ modular-css --css \"./gen/client.css\" ]",
     "watch": "watchify ./index.js -o ./gen/client.js -p [ modular-css --css \"./gen/client.css\" ]",
-    "start": "wzrd index.js --pushstate -- -p [ modular-css --css \"./gen/client.css\" ]"
+    "start": "beefy index.js 9966 --live --index=./index.html -- -p [ modular-css --css \"./gen/client.css\" ]"
   },
   "keywords": [
     "cms",
@@ -19,7 +19,7 @@
     "browserify": "^12.0.1",
     "modular-css": "^0.5.1",
     "watchify": "^3.6.1",
-    "wzrd": "^1.3.1"
+    "beefy": "^2.1.5"
   },
   "dependencies": {
     "firebase": "^2.3.2",
