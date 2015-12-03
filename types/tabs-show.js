@@ -2,8 +2,8 @@
 
 var m      = require("mithril"),
     assign = require("lodash.assign"),
+    get    = require("lodash.get"),
     
-    db    = require("../lib/firebase"),
     types = require("./index"),
     
     css = require("./tabs.css");
@@ -45,7 +45,11 @@ module.exports = {
                         var field = tab.fields[fieldKey];
 
                         return m("div",
-                            m.component(types.components[field.type].show, { details : field })
+                            m.component(types.components[field.type].show, {
+                                ref     : options.ref.child(key).child(fieldKey),
+                                data    : get(options.data, key + "." + fieldKey),
+                                details : field
+                            })
                         );
                     })
                 );
