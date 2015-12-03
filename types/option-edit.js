@@ -49,7 +49,7 @@ module.exports = {
                 m("label",
                     "Value: ",
                     m("input", {
-                        value   : details.value || "",
+                        value   : details.attrs.value || "",
                         oninput : m.withAttr("value", update.bind(null, options.ref, "attrs/value"))
                     })
                 )
@@ -58,8 +58,8 @@ module.exports = {
                 m("label",
                     m("input[type=radio]", {
                         name    : key + "-selected",
-                        checked : details.attrs.selected || false,
-                        onclick : m.withAttr("checked", ctrl.selected.bind(null, options.ref, "attrs/selected"))
+                        checked : details.selected || false,
+                        onclick : m.withAttr("checked", ctrl.selected.bind(null, options.ref, "selected"))
                     }),
                     " Default selection?"
                 )
