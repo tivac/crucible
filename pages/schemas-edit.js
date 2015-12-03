@@ -11,6 +11,15 @@ var m      = require("mithril"),
 
 // Require codemirror extra JS bits and bobs so it works
 require("codemirror/mode/javascript/javascript");
+require("codemirror/addon/dialog/dialog");
+require("codemirror/addon/search/searchcursor");
+require("codemirror/addon/search/search");
+require("codemirror/addon/search/matchesonscrollbar");
+require("codemirror/addon/edit/matchbrackets");
+require("codemirror/addon/edit/closebrackets");
+require("codemirror/addon/fold/foldcode");
+require("codemirror/addon/fold/foldgutter");
+require("codemirror/addon/fold/brace-fold");
 require("codemirror/addon/lint/lint");
 require("../lib/cm-json-lint");
 
@@ -54,10 +63,11 @@ module.exports = {
             ctrl.editor = Editor.fromTextArea(el, {
                 mode         : "application/json",
                 lint         : true,
-                gutters      : [ "CodeMirror-lint-markers" ],
+                gutters      : [ "CodeMirror-lint-markers", "CodeMirror-foldgutter" ],
                 lineNumbers  : true,
                 indentUnit   : 4,
-                lineWrapping : true
+                lineWrapping : true,
+                foldGutter   : true
             });
 
             ctrl.editor.on("changes", ctrl.editorChanged);
