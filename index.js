@@ -9,6 +9,6 @@ m.route(document.body, "/", {
     "/schemas/new" : require("./pages/schemas-new"),
     "/schemas/:id" : require("./pages/schemas-edit"),
     "/content"     : require("./pages/content"),
-    "/content/new" : require("./pages/content-new"),
-    "/content/:id" : require("./pages/content-edit")
+    
+    "/content/:schema/:id" : require("./pages/content-edit")
 });

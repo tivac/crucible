@@ -6,35 +6,55 @@ var m = require("mithril"),
 
 module.exports = {
     controller : function() {
-        var ctrl    = this,
-            content = db.child("content");
+        var ctrl = this;
         
-        ctrl.content = null;
-        
-        content.on("value", function(snap) {
-            ctrl.content = snap.val() || {};
-            
+        ctrl.content = {};
+
+        db.child("schemas").on("value", function(snap) {
+            ctrl.schemas = snap.val() || {};
+
+            snap.forEach(function(schema) {
+                db.child("content").orderByChild("schema").equalTo(schema.key()).on("value", function(content) {
+                    ctrl.content[schema.key()] = content.val();
+
+                    m.redraw();
+                });
+            });
+
             m.redraw();
         });
+
+        ctrl.add = function(schema) {
+            var result = db.child("content").push({
+                    _schema : schema
+                });
+
+            m.route("/content/" + schema + "/" + result.key());
+        };
     },
 
     view : function(ctrl) {
-        if(!ctrl.content) {
-            return m("h1", "LOADING...");
-        }
-        
         return [
             m("h1", "CONTENT"),
-            m("p",
-                m("a", { href : "/content/new", config : m.route }, "Add Content")
-            ),
-            m("ul",
-                Object.keys(ctrl.content).map(function(id) {
-                    return m("li",
-                        m("a", { href : "/content/" + id, config : m.route }, ctrl.content[id].name)
-                    );
-                })
-            )
+            Object.keys(ctrl.schemas || {}).map(function(schemaKey) {
+                var schema = ctrl.schemas[schemaKey];
+
+                return m("div",
+                    m("h2", schema.name),
+                    m("p",
+                        m("button", { onclick : ctrl.add.bind(ctrl, schemaKey) }, "Add " + schema.name)
+                    ),
+                    m("ul",
+                        Object.keys(ctrl.content[schemaKey] || {}).map(function(contentKey) {
+                            var content = ctrl.content[schemaKey][contentKey];
+
+                            return m("li",
+                                m("a", { href : "/content/" + schemaKey + "/" + contentKey, config : m.route }, content.name)
+                            );
+                        })
+                    )
+                );
+            })
         ];
     }
 };
