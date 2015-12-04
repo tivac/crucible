@@ -9,7 +9,7 @@ module.exports = {
     view : function(ctrl, options) {
         var details = options.details;
         
-        return m("label", details.name + ": ",
+        return m("label", options.name + ": ",
             m("input[type=number]", assign({
                     value   : options.data || "",
                     oninput : options.ref && m.withAttr("value", update.bind(null, options.ref, null))
