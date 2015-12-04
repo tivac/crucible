@@ -14,15 +14,20 @@ module.exports = {
                 var field     = details[key],
                     component = types.components[field.type || field];
                 
+                if(!component) {
+                    return m("div",
+                        m("p", "Unknown component"),
+                        m("pre", JSON.stringify(field, null, 4))
+                    );
+                }
+
                 return m("div",
-                    component ?
-                        m.component(component, {
-                            name    : key,
-                            details : field,
-                            data    : get(options, "data." + key),
-                            ref     : options.ref && options.ref.child(key)
-                        }) :
-                        m("p", "Unknown component: " + JSON.stringify(field, null, 4))
+                    m.component(component, {
+                        name    : key,
+                        details : field,
+                        data    : get(options, "data." + key),
+                        ref     : options.ref && options.ref.child(key)
+                    })
                 );
             })
         );
