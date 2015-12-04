@@ -10,8 +10,8 @@ module.exports = {
         var details = options.details;
 
         return m("div",
-            Object.keys(details.fields || {}).map(function(key) {
-                var field = details.fields[key];
+            Object.keys(details || {}).map(function(key) {
+                var field = details[key];
 
                 return m("div",
                     m.component(types.components[field.type || field], {

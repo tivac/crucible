@@ -130,7 +130,7 @@ module.exports = {
                 ),
 
                 m("div", { class : css.fields.join(" ") },
-                    m.component(types.components.fields, { details : ctrl.schema })
+                    m.component(types.components.fields, { details : ctrl.schema.fields })
                 )
             )
         );
