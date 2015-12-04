@@ -98,6 +98,9 @@ module.exports = {
                 return;
             }
             
+            // TODO: This needs to iterate EVERY CHILD OBJECT
+            // AND USE SET WITH PRIORITY ON EACH
+            // ALSO TODO: There has to be a better way, right?
             Object.keys(config).forEach(function(key, idx) {
                 ref.child("fields").child(key).setWithPriority(config[key], idx);
             });
