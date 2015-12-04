@@ -38,14 +38,14 @@ module.exports = {
             });
         }
         
-        return m("label", details.name + ": ",
+        return m("label", options.name + ": ",
             m("select", assign({
                     onchange : options.ref && m.withAttr("selectedIndex", ctrl.onchange.bind(ctrl, options)),
                     value    : value
                 }, details.attrs),
                 opts.map(function(key) {
                     return m.component(fields.components.option, {
-                        id      : key,
+                        name    : key,
                         details : details.options[key]
                     });
                 })

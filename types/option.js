@@ -7,12 +7,12 @@ module.exports = {
     view : function(ctrl, options) {
         var details = options.details;
         
-        return m("option", assign({
-                // Default value to the name, it can be overridden
-                // in attrs/value
-                value : details.name
-            }, details.attrs),
-            details.name
+        console.log(options);
+        
+        return m("option", {
+                value : options.details || options.name
+            },
+            options.name
         );
     }
 };

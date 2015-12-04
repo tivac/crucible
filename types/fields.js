@@ -13,8 +13,9 @@ module.exports = {
             Object.keys(details.fields || {}).map(function(key) {
                 var field = details.fields[key];
 
-                return m("div", { key : "show-" + key },
-                    m.component(types.components[field.type], {
+                return m("div",
+                    m.component(types.components[field.type || field], {
+                        name    : key,
                         details : field,
                         data    : get(options, "data." + key),
                         ref     : options.ref && options.ref.child(key)

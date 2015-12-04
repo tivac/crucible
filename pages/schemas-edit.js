@@ -1,14 +1,5 @@
 "use strict";
 
-var m      = require("mithril"),
-    assign = require("lodash.assign"),
-    Editor = require("codemirror"),
-
-    types  = require("../types"),
-    db     = require("../lib/firebase"),
-
-    css    = require("./schemas-edit.css");
-
 // Require codemirror extra JS bits and bobs so it works
 require("codemirror/mode/javascript/javascript");
 require("codemirror/addon/dialog/dialog");
@@ -23,6 +14,15 @@ require("codemirror/addon/fold/brace-fold");
 require("codemirror/addon/lint/lint");
 require("../lib/cm-json-lint");
 
+var m      = require("mithril"),
+    assign = require("lodash.assign"),
+    Editor = require("codemirror"),
+
+    types  = require("../types"),
+    db     = require("../lib/firebase"),
+
+    css    = require("./schemas-edit.css");
+
 module.exports = {
     controller : function() {
         var ctrl = this,
@@ -33,7 +33,23 @@ module.exports = {
         ctrl.recent = null;
 
         ref.on("value", function(snap) {
-            ctrl.schema = snap.val();
+            ctrl.schema = {
+                fields : {}
+            };
+            
+            // Iterate everything but fields first
+            snap.forEach(function(field) {
+                if(snap.key() === "fields") {
+                    return;
+                }
+                
+                ctrl.schema[snap.key()] = snap.val();
+            });
+            
+            // Then iterate fields in priority order
+            snap.child("fields").forEach(function(field) {
+                ctrl.schema.fields[field.key()] = field.val() ;
+            });
             
             m.redraw();
         });
@@ -81,8 +97,10 @@ module.exports = {
             } catch(e) {
                 return;
             }
-
-            ref.child("fields").set(config);
+            
+            Object.keys(config).forEach(function(key, idx) {
+                ref.child("fields").child(key).setWithPriority(config[key], idx);
+            });
         };
     },
 
