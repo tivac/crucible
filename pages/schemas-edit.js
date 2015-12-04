@@ -16,6 +16,7 @@ require("../lib/cm-json-lint");
 
 var m        = require("mithril"),
     assign   = require("lodash.assign"),
+    debounce = require("lodash.debounce"),
     Editor   = require("codemirror"),
     traverse = require("traverse"),
 
@@ -62,16 +63,22 @@ module.exports = {
             }
 
             ctrl.editor = Editor.fromTextArea(el, {
-                mode         : "application/json",
-                lint         : true,
-                gutters      : [ "CodeMirror-lint-markers", "CodeMirror-foldgutter" ],
+                mode : "application/json",
+                lint : true,
+                
+                gutters : [ "CodeMirror-lint-markers", "CodeMirror-foldgutter" ],
+                
                 lineNumbers  : true,
                 indentUnit   : 4,
                 lineWrapping : true,
-                foldGutter   : true
+                foldGutter   : true,
+                
+                autoCloseBrackets : true
             });
 
-            ctrl.editor.on("changes", ctrl.editorChanged);
+            // Respond to editor changes, but debounced. Ensure it fires at least
+            // once a second while changes are happening though
+            ctrl.editor.on("changes", debounce(ctrl.editorChanged, 100, { maxWait : 1000 }));
         };
         
         // Handle codemirror change events
