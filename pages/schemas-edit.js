@@ -25,6 +25,38 @@ var m        = require("mithril"),
 
     css    = require("./schemas-edit.css");
 
+// Maintain order (or at least attempt to) using firebase priorities
+function orderedSave(ref, obj) {
+    var priorities = {};
+
+    ref.set(traverse(obj).map(function(value) {
+        var level;
+
+        // Don't bother w/ root or special firebase keys
+        if(this.isRoot || this.key.indexOf(".") === 0) {
+            return;
+        }
+
+        level = this.parent.path.join("/");
+        
+        if(!priorities[level]) {
+            priorities[level] = 0;
+        }
+
+        // Transform non-object bits to be an object containing
+        // the special firebase keys
+        if(this.isLeaf) {
+            value = {
+                ".value" : value,
+            };
+        }
+
+        value[".priority"] = priorities[level]++;
+
+        this.update(value);
+    }));
+}
+
 module.exports = {
     controller : function() {
         var ctrl = this,
@@ -83,7 +115,7 @@ module.exports = {
         // Handle codemirror change events
         ctrl.editorChanged = function() {
             var text = ctrl.editor.doc.getValue(),
-                config, priorities;
+                config;
 
             // Ensure JSON is still valid before applying
             try {
@@ -92,33 +124,12 @@ module.exports = {
                 return;
             }
             
-            // Clear out previous state
-            ref.child("fields").remove();
-            ref.child("source").set(text);
-            
-            // Track priority by depth
-            priorities = {};
-
-            // Traverse config object, calculate priority at each level
-            // so order is maintained (barf barf barf)
-            traverse(config).forEach(function(value) {
-                var level;
-
-                if(this.isRoot) {
-                    return;
-                }
-
-                level = this.parent.path.join("/");
-                
-                if(!priorities[level]) {
-                    priorities[level] = 0;
-                }
-
-                ref.child("fields").child(this.path.join("/")).setWithPriority(
-                    this.isLeaf ? value : false,
-                    priorities[level]++
-                );
+            ref.update({
+                source : text,
+                fields : false
             });
+
+            orderedSave(ref.child("fields"), config);
         };
     },
 
