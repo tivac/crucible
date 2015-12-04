@@ -21,36 +21,30 @@ module.exports = {
         };
     },
     view : function(ctrl, options) {
-        var details = options.details;
+        var tabs = Object.keys(options.details.tabs || {});
         
         return m("div",
             m("div", { class : css.nav.join(" ") },
                 m("ul", { class : css.list.join(" ") },
-                    Object.keys(details.tabs || {}).map(function(key) {
+                    tabs.map(function(key) {
                         return m("li", { class : css[key === ctrl.tab ? "item-active" : "item"].join(" ") },
                             m("a", {
                                 href    : "#" + key,
                                 class   : css.link.join(" "),
                                 onclick : ctrl.switchtab.bind(ctrl, key)
-                            }, details.tabs[key].name)
+                            }, key)
                         );
                     })
                 )
             ),
-            Object.keys(details.tabs || {}).map(function(key) {
-                var tab = details.tabs[key];
-
+            tabs.map(function(key) {
+                console.log(key, options.details.tabs[key]);
+                
                 return m("div", { class : css[key === ctrl.tab ? "contents-active" : "contents"].join(" ") },
-                    Object.keys(tab.fields || {}).map(function(fieldKey) {
-                        var field = tab.fields[fieldKey];
-
-                        return m("div",
-                            m.component(types.components[field.type], {
-                                ref     : options.ref && options.ref.child(key).child(fieldKey),
-                                data    : get(options.data, key + "." + fieldKey),
-                                details : field
-                            })
-                        );
+                    m.component(types.components.fields, {
+                        ref     : options.ref && options.ref.child(key),
+                        // data    : ctrl.entry,
+                        details : options.details.tabs[key]
                     })
                 );
             })
