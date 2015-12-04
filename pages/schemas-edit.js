@@ -49,7 +49,7 @@ module.exports = {
             ref.child("updated").set(db.TIMESTAMP);
         });
 
-        // get 5 latest entries using this type to display
+        // get recent entries using this type to display
         db.child("content").orderByChild("type").equalTo(id).limitToLast(5).on("value", function(snap) {
             ctrl.recent = snap.val();
 
@@ -76,15 +76,14 @@ module.exports = {
                 autoCloseBrackets : true
             });
 
-            // Respond to editor changes, but debounced. Ensure it fires at least
-            // once a second while changes are happening though
-            ctrl.editor.on("changes", debounce(ctrl.editorChanged, 100, { maxWait : 1000 }));
+            // Respond to editor changes, but debounced.
+            ctrl.editor.on("changes", debounce(ctrl.editorChanged, 250, { maxWait : 10000 }));
         };
         
         // Handle codemirror change events
         ctrl.editorChanged = function() {
             var text = ctrl.editor.doc.getValue(),
-                config, priority;
+                config, priorities;
 
             // Ensure JSON is still valid before applying
             try {
@@ -97,27 +96,29 @@ module.exports = {
             ref.child("fields").remove();
             ref.child("source").set(text);
             
+            // Track priority by depth
+            priorities = {};
+
             // Traverse config object, calculate priority at each level
             // so order is maintained (barf barf barf)
             traverse(config).forEach(function(value) {
+                var level;
+
                 if(this.isRoot) {
-                    priority = 0;
-                    
                     return;
                 }
-                
-                ref.child("fields").child(this.path.join("/")).setWithPriority(
-                    this.isLeaf ? value : "placeholder",
-                    priority
-                );
-                
-                if(this.notLeaf) {
-                    priority = 0;
-                } else {
-                    priority++;
-                }
-            });
 
+                level = this.parent.path.join("/");
+                
+                if(!priorities[level]) {
+                    priorities[level] = 0;
+                }
+
+                ref.child("fields").child(this.path.join("/")).setWithPriority(
+                    this.isLeaf ? value : false,
+                    priorities[level]++
+                );
+            });
         };
     },
 
