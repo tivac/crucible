@@ -14,9 +14,10 @@ require("codemirror/addon/fold/brace-fold");
 require("codemirror/addon/lint/lint");
 require("../lib/cm-json-lint");
 
-var m      = require("mithril"),
-    assign = require("lodash.assign"),
-    Editor = require("codemirror"),
+var m        = require("mithril"),
+    assign   = require("lodash.assign"),
+    Editor   = require("codemirror"),
+    traverse = require("traverse"),
 
     types  = require("../types"),
     db     = require("../lib/firebase"),
@@ -33,23 +34,7 @@ module.exports = {
         ctrl.recent = null;
 
         ref.on("value", function(snap) {
-            ctrl.schema = {
-                fields : {}
-            };
-            
-            // Iterate everything but fields first
-            snap.forEach(function(field) {
-                if(snap.key() === "fields") {
-                    return;
-                }
-                
-                ctrl.schema[snap.key()] = snap.val();
-            });
-            
-            // Then iterate fields in priority order
-            snap.child("fields").forEach(function(field) {
-                ctrl.schema.fields[field.key()] = field.val() ;
-            });
+            ctrl.schema = snap.val();
             
             m.redraw();
         });
@@ -69,7 +54,8 @@ module.exports = {
 
             m.redraw();
         });
-
+        
+        // Set up codemirror
         ctrl.editorSetup = function(el, init) {
             if(init) {
                 return;
@@ -87,23 +73,44 @@ module.exports = {
 
             ctrl.editor.on("changes", ctrl.editorChanged);
         };
-
+        
+        // Handle codemirror change events
         ctrl.editorChanged = function() {
-            var config;
+            var text = ctrl.editor.doc.getValue(),
+                config, priority;
 
             // Ensure JSON is still valid before applying
             try {
-                config = JSON.parse(ctrl.editor.doc.getValue());
+                config = JSON.parse(text);
             } catch(e) {
                 return;
             }
             
-            // TODO: This needs to iterate EVERY CHILD OBJECT
-            // AND USE SET WITH PRIORITY ON EACH
-            // ALSO TODO: There has to be a better way, right?
-            Object.keys(config).forEach(function(key, idx) {
-                ref.child("fields").child(key).setWithPriority(config[key], idx);
+            // Clear out previous state
+            ref.child("fields").remove();
+            ref.child("source").set(text);
+            
+            // Traverse config object, calculate priority at each level
+            // so order is maintained (barf barf barf)
+            traverse(config).forEach(function(value) {
+                if(this.isRoot) {
+                    priority = 0;
+                    
+                    return;
+                }
+                
+                ref.child("fields").child(this.path.join("/")).setWithPriority(
+                    this.isLeaf ? value : "placeholder",
+                    priority
+                );
+                
+                if(this.notLeaf) {
+                    priority = 0;
+                } else {
+                    priority++;
+                }
             });
+
         };
     },
 
@@ -128,7 +135,7 @@ module.exports = {
             m("div", { class : css.contents.join(" ") },
                 m("div", { class : css.editor.join(" ") },
                     m("textarea", { config : ctrl.editorSetup, },
-                        JSON.stringify(ctrl.schema.fields || {}, null, 4)
+                        ctrl.schema.source || "{}"
                     )
                 ),
 
