@@ -11,15 +11,18 @@ module.exports = {
 
         return m("div",
             Object.keys(details || {}).map(function(key) {
-                var field = details[key];
-
+                var field     = details[key],
+                    component = types.components[field.type || field];
+                
                 return m("div",
-                    m.component(types.components[field.type || field], {
-                        name    : key,
-                        details : field,
-                        data    : get(options, "data." + key),
-                        ref     : options.ref && options.ref.child(key)
-                    })
+                    component ?
+                        m.component(component, {
+                            name    : key,
+                            details : field,
+                            data    : get(options, "data." + key),
+                            ref     : options.ref && options.ref.child(key)
+                        }) :
+                        m("p", "Unknown component: " + JSON.stringify(field, null, 4))
                 );
             })
         );
