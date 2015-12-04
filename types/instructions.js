@@ -7,8 +7,8 @@ module.exports = {
         var details = options.details;
         
         return m("div",
-            m("strong", options.name),
-            details.text ? m("p", details.text) : null
+            details.head ? m("p", m("strong", details.head)) : null,
+            details.body ? m("p", details.body) : null
         );
     }
 };
