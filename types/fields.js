@@ -14,7 +14,7 @@ module.exports = {
                 var field = details.fields[key];
 
                 return m("div", { key : "show-" + key },
-                    m.component(types.components[field.type].show, {
+                    m.component(types.components[field.type], {
                         details : field,
                         data    : get(options, "data." + key),
                         ref     : options.ref && options.ref.child(key)

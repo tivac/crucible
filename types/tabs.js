@@ -45,7 +45,7 @@ module.exports = {
                         var field = tab.fields[fieldKey];
 
                         return m("div",
-                            m.component(types.components[field.type].show, {
+                            m.component(types.components[field.type], {
                                 ref     : options.ref && options.ref.child(key).child(fieldKey),
                                 data    : get(options.data, key + "." + fieldKey),
                                 details : field

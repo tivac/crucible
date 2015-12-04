@@ -44,7 +44,7 @@ module.exports = {
                     value    : value
                 }, details.attrs),
                 opts.map(function(key) {
-                    return m.component(fields.components.option.show, {
+                    return m.component(fields.components.option, {
                         id      : key,
                         details : details.options[key]
                     });

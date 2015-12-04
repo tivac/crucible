@@ -27,8 +27,7 @@ module.exports = {
     controller : function() {
         var ctrl = this,
             id   = m.route.param("id"),
-            
-            ref = db.child("schemas/" + id);
+            ref  = db.child("schemas/" + id);
         
         ctrl.schema = null;
         ctrl.recent = null;
@@ -113,7 +112,7 @@ module.exports = {
                 ),
 
                 m("div", { class : css.fields.join(" ") },
-                    m.component(types.components.fields.show, { details : ctrl.schema })
+                    m.component(types.components.fields, { details : ctrl.schema })
                 )
             )
         );

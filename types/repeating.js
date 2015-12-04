@@ -17,7 +17,7 @@ module.exports = {
                     var field = details.fields[key];
 
                     return m("div",
-                        m.component(types.components[field.type].show, { details : field })
+                        m.component(types.components[field.type], { details : field })
                     );
                 })
             )

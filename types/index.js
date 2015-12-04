@@ -10,50 +10,36 @@ module.exports = [
 ];
 
 module.exports.defaults = {
-    text   : require("./text-defaults"),
-    number : require("./number-defaults"),
-    tabs   : require("./tabs-defaults"),
-    select : require("./select-defaults")
+    text : {
+        name  : "Text Field",
+        attrs : {
+            placeholder : "Enter some text, not too much"
+        }
+    },
+    number : {
+        name  : "Number Field",
+        attrs : {
+            placeholder : "Numbers!"
+        }
+    },
+    tabs : {
+        name  : "Tabs"
+    },
+    select : {
+        name  : "select",
+        attrs : {
+            size : 1
+        }
+    }
 };
 
 module.exports.components = {
-    "text" : {
-        edit : require("./text-edit"),
-        show : require("./text-show")
-    },
-    
-    "select" : {
-        edit : require("./select-edit"),
-        show : require("./select-show")
-    },
-    
-    "number" : {
-        edit : require("./number-edit"),
-        show : require("./number-show")
-    },
-
-    "tabs" : {
-        edit : require("./tabs-edit"),
-        show : require("./tabs-show")
-    },
-
-    "fields" : {
-        edit : require("./fields-edit"),
-        show : require("./fields-show")
-    },
-
-    "repeating" : {
-        edit : require("./repeating-edit"),
-        show : require("./repeating-show")
-    },
-
-    "option" : {
-        edit : require("./option-edit"),
-        show : require("./option-show")
-    },
-
-    "instructions" : {
-        edit : require("./instructions-edit"),
-        show : require("./instructions-show")
-    }
+    "fields"       : require("./fields"),
+    "instructions" : require("./instructions"),
+    "number"       : require("./number"),
+    "option"       : require("./option"),
+    "repeating"    : require("./repeating"),
+    "select"       : require("./select"),
+    "tabs"         : require("./tabs"),
+    "text"         : require("./text")
 };
