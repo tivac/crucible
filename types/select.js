@@ -2,12 +2,11 @@
 
 var m      = require("mithril"),
     assign = require("lodash.assign"),
-    get    = require("lodash.get"),
 
-    fields = require("./");
+    types = require("./types.css");
 
 function optvalue(option) {
-    return get(option, "attrs.value") || option.name
+    return option.value || option.name
 }
 
 module.exports = {
@@ -15,8 +14,7 @@ module.exports = {
         var ctrl = this;
         
         ctrl.onchange = function(options, index) {
-            var key = Object.keys(options.details.options)[index],
-                opt = options.details.options[key];
+            var opt = options.details.children[index];
             
             options.ref.set(optvalue(opt));
         };
@@ -24,31 +22,33 @@ module.exports = {
     
     view : function(ctrl, options) {
         var details = options.details,
-            opts    = Object.keys(details.options || {}),
             value   = options.data;
         
-        // Need to go see if one of the options was set to be selected
+        // Need to go see if one of the options should be already selected
         if(!value) {
-            opts.some(function(opt) {
-                if(details.options[opt].selected) {
-                    value = optvalue(details.options[opt]);
+            details.children.some(function(opt) {
+                if(opt.selected) {
+                    value = optvalue(opt);
                 }
                 
                 return value;
             });
         }
         
-        return m("label", options.name + ": ",
-            m("select", assign({
-                    onchange : options.ref && m.withAttr("selectedIndex", ctrl.onchange.bind(ctrl, options)),
-                    value    : value
-                }, details.attrs),
-                opts.map(function(key) {
-                    return m.component(fields.components.option, {
-                        name    : key,
-                        details : details.options[key]
-                    });
-                })
+        return m("div", { class : types[options.index ? "field" : "first"].join(" ") },
+            m("label", { class : types.label.join(" ") }, details.name,
+                m("select", assign({
+                        onchange : options.ref && m.withAttr("selectedIndex", ctrl.onchange.bind(ctrl, options)),
+                        value    : value
+                    }, details.attrs),
+                    details.children.map(function(opt) {
+                        return m("option", {
+                                value : opt.value || opt.name
+                            },
+                            opt.name
+                        );
+                    })
+                )
             )
         );
     }

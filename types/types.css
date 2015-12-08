@@ -1,0 +1,16 @@
+.group {
+    composes: global(pure-control-group);
+}
+
+.field {
+    margin: 10px;
+}
+
+.first {
+    composes: field;
+    margin-top: 0;
+}
+
+.label {
+    font-weight: bold;
+}

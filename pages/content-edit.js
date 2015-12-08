@@ -2,9 +2,9 @@
 
 var m = require("mithril"),
     
-    types  = require("../types"),
-    db     = require("../lib/firebase"),
-    update = require("../lib/update");
+    children = require("../types/children"),
+    db       = require("../lib/firebase"),
+    update   = require("../lib/update");
 
 module.exports = {
     controller : function() {
@@ -75,7 +75,11 @@ module.exports = {
                 )
             ),
             m("br"),
-            m.component(types.components.fields.show, { details : ctrl.schema, ref : ctrl.ref, data : ctrl.entry })
+            m.component(children, {
+                details : ctrl.schema,
+                ref     : ctrl.ref,
+                data    : ctrl.entry
+            })
         ];
     }
 };

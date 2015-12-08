@@ -1,8 +1,14 @@
-.nav {
+.field {
+    composes: field from "./types.css";
     composes: global(pure-menu), global(pure-menu-horizontal);
 }
 
-.list {
+.first {
+    composes: first from "./types.css";
+    composes: field;
+}
+
+.nav {
     composes: global(pure-menu-list);
 }
 
@@ -18,16 +24,11 @@
     border-right: 1px solid #000;
 }
 
-.item-new {
-    composes: item;
-    
-    border: 0;
-}
-
 .item-active {
     composes: item, global(pure-menu-selected);
     
     background: #DDD;
+    font-weight: bold;
 }
 
 .link {

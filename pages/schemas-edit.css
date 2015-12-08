@@ -25,14 +25,21 @@
     overflow-y: auto;
 }
 
-.editor {
+.panes {
     flex: 1 0 50%;
+}
+
+.editor {
+    composes: panes;
+
     display: flex;
     flex-direction: column;
 }
 
 .fields {
-    flex: 1 0 50%;
+    composes: global(pure-form), global(pure-form-stacked), panes;
+
+    padding: 0 10px 10px 10px;
 }
 
 /* Override codemirror styling to make it expannnnd */

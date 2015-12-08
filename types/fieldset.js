@@ -7,8 +7,8 @@ var m      = require("mithril"),
 
 module.exports = {
     view : function(ctrl, options) {
-        return m("div",
-            "Repeating " + options.details.name + ":",
+        return m("fieldset",
+            options.details.name ? m("legend", options.details.name) : null,
             m.component(children, {
                 details : options.details.children
                 // TODO: figure out how refs/data work here

@@ -4,14 +4,16 @@ var m      = require("mithril"),
     assign = require("lodash.assign"),
     get    = require("lodash.get"),
     
-    types = require("./index"),
-    
+    children = require("./children"),
+
     css = require("./tabs.css");
 
 module.exports = {
     controller : function(options) {
         var ctrl = this;
         
+        ctrl.tab = 0;
+
         ctrl.switchtab = function(tab, e) {
             e.preventDefault();
             
@@ -19,27 +21,26 @@ module.exports = {
         };
     },
     view : function(ctrl, options) {
-        var tabs = Object.keys(options.details.tabs || {}),
-            tab  = ctrl.tab || tabs[0];
+        var tabs = options.details.tabs || [];
 
-        return m("div", { class : css.nav.join(" ") },
-            m("ul", { class : css.list.join(" ") },
-                tabs.map(function(key) {
-                    return m("li", { class : css[key === tab ? "item-active" : "item"].join(" ") },
+        return m("div", { class : css[options.index ? "field" : "first"].join(" ") },
+            m("ul", { class : css.nav.join(" ") },
+                tabs.map(function(tab, idx) {
+                    return m("li", { class : css[idx === ctrl.tab ? "item-active" : "item"].join(" ") },
                         m("a", {
-                            href    : "#" + key,
+                            href    : "#" + idx,
                             class   : css.link.join(" "),
-                            onclick : ctrl.switchtab.bind(ctrl, key)
-                        }, key)
+                            onclick : ctrl.switchtab.bind(ctrl, idx)
+                        }, tab.name)
                     );
                 })
             ),
-            tabs.map(function(key) {
-                return m("div", { class : css[key === tab ? "contents-active" : "contents"].join(" ") },
-                    m.component(types.components.fields, {
-                        ref     : options.ref && options.ref.child(key),
+            tabs.map(function(tab, idx) {
+                return m("div", { class : css[idx === ctrl.tab ? "contents-active" : "contents"].join(" ") },
+                    m.component(children, {
+                        ref     : options.ref && options.ref.child(idx),
                         // data    : ctrl.entry,
-                        details : options.details.tabs[key]
+                        details : tab.children
                     })
                 );
             })
