@@ -18,8 +18,12 @@ module.exports = {
         ctrl.schema = null;
         
         entry.on("value", function(snap) {
+            if(!snap.exists()) {
+                return m.route("/content");
+            }
+
             ctrl.entry = snap.val();
-            
+
             if(!ctrl.entry.data) {
                 ctrl.entry.data = {};
             }
