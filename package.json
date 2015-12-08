@@ -19,7 +19,7 @@
   "devDependencies": {
     "beefy": "^2.1.5",
     "browserify": "^12.0.1",
-    "modular-css": "^0.5.1",
+    "modular-css": "^0.6.0",
     "watchify": "^3.6.1",
     "wzrd": "^1.3.1"
   },
@@ -33,7 +33,6 @@
     "lodash.set": "^3.7.4",
     "mithril": "^0.2.0",
     "purecss": "^0.6.0",
-    "sluggo": "^0.2.0",
-    "traverse": "^0.6.6"
+    "sluggo": "^0.2.0"
   }
 }
