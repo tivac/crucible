@@ -19,7 +19,7 @@ module.exports = {
             id   = m.route.param("id"),
             ref  = db.child("schemas/" + id),
             // Weird path is because this isn't browserified
-            save = new Worker("/pages/_schema-save.js");
+            save = new Worker("/workers/save-schema.js");
         
         ctrl.schema = null;
         ctrl.recent = null;
