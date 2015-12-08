@@ -1,18 +1,8 @@
 "use strict";
 
-// Require codemirror extra JS bits and bobs so it works
+// Require codemirror extra JS bits and bobs so they're included
+// since codemirror isn't commonjs
 require("codemirror/mode/javascript/javascript");
-require("codemirror/addon/dialog/dialog");
-require("codemirror/addon/search/searchcursor");
-require("codemirror/addon/search/search");
-require("codemirror/addon/search/matchesonscrollbar");
-require("codemirror/addon/edit/matchbrackets");
-require("codemirror/addon/edit/closebrackets");
-require("codemirror/addon/fold/foldcode");
-require("codemirror/addon/fold/foldgutter");
-require("codemirror/addon/fold/brace-fold");
-require("codemirror/addon/lint/lint");
-require("../lib/cm-json-lint");
 
 var m        = require("mithril"),
     assign   = require("lodash.assign"),
@@ -20,52 +10,23 @@ var m        = require("mithril"),
     Editor   = require("codemirror"),
     traverse = require("traverse"),
 
-    types  = require("../types"),
-    db     = require("../lib/firebase"),
+    children = require("../types/children"),
+    db       = require("../lib/firebase"),
 
     css    = require("./schemas-edit.css");
-
-// Maintain order (or at least attempt to) using firebase priorities
-function orderedSave(ref, obj) {
-    var priorities = {};
-
-    ref.set(traverse(obj).map(function(value) {
-        var level;
-
-        // Don't bother w/ root or special firebase keys
-        if(this.isRoot || this.key.indexOf(".") === 0) {
-            return;
-        }
-
-        level = this.parent.path.join("/");
-        
-        if(!priorities[level]) {
-            priorities[level] = 0;
-        }
-
-        // Transform non-object bits to be an object containing
-        // the special firebase keys
-        if(this.isLeaf) {
-            value = {
-                ".value" : value,
-            };
-        }
-
-        value[".priority"] = priorities[level]++;
-
-        this.update(value);
-    }));
-}
 
 module.exports = {
     controller : function() {
         var ctrl = this,
             id   = m.route.param("id"),
-            ref  = db.child("schemas/" + id);
+            ref  = db.child("schemas/" + id),
+            // Weird path is because this isn't browserified
+            save = new Worker("/pages/_schema-save.js");
         
         ctrl.schema = null;
         ctrl.recent = null;
 
+        // Listen for updates from Firebase
         ref.on("value", function(snap) {
             ctrl.schema = snap.val();
             
@@ -87,6 +48,13 @@ module.exports = {
 
             m.redraw();
         });
+
+        // Take processed code from worker, save it to firebase
+        save.addEventListener("message", function(e) {
+            console.log(e.data); // TODO: REMOVE DEBUGGING
+
+            ref.child("fields").set(e.data);
+        });
         
         // Set up codemirror
         ctrl.editorSetup = function(el, init) {
@@ -95,41 +63,39 @@ module.exports = {
             }
 
             ctrl.editor = Editor.fromTextArea(el, {
-                mode : "application/json",
+                mode : "application/javascript",
                 lint : true,
                 
-                gutters : [ "CodeMirror-lint-markers", "CodeMirror-foldgutter" ],
+                // gutters : [ "CodeMirror-lint-markers", "CodeMirror-foldgutter" ],
                 
                 lineNumbers  : true,
                 indentUnit   : 4,
                 lineWrapping : true,
-                foldGutter   : true,
+                smartIndent  : false,
+                // foldGutter   : true,
                 
-                autoCloseBrackets : true
+                autoCloseBrackets : true,
+
+                extraKeys : {
+                    Tab : function(cm) {
+                        cm.execCommand(cm.options.indentWithTabs ? "insertTab" : "insertSoftTab");
+                    },
+                    "Shift-Tab": function (cm) {
+                        cm.indentSelection("subtract");
+                    }
+                }
             });
 
             // Respond to editor changes, but debounced.
-            ctrl.editor.on("changes", debounce(ctrl.editorChanged, 250, { maxWait : 10000 }));
+            ctrl.editor.on("changes", debounce(ctrl.editorChanged, 100, { maxWait : 10000 }));
         };
         
         // Handle codemirror change events
         ctrl.editorChanged = function() {
-            var text = ctrl.editor.doc.getValue(),
-                config;
+            var text = ctrl.editor.doc.getValue();
 
-            // Ensure JSON is still valid before applying
-            try {
-                config = JSON.parse(text);
-            } catch(e) {
-                return;
-            }
-            
-            ref.update({
-                source : text,
-                fields : false
-            });
-
-            orderedSave(ref.child("fields"), config);
+            ref.child("source").set(text);
+            save.postMessage(text);
         };
     },
 
@@ -159,7 +125,9 @@ module.exports = {
                 ),
 
                 m("div", { class : css.fields.join(" ") },
-                    m.component(types.components.fields, { details : ctrl.schema.fields })
+                    m.component(children, {
+                        details : ctrl.schema.fields
+                    })
                 )
             )
         );
