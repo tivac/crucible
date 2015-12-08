@@ -16,6 +16,7 @@ module.exports = function(type) {
                     m("input", assign({
                             type    : type || "text",
                             value   : options.data || "",
+                            class   : types.input.join(" "),
                             oninput : options.ref && m.withAttr("value", update.bind(null, options.ref, null))
                         },
                         details.attrs || {}

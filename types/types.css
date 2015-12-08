@@ -12,5 +12,16 @@
 }
 
 .label {
+    display: block;
+    
     font-weight: bold;
+}
+
+._input {
+    display: block;
+}
+
+.input,
+.select {
+    composes: _input;
 }

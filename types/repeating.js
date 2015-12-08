@@ -7,8 +7,24 @@ var m      = require("mithril"),
     children     = require("./children"),
     instructions = require("./instructions"),
 
-    types = require("./types.css"),
     css   = require("./repeating.css");
+
+function child(ctrl, options, idx, data) {
+    return  m("div", { class : css.child.join(" ") },
+        m("div", { class : css.counter.join(" ") }, idx),
+        m.component(children, {
+            details : options.details.children,
+            class   : css.fields.join(" "),
+            data    : data,
+            ref     : options.ref && options.ref.child(idx)
+        }),
+        m("div", { class : css.counter.join(" ") },
+            m("button", {
+                onclick : ctrl.remove.bind(ctrl, idx)
+            }, "✘")
+        )
+    );
+}
 
 module.exports = {
     controller : function(options) {
@@ -19,35 +35,24 @@ module.exports = {
         ctrl.add = function(e) {
             ++ctrl.children;
         };
+        
+        ctrl.remove = function(idx, e) {
+            console.log("TODO: remove", arguments);
+        };
     },
 
     view : function(ctrl, options) {
         var details = options.details;
 
-        return m("div", { class : types[options.index ? "field" : "first"].join(" ") },
+        return m("div", { class : css[options.index ? "field" : "first"].join(" ") },
             details.instructions ? m.component(instructions, { details : details.instructions }) : null,
             options.data ?
-                options.data.map(function(data, idx) {
-                    return m("div", { class : css.child.join(" ") },
-                        m("p", idx),
-                        m.component(children, {
-                            details : details.children,
-                            data    : data,
-                            ref     : options.ref && options.ref.child(idx)
-                        })
-                    );
-                }) : [
-                    times(ctrl.children, function(idx) {
-                        return m("div", { class : css.child.join(" ") },
-                            m("p", idx),
-                            m.component(children, {
-                                details : details.children,
-                                ref     : options.ref && options.ref.child(idx)
-                            })
-                        );
-                    }),
-                    m("button", { onclick : ctrl.add }, "Add")
-                ]
+                options.data.map(child.bind(null, ctrl, options)) :
+                times(ctrl.children, child.bind(null, ctrl, options)),
+            m("button", {
+                class   : css.add.join(" "),
+                onclick : ctrl.add
+            }, "Add")
         );
     }
 };

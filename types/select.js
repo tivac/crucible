@@ -39,7 +39,8 @@ module.exports = {
             m("label", { class : types.label.join(" ") }, details.name,
                 m("select", assign({
                         onchange : options.ref && m.withAttr("selectedIndex", ctrl.onchange.bind(ctrl, options)),
-                        value    : value
+                        value    : value,
+                        class    : types.select.join(" ")
                     }, details.attrs),
                     details.children.map(function(opt) {
                         return m("option", {

@@ -1,3 +1,41 @@
+.field {
+    composes: field from "./types.css";
+    
+    display: flex;
+    flex-direction: column;
+}
+
+.first {
+    composes: first from "./types.css";
+    composes: field;
+}
+
 .child {
+    display: flex;
+    flex-direction: row;
+    
     border: 1px solid #CCC;
+    padding: 10px;
+}
+
+.counter {
+    flex: 0 0 20px;
+    
+    margin: 0;
+    text-align: center;
+    font-weight: bold;
+}
+
+.fields {
+    flex: 1;
+}
+
+.add {
+    margin-top: 10px;
+    padding: 10px 20px;
+    
+    background-color: #111;
+    color: #EEE;
+    
+    border-radius: 5px;
 }

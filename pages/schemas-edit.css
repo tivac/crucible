@@ -13,11 +13,11 @@
 }
 
 .meta {
-    flex: 0;
+    flex: 1;
 }
 
 .contents {
-    flex: 1;
+    flex: 2;
 
     display: flex;
     flex-direction: row;
@@ -26,7 +26,7 @@
 }
 
 .panes {
-    flex: 1 0 50%;
+    flex: 1;
 }
 
 .editor {
@@ -37,7 +37,7 @@
 }
 
 .fields {
-    composes: global(pure-form), global(pure-form-stacked), panes;
+    composes: panes;
 
     padding: 0 10px 10px 10px;
 }

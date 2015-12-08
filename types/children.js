@@ -10,7 +10,7 @@ module.exports = {
     view : function(ctrl, options) {
         var details = options.details || [];
 
-        return m("div",
+        return m("div", { class : options.class || null },
             details.map(function(field, idx) {
                 var component = types[field.type || field];
                 
