@@ -26,7 +26,8 @@ module.exports = {
 
         ctrl.add = function(schema) {
             var result = db.child("content").push({
-                    _schema : schema
+                    _schema : schema,
+                    _name   : "New " + ctrl.schemas[schema].name
                 });
 
             m.route("/content/" + schema + "/" + result.key());
