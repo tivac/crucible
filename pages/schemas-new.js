@@ -10,7 +10,7 @@ module.exports = {
         var ctrl  = this;
 
         ctrl.name = "";
-        ctrl.slug = "";
+        ctrl.slug = false;
 
         ctrl.oninput = function(name) {
             ctrl.name = name;
@@ -32,14 +32,14 @@ module.exports = {
 
     view : function(ctrl) {
         return [
-            m("h1", "Add a Type"),
+            m("h1", "Create a Schema"),
             m("form", { onsubmit : ctrl.onsubmit },
                 m("input[name=name]", {
                     oninput : m.withAttr("value", ctrl.oninput),
                     value   : ctrl.name
                 }),
                 m("p",
-                    "Slug: " + ctrl.slug
+                    "Slug: " + (ctrl.slug || "???")
                 ),
                 m("input[type=submit]", { value : "Add" })
             )
