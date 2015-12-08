@@ -1,3 +1,7 @@
+function slugger(name) {
+    return name.replace(/\s+/g, "-").replace(/[^a-zA-Z0-9-]/g, "").toLowerCase();
+}
+
 function process(obj) {
     var out = [];
 
@@ -11,13 +15,15 @@ function process(obj) {
         }
 
         field.name = name;
+        field.slug = slugger(name);
 
         if(field.type === "tabs") {
             field.tabs = Object.keys(field.tabs).map(function(tabName) {
                 var tab = field.tabs[tabName];
 
                 return {
-                    name : tabName,
+                    name     : tabName,
+                    slug     : slugger(tabName),
                     children : process(tab)
                 };
             });
@@ -40,8 +46,8 @@ function process(obj) {
                 var details = field.options[name];
 
                 return {
-                    name  : name,
-                    value : details.value || details,
+                    name     : name,
+                    value    : details.value || details,
                     selected : details.selected || false
                 };
             });
