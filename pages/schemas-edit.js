@@ -5,10 +5,8 @@
 require("codemirror/mode/javascript/javascript");
 
 var m        = require("mithril"),
-    assign   = require("lodash.assign"),
     debounce = require("lodash.debounce"),
     Editor   = require("codemirror"),
-    traverse = require("traverse"),
 
     children = require("../types/children"),
     db       = require("../lib/firebase"),
