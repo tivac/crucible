@@ -74,7 +74,14 @@ module.exports = {
                     "Name: ",
                     m("input", {
                         value   : ctrl.entry._name || "",
-                        oninput : m.withAttr("value", update.bind(null, ctrl.ref, "_name"))
+                        oninput : m.withAttr("value", update.bind(null, ctrl.ref, "_name")),
+                        config  : function(el, init) {
+                            if(init) {
+                                return;
+                            }
+
+                            el.select();
+                        }
                     })
                 )
             ),
