@@ -38,8 +38,8 @@ module.exports = {
             tabs.map(function(tab, idx) {
                 return m("div", { class : css[idx === ctrl.tab ? "contents-active" : "contents"].join(" ") },
                     m.component(children, {
-                        ref     : options.ref && options.ref.child(idx),
-                        // data    : ctrl.entry,
+                        ref     : options.ref && options.ref.child(tab.slug),
+                        data    : get(options, "data." + tab.slug),
                         details : tab.children
                     })
                 );

@@ -24,8 +24,8 @@ module.exports = {
                 return m.component(component, {
                     details : field,
                     index   : idx,
-                    data    : get(options, "data." + idx),
-                    ref     : options.ref && options.ref.child(idx),
+                    data    : get(options, "data." + field.slug),
+                    ref     : options.ref && options.ref.child(field.slug)
                 });
             })
         );

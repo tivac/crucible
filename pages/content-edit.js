@@ -76,7 +76,7 @@ module.exports = {
             ),
             m("br"),
             m.component(children, {
-                details : ctrl.schema,
+                details : ctrl.schema.fields,
                 ref     : ctrl.ref,
                 data    : ctrl.entry
             })
