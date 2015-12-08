@@ -6,8 +6,7 @@
   "scripts": {
     "build": "browserify ./index.js --outfile ./gen/client.js --debug -p [ modular-css --css \"./gen/client.css\" ]",
     "watch": "watchify ./index.js --outfile ./gen/client.js --debug -p [ modular-css --css \"./gen/client.css\" ]",
-    "start": "beefy index.js 9966 --live --index=./index.html -- -p [ modular-css --css \"./gen/client.css\" ]",
-    "wzrd": "wzrd index.js --pushstate -- --debug -p [ modular-css --css \"./gen/client.css\" ]"
+    "start": "wzrd index.js --pushstate -- --debug -p [ modular-css --css \"./gen/client.css\" ]"
   },
   "keywords": [
     "cms",
