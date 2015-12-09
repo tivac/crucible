@@ -40,10 +40,10 @@ module.exports = {
             console.log("TODO: remove", arguments);
         };
     },
-        
+
     view : function(ctrl, options) {
         var details = options.details;
-
+        
         return m("div", { class : css[options.index ? "field" : "first"].join(" ") },
             options.data ?
                 options.data.map(child.bind(null, ctrl, options)) :
@@ -51,7 +51,7 @@ module.exports = {
             m("button", {
                 class   : css.add.join(" "),
                 onclick : ctrl.add
-            }, "Add")
+            }, details.button || "Add")
         );
     }
 };
