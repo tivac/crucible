@@ -2,6 +2,8 @@
 
 var m = require("mithril");
 
+require("./global.css");
+
 m.route.mode = "pathname";
 m.route(document.body, "/", {
     "/"            : require("./pages/home"),

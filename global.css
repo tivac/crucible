@@ -1,0 +1,10 @@
+/* apply a natural box layout model to all elements, but allowing components to change */
+:global(html) {
+    box-sizing: border-box;
+}
+
+:global(*),
+:global(*:before),
+:global(*:after) {
+    box-sizing: inherit;
+}
