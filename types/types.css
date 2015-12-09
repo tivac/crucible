@@ -17,6 +17,10 @@
     font-weight: bold;
 }
 
+.label > * {
+    font-weight: normal;
+}
+
 ._input {
     display: block;
 }
