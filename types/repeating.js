@@ -45,7 +45,6 @@ module.exports = {
         var details = options.details;
 
         return m("div", { class : css[options.index ? "field" : "first"].join(" ") },
-            details.instructions ? m.component(instructions, { details : details.instructions }) : null,
             options.data ?
                 options.data.map(child.bind(null, ctrl, options)) :
                 times(ctrl.children, child.bind(null, ctrl, options, false)),
