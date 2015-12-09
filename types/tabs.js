@@ -24,14 +24,13 @@ module.exports = {
         var tabs = options.details.children || [];
 
         return m("div", { class : css[options.index ? "field" : "first"].join(" ") },
-            m("ul", { class : css.nav.join(" ") },
+            m("div", { class : css.nav.join(" ") },
                 tabs.map(function(tab, idx) {
-                    return m("li", { class : css[idx === ctrl.tab ? "item-active" : "item"].join(" ") },
-                        m("a", {
+                    return m("a", {
+                            class   : css[idx === ctrl.tab ? "item-active" : "item"].join(" "),
                             href    : "#" + idx,
-                            class   : css.link.join(" "),
                             onclick : ctrl.switchtab.bind(ctrl, idx)
-                        }, tab.name)
+                        }, tab.name
                     );
                 })
             ),

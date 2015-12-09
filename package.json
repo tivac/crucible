@@ -31,7 +31,7 @@
     "lodash.set": "^3.7.4",
     "lodash.times": "^3.0.3",
     "mithril": "^0.2.0",
-    "purecss": "^0.6.0",
+    "normalize.css": "^3.0.3",
     "sluggo": "^0.2.0"
   }
 }

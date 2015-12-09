@@ -9,15 +9,31 @@
 }
 
 .nav {
-    composes: global(pure-menu-list);
+    display: flex;
+    flex-direction: row;
+    
+    list-style-type: none;
+    
+    margin: 0;
+    padding: 0;
 }
 
 .item {
-    composes: global(pure-menu-item);
+    flex: 0;
+    
+    padding: 10px 20px;
     
     border: 1px solid #000;
     border-bottom: 0;
     border-right: 0;
+    
+    text-decoration: none;
+    
+    color: #101010;
+}
+
+.item:hover {
+    background: #EEE;
 }
 
 .item:last-child {
@@ -25,14 +41,10 @@
 }
 
 .item-active {
-    composes: item, global(pure-menu-selected);
+    composes: item;
     
-    background: #DDD;
+    background: #BCBCBC;
     font-weight: bold;
-}
-
-.link {
-    composes: global(pure-menu-link);
 }
 
 .contents {
