@@ -11,7 +11,7 @@ var m      = require("mithril"),
 
 function child(ctrl, options, data, idx) {
     return m("div", { class : css.child.join(" ") },
-        m("div", { class : css.counter.join(" ") }, idx),
+        m("div", { class : css.counter.join(" ") }, idx + 1),
         m.component(children, {
             details : options.details.children,
             class   : css.fields.join(" "),
