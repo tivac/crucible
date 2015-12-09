@@ -12,7 +12,8 @@ module.exports = {
 
         return m("div", { class : options.class || null },
             details.map(function(field, idx) {
-                var component = types[field.type || field];
+                var component = types[field.type || field],
+                    data, ref;
                 
                 if(!component) {
                     return m("div",
@@ -21,11 +22,19 @@ module.exports = {
                     );
                 }
                 
+                if(component.ignore) {
+                    data = options.data;
+                    ref  = options.ref && options.ref;
+                } else {
+                    data = get(options, "data." + field.slug);
+                    ref  = options.ref && options.ref.child(field.slug);
+                }
+                
                 return m.component(component, {
                     details : field,
                     index   : idx,
-                    data    : get(options, "data." + field.slug),
-                    ref     : options.ref && options.ref.child(field.slug)
+                    data    : data,
+                    ref     : ref
                 });
             })
         );

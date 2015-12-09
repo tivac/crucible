@@ -8,6 +8,9 @@ var m      = require("mithril"),
     css          = require("./split.css");
 
 module.exports = {
+    // Ignore this component in the data hierarchy
+    ignore : true,
+    
     view : function(ctrl, options) {
         var details = options.details;
         
@@ -16,10 +19,9 @@ module.exports = {
             (details.children || []).map(function(section) {
                 return m("div", { class : css.section.join(" ") },
                     m.component(children, {
-                        details : section.children
-                        // TODO: figure out how refs/data work here
-                        // ref     : options.ref && options.ref.child
-                        // data    : options.data
+                        details : section.children,
+                        data    : options.data,
+                        ref : options.ref && options.ref
                     })
                 );
             })
