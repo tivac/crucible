@@ -115,8 +115,10 @@ module.exports = {
                 m("h2", "Recent Entries"),
                 m("ul",
                     Object.keys(ctrl.recent || {}).map(function(key) {
+                        var content = ctrl.recent[key];
+
                         return m("li",
-                            m("a", { href : "/content/" + key, config : m.route }, ctrl.recent[key]._name)
+                            m("a", { href : "/content/" + content._schema + "/" + key, config : m.route }, content._name)
                         );
                     })
                 ),
