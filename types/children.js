@@ -22,7 +22,7 @@ module.exports = {
                     );
                 }
                 
-                if(component.ignore) {
+                if(component.decorative) {
                     data = options.data;
                     ref  = options.ref && options.ref;
                 } else {

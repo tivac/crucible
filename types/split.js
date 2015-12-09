@@ -9,7 +9,7 @@ var m      = require("mithril"),
 
 module.exports = {
     // Ignore this component in the data hierarchy
-    ignore : true,
+    decorative : true,
     
     view : function(ctrl, options) {
         var details = options.details;
