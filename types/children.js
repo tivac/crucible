@@ -40,5 +40,8 @@ types = {
     number : require("./number"),
     fieldset : require("./fieldset"),
     instructions : require("./instructions"),
-    text : require("./text")
+    text : require("./text"),
+    datetime : require("./datetime"),
+    date : require("./date"),
+    time : require("./time")
 };
