@@ -40,7 +40,7 @@ module.exports = {
             console.log("TODO: remove", arguments);
         };
     },
-
+        
     view : function(ctrl, options) {
         var details = options.details;
 

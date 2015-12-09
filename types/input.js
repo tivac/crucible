@@ -10,7 +10,7 @@ module.exports = function(type) {
     return {
         view : function(ctrl, options) {
             var details = options.details;
-
+            
             return m("div", { class : types[options.index ? "field" : "first"].join(" ") },
                 m("label", { class : types.label.join(" ") }, details.name,
                     m("input", assign({
