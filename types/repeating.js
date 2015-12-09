@@ -30,7 +30,7 @@ module.exports = {
     controller : function(options) {
         var ctrl = this;
 
-        ctrl.children = (options.data && options.data.length) || 0;
+        ctrl.children = (options.data && options.data.length) || 1;
 
         ctrl.add = function(e) {
             ++ctrl.children;
