@@ -15,8 +15,7 @@ module.exports = {
             m.component(children, {
                 details : options.details.children,
                 data    : options.data,
-                // Use the parent because fieldsets shouldn't be part of data hierarchy
-                ref : options.ref && options.ref.parent()
+                ref     : options.ref && options.ref
             })
         );
     }
