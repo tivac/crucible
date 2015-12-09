@@ -40,8 +40,8 @@ module.exports = {
             ref.child("updated").set(db.TIMESTAMP);
         });
 
-        // get recent entries using this type to display
-        db.child("content").orderByChild("type").equalTo(id).limitToLast(5).on("value", function(snap) {
+        // get recent entries using this schema to display
+        db.child("content").orderByChild("_schema").equalTo(id).limitToLast(5).on("value", function(snap) {
             ctrl.recent = snap.val();
 
             m.redraw();
@@ -49,8 +49,6 @@ module.exports = {
 
         // Take processed code from worker, save it to firebase
         save.addEventListener("message", function(e) {
-            console.log(e.data); // TODO: REMOVE DEBUGGING
-
             ref.child("fields").set(e.data);
         });
         
@@ -64,18 +62,17 @@ module.exports = {
                 mode : "application/javascript",
                 lint : true,
                 
-                // gutters : [ "CodeMirror-lint-markers", "CodeMirror-foldgutter" ],
-                
                 lineNumbers  : true,
                 indentUnit   : 4,
                 lineWrapping : true,
                 smartIndent  : false,
-                // foldGutter   : true,
                 
                 autoCloseBrackets : true,
 
                 extraKeys : {
                     Tab : function(cm) {
+                        debugger;
+                        
                         cm.execCommand(cm.options.indentWithTabs ? "insertTab" : "insertSoftTab");
                     },
                     "Shift-Tab": function (cm) {
@@ -109,7 +106,7 @@ module.exports = {
                 m("ul",
                     Object.keys(ctrl.recent || {}).map(function(key) {
                         return m("li",
-                            m("a", { href : "/content/" + key, config : m.route }, ctrl.recent[key].name)
+                            m("a", { href : "/content/" + key, config : m.route }, ctrl.recent[key]._name)
                         );
                     })
                 ),
