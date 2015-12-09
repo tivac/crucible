@@ -13,11 +13,11 @@
 }
 
 .meta {
-    flex: 1;
+    flex: 1 0 0%;
 }
 
 .contents {
-    flex: 2;
+    flex: 4;
 
     display: flex;
     flex-direction: row;
@@ -31,9 +31,6 @@
 
 .editor {
     composes: panes;
-
-    display: flex;
-    flex-direction: column;
 }
 
 .fields {
@@ -44,5 +41,5 @@
 
 /* Override codemirror styling to make it expannnnd */
 :global(.CodeMirror) {
-    flex: 1 0 100%;
+    height: 100%;
 }

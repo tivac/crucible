@@ -3,6 +3,9 @@
 // Require codemirror extra JS bits and bobs so they're included
 // since codemirror isn't commonjs
 require("codemirror/mode/javascript/javascript");
+require("codemirror/addon/edit/matchbrackets");
+require("codemirror/addon/selection/active-line");
+require("codemirror/addon/comment/continuecomment");
 
 var m        = require("mithril"),
     debounce = require("lodash.debounce"),
@@ -62,12 +65,17 @@ module.exports = {
                 mode : "application/javascript",
                 lint : true,
                 
-                lineNumbers  : true,
                 indentUnit   : 4,
-                lineWrapping : true,
                 smartIndent  : false,
+                lineNumbers  : true,
+                lineWrapping : true,
+                
+                // Plugin options
+                styleActiveLine  : true,
+                continueComments : true,
                 
                 autoCloseBrackets : true,
+                matchBrackets     : true,
 
                 extraKeys : {
                     Tab : function(cm) {
