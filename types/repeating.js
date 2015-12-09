@@ -9,8 +9,8 @@ var m      = require("mithril"),
 
     css   = require("./repeating.css");
 
-function child(ctrl, options, idx, data) {
-    return  m("div", { class : css.child.join(" ") },
+function child(ctrl, options, data, idx) {
+    return m("div", { class : css.child.join(" ") },
         m("div", { class : css.counter.join(" ") }, idx),
         m.component(children, {
             details : options.details.children,
@@ -48,7 +48,7 @@ module.exports = {
             details.instructions ? m.component(instructions, { details : details.instructions }) : null,
             options.data ?
                 options.data.map(child.bind(null, ctrl, options)) :
-                times(ctrl.children, child.bind(null, ctrl, options)),
+                times(ctrl.children, child.bind(null, ctrl, options, false)),
             m("button", {
                 class   : css.add.join(" "),
                 onclick : ctrl.add
