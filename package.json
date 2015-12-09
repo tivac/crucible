@@ -16,7 +16,6 @@
   "author": "Pat Cavit <npm@patcavit.com>",
   "license": "MIT",
   "devDependencies": {
-    "beefy": "^2.1.5",
     "browserify": "^12.0.1",
     "modular-css": "^0.6.0",
     "watchify": "^3.6.1",
