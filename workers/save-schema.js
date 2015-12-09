@@ -18,7 +18,7 @@ function process(obj) {
         field.slug = slugger(name);
 
         if(field.type === "tabs") {
-            field.tabs = Object.keys(field.tabs).map(function(tabName) {
+            field.children = Object.keys(field.tabs).map(function(tabName) {
                 var tab = field.tabs[tabName];
 
                 return {
@@ -27,6 +27,8 @@ function process(obj) {
                     children : process(tab)
                 };
             });
+            
+            delete field.tabs;
         }
 
         if(field.type === "repeating") {

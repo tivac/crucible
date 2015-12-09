@@ -21,7 +21,7 @@ module.exports = {
         };
     },
     view : function(ctrl, options) {
-        var tabs = options.details.tabs || [];
+        var tabs = options.details.children || [];
 
         return m("div", { class : css[options.index ? "field" : "first"].join(" ") },
             m("ul", { class : css.nav.join(" ") },
