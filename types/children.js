@@ -20,7 +20,7 @@ module.exports = {
                         m("pre", JSON.stringify(field, null, 4))
                     );
                 }
-
+                
                 return m.component(component, {
                     details : field,
                     index   : idx,
@@ -43,5 +43,6 @@ types = {
     text : require("./text"),
     datetime : require("./datetime"),
     date : require("./date"),
-    time : require("./time")
+    time : require("./time"),
+    split : require("./split")
 };

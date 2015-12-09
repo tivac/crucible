@@ -56,6 +56,18 @@ function process(obj) {
 
             delete field.options;
         }
+        
+        if(field.type === "split") {
+            field.children = Object.keys(field.sections).map(function(name) {
+                return {
+                    name     : name,
+                    slug     : slugger(name),
+                    children : process(field.sections[name])
+                };
+            });
+            
+            delete field.sections;
+        }
 
         out.push(field);
     });
