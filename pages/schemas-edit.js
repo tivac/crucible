@@ -71,7 +71,9 @@ module.exports = {
 
                 extraKeys : {
                     Tab : function(cm) {
-                        debugger;
+                        if(cm.somethingSelected()) {
+                            return cm.indentSelection("add");
+                        }
                         
                         cm.execCommand(cm.options.indentWithTabs ? "insertTab" : "insertSoftTab");
                     },
