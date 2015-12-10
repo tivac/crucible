@@ -15,12 +15,22 @@ You'll want to create a schema first. Schemas are JSON-ish documents that look s
 
 ```js
 {
+    // Comments are allowed, as are unquoted keys
+    
+    // The simplest types are just a string because they need no config
+    Field : "text",
+    
+    // More complicated types always have at least a "type" property, and depending
+    // on what they are will use a few more
+    
+    // instructions types have one of a head or body, or both.
 	Start : {
         type : "instructions",
         head : "This is a content type",
         body : "Here is what you do with it, hello"
     },
     
+    // Fieldsets are a direct mapping to <fieldset>
     Schedule : {
         type : "fieldset",
         fields : {
@@ -29,6 +39,7 @@ You'll want to create a schema first. Schemas are JSON-ish documents that look s
                 body : "Enter schedule information for this thing"
             },
             
+            // Repeating fields allow for multiple data points to be added
             Repeating : {
                 type : "repeating",
                 fields : {
@@ -39,6 +50,8 @@ You'll want to create a schema first. Schemas are JSON-ish documents that look s
     },
     Text : "text",
     Number : "number",
+    
+    // Tabbed fields
     tabs : {
         type : "tabs",
         tabs : {
@@ -53,6 +66,8 @@ You'll want to create a schema first. Schemas are JSON-ish documents that look s
         }
     },
     
+    // <select> analogue, showing both short hand <option> values as well as
+    // making one option selected by default
     "Make your choice" : {
         type : "select",
         options : {
