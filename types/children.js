@@ -53,5 +53,6 @@ types = {
     datetime : require("./datetime"),
     date : require("./date"),
     time : require("./time"),
-    split : require("./split")
+    split : require("./split"),
+    relationship : require("./relationship")
 };

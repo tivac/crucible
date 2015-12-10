@@ -24,6 +24,8 @@
   "dependencies": {
     "codemirror": "^5.9.0",
     "firebase": "^2.3.2",
+    "horsey": "^2.6.1",
+    "insignia": "^4.4.0",
     "jsonlint": "github:josdejong/jsonlint",
     "lodash.assign": "^3.2.0",
     "lodash.debounce": "^3.1.1",
