@@ -20,7 +20,7 @@ function child(ctrl, options, data, idx) {
         }),
         m("div", { class : css.counter.join(" ") },
             m("button", {
-                onclick : ctrl.remove.bind(ctrl, idx)
+                onclick : ctrl.remove.bind(ctrl, options, data, idx)
             }, "✘")
         )
     );
@@ -32,25 +32,47 @@ module.exports = {
 
         ctrl.children = (options.data && options.data.length) || 1;
 
-        ctrl.add = function(e) {
-            ++ctrl.children;
+        ctrl.add = function(options) {
+            ctrl.children += 1;
+
+            if(!options.ref) {
+                return;
+            }
+    
+            // Ensure that we have data placeholders for all the possible entries
+            times(ctrl.children, function(idx) {
+                if(options.data && options.data[idx]) {
+                    return;
+                }
+
+                options.ref.child(idx).set("placeholder");
+            });
         };
         
-        ctrl.remove = function(idx, e) {
-            console.log("TODO: remove", arguments);
+        ctrl.remove = function(options, data, idx, e) {
+            // No ref means we don't much care
+            if(!options.ref || !options.data) {
+                return --ctrl.children;
+            }
+
+            options.data.splice(idx, 1);
+
+            ctrl.children = options.data.length;
+
+            options.ref.set(options.data);
         };
     },
 
     view : function(ctrl, options) {
         var details = options.details;
-        
+
         return m("div", { class : css[options.index ? "field" : "first"].join(" ") },
             options.data ?
                 options.data.map(child.bind(null, ctrl, options)) :
                 times(ctrl.children, child.bind(null, ctrl, options, false)),
             m("button", {
                 class   : css.add.join(" "),
-                onclick : ctrl.add
+                onclick : ctrl.add.bind(ctrl, options)
             }, details.button || "Add")
         );
     }
