@@ -2,7 +2,6 @@
 
 var m      = require("mithril"),
     assign = require("lodash.assign"),
-    get    = require("lodash.get"),
     
     children = require("./children"),
 
@@ -36,11 +35,11 @@ module.exports = {
             ),
             tabs.map(function(tab, idx) {
                 return m("div", { class : css[idx === ctrl.tab ? "contents-active" : "contents"].join(" ") },
-                    m.component(children, {
-                        ref     : options.ref && options.ref.child(tab.slug),
-                        data    : get(options, "data." + tab.slug),
-                        details : tab.children
-                    })
+                    m.component(children, assign({}, options, {
+                        details : tab.children,
+                        data    : options.data && options.data[tab.slug],
+                        ref     : options.ref  && options.ref.child(tab.slug),
+                    }))
                 );
             })
         );

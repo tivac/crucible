@@ -12,12 +12,12 @@ var m      = require("mithril"),
 function child(ctrl, options, data, idx) {
     return m("div", { class : css.child.join(" ") },
         m("div", { class : css.counter.join(" ") }, idx + 1),
-        m.component(children, {
+        m.component(children, assign({}, options, {
             details : options.details.children,
             class   : css.fields.join(" "),
             data    : data,
             ref     : options.ref && options.ref.child(idx)
-        }),
+        })),
         m("div", { class : css.counter.join(" ") },
             m("button", {
                 onclick : ctrl.remove.bind(ctrl, options, data, idx)

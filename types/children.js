@@ -1,7 +1,8 @@
 "use strict";
 
-var m   = require("mithril"),
-    get = require("lodash.get"),
+var m      = require("mithril"),
+    get    = require("lodash.get"),
+    assign = require("lodash.assign"),
 
     // Bound below
     types;
@@ -11,7 +12,7 @@ module.exports = {
         var details = options.details || [];
 
         return m("div", { class : options.class || null },
-            details.map(function(field, idx) {
+            details.map(function(field, index) {
                 var component = types[field.type || field],
                     data, ref;
                 
@@ -30,12 +31,12 @@ module.exports = {
                     ref  = options.ref && options.ref.child(field.slug);
                 }
                 
-                return m.component(component, {
+                return m.component(component, assign({}, options, {
                     details : field,
-                    index   : idx,
+                    index   : index,
                     data    : data,
                     ref     : ref
-                });
+                }));
             })
         );
     }

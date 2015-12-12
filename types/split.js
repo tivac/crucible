@@ -21,7 +21,8 @@ module.exports = {
                     m.component(children, {
                         details : section.children,
                         data    : options.data,
-                        ref : options.ref && options.ref
+                        root    : options.root,
+                        ref     : options.ref && options.ref
                     })
                 );
             })

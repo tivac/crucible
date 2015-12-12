@@ -12,11 +12,9 @@ module.exports = {
     view : function(ctrl, options) {
         return m("fieldset",
             options.details.name ? m("legend", options.details.name) : null,
-            m.component(children, {
-                details : options.details.children,
-                data    : options.data,
-                ref     : options.ref && options.ref
-            })
+            m.component(children, assign({}, options, {
+                details : options.details.children
+            }))
         );
     }
 };

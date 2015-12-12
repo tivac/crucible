@@ -89,7 +89,8 @@ module.exports = {
             m.component(children, {
                 details : ctrl.schema.fields,
                 ref     : ctrl.ref,
-                data    : ctrl.entry
+                data    : ctrl.entry,
+                root    : ctrl.ref
             })
         ];
     }
