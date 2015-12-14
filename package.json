@@ -25,7 +25,6 @@
     "codemirror": "^5.9.0",
     "firebase": "^2.3.2",
     "fuzzysearch": "^1.0.3",
-    "jsonlint": "github:josdejong/jsonlint",
     "lodash.assign": "^3.2.0",
     "lodash.debounce": "^3.1.1",
     "lodash.get": "^3.7.0",
