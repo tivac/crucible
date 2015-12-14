@@ -4,6 +4,7 @@
 // since codemirror isn't commonjs
 require("codemirror/mode/javascript/javascript");
 require("codemirror/addon/edit/matchbrackets");
+require("codemirror/addon/edit/closebrackets");
 require("codemirror/addon/selection/active-line");
 require("codemirror/addon/comment/continuecomment");
 
