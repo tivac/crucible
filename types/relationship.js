@@ -4,6 +4,7 @@ var m      = require("mithril"),
     assign = require("lodash.assign"),
     map    = require("lodash.map"),
     fuzzy  = require("fuzzysearch"),
+    slug   = require("unique-slug"),
     
     db = require("../lib/firebase"),
     
@@ -15,6 +16,8 @@ module.exports = {
         var ctrl = this,
             sources;
         
+        ctrl.id = slug(options.details.name);
+
         ctrl.sources = function() {
             if(sources) {
                 return;
@@ -39,7 +42,7 @@ module.exports = {
             }
 
             if(!value) {
-                ctrl.suggestions = false;
+                ctrl.suggestions = null;
 
                 return;
             }
@@ -59,7 +62,12 @@ module.exports = {
     },
     
     view : function(ctrl, options) {
-        var details = options.details;
+        var details = options.details
+            name    = details.name;
+            
+        if(details.required) {
+            name += "*";
+        }
         
         return m("div", { class : types[options.index ? "field" : "first"] },
             m("ul",
@@ -67,13 +75,17 @@ module.exports = {
                     return m("li", key);
                 })
             ),
-            m("label", { class : types.label }, details.name,
-                m("input", assign({
-                        oninput : m.withAttr("value", ctrl.oninput)
-                    },
-                    details.attrs || {}
-                ))
-            ),
+            m("label", {
+                for   : ctrl.id,
+                class : types[details.required ? "required" : "label"]
+            }, name),
+            m("input", assign({
+                    id      : ctrl.id,
+                    class   : types.input,
+                    oninput : m.withAttr("value", ctrl.oninput)
+                },
+                details.attrs || {}
+            )),
             m("ul",
                 ctrl.suggestions && ctrl.suggestions.map(function(suggestion) {
                     return m("li", {

@@ -2,6 +2,7 @@
 
 var m      = require("mithril"),
     assign = require("lodash.assign"),
+    slug   = require("unique-slug"),
 
     types = require("./types.css");
 
@@ -13,6 +14,8 @@ module.exports = {
     controller : function(options) {
         var ctrl = this;
         
+        ctrl.id = slug(options.details.name);
+
         ctrl.onchange = function(options, index) {
             var opt = options.details.children[index];
             
@@ -22,7 +25,12 @@ module.exports = {
     
     view : function(ctrl, options) {
         var details = options.details,
-            value   = options.data;
+            value   = options.data,
+            name    = details.name;
+            
+        if(details.required) {
+            name += "*";
+        }
         
         // Need to go see if one of the options should be already selected
         if(!value) {
@@ -36,20 +44,22 @@ module.exports = {
         }
         
         return m("div", { class : types[options.index ? "field" : "first"] },
-            m("label", { class : types.label }, details.name,
-                m("select", assign({
-                        onchange : options.ref && m.withAttr("selectedIndex", ctrl.onchange.bind(ctrl, options)),
-                        value    : value,
-                        class    : types.select
-                    }, details.attrs),
-                    details.children.map(function(opt) {
-                        return m("option", {
-                                value : opt.value || opt.name
-                            },
-                            opt.name
-                        );
-                    })
-                )
+            m("label", {
+                for   : ctrl.id,
+                class : types[details.required ? "required" : "label"]
+            }, name),
+            m("select", assign({
+                    onchange : options.ref && m.withAttr("selectedIndex", ctrl.onchange.bind(ctrl, options)),
+                    value    : value,
+                    class    : types.select
+                }, details.attrs),
+                details.children.map(function(opt) {
+                    return m("option", {
+                            value : opt.value || opt.name
+                        },
+                        opt.name
+                    );
+                })
             )
         );
     }

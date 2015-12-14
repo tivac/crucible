@@ -1,3 +1,7 @@
+"use strict";
+
+var required = /\*$/;
+
 function slugger(name) {
     return name.replace(/\s+/g, "-").replace(/[^a-zA-Z0-9-]/g, "").toLowerCase();
 }
@@ -12,6 +16,13 @@ function process(obj) {
             field = {
                 type : field
             };
+        }
+
+        // Handle required fields
+        if(name.search(required) > -1) {
+            name = name.slice(0, -1);
+
+            field.required = true;
         }
 
         field.name = name;

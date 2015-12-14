@@ -34,6 +34,7 @@
     "lodash.times": "^3.0.3",
     "mithril": "^0.2.0",
     "normalize.css": "^3.0.3",
-    "sluggo": "^0.2.0"
+    "sluggo": "^0.2.0",
+    "unique-slug": "^2.0.0"
   }
 }

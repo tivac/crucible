@@ -1,3 +1,7 @@
+.block {
+    display: block;
+}
+
 .group {
     composes: global(pure-control-group);
 }
@@ -12,20 +16,19 @@
 }
 
 .label {
-    display: block;
+    composes: block;
     
     font-weight: bold;
 }
 
-.label > * {
-    font-weight: normal;
-}
+.required {
+    composes: label;
 
-._input {
-    display: block;
+    color: red;
 }
 
 .input,
-.select {
-    composes: _input;
+.select,
+.textarea {
+    composes: block;
 }
