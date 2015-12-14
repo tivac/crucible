@@ -109,8 +109,8 @@ module.exports = {
             return m("h1", "Loading...");
         }
 
-        return m("div", { class : css.page.join(" ") },
-            m("div", { class : css.meta.join(" ") },
+        return m("div", { class : css.page },
+            m("div", { class : css.meta },
                 m("h1", ctrl.schema.name),
                 m("h2", "Recent Entries"),
                 m("ul",
@@ -124,14 +124,14 @@ module.exports = {
                 ),
                 m("hr")
             ),
-            m("div", { class : css.contents.join(" ") },
-                m("div", { class : css.editor.join(" ") },
+            m("div", { class : css.contents },
+                m("div", { class : css.editor },
                     m("textarea", { config : ctrl.editorSetup, },
                         ctrl.schema.source || "{}"
                     )
                 ),
 
-                m("div", { class : css.fields.join(" ") },
+                m("div", { class : css.fields },
                     m.component(children, {
                         details : ctrl.schema.fields
                     })

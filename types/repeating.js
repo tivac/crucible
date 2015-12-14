@@ -10,15 +10,15 @@ var m      = require("mithril"),
     css   = require("./repeating.css");
 
 function child(ctrl, options, data, idx) {
-    return m("div", { class : css.child.join(" ") },
-        m("div", { class : css.counter.join(" ") }, idx + 1),
+    return m("div", { class : css.child },
+        m("div", { class : css.counter }, idx + 1),
         m.component(children, assign({}, options, {
             details : options.details.children,
-            class   : css.fields.join(" "),
+            class   : css.fields,
             data    : data,
             ref     : options.ref && options.ref.child(idx)
         })),
-        m("div", { class : css.counter.join(" ") },
+        m("div", { class : css.counter },
             m("button", {
                 onclick : ctrl.remove.bind(ctrl, options, data, idx)
             }, "✘")
@@ -66,12 +66,12 @@ module.exports = {
     view : function(ctrl, options) {
         var details = options.details;
 
-        return m("div", { class : css[options.index ? "field" : "first"].join(" ") },
+        return m("div", { class : css[options.index ? "field" : "first"] },
             options.data ?
                 options.data.map(child.bind(null, ctrl, options)) :
                 times(ctrl.children, child.bind(null, ctrl, options, false)),
             m("button", {
-                class   : css.add.join(" "),
+                class   : css.add,
                 onclick : ctrl.add.bind(ctrl, options)
             }, details.button || "Add")
         );

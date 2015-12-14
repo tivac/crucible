@@ -61,13 +61,13 @@ module.exports = {
     view : function(ctrl, options) {
         var details = options.details;
         
-        return m("div", { class : types[options.index ? "field" : "first"].join(" ") },
+        return m("div", { class : types[options.index ? "field" : "first"] },
             m("ul",
                 options.data && Object.keys(options.data).map(function(key) {
                     return m("li", key);
                 })
             ),
-            m("label", { class : types.label.join(" ") }, details.name,
+            m("label", { class : types.label }, details.name,
                 m("input", assign({
                         oninput : m.withAttr("value", ctrl.oninput)
                     },

@@ -17,7 +17,7 @@
   "license": "MIT",
   "devDependencies": {
     "browserify": "^12.0.1",
-    "modular-css": "^0.6.0",
+    "modular-css": "^0.7.0",
     "watchify": "^3.6.1",
     "wzrd": "^1.3.1"
   },

@@ -14,10 +14,10 @@ module.exports = {
     view : function(ctrl, options) {
         var details = options.details;
         
-        return m("div", { class : css.container.join(" ") },
+        return m("div", { class : css.container },
             details.instructions ? m.component(instructions, { details : details.instructions }) : null,
             (details.children || []).map(function(section) {
-                return m("div", { class : css.section.join(" ") },
+                return m("div", { class : css.section },
                     m.component(children, {
                         details : section.children,
                         data    : options.data,

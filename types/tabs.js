@@ -22,11 +22,11 @@ module.exports = {
     view : function(ctrl, options) {
         var tabs = options.details.children || [];
 
-        return m("div", { class : css[options.index ? "field" : "first"].join(" ") },
-            m("div", { class : css.nav.join(" ") },
+        return m("div", { class : css[options.index ? "field" : "first"] },
+            m("div", { class : css.nav },
                 tabs.map(function(tab, idx) {
                     return m("a", {
-                            class   : css[idx === ctrl.tab ? "item-active" : "item"].join(" "),
+                            class   : css[idx === ctrl.tab ? "item-active" : "item"],
                             href    : "#" + idx,
                             onclick : ctrl.switchtab.bind(ctrl, idx)
                         }, tab.name
@@ -34,7 +34,7 @@ module.exports = {
                 })
             ),
             tabs.map(function(tab, idx) {
-                return m("div", { class : css[idx === ctrl.tab ? "contents-active" : "contents"].join(" ") },
+                return m("div", { class : css[idx === ctrl.tab ? "contents-active" : "contents"] },
                     m.component(children, assign({}, options, {
                         details : tab.children,
                         data    : options.data && options.data[tab.slug],

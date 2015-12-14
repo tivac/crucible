@@ -11,12 +11,12 @@ module.exports = function(type) {
         view : function(ctrl, options) {
             var details = options.details;
             
-            return m("div", { class : types[options.index ? "field" : "first"].join(" ") },
-                m("label", { class : types.label.join(" ") }, details.name,
+            return m("div", { class : types[options.index ? "field" : "first"] },
+                m("label", { class : types.label }, details.name,
                     m("input", assign({
                             type    : type || "text",
                             value   : options.data || "",
-                            class   : types.input.join(" "),
+                            class   : types.input,
                             oninput : options.ref && m.withAttr("value", update.bind(null, options.ref, null))
                         },
                         details.attrs || {}

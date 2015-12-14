@@ -35,12 +35,12 @@ module.exports = {
             });
         }
         
-        return m("div", { class : types[options.index ? "field" : "first"].join(" ") },
-            m("label", { class : types.label.join(" ") }, details.name,
+        return m("div", { class : types[options.index ? "field" : "first"] },
+            m("label", { class : types.label }, details.name,
                 m("select", assign({
                         onchange : options.ref && m.withAttr("selectedIndex", ctrl.onchange.bind(ctrl, options)),
                         value    : value,
-                        class    : types.select.join(" ")
+                        class    : types.select
                     }, details.attrs),
                     details.children.map(function(opt) {
                         return m("option", {
