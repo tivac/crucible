@@ -4,9 +4,9 @@
   "description": "cms thing",
   "main": "index.js",
   "scripts": {
-    "build": "browserify ./index.js --outfile ./gen/client.js -p [ modular-css --css \"./gen/client.css\" ]",
-    "watch": "watchify ./index.js --outfile ./gen/client.js --debug -p [ modular-css --css \"./gen/client.css\" ]",
-    "start": "wzrd index.js --pushstate -- --debug -p [ modular-css --css \"./gen/client.css\" ]"
+    "build": "browserify index.js --outfile gen/index.js -p [ modular-css --css gen/index.css ]",
+    "watch": "watchify index.js --outfile gen/index.js --debug -p [ modular-css --css gen/index.css ]",
+    "start": "build/serve.js"
   },
   "keywords": [
     "cms",
@@ -17,9 +17,10 @@
   "license": "MIT",
   "devDependencies": {
     "browserify": "^12.0.1",
+    "connect": "^3.4.0",
+    "ecstatic": "^1.3.1",
     "modular-css": "^0.7.0",
-    "watchify": "^3.6.1",
-    "wzrd": "^1.3.1"
+    "watchify": "^3.6.1"
   },
   "dependencies": {
     "codemirror": "^5.9.0",
@@ -33,6 +34,7 @@
     "lodash.set": "^3.7.4",
     "lodash.times": "^3.0.3",
     "mithril": "^0.2.0",
+    "modular-css": "^0.7.1",
     "moment": "^2.10.6",
     "normalize.css": "^3.0.3",
     "sluggo": "^0.2.0",
