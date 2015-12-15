@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "browserify index.js --outfile gen/index.js -p [ modular-css --css gen/index.css ]",
-    "watch": "watchify index.js --outfile gen/index.js --debug -p [ modular-css --css gen/index.css ]",
-    "start": "build/serve.js"
+    "watch": "watchify index.js --verbose --outfile gen/index.js --debug -p [ modular-css --css gen/index.css ]",
+    "start": "node  build/serve.js"
   },
   "keywords": [
     "cms",
