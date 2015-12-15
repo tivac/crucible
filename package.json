@@ -4,7 +4,7 @@
   "description": "cms thing",
   "main": "index.js",
   "scripts": {
-    "build": "browserify ./index.js --outfile ./gen/client.js --debug -p [ modular-css --css \"./gen/client.css\" ]",
+    "build": "browserify ./index.js --outfile ./gen/client.js -p [ modular-css --css \"./gen/client.css\" ]",
     "watch": "watchify ./index.js --outfile ./gen/client.js --debug -p [ modular-css --css \"./gen/client.css\" ]",
     "start": "wzrd index.js --pushstate -- --debug -p [ modular-css --css \"./gen/client.css\" ]"
   },
