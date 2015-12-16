@@ -1,7 +1,9 @@
 "use strict";
 
-var m = require("mithril"),
-    moment = require("moment");
+var m      = require("mithril"),
+    moment = require("moment"),
+
+    css = require("./publish-status.css");
 
 module.exports = {
     controller : function(options) {
@@ -45,7 +47,12 @@ module.exports = {
         
         return m("div",
             m("button", {
-                onclick : ctrl.publish
+                // Attrs
+                class    : !options.enabled ? css.disabled : null,
+                disabled : !options.enabled,
+                
+                // Events
+                onclick  : ctrl.publishAt
             }, "Publish Now"),
             " | ",
             m("label",
@@ -59,7 +66,12 @@ module.exports = {
                 })
             ),
             m("button", {
-                onclick : ctrl.publishAt
+                // Attrs
+                class    : !options.enabled ? css.disabled : null,
+                disabled : !options.enabled,
+                
+                // Events
+                onclick  : ctrl.publishAt
             }, "Publish")
         );
     }

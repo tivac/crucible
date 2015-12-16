@@ -17,6 +17,7 @@ module.exports = {
         ctrl.ref    = entry;
         ctrl.entry  = null;
         ctrl.schema = null;
+        ctrl.form   = null;
         
         entry.on("value", function(snap) {
             if(!snap.exists()) {
@@ -49,9 +50,17 @@ module.exports = {
     },
 
     view : function(ctrl) {
+        var publishing;
+
         if(!ctrl.entry || !ctrl.schema) {
             return m("h1", "LOADING...");
         }
+
+        publishing = m.component(publish, {
+            ref     : ctrl.ref,
+            data    : ctrl.entry,
+            enabled : ctrl.form && ctrl.form.checkValidity()
+        });
 
         return [
             m("h1", "Content - Editing \"" + (ctrl.entry._name || "") + "\""),
@@ -62,10 +71,7 @@ module.exports = {
                     m("a", { href : "/schemas/" + ctrl.entry._schema, config : m.route }, ctrl.schema.name)
                 )
             ),
-            m.component(publish, {
-                ref  : ctrl.ref,
-                data : ctrl.entry
-            }),
+            publishing,
             m("hr"),
             m("div",
                 m("label",
@@ -84,17 +90,28 @@ module.exports = {
                 )
             ),
             m("br"),
-            m.component(children, {
-                details : ctrl.schema.fields,
-                ref     : ctrl.ref,
-                data    : ctrl.entry,
-                root    : ctrl.ref
-            }),
+            m("form", {
+                    config : function(el, init) {
+                        if(init) {
+                            return;
+                        }
+
+                        ctrl.form = el;
+
+                        // force a redraw so publishing component can get
+                        // new args w/ actual validity
+                        m.redraw();
+                    }
+                },
+                m.component(children, {
+                    details : ctrl.schema.fields,
+                    ref     : ctrl.ref,
+                    data    : ctrl.entry,
+                    root    : ctrl.ref
+                })
+            ),
             m("hr"),
-            m.component(publish, {
-                ref  : ctrl.ref,
-                data : ctrl.entry
-            })
+            publishing
         ];
     }
 };
