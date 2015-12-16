@@ -28,8 +28,12 @@ module.exports = {
                 class : types[details.required ? "required" : "label"]
             }, name),
             m("textarea", assign({
-                    id      : ctrl.id,
-                    class   : types.input,
+                    // attrs
+                    id       : ctrl.id,
+                    class    : types.input,
+                    required : details.required ? "required" : null,
+                    
+                    // events
                     oninput : options.ref && m.withAttr("value", update.bind(null, options.ref, null))
                 },
                 details.attrs || {}
