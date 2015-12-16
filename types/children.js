@@ -4,6 +4,8 @@ var m      = require("mithril"),
     get    = require("lodash.get"),
     assign = require("lodash.assign"),
 
+    input = require("./_input"),
+
     // Bound below
     types;
 
@@ -44,16 +46,23 @@ module.exports = {
 
 // Have to bind these down here to avoid circular binding issues
 types = {
-    tabs : require("./tabs"),
-    select : require("./select"),
-    repeating : require("./repeating"),
-    number : require("./number"),
+    // Structural
     fieldset : require("./fieldset"),
-    instructions : require("./instructions"),
-    text : require("./text"),
-    datetime : require("./datetime"),
-    date : require("./date"),
-    time : require("./time"),
+    repeating : require("./repeating"),
     split : require("./split"),
-    relationship : require("./relationship")
+    tabs : require("./tabs"),
+
+    // Non-input fields
+    instructions : require("./instructions"),
+    relationship : require("./relationship"),
+    select       : require("./select"),
+    
+    // These are all just variations on the input type
+    date     : input("date"),
+    datetime : input("datetime-local"),
+    email    : input("email"),
+    number   : input("number"),
+    text     : input("text"),
+    time     : input("time"),
+    url      : input("url")
 };
