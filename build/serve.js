@@ -8,12 +8,7 @@ var path = require("path"),
         handleError : false
     });
 
-server.use(function(req, res, next) {
-    console.log(req.url);
-
-    next();
-});
-
+server.use(require("morgan")("dev"));
 server.use(ecstatic);
 
 // SPA support
