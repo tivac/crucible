@@ -6,6 +6,8 @@ var m      = require("mithril"),
 
     input = require("./_input"),
 
+    css  = require("./types.css"),
+
     // Bound below
     types;
 
@@ -35,7 +37,7 @@ module.exports = {
                 
                 return m.component(component, assign({}, options, {
                     details : field,
-                    index   : index,
+                    class   : css[index ? "field" : "first"],
                     data    : data,
                     ref     : ref
                 }));

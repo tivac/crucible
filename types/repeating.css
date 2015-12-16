@@ -1,13 +1,8 @@
-.field {
-    composes: field from "./types.css";
-    
+.container {
     display: flex;
     flex-direction: column;
-}
 
-.first {
-    composes: first from "./types.css";
-    composes: field;
+    background: red;
 }
 
 .child {

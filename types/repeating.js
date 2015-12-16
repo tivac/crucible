@@ -66,7 +66,7 @@ module.exports = {
     view : function(ctrl, options) {
         var details = options.details;
 
-        return m("div", { class : css[options.index ? "field" : "first"] },
+        return m("div", { class : options.class + " " + css.container },
             options.data ?
                 options.data.map(child.bind(null, ctrl, options)) :
                 times(ctrl.children, child.bind(null, ctrl, options, false)),

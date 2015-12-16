@@ -43,7 +43,7 @@ module.exports = {
             });
         }
         
-        return m("div", { class : types[options.index ? "field" : "first"] },
+        return m("div", { class : options.class },
             m("label", {
                 for   : ctrl.id,
                 class : types[details.required ? "required" : "label"]

@@ -69,7 +69,7 @@ module.exports = {
             name += "*";
         }
         
-        return m("div", { class : types[options.index ? "field" : "first"] },
+        return m("div", { class : options.class },
             m("ul",
                 options.data && Object.keys(options.data).map(function(key) {
                     return m("li", key);

@@ -22,7 +22,7 @@ module.exports = {
     view : function(ctrl, options) {
         var tabs = options.details.children || [];
 
-        return m("div", { class : css[options.index ? "field" : "first"] },
+        return m("div", { class : options.class },
             m("div", { class : css.nav },
                 tabs.map(function(tab, idx) {
                     return m("a", {

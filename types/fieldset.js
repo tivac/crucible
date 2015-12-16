@@ -10,7 +10,7 @@ module.exports = {
     decorative : true,
     
     view : function(ctrl, options) {
-        return m("fieldset",
+        return m("fieldset", { class : options.class },
             options.details.name ? m("legend", options.details.name) : null,
             m.component(children, assign({}, options, {
                 details : options.details.children
