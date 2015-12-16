@@ -56,6 +56,7 @@ types = {
     instructions : require("./instructions"),
     relationship : require("./relationship"),
     select       : require("./select"),
+    textarea     : require("./textarea"),
     
     // These are all just variations on the input type
     date     : input("date"),
