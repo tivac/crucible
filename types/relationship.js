@@ -54,10 +54,16 @@ module.exports = {
             });
         };
 
-        ctrl.onclick = function(id) {
-            // Set up a two-way relationship between these
+        // Set up a two-way relationship between these
+        ctrl.add = function(id) {
             options.ref.child(id).set(true);
             db.child("content/" + id + "/_relationships/" + options.root.key()).set(true);
+        };
+
+        // BREAK THE RELATIONSHIP
+        ctrl.remove = function(id) {
+            options.ref.child(id).remove();
+            db.child("content/" + id + "/_relationships/" + options.root.key()).remove();
         };
     },
     
@@ -72,7 +78,11 @@ module.exports = {
         return m("div", { class : options.class },
             m("ul",
                 options.data && Object.keys(options.data).map(function(key) {
-                    return m("li", key);
+                    return m("li", key,
+                        m("button", {
+                            onclick : ctrl.remove.bind(ctrl, key)
+                        }, "✘")
+                    );
                 })
             ),
             m("label", {
@@ -90,7 +100,7 @@ module.exports = {
                 ctrl.suggestions && ctrl.suggestions.map(function(suggestion) {
                     return m("li", {
                         "data-id" : suggestion.id,
-                        onclick   : options.ref && m.withAttr("data-id", ctrl.onclick)
+                        onclick   : options.ref && m.withAttr("data-id", ctrl.add)
                     }, suggestion.name)
                 })
             )
