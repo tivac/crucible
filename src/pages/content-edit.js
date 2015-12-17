@@ -2,10 +2,13 @@
 
 var m = require("mithril"),
 
-    children = require("../types/children"),
-    db       = require("../lib/firebase"),
-    update   = require("../lib/update"),
-    publish  = require("./content/publish-status");
+    children   = require("../types/children"),
+    db         = require("../lib/firebase"),
+    update     = require("../lib/update"),
+    publishing = require("./content/publishing"),
+    versioning = require("./content/versioning"),
+
+    css = require("./content-edit.css");
 
 module.exports = {
     controller : function() {
@@ -50,16 +53,24 @@ module.exports = {
     },
 
     view : function(ctrl) {
-        var publishing;
+        var publish,
+            version;
 
         if(!ctrl.entry || !ctrl.schema) {
             return m("h1", "LOADING...");
         }
 
-        publishing = m.component(publish, {
+        publish = m.component(publishing, {
             ref     : ctrl.ref,
             data    : ctrl.entry,
+            class   : css.child,
             enabled : ctrl.form && ctrl.form.checkValidity()
+        });
+
+        version = m.component(versioning, {
+            ref   : ctrl.ref,
+            data  : ctrl.entry,
+            class : css.child
         });
 
         return [
@@ -71,7 +82,10 @@ module.exports = {
                     m("a", { href : "/schemas/" + ctrl.entry._schema, config : m.route }, ctrl.schema.name)
                 )
             ),
-            publishing,
+            m("div", { class : css.menu },
+                publish,
+                version
+            ),
             m("hr"),
             m("div",
                 m("label",
@@ -111,7 +125,10 @@ module.exports = {
                 })
             ),
             m("hr"),
-            publishing
+            m("div", { class : css.menu },
+                publish,
+                version
+            )
         ];
     }
 };
