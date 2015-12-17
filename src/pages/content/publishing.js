@@ -3,7 +3,7 @@
 var m      = require("mithril"),
     moment = require("moment"),
 
-    css = require("./publish-status.css");
+    css = require("./publishing.css");
 
 module.exports = {
     controller : function(options) {
@@ -33,7 +33,7 @@ module.exports = {
         var published = options.data._published && moment(options.data._published);
 
         if(published) {
-            return m("div",
+            return m("div", { class : options.class },
                 m("span",
                     published.isBefore(ctrl.now) ?
                         "Published at " + published.format("lll") :
@@ -45,16 +45,7 @@ module.exports = {
             );
         }
         
-        return m("div",
-            m("button", {
-                // Attrs
-                class    : !options.enabled ? css.disabled : null,
-                disabled : !options.enabled,
-                
-                // Events
-                onclick  : ctrl.publishAt
-            }, "Publish Now"),
-            " | ",
+        return m("div", { class : options.class },
             m("label",
                 "Publish at: ",
                 m("input", {
@@ -72,7 +63,16 @@ module.exports = {
                 
                 // Events
                 onclick  : ctrl.publishAt
-            }, "Publish")
+            }, "Publish"),
+            " | ",
+            m("button", {
+                // Attrs
+                class    : !options.enabled ? css.disabled : null,
+                disabled : !options.enabled,
+                
+                // Events
+                onclick  : ctrl.publishAt
+            }, "Publish Now")
         );
     }
 };
