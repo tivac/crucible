@@ -28,7 +28,6 @@
 }
 
 .input,
-.select,
-.textarea {
+.select {
     composes: block;
 }

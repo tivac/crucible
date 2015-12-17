@@ -1,0 +1,41 @@
+/* technique from http://alistapart.com/article/expanding-text-areas-made-elegant */
+.expander {
+    position: relative;
+    max-height: 600px;
+    
+    border: 1px solid #888;
+    background: #FFF;
+}
+
+.child {
+    margin: 0;
+    padding: 5px;
+    
+    background: transparent;
+
+    /* Make the text soft-wrap */
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.textarea {
+    composes: child;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    border: none;
+
+    /* Remove WebKit user-resize widget */
+    resize: none;
+}
+
+.shadow {
+    composes: child;
+
+    /* Hide the text; just using it for sizing */
+    visibility: hidden;
+}
