@@ -4,10 +4,8 @@
 // Don't actually want the exports, just want it bundled
 require("./global.css");
 
-var m = require("mithril"),
-    
-    routes = require("./routes");
+var m = require("mithril");
 
 m.route.mode = "pathname";
 
-routes[global.crucible ? "default" : "setup"]();
+require("./routes")[global.crucible ? "default" : "setup"]();
