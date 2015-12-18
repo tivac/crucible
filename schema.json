@@ -1,0 +1,262 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+
+    "definitions": {
+        "field": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "required": {
+                    "type": "boolean"
+                },
+                "slug": {
+                    "type": "string",
+                    "minLength": 1
+                }
+            },
+            "required": ["name", "slug"]
+        },
+        "children": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/fields"
+            }
+        },
+        "fields": {
+            "oneOf": [{
+                "type": "string",
+                "enum": [
+                    "date",
+                    "datetime",
+                    "email",
+                    "number",
+                    "text",
+                    "textarea",
+                    "time",
+                    "url"
+                ]
+            }, {
+                "type": "object",
+                "allOf": [{
+                    "$ref": "#/definitions/field"
+                }, {
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "enum": ["fieldset"]
+                        },
+                        "children": {
+                            "$ref": "#/definitions/children"
+                        }
+                    }
+                }]
+            }, {
+                "type": "object",
+                "allOf": [{
+                    "$ref": "#/definitions/field"
+                }, {
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "enum": ["repeating"]
+                        },
+                        "children": {
+                            "$ref": "#/definitions/children"
+                        }
+                    }
+                }]
+            }, {
+                "type": "object",
+                "allOf": [{
+                    "$ref": "#/definitions/field"
+                }, {
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "enum": ["split"]
+                        },
+                        "children": {
+                            "$ref": "#/definitions/children"
+                        }
+                    }
+                }]
+            }, {
+                "type": "object",
+                "allOf": [{
+                    "$ref": "#/definitions/field"
+                }, {
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "enum": ["tabs"]
+                        },
+                        "children": {
+                            "type": "array",
+                            "items": {
+                                "allOf": [{
+                                    "$ref": "#/definitions/field"
+                                }, {
+                                    "properties": {
+                                        "children": {
+                                            "$ref": "#/definitions/children"
+                                        }
+                                    }
+                                }]
+                            }
+                        }
+                    }
+                }]
+            }, {
+                "type": "object",
+                "allOf": [{
+                    "$ref": "#/definitions/field"
+                }, {
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "enum": ["instructions"]
+                        },
+                        "head": {
+                            "type": "string"
+                        },
+                        "body": {
+                            "type": "string"
+                        }
+                    }
+                }]
+            }, {
+                "type": "object",
+                "allOf": [{
+                    "$ref": "#/definitions/field"
+                }, {
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "enum": ["relationship"]
+                        },
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }]
+            }, {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": ["select"]
+                    },
+                    "children": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "selected": {
+                                    "type": "boolean"
+                                },
+                                "value": {
+                                    "oneOf": [{
+                                        "type": "string"
+                                    }, {
+                                        "type": "boolean"
+                                    }, {
+                                        "type": "number"
+                                    }]
+                                }
+                            }
+                        }
+                    }
+                }
+            }, {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": ["textarea"]
+                    }
+                }
+            }, {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": ["date"]
+                    }
+                }
+            }, {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": ["datetime"]
+                    }
+                }
+            }, {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": ["email"]
+                    }
+                }
+            }, {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": ["number"]
+                    }
+                }
+            }, {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": ["text"]
+                    }
+                }
+            }, {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": ["time"]
+                    }
+                }
+            }, {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": ["url"]
+                    }
+                }
+            }]
+        }
+    },
+
+    "type": "object",
+    "properties": {
+        "updated": {
+            "type": "number"
+        },
+        "created": {
+            "type": "number"
+        },
+        "source": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string",
+            "minLength": 1
+        },
+        "fields": {
+            "$ref": "#/definitions/children"
+        }
+    }
+}
