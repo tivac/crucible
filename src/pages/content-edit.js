@@ -5,6 +5,9 @@ var m = require("mithril"),
     children   = require("../types/children"),
     db         = require("../lib/firebase"),
     update     = require("../lib/update"),
+    
+    nav = require("./nav"),
+    
     publishing = require("./content/publishing"),
     versioning = require("./content/versioning"),
 
@@ -74,6 +77,7 @@ module.exports = {
         });
 
         return [
+            m(nav),
             m("h1", "Content - Editing \"" + (ctrl.entry._name || "") + "\""),
             
             m("div",
@@ -117,7 +121,7 @@ module.exports = {
                         m.redraw();
                     }
                 },
-                m.component(children, {
+                m(children, {
                     details : ctrl.schema.fields,
                     ref     : ctrl.ref,
                     data    : ctrl.entry,

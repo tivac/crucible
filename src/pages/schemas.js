@@ -2,7 +2,9 @@
 
 var m = require("mithril"),
     
-    db = require("../lib/firebase");
+    db = require("../lib/firebase"),
+    
+    nav = require("./nav");
 
 module.exports = {
     controller : function() {
@@ -17,6 +19,7 @@ module.exports = {
 
     view : function(ctrl) {
         return [
+            m(nav),
             m("h1", "Schemas"),
             m("p",
                 m("a[href=/schemas/new]", { config : m.route }, "Create a new Schema")

@@ -1,15 +1,15 @@
 "use strict";
 
 var m  = require("mithril"),
-    db = require("../lib/firebase");
+    
+    db   = require("../lib/firebase"),
+    
+    nav = require("./nav");
 
 module.exports = {
-    controller : function() {
-
-    },
-
     view : function() {
         return [
+            m(nav),
             m("h1", "HOME"),
             m("ul",
                 m("li",

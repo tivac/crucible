@@ -14,6 +14,8 @@ var m        = require("mithril"),
 
     children = require("../types/children"),
     db       = require("../lib/firebase"),
+    
+    nav = require("./nav"),
 
     css    = require("./schemas-edit.css");
 
@@ -111,6 +113,7 @@ module.exports = {
         }
 
         return m("div", { class : css.page },
+            m(nav),
             m("div", { class : css.meta },
                 m("h1", ctrl.schema.name),
                 m("h2", "Recent Entries"),

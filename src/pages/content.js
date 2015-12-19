@@ -2,7 +2,9 @@
 
 var m = require("mithril"),
     
-    db = require("../lib/firebase");
+    db = require("../lib/firebase"),
+
+    nav = require("./nav");
 
 module.exports = {
     controller : function() {
@@ -36,6 +38,7 @@ module.exports = {
 
     view : function(ctrl) {
         return [
+            m(nav),
             m("h1", "CONTENT"),
             Object.keys(ctrl.schemas || {}).map(function(schemaKey) {
                 var schema = ctrl.schemas[schemaKey];

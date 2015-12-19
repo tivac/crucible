@@ -5,6 +5,9 @@ var m = require("mithril");
 exports.default = function() {
     m.route(document.body, "/", {
         "/" : require("./pages/home"),
+        
+        "/login"  : require("./pages/login"),
+        "/logout" : require("./pages/logout"),
 
         "/schemas"     : require("./pages/schemas"),
         "/schemas/new" : require("./pages/schemas-new"),

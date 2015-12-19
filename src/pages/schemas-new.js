@@ -3,12 +3,14 @@
 var m      = require("mithril"),
     sluggo = require("sluggo"),
 
-    db = require("../lib/firebase");
+    db = require("../lib/firebase"),
+    
+    nav = require("./nav");
 
 module.exports = {
     controller : function() {
         var ctrl  = this;
-
+        
         ctrl.name = "";
         ctrl.slug = false;
 
@@ -32,6 +34,7 @@ module.exports = {
 
     view : function(ctrl) {
         return [
+            m(nav),
             m("h1", "Create a Schema"),
             m("form", { onsubmit : ctrl.onsubmit },
                 m("input[name=name]", {

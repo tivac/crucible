@@ -34,7 +34,7 @@
     "lodash.mapvalues": "^3.0.1",
     "lodash.set": "^3.7.4",
     "lodash.times": "^3.0.3",
-    "mithril": "^0.2.0",
+    "mithril": "^0.2.1",
     "modular-css": "^0.7.1",
     "moment": "^2.10.6",
     "normalize.css": "^3.0.3",
