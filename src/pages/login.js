@@ -1,3 +1,4 @@
+/* global crucible */
 "use strict";
 
 var m = require("mithril"),
@@ -28,6 +29,10 @@ module.exports = {
                 m.route("/");
             });
         };
+        
+        if(crucible.auth && crucible.auth !== "password") {
+            db.authWithOAuthRedirect(crucible.auth);
+        }
     },
     
     view : function(ctrl) {
