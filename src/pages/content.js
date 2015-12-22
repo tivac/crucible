@@ -38,7 +38,7 @@ module.exports = {
 
     view : function(ctrl) {
         return [
-            m(nav),
+            m.component(nav),
             m("h1", "CONTENT"),
             Object.keys(ctrl.schemas || {}).map(function(schemaKey) {
                 var schema = ctrl.schemas[schemaKey];

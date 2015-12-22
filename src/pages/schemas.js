@@ -19,7 +19,7 @@ module.exports = {
 
     view : function(ctrl) {
         return [
-            m(nav),
+            m.component(nav),
             m("h1", "Schemas"),
             m("p",
                 m("a[href=/schemas/new]", { config : m.route }, "Create a new Schema")

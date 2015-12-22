@@ -34,7 +34,7 @@ module.exports = {
 
     view : function(ctrl) {
         return [
-            m(nav),
+            m.component(nav),
             m("h1", "Create a Schema"),
             m("form", { onsubmit : ctrl.onsubmit },
                 m("input[name=name]", {

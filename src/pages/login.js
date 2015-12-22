@@ -37,7 +37,7 @@ module.exports = {
     
     view : function(ctrl) {
         return [
-            m(nav, { unauth : true }),
+            m.component(nav, { unauth : true }),
             m("h1", "CRUCIBLE LOGIN"),
             
             m("form", { onsubmit : ctrl.onsubmit },

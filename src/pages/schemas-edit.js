@@ -113,7 +113,7 @@ module.exports = {
         }
 
         return m("div", { class : css.page },
-            m(nav),
+            m.component(nav),
             m("div", { class : css.meta },
                 m("h1", ctrl.schema.name),
                 m("h2", "Recent Entries"),

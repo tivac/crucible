@@ -77,7 +77,7 @@ module.exports = {
         });
 
         return [
-            m(nav),
+            m.component(nav),
             m("h1", "Content - Editing \"" + (ctrl.entry._name || "") + "\""),
             
             m("div",
@@ -121,7 +121,7 @@ module.exports = {
                         m.redraw();
                     }
                 },
-                m(children, {
+                m.component(children, {
                     details : ctrl.schema.fields,
                     ref     : ctrl.ref,
                     data    : ctrl.entry,

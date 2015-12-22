@@ -9,7 +9,7 @@ var m  = require("mithril"),
 module.exports = {
     view : function() {
         return [
-            m(nav),
+            m.component(nav),
             m("h1", "HOME"),
             m("ul",
                 m("li",

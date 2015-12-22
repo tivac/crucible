@@ -8,6 +8,10 @@ module.exports = {
     controller : function(options) {
         var ctrl = this,
             auth = db.getAuth();
+            
+        if(!options) {
+            options = false;
+        }
         
         if(!auth && !options.unauth) {
             return m.route("/login");
