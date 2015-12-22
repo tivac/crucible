@@ -259,4 +259,6 @@
             "$ref": "#/definitions/children"
         }
     }
+    },
+    "required": [ "updated", "created", "name" ]
 }
