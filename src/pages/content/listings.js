@@ -34,7 +34,7 @@ module.exports = {
                 entries.push(data);
             });
 
-            ctrl.content = paginate(entries);
+            ctrl.content = paginate(entries, { limit : 20 });
 
             m.redraw();
         });
@@ -58,7 +58,27 @@ module.exports = {
     },
 
     view : function(ctrl) {
-        var page = ctrl.content ? ctrl.content.pages[ctrl.page] : { items : [] };
+        var current = ctrl.content ? ctrl.content.pages[ctrl.page] : { items : [] },
+            pages   = [];
+
+        if(ctrl.content) {
+            if(ctrl.content.pages.length > 15) {
+                if(current.idx > 5) {
+                    pages.push("...");
+                }
+
+                pages = pages.concat(ctrl.content.pages.slice(
+                    Math.max(current.idx - 5, 0),
+                    Math.min(current.idx + 5, ctrl.content.pages.length)
+                ));
+
+                if(current.idx < (ctrl.content.pages.length - 5)) {
+                    pages.push("...");
+                }
+            } else {
+                pages = ctrl.content.pages;
+            }
+        }
 
         return m("div",
             m("h2", ctrl.schema.name),
@@ -72,7 +92,7 @@ module.exports = {
                     m("th", "Updated"),
                     m("th", m.trust("&nbsp;"))
                 ),
-                page.items.map(function(data) {
+                current.items.map(function(data) {
                     return m("tr", { key : data.key },
                         m("td",
                             m("a", { href : "/content/" + ctrl.schema.key + "/" + data.key, config : m.route }, data._name)
@@ -87,23 +107,31 @@ module.exports = {
             ),
             ctrl.content ?
                 m("div",
-                    page.prev ?
+                    current.prev ?
                         m("a", {
-                            href : "#/page" + page.prev - 1,
-                            onclick : ctrl.change.bind(null, page.prev - 1)
-                        }, m.trust("&lt; "), page.prev) :
+                            href : "#/page" + current.prev - 1,
+                            onclick : ctrl.change.bind(null, current.prev - 1)
+                        }, m.trust("&lt; "), current.prev) :
                         m.trust("&lt; &nbsp;"),
-                    ctrl.content.pages.map(function(page) {
+                    pages.map(function(page) {
+                        if(typeof page === "string") {
+                            return m.trust(page);
+                        }
+
+                        if(page.idx === current.idx) {
+                            return page.current;
+                        }
+
                         return m("a", {
                             href : "#/page" + page.idx,
                             onclick : ctrl.change.bind(null, page.idx)
                         }, page.current);
                     }),
-                    page.next ?
+                    current.next ?
                         m("a", {
-                            href : "#/page" + page.next - 1,
-                            onclick : ctrl.change.bind(null, page.next - 1)
-                        }, page.next, m.trust("&gt;")) :
+                            href : "#/page" + current.next - 1,
+                            onclick : ctrl.change.bind(null, current.next - 1)
+                        }, current.next, m.trust("&gt;")) :
                         m.trust("&nbsp; &gt;")
                 ) :
                 null
