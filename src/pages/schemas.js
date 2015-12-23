@@ -18,7 +18,7 @@ module.exports = {
     },
 
     view : function(ctrl) {
-        return [
+        return m("div",
             m.component(nav),
             m("h1", "Schemas"),
             m("p",
@@ -32,6 +32,6 @@ module.exports = {
                     );
                 })
             )
-        ];
+        );
     }
 };

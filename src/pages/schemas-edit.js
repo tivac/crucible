@@ -109,7 +109,9 @@ module.exports = {
 
     view : function(ctrl) {
         if(!ctrl.schema) {
-            return m("h1", "Loading...");
+            return m("div",
+                m("h1", "Loading...")
+            );
         }
 
         return m("div", { class : css.page },

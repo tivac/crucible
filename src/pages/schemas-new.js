@@ -33,7 +33,7 @@ module.exports = {
     },
 
     view : function(ctrl) {
-        return [
+        return m("div",
             m.component(nav),
             m("h1", "Create a Schema"),
             m("form", { onsubmit : ctrl.onsubmit },
@@ -46,6 +46,6 @@ module.exports = {
                 ),
                 m("input[type=submit]", { value : "Add" })
             )
-        ];
+        );
     }
 };

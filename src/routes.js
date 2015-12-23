@@ -1,21 +1,29 @@
 "use strict";
 
-var m = require("mithril");
+var m = require("mithril"),
+    
+    auth = require("./lib/require-auth");
 
 exports.default = function() {
     m.route(document.body, "/", {
-        "/" : require("./pages/home"),
+        "/" : auth(require("./pages/home")),
         
         "/login"  : require("./pages/login"),
         "/logout" : require("./pages/logout"),
 
-        "/schemas"     : require("./pages/schemas"),
-        "/schemas/new" : require("./pages/schemas-new"),
-        "/schemas/:id" : require("./pages/schemas-edit"),
+        "/schemas"     : auth(require("./pages/schemas")),
+        "/schemas/new" : auth(require("./pages/schemas-new")),
+        "/schemas/:id" : auth(require("./pages/schemas-edit")),
 
-        "/content"             : require("./pages/content"),
-        "/content/:schema"     : require("./pages/content-list"),
-        "/content/:schema/:id" : require("./pages/content-edit")
+        "/content"             : auth(require("./pages/content")),
+        "/content/:schema"     : auth(require("./pages/content-list")),
+        "/content/:schema/:id" : auth(require("./pages/content-edit"))
+    });
+};
+
+exports.unauth = function() {
+    m.route(document.body, "/login", {
+        "/login" : require("./pages/login")
     });
 };
 

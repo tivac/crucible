@@ -76,7 +76,7 @@ module.exports = {
             class : css.child
         });
 
-        return [
+        return m("div",
             m.component(nav),
             m("h1", "Content - Editing \"" + (ctrl.entry._name || "") + "\""),
             
@@ -133,6 +133,6 @@ module.exports = {
                 publish,
                 version
             )
-        ];
+        );
     }
 };

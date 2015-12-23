@@ -26,7 +26,7 @@ module.exports = {
                     return m.redraw();
                 }
                 
-                m.route("/");
+                document.location = "/";
             });
         };
         

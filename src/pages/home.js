@@ -8,7 +8,7 @@ var m  = require("mithril"),
 
 module.exports = {
     view : function() {
-        return [
+        return m("div",
             m.component(nav),
             m("h1", "HOME"),
             m("ul",
@@ -19,6 +19,6 @@ module.exports = {
                     m("a", { href : "/content", config : m.route }, "Content")
                 )
             )
-        ]
+        );
     }
 };

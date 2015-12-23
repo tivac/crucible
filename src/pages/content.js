@@ -54,9 +54,7 @@ module.exports = {
     },
 
     view : function(ctrl) {
-        console.log(ctrl.content); // TODO: REMOVE DEBUGGING
-
-        return [
+        return m("div",
             m.component(nav),
             m("h1", "CONTENT"),
             Object.keys(ctrl.schemas || {}).map(function(schemaKey) {
@@ -91,6 +89,6 @@ module.exports = {
                     )
                 );
             })
-        ];
+        );
     }
 };

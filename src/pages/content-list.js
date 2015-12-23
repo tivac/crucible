@@ -63,7 +63,7 @@ module.exports = {
     view : function(ctrl) {
         var page = ctrl.content ? ctrl.content.pages[ctrl.page] : { items : [] };
 
-        return [
+        return m("div",
             m.component(nav),
             m("h1", "CONTENT"),
             m("div",
@@ -114,6 +114,6 @@ module.exports = {
                     ) :
                     null
             )
-        ];
+        );
     }
 };
