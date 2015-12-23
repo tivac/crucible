@@ -16,7 +16,6 @@ exports.default = function() {
         "/schemas/:id" : auth(require("./pages/schemas-edit")),
 
         "/content"             : auth(require("./pages/content")),
-        "/content/:schema"     : auth(require("./pages/content-list")),
         "/content/:schema/:id" : auth(require("./pages/content-edit"))
     });
 };
