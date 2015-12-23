@@ -14,6 +14,7 @@ exports.default = function() {
         "/schemas/:id" : require("./pages/schemas-edit"),
 
         "/content"             : require("./pages/content"),
+        "/content/:schema"     : require("./pages/content-list"),
         "/content/:schema/:id" : require("./pages/content-edit")
     });
 };

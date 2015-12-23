@@ -17,15 +17,15 @@ module.exports = {
     controller : function() {
         var ctrl = this,
             
-            entry  = db.child("content/" + m.route.param("id")),
+            ref    = db.child("content/" + m.route.param("schema") + "/" + m.route.param("id")),
             schema = db.child("schemas/" + m.route.param("schema"));
         
-        ctrl.ref    = entry;
+        ctrl.ref    = ref;
         ctrl.entry  = null;
         ctrl.schema = null;
         ctrl.form   = null;
         
-        entry.on("value", function(snap) {
+        ref.on("value", function(snap) {
             if(!snap.exists()) {
                 return m.route("/content");
             }
@@ -46,12 +46,12 @@ module.exports = {
         });
 
         // Ensure the updated timestamp is always accurate-ish
-        entry.on("child_changed", function(snap) {
+        ref.on("child_changed", function(snap) {
             if(snap.key() === "updated") {
                 return;
             }
 
-            entry.child("updated").set(db.TIMESTAMP);
+            ref.child("updated").set(db.TIMESTAMP);
         });
     },
 
