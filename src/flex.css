@@ -1,0 +1,31 @@
+.container {
+    display: flex;
+}
+
+.vbox {
+    composes: container;
+
+    flex-direction: column;
+}
+
+.hbox {
+    composes: container;
+
+    flex-direction: row;
+}
+
+.flex {
+    flex: 1;
+}
+
+.noflex {
+    flex: 0;
+}
+
+.center {
+    justify-content: center;
+}
+
+.around {
+    justify-content: space-around;
+}
