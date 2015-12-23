@@ -8,8 +8,8 @@ var m = require("mithril"),
     
     nav = require("./nav"),
     
-    publishing = require("./content/publishing"),
-    versioning = require("./content/versioning"),
+    publishing = require("./content-edit/publishing"),
+    versioning = require("./content-edit/versioning"),
 
     css = require("./content-edit.css");
 
