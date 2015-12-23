@@ -16,9 +16,9 @@ for(x = 0; x < count; x++) {
     }
     
     data[new Randexp(/-\w{19}/).gen()] = {
-        _name : faker.company.catchPhrase(),
-        _schema : "blog-post",
-        _version : faker.random.number(),
+        _name    : faker.company.catchPhrase(),
+        _version : faker.random.number({ min : 1, max : 100 }),
+        _created : faker.date.past().valueOf(),
         _updated : faker.date.recent().valueOf(),
         "make-your-choice": faker.random.arrayElement([ 1, 2, 3 ]),
         number : faker.random.number(),
@@ -42,4 +42,4 @@ for(x = 0; x < count; x++) {
     };
 }
 
-require("fs").writeFileSync("./fake.json", JSON.stringify(data, null, 4), "utf8");
+require("fs").writeFileSync("./fake.json", JSON.stringify({ "blog-post" : data }, null, 4), "utf8");
