@@ -1,0 +1,56 @@
+@value flexcss: "../../flex.css";
+
+.listings {
+    width: 100%;
+}
+
+.meta {
+    composes: hbox, flex from flexcss;
+
+    margin-bottom: 20px;
+}
+
+.meta-section {
+    composes: flex from flexcss;
+}
+
+.new {
+    composes: meta-section;
+
+    text-align: center;
+}
+
+.filter {
+    composes: meta-section;
+
+    text-align: right;
+}
+
+.search {
+    width: 100%;
+}
+
+.title {
+    composes: meta-section;
+
+    margin: 0;
+}
+
+.name {
+    text-align: left;
+}
+
+.time {
+    text-align: center;
+}
+
+.pagination {
+    composes: hbox, center from flexcss;
+}
+
+.link {
+    composes: noflex from flexcss;
+    flex-basis: 3%;
+
+    text-align: center;
+}

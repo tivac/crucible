@@ -3,8 +3,15 @@
 var m        = require("mithril"),
     paginate = require("paginationator"),
     moment   = require("moment"),
+    fuzzy    = require("fuzzysearch"),
+    debounce = require("lodash.debounce"),
+    sluggo   = require("sluggo"),
     
-    db = require("../../lib/firebase");
+    db = require("../../lib/firebase"),
+
+    css = require("./listings.css"),
+
+    size = 20;
 
 module.exports = {
     controller : function(options) {
@@ -14,7 +21,9 @@ module.exports = {
 
         ctrl.page = 0;
 
+        ctrl.entries = null;
         ctrl.content = null;
+        ctrl.results = null;
         
         // need to go get schema name
         db.child("schemas/" + ctrl.schema.key).once("value", function(snap) {
@@ -30,11 +39,13 @@ module.exports = {
                 data.key = record.key();
                 data.created = moment(data._created);
                 data.updated = moment(data._updated);
+                data.search  = sluggo(data._name, { separator : "" });
 
                 entries.push(data);
             });
 
-            ctrl.content = paginate(entries, { limit : 20 });
+            ctrl.entries = entries;
+            ctrl.content = paginate(entries, { limit : size });
 
             m.redraw();
         });
@@ -55,13 +66,39 @@ module.exports = {
 
             ctrl.page = page;
         };
+
+        // m.redraw calls are necessary due to debouncing, this function
+        // may not be executing during a planned redraw cycle
+        ctrl.filter = debounce(function(input, e) {
+            if(input.length < 2) {
+                ctrl.results = false;
+
+                return m.redraw();
+            }
+
+            input = input.toLowerCase();
+
+            ctrl.results = ctrl.entries.filter(function(content) {
+                return fuzzy(input, content.search);
+            }).slice(0, size);
+
+            m.redraw();
+        }, 100);
     },
 
     view : function(ctrl) {
-        var current = ctrl.content ? ctrl.content.pages[ctrl.page] : { items : [] },
-            pages   = [];
+        var pages = [],
+            current;
 
-        if(ctrl.content) {
+        if(ctrl.results) {
+            current = {
+                items : ctrl.results
+            };
+        } else {
+            current = ctrl.content ? ctrl.content.pages[ctrl.page] : { items : [] };
+        }
+
+        if(ctrl.content && !ctrl.results) {
             if(ctrl.content.pages.length > 15) {
                 if(current.idx > 5) {
                     pages.push("...");
@@ -81,15 +118,22 @@ module.exports = {
         }
 
         return m("div",
-            m("h2", ctrl.schema.name),
-            m("p",
-                m("button", { onclick : ctrl.add }, "Add " + ctrl.schema.name)
+            m("div", { class : css.meta },
+                m("h2", { class : css.title }, ctrl.schema.name),
+
+                m("div", { class : css.new },
+                    m("button", { onclick : ctrl.add }, "Add " + ctrl.schema.name)
+                ),
+
+                m("div", { class : css.filter },
+                    m("input", { class : css.search, oninput : m.withAttr("value", ctrl.filter), placeholder : "Search" })
+                )
             ),
-            m("table",
+            m("table", { class : css.listings },
                 m("tr",
-                    m("th", "Name"),
-                    m("th", "Created"),
-                    m("th", "Updated"),
+                    m("th", { class : css.name }, "Name"),
+                    m("th", { class : css.time },"Created"),
+                    m("th", { class : css.time },"Updated"),
                     m("th", m.trust("&nbsp;"))
                 ),
                 current.items.map(function(data) {
@@ -97,42 +141,48 @@ module.exports = {
                         m("td",
                             m("a", { href : "/content/" + ctrl.schema.key + "/" + data.key, config : m.route }, data._name)
                         ),
-                        m("td", { title : data.created.format("LLL") }, data.created.fromNow()),
-                        m("td", { title : data.updated.format("LLL") }, data.updated.fromNow()),
+                        m("td", { class : css.time, title : data.created.format("LLL") }, data.created.fromNow()),
+                        m("td", { class : css.time, title : data.updated.format("LLL") }, data.updated.fromNow()),
                         m("td",
                             m("button", "Delete")
                         )
                     );
                 })
             ),
-            ctrl.content ?
-                m("div",
+            pages.length ?
+                m("div", { class : css.pagination },
                     current.prev ?
                         m("a", {
-                            href : "#/page" + current.prev - 1,
+                            key     : "prev",
+                            href    : "#/page" + current.prev - 1,
+                            class   : css.link,
                             onclick : ctrl.change.bind(null, current.prev - 1)
-                        }, m.trust("&lt; "), current.prev) :
-                        m.trust("&lt; &nbsp;"),
+                        }, m.trust("&lt; ")) :
+                        m("span", { class : css.link }, m.trust("&lt;")),
                     pages.map(function(page) {
                         if(typeof page === "string") {
-                            return m.trust(page);
+                            return m("span", { class : css.link }, page);
                         }
 
                         if(page.idx === current.idx) {
-                            return page.current;
+                            return m("span", { class : css.link }, page.current);
                         }
 
                         return m("a", {
-                            href : "#/page" + page.idx,
+                            key     : "page" + page.idx,
+                            href    : "#/page" + page.idx,
+                            class   : css.link,
                             onclick : ctrl.change.bind(null, page.idx)
                         }, page.current);
                     }),
                     current.next ?
                         m("a", {
-                            href : "#/page" + current.next - 1,
+                            key     : "next",
+                            href    : "#/page" + current.next - 1,
+                            class   : css.link,
                             onclick : ctrl.change.bind(null, current.next - 1)
-                        }, current.next, m.trust("&gt;")) :
-                        m.trust("&nbsp; &gt;")
+                        }, m.trust("&gt;")) :
+                        m("span", { class : css.link }, m.trust("&gt;"))
                 ) :
                 null
         );
