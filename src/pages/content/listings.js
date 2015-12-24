@@ -116,7 +116,7 @@ module.exports = {
                 pages = ctrl.content.pages;
             }
         }
-
+        
         return m("div",
             m("div", { class : css.meta },
                 m("h2", { class : css.title }, ctrl.schema.name),
@@ -129,25 +129,29 @@ module.exports = {
                     m("input", { class : css.search, oninput : m.withAttr("value", ctrl.filter), placeholder : "Search" })
                 )
             ),
-            m("table", { class : css.listings },
-                m("tr",
-                    m("th", { class : css.name }, "Name"),
-                    m("th", { class : css.time },"Created"),
-                    m("th", { class : css.time },"Updated"),
-                    m("th", m.trust("&nbsp;"))
+            m("table", { class : css.table },
+                m("thead",
+                    m("tr",
+                        m("th", { class : css.nonNumeric }, "Name"),
+                        m("th", { class : css.nonNumeric }, "Created"),
+                        m("th", { class : css.nonNumeric }, "Updated"),
+                        m("th", { class : css.nonNumeric }, "")
+                    )
                 ),
-                current.items.map(function(data) {
-                    return m("tr", { key : data.key },
-                        m("td",
-                            m("a", { href : "/content/" + ctrl.schema.key + "/" + data.key, config : m.route }, data._name)
-                        ),
-                        m("td", { class : css.time, title : data.created.format("LLL") }, data.created.fromNow()),
-                        m("td", { class : css.time, title : data.updated.format("LLL") }, data.updated.fromNow()),
-                        m("td",
-                            m("button", "Delete")
-                        )
-                    );
-                })
+                m("tbody",
+                    current.items.map(function(data) {
+                        return m("tr", { key : data.key },
+                            m("td", { class : css.nonNumeric },
+                                m("a", { href : "/content/" + ctrl.schema.key + "/" + data.key, config : m.route }, data._name)
+                            ),
+                            m("td", { class : css.nonNumeric, title : data.created.format("LLL") }, data.created.fromNow()),
+                            m("td", { class : css.nonNumeric, title : data.updated.format("LLL") }, data.updated.fromNow()),
+                            m("td", { class : css.nonNumeric },
+                                m("button", { class : css.delete }, "Delete")
+                            )
+                        );
+                    })
+                )
             ),
             pages.length ?
                 m("div", { class : css.pagination },

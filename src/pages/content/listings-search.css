@@ -1,0 +1,23 @@
+.container {
+    composes: global(mdl-textfield), global(mdl-js-textfield), global(mdl-textfield--expandable);
+}
+
+.button {
+    composes: global(mdl-button), global(mdl-js-button), global(mdl-button--icon);
+}
+
+.icon {
+    composes: global(material-icons);
+}
+
+.text {
+    composes: global(mdl-textfield__expandable-holder);
+}
+
+.input {
+    composes: global(mdl-textfield__input);
+}
+
+.label {
+    composes: global(mdl-textfield__label);
+}

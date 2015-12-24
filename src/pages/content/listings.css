@@ -1,7 +1,13 @@
 @value flexcss: "../../flex.css";
 
-.listings {
+.table {
+    composes: global(mdl-data-table), global(mdl-shadow--2dp);
+    
     width: 100%;
+}
+
+.nonNumeric {
+    composes: global(mdl-data-table__cell--non-numeric);
 }
 
 .meta {
@@ -36,13 +42,6 @@
     margin: 0;
 }
 
-.name {
-    text-align: left;
-}
-
-.time {
-    text-align: center;
-}
 
 .pagination {
     composes: hbox, center from flexcss;
@@ -53,4 +52,14 @@
     flex-basis: 3%;
 
     text-align: center;
+}
+
+.button {
+    composes: global(mdl-button), global(mdl-js-button), global(mdl-button--raised), global(mdl-js-ripple-effect), global(mdl-button-accent);
+}
+
+.delete {
+    composes: button;
+    
+    margin-top: -7px;
 }
