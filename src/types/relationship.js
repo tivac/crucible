@@ -4,7 +4,7 @@ var m      = require("mithril"),
     assign = require("lodash.assign"),
     map    = require("lodash.map"),
     fuzzy  = require("fuzzysearch"),
-    slug   = require("unique-slug"),
+    slug   = require("sluggo"),
     
     db = require("../lib/firebase"),
     

@@ -2,7 +2,7 @@
 
 var m      = require("mithril"),
     assign = require("lodash.assign"),
-    slug   = require("unique-slug"),
+    slug   = require("sluggo"),
 
     types = require("./types.css");
 
