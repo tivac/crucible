@@ -119,7 +119,7 @@ module.exports = {
         
         return m("div",
             m("div", { class : css.meta },
-                m("h2", { class : css.title }, ctrl.schema.name),
+                m("h3", { class : css.title }, ctrl.schema.name),
 
                 m("div", { class : css.new },
                     m("button", { onclick : ctrl.add }, "Add " + ctrl.schema.name)

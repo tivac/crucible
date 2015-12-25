@@ -3,8 +3,8 @@
 var m = require("mithril"),
     
     db = require("../lib/firebase"),
-
-    nav      = require("./nav"),
+    
+    layout   = require("./layout"),
     listings = require("./content/listings");
 
 module.exports = {
@@ -26,12 +26,11 @@ module.exports = {
     },
 
     view : function(ctrl) {
-        return m("div",
-            m.component(nav),
-            m("h1", "CONTENT"),
-            ctrl.schemas.map(function(schema) {
+        return m.component(layout, {
+            title : "Content",
+            content : ctrl.schemas.map(function(schema) {
                 return m.component(listings, { schema : schema });
             })
-        );
+        });
     }
 };
