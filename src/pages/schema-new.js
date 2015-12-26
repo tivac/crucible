@@ -5,7 +5,7 @@ var m      = require("mithril"),
 
     db = require("../lib/firebase"),
     
-    nav = require("./nav");
+    layout = require("./layout");
 
 module.exports = {
     controller : function() {
@@ -33,10 +33,9 @@ module.exports = {
     },
 
     view : function(ctrl) {
-        return m("div",
-            m.component(nav),
-            m("h1", "Create a Schema"),
-            m("form", { onsubmit : ctrl.onsubmit },
+        return m.component(layout, {
+            title   : "Create a Schema",
+            content : m("form", { onsubmit : ctrl.onsubmit },
                 m("input[name=name]", {
                     oninput : m.withAttr("value", ctrl.oninput),
                     value   : ctrl.name
@@ -46,6 +45,6 @@ module.exports = {
                 ),
                 m("input[type=submit]", { value : "Add" })
             )
-        );
+        });
     }
 };

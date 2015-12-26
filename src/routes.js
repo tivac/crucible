@@ -11,11 +11,10 @@ exports.default = function() {
         "/login"  : require("./pages/login"),
         "/logout" : require("./pages/logout"),
 
-        "/schemas"     : auth(require("./pages/schemas")),
-        "/schemas/new" : auth(require("./pages/schemas-new")),
-        "/schemas/:id" : auth(require("./pages/schemas-edit")),
+        "/schema/new" : auth(require("./pages/schema-new")),
+        "/schema/:id" : auth(require("./pages/schema-edit")),
 
-        "/content"             : auth(require("./pages/content")),
+        "/content/:schema"     : auth(require("./pages/content")),
         "/content/:schema/:id" : auth(require("./pages/content-edit"))
     });
 };

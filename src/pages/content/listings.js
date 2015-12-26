@@ -11,7 +11,15 @@ var m        = require("mithril"),
 
     css = require("./listings.css"),
 
-    size = 20;
+    size = 10;
+
+function upgrade(el, init) {
+    if(init) {
+        return;
+    }
+    
+    componentHandler.upgradeElement(el);
+}
 
 module.exports = {
     controller : function(options) {
@@ -25,11 +33,6 @@ module.exports = {
         ctrl.content = null;
         ctrl.results = null;
         
-        // need to go get schema name
-        db.child("schemas/" + ctrl.schema.key).once("value", function(snap) {
-            ctrl.schema.name = snap.val().name;
-        });
-
         db.child("content/" + ctrl.schema.key).on("value", function(snap) {
             var entries = [];
 
@@ -119,14 +122,17 @@ module.exports = {
         
         return m("div",
             m("div", { class : css.meta },
-                m("h3", { class : css.title }, ctrl.schema.name),
-
-                m("div", { class : css.new },
-                    m("button", { onclick : ctrl.add }, "Add " + ctrl.schema.name)
+                m("button.mdl-button.mdl-js-button.mdl-button--fab.mdl-button--mini-fab", { config : upgrade, onclick : ctrl.add },
+                    m("i.material-icons", "add")
                 ),
-
-                m("div", { class : css.filter },
-                    m("input", { class : css.search, oninput : m.withAttr("value", ctrl.filter), placeholder : "Search" })
+                m(".mdl-textfield.mdl-js-textfield.mdl-textfield--expandable", { config : upgrade },
+                    m("label.mdl-button.mdl-js-button.mdl-button--icon", { for : "search" },
+                        m("i.material-icons", "search")
+                    ),
+                    m(".mdl-textfield__expandable-holder",
+                        m("input.mdl-textfield__input", { id : "search", placeholder : "Search", oninput : m.withAttr("value", ctrl.filter) }),
+                        m("label.mdl-textfield__label", { for : "search" }, "Expandable Input")
+                    )
                 )
             ),
             m("table", { class : css.table },

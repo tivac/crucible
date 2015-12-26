@@ -15,9 +15,9 @@ var m        = require("mithril"),
     children = require("../types/children"),
     db       = require("../lib/firebase"),
     
-    nav = require("./nav"),
+    layout = require("./layout"),
 
-    css    = require("./schemas-edit.css");
+    css    = require("./schema-edit.css");
 
 module.exports = {
     controller : function() {
@@ -108,41 +108,50 @@ module.exports = {
     },
 
     view : function(ctrl) {
+        var recent;
+        
         if(!ctrl.schema) {
-            return m("div",
-                m("h1", "Loading...")
-            );
+            return m.component(layout, {
+                title   : "",
+                content : m("p", "Loading...")
+            });
         }
+        
+        recent = Object.keys(ctrl.recent || {});
+        
+        return m.component(layout, {
+            title   : ctrl.schema.name,
+            content : [
+                recent.length ?
+                    m("div", { class : css.meta },
+                        m("h3", "Recent Entries"),
+                        m("ul",
+                            recent.map(function(key) {
+                                var content = ctrl.recent[key];
 
-        return m("div", { class : css.page },
-            m.component(nav),
-            m("div", { class : css.meta },
-                m("h1", ctrl.schema.name),
-                m("h2", "Recent Entries"),
-                m("ul",
-                    Object.keys(ctrl.recent || {}).map(function(key) {
-                        var content = ctrl.recent[key];
+                                return m("li",
+                                    m("a", { href : "/content/" + content._schema + "/" + key, config : m.route }, content._name)
+                                );
+                            })
+                        ),
+                        m("hr")
+                    ) :
+                    null,
+                m("div", { class : css.contents },
+                    m("div", { class : css.editor },
+                        m("textarea", { config : ctrl.editorSetup, },
+                            ctrl.schema.source || "{}"
+                        )
+                    ),
 
-                        return m("li",
-                            m("a", { href : "/content/" + content._schema + "/" + key, config : m.route }, content._name)
-                        );
-                    })
-                ),
-                m("hr")
-            ),
-            m("div", { class : css.contents },
-                m("div", { class : css.editor },
-                    m("textarea", { config : ctrl.editorSetup, },
-                        ctrl.schema.source || "{}"
+                    m("div", { class : css.fields },
+                        m.component(children, {
+                            details : ctrl.schema.fields
+                        })
                     )
-                ),
-
-                m("div", { class : css.fields },
-                    m.component(children, {
-                        details : ctrl.schema.fields
-                    })
                 )
-            )
-        );
+            ]
+        });
+
     }
 };
