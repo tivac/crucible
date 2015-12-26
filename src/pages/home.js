@@ -4,14 +4,13 @@ var m  = require("mithril"),
     
     db   = require("../lib/firebase"),
     
-    nav = require("./nav");
+    layout = require("./layout");
 
 module.exports = {
     view : function() {
-        return m("div",
-            m.component(nav),
-            m("h1", "HOME"),
-            m("ul",
+        return m.component(layout, {
+            title   : "Home",
+            content : m("ul",
                 m("li",
                     m("a", { href : "/schemas", config : m.route }, "Schemas")
                 ),
@@ -19,6 +18,6 @@ module.exports = {
                     m("a", { href : "/content", config : m.route }, "Content")
                 )
             )
-        );
+        });
     }
 };
