@@ -24,8 +24,7 @@ module.exports = {
     view : function(ctrl) {
         if(!ctrl.schema) {
             return m.component(layout, {
-                title   : "",
-                content : "Loading..."
+                title   : "Loading..."
             });
         }
         

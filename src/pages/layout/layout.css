@@ -1,3 +1,9 @@
 .content {
     margin-top: 20px;
 }
+
+.progress {
+    composes: global(mdl-progress), global(mdl-js-progress), global(mdl-progress__indeterminate);
+    
+    width: 100%;
+}

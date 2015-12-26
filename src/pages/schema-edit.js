@@ -112,8 +112,7 @@ module.exports = {
         
         if(!ctrl.schema) {
             return m.component(layout, {
-                title   : "",
-                content : m("p", "Loading...")
+                title   : "Loading..."
             });
         }
         

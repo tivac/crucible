@@ -68,7 +68,9 @@ module.exports = {
                 )
             ),
             m("main.mdl-layout__content",
-                m("div", { class : css.content }, options.content)
+                options.content ?
+                    m("div", { class : css.content }, options.content) :
+                    m("div", { class : css.progress })
             )
         );
     }
