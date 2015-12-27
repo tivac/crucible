@@ -7,19 +7,12 @@ var m        = require("mithril"),
     debounce = require("lodash.debounce"),
     sluggo   = require("sluggo"),
     
-    db = require("../../lib/firebase"),
-
+    db      = require("../../lib/firebase"),
+    upgrade = require("../../lib/mdl-upgrade"),
+    
     css = require("./listings.css"),
 
     size = 10;
-
-function upgrade(el, init) {
-    if(init) {
-        return;
-    }
-    
-    componentHandler.upgradeElement(el);
-}
 
 module.exports = {
     controller : function(options) {

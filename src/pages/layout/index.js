@@ -2,17 +2,10 @@
 
 var m = require("mithril"),
     
-    db = require("../../lib/firebase.js"),
+    db      = require("../../lib/firebase"),
+    upgrade = require("../../lib/mdl-upgrade"),
     
     css = require("./layout.css");
-
-function upgrade(el, init) {
-    if(init) {
-        return;
-    }
-    
-    componentHandler.upgradeElement(el);
-}
 
 function link(schema) {
     return m("a", { class : "mdl-navigation__link", href : "/content/" + schema.key }, schema.name)
