@@ -2,14 +2,9 @@
 
 var m = require("mithril"),
     
-    db      = require("../../lib/firebase"),
-    upgrade = require("../../lib/mdl-upgrade"),
+    db = require("../../lib/firebase"),
     
     css = require("./layout.css");
-
-function link(schema) {
-    return m("a", { class : "mdl-navigation__link", href : "/content/" + schema.key }, schema.name)
-}
 
 module.exports = {
     controller : function(options) {
@@ -35,36 +30,24 @@ module.exports = {
     },
     
     view : function(ctrl, options) {
-        return m(".mdl-layout.mdl-js-layout.mdl-layout--fixed-header", { config : upgrade },
-            m("header.mdl-layout__header",
-                m(".mdl-layout__header-row",
-                    m("span.mdl-layout-title", options.title || "Title"),
-                    m(".mdl-layout-spacer"),
-                    m("nav.mdl-navigation.mdl-layout--large-screen-only",
-                        m("a", { class : "mdl-navigation__link", href : "/" }, "Home"),
-                        ctrl.schemas.map(link),
-                        m("button.mdl-button.mdl-button--icon", { onclick : ctrl.add },
-                            m("i.material-icons", "add")
-                        )
-                    )
+        return m("div",
+            m("h1", options.title || "Title"),
+            m("ul",
+                m("li",
+                    m("a", { class : "mdl-navigation__link", href : "/" }, "Home")
+                ),
+                ctrl.schemas.map(function(schema) {
+                    return m("li",
+                        m("a", { class : "mdl-navigation__link", href : "/content/" + schema.key }, schema.name)
+                    );
+                }),
+                m("li",
+                    m("button", { onclick : ctrl.add }, "Add")
                 )
             ),
-            m(".mdl-layout__drawer",
-                m("span.mdl-layout-title", options.title || "Title"),
-                m("nav.mdl-navigation",
-                    m("a", { class : "mdl-navigation__link", href : "/" }, "Home"),
-                    ctrl.schemas.map(link),
-                    m("button.mdl-button.mdl-js-button.mdl-button--raised.mdl-js-ripple-effect", { onclick : ctrl.add },
-                        m("i.material-icons", "add"),
-                        "Add Schema"
-                    )
-                )
-            ),
-            m("main.mdl-layout__content",
-                options.content ?
-                    m("div", { class : css.content }, options.content) :
-                    m("div", { class : css.progress })
-            )
+            options.content ?
+                m("div", { class : css.content }, options.content) :
+                m("div", { class : css.progress })
         );
     }
 }
