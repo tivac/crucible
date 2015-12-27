@@ -19,6 +19,10 @@ module.exports = {
             
             m.redraw();
         });
+        
+        ctrl.edit = function() {
+            m.route("/schema/" + ctrl.schema.key);
+        };
     },
 
     view : function(ctrl) {
@@ -29,13 +33,13 @@ module.exports = {
         }
         
         return m.component(layout, {
-            title : ctrl.schema.name,
-            content : m("div",
-                m("p",
-                    m("a", { href : "/schema/" + ctrl.schema.key }, "Edit " + ctrl.schema.name)
+            title : [
+                ctrl.schema.name,
+                m("button.mdl-button.mdl-js-button.mdl-button--icon.mdl-button--accent", { onclick : ctrl.edit },
+                    m("i.material-icons", "edit")
                 ),
-                m.component(listings, { schema : ctrl.schema })
-            )
+            ],
+            content : m.component(listings, { schema : ctrl.schema })
         });
     }
 };
