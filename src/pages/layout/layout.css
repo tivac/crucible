@@ -16,6 +16,10 @@
     composes: global(pure-menu-item);
 }
 
+.selected {
+    composes: item, global(pure-menu-selected);
+}
+
 .link {
     composes: global(pure-menu-link);
 }

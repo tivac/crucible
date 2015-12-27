@@ -30,15 +30,19 @@ module.exports = {
     },
     
     view : function(ctrl, options) {
+        var route = m.route();
+        
         return m("div",
             m("div", { class : css.header },
                 m("h1", { class : css.heading },
-                    m("a", { href : "/" }, options.title || "Crucible")
+                    m("a", { href : "/" }, "Crucible")
                 ),
                 m("ul", { class : css.items },
                     ctrl.schemas.map(function(schema) {
-                        return m("li", { class : css.item },
-                            m("a", { class : css.link, href : "/content/" + schema.key }, schema.name)
+                        var url = "/content/" + schema.key;
+                        
+                        return m("li", { class : css[route === url ? "selected" : "item"] },
+                            m("a", { class : css.link, href : url }, schema.name)
                         );
                     })
                 )
