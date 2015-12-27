@@ -1,11 +1,7 @@
 /* technique from http://alistapart.com/article/expanding-text-areas-made-elegant */
 .expander {
     position: relative;
-    min-height: 50px;
     max-height: 600px;
-    
-    border: 1px solid #888;
-    background: #FFF;
 }
 
 .child {

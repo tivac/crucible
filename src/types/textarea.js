@@ -4,9 +4,10 @@ var m      = require("mithril"),
     assign = require("lodash.assign"),
     slug   = require("sluggo"),
 
-    update = require("../lib/update"),
-    types  = require("./types.css"),
-    css    = require("./textarea.css");
+    update  = require("../lib/update"),
+    upgrade = require("../lib/mdl-upgrade"),
+    types   = require("./types.css"),
+    css     = require("./textarea.css");
 
 module.exports = {
     controller : function(options) {
@@ -34,14 +35,10 @@ module.exports = {
             name += "*";
         }
 
-        return m("div", { class : options.class },
-            m("label", {
-                for   : ctrl.id,
-                class : types[details.required ? "required" : "label"]
-            }, name),
+        return m("div.mdl-textfield.mdl-js-textfield", { class : options.class, config : upgrade },
             m("div", { class : css.expander },
                 m("pre", { class : css.shadow }, m("span", ctrl.text), m("br")),
-                m("textarea", assign({
+                m("textarea.mdl-textfield__input", assign({
                         // attrs
                         id       : ctrl.id,
                         class    : css.textarea,
@@ -52,7 +49,11 @@ module.exports = {
                     },
                     details.attrs || {}
                 ), options.data || "")
-            )
+            ),
+            m("label.mdl-textfield__label", {
+                for   : ctrl.id,
+                class : types[details.required ? "required" : "label"]
+            }, name)
         );
     }
 };

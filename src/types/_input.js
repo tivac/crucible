@@ -4,8 +4,9 @@ var m      = require("mithril"),
     assign = require("lodash.assign"),
     slug   = require("sluggo"),
 
-    update = require("../lib/update"),
-    types  = require("./types.css");
+    update  = require("../lib/update"),
+    upgrade = require("../lib/mdl-upgrade"),
+    types   = require("./types.css");
 
 module.exports = function(type) {
     return {
@@ -23,12 +24,8 @@ module.exports = function(type) {
                 name += "*";
             }
 
-            return m("div", { class : options.class },
-                m("label", {
-                    for   : ctrl.id,
-                    class : types[details.required ? "required" : "label"]
-                }, name),
-                m("input", assign({
+            return m(".mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label", { class : options.class, config : upgrade },
+                m("input.mdl-textfield__input", assign({
                         // attrs
                         id       : ctrl.id,
                         type     : type || "text",
@@ -40,7 +37,12 @@ module.exports = function(type) {
                         oninput : options.ref && m.withAttr("value", update.bind(null, options.ref, null))
                     },
                     details.attrs || {}
-                ))
+                )),
+                m("label.mdl-textfield__label", {
+                    for   : ctrl.id,
+                    class : types[details.required ? "required" : "label"]
+                }, name),
+                m("span.mdl-textfield__error", "Input is incorrect!")
             );
         }
     }
