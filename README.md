@@ -7,7 +7,9 @@ Mithril.js single-page application talking to FireBase to build a customizable A
 
 1. Clone
 2. `npm i`
-3. `npm start`
+3. `npm run build`
+4. `npm start`
+5. [Open browser for instructions](http://localhost:9966)
 
 ## Usage
 
