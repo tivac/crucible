@@ -1,9 +1,96 @@
-.content {
-    margin-top: 20px;
+.header {
+    composes: global(pure-menu), global(pure-menu-horizontal);
+}
+
+.heading {
+    composes: global(pure-menu-heading), global(pure-menu-link);
+    
+    font-size: 1.2em;
+}
+
+.items {
+    composes: global(pure-menu-list);
+}
+
+.item {
+    composes: global(pure-menu-item);
+}
+
+.link {
+    composes: global(pure-menu-link);
 }
 
 .progress {
-    composes: global(mdl-progress), global(mdl-js-progress), global(mdl-progress__indeterminate);
+    height: 10px;
+    background: #666;
     
-    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress::before {
+    position: absolute;
+    z-index: 1;
+    content: "";
+    
+    top: 0;
+    bottom: 0;
+    width: 0;
+    
+    background: #00F;
+    
+    animation: progressBefore 2s linear infinite;
+}
+
+.progress::after {
+    position: absolute;
+    z-index: 1;
+    content: "";
+    
+    top: 0;
+    bottom: 0;
+    width: 0;
+       
+    background: #F00;
+    
+    animation: progressAfter 2s linear infinite;
+}
+
+@keyframes progressBefore {
+    0% {
+        left: 0%;
+        width: 0%;
+    }
+    
+    50% {
+        left: 25%;
+        width: 75%;
+    }
+    
+    75% {
+        left: 100%;
+        width: 0%;
+    }
+}
+
+@keyframes progressAfter {
+    0% {
+        left: 0%;
+        width: 0%;
+    }
+    
+    50% {
+        left: 0%;
+        width: 0%;
+    }
+    
+    75% {
+        left: 0%;
+        width: 25%;
+    }
+    
+    100% {
+        left: 100%;
+        width: 0%;
+    }
 }

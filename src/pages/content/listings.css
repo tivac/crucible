@@ -1,65 +1,14 @@
-@value flexcss: "../../flex.css";
-
 .table {
-    composes: global(mdl-data-table), global(mdl-shadow--2dp);
+    composes: global(pure-table), global(pure-table-horizontal), global(pure-table-striped);
     
     width: 100%;
-}
-
-.nonNumeric {
-    composes: global(mdl-data-table__cell--non-numeric);
-}
-
-.meta {
-    composes: hbox, flex from flexcss;
-
-    margin-bottom: 20px;
-}
-
-.meta-section {
-    composes: flex from flexcss;
-}
-
-.new {
-    composes: meta-section;
-
-    text-align: center;
-}
-
-.filter {
-    composes: meta-section;
-
-    text-align: right;
-}
-
-.search {
-    width: 100%;
-}
-
-.title {
-    composes: meta-section;
-
-    margin: 0;
-}
-
-
-.pagination {
-    composes: hbox, center from flexcss;
-}
-
-.link {
-    composes: noflex from flexcss;
-    flex-basis: 3%;
-
-    text-align: center;
-}
-
-.button {
-    composes: global(mdl-button), global(mdl-js-button), global(mdl-button--raised), global(mdl-js-ripple-effect), global(mdl-button-accent);
 }
 
 .delete {
-    composes: button;
+    composes: global(pure-button);
     
-    margin-top: -7px;
+    color: white;
+    background: rgb(202, 60, 60);
+    
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }

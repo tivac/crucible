@@ -8,7 +8,6 @@ var m        = require("mithril"),
     sluggo   = require("sluggo"),
     
     db      = require("../../lib/firebase"),
-    upgrade = require("../../lib/mdl-upgrade"),
     
     css = require("./listings.css"),
 
@@ -115,37 +114,37 @@ module.exports = {
         
         return m("div",
             m("div", { class : css.meta },
-                m("button.mdl-button.mdl-js-button.mdl-button--fab.mdl-button--mini-fab", { config : upgrade, onclick : ctrl.add },
+                m("button", { onclick : ctrl.add },
                     m("i.material-icons", "add")
                 ),
-                m(".mdl-textfield.mdl-js-textfield.mdl-textfield--expandable", { config : upgrade },
-                    m("label.mdl-button.mdl-js-button.mdl-button--icon", { for : "search" },
+                m("div",
+                    m("label", { for : "search" },
                         m("i.material-icons", "search")
                     ),
-                    m(".mdl-textfield__expandable-holder",
-                        m("input.mdl-textfield__input", { id : "search", placeholder : "Search", oninput : m.withAttr("value", ctrl.filter) }),
-                        m("label.mdl-textfield__label", { for : "search" }, "Expandable Input")
+                    m("div",
+                        m("input", { id : "search", placeholder : "Search", oninput : m.withAttr("value", ctrl.filter) }),
+                        m("label", { for : "search" }, "Expandable Input")
                     )
                 )
             ),
             m("table", { class : css.table },
                 m("thead",
                     m("tr",
-                        m("th", { class : css.nonNumeric }, "Name"),
-                        m("th", { class : css.nonNumeric }, "Created"),
-                        m("th", { class : css.nonNumeric }, "Updated"),
-                        m("th", { class : css.nonNumeric }, "")
+                        m("th", "Name"),
+                        m("th", "Created"),
+                        m("th", "Updated"),
+                        m("th", "")
                     )
                 ),
                 m("tbody",
                     current.items.map(function(data) {
                         return m("tr", { key : data.key },
-                            m("td", { class : css.nonNumeric },
+                            m("td",
                                 m("a", { href : "/content/" + ctrl.schema.key + "/" + data.key, config : m.route }, data._name)
                             ),
-                            m("td", { class : css.nonNumeric, title : data.created.format("LLL") }, data.created.fromNow()),
-                            m("td", { class : css.nonNumeric, title : data.updated.format("LLL") }, data.updated.fromNow()),
-                            m("td", { class : css.nonNumeric },
+                            m("td", { title : data.created.format("LLL") }, data.created.fromNow()),
+                            m("td", { title : data.updated.format("LLL") }, data.updated.fromNow()),
+                            m("td",
                                 m("button", { class : css.delete }, "Delete")
                             )
                         );

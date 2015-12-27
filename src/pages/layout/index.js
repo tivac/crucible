@@ -31,23 +31,19 @@ module.exports = {
     
     view : function(ctrl, options) {
         return m("div",
-            m("h1", options.title || "Title"),
-            m("ul",
-                m("li",
-                    m("a", { class : "mdl-navigation__link", href : "/" }, "Home")
+            m("div", { class : css.header },
+                m("h1", { class : css.heading },
+                    m("a", { href : "/" }, options.title || "Crucible")
                 ),
-                ctrl.schemas.map(function(schema) {
-                    return m("li",
-                        m("a", { class : "mdl-navigation__link", href : "/content/" + schema.key }, schema.name)
-                    );
-                }),
-                m("li",
-                    m("button", { onclick : ctrl.add }, "Add")
+                m("ul", { class : css.items },
+                    ctrl.schemas.map(function(schema) {
+                        return m("li", { class : css.item },
+                            m("a", { class : css.link, href : "/content/" + schema.key }, schema.name)
+                        );
+                    })
                 )
             ),
-            options.content ?
-                m("div", { class : css.content }, options.content) :
-                m("div", { class : css.progress })
+            m("div", { class : (options.content ? "" : css.progress) }, options.content || "")
         );
     }
 }
