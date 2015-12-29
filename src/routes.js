@@ -12,10 +12,10 @@ exports.default = function() {
         "/logout" : require("./pages/logout"),
 
         "/schema/new" : auth(require("./pages/schema-new")),
-        "/schema/:id" : auth(require("./pages/schema-edit")),
 
-        "/content/:schema"     : auth(require("./pages/content")),
-        "/content/:schema/:id" : auth(require("./pages/content-edit"))
+        "/content/:schema"      : auth(require("./pages/content")),
+        "/content/:schema/edit" : auth(require("./pages/schema-edit")),
+        "/content/:schema/:id"  : auth(require("./pages/content-edit"))
     });
 };
 
