@@ -10,7 +10,7 @@ module.exports = {
     controller : function() {
         var ctrl = this;
         
-        ctrl.schemas = [];
+        ctrl.schemas = null;
         
         ctrl.add = function() {
             m.route("/schema/new");
@@ -21,6 +21,8 @@ module.exports = {
         };
         
         db.child("schemas").on("value", function(snap) {
+            ctrl.schemas = [];
+            
             snap.forEach(function(schema) {
                 var val = schema.val();
                 
@@ -46,7 +48,7 @@ module.exports = {
                     m("a", { href : "/" }, "Crucible")
                 ),
                 m("ul", { class : css.items },
-                    ctrl.schemas.map(function(schema) {
+                    (ctrl.schemas || []).map(function(schema) {
                         var url = "/content/" + schema.key;
                         
                         return m("li", { class : css[route === url ? "selected" : "item"] },
