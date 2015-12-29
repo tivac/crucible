@@ -6,7 +6,7 @@ var m = require("mithril"),
     db         = require("../lib/firebase"),
     update     = require("../lib/update"),
     
-    nav = require("./nav"),
+    layout = require("./layout"),
     
     publishing = require("./content-edit/publishing"),
     versioning = require("./content-edit/versioning"),
@@ -60,7 +60,7 @@ module.exports = {
             version;
 
         if(!ctrl.entry || !ctrl.schema) {
-            return m("h1", "LOADING...");
+            return m.component(layout);
         }
 
         publish = m.component(publishing, {
@@ -76,63 +76,65 @@ module.exports = {
             class : css.child
         });
 
-        return m("div",
-            m.component(nav),
-            m("h1", "Content - Editing \"" + (ctrl.entry._name || "") + "\""),
+        return m.component(layout, {
+            title   : ctrl.entry._name,
+            content : [
+                m("h1", "\"" + (ctrl.entry._name || "") + "\""),
             
-            m("div",
-                m("label",
-                    "Type: ",
-                    m("a", { href : "/schemas/" + ctrl.entry._schema, config : m.route }, ctrl.schema.name)
-                )
-            ),
-            m("div", { class : css.menu },
-                publish,
-                version
-            ),
-            m("hr"),
-            m("div",
-                m("label",
-                    "Name: ",
-                    m("input", {
-                        value   : ctrl.entry._name || "",
-                        oninput : m.withAttr("value", update.bind(null, ctrl.ref, "_name")),
-                        config  : function(el, init) {
+                m("div",
+                    m("label",
+                        "Type: ",
+                        m("a", { href : "/schemas/" + ctrl.entry._schema, config : m.route }, ctrl.schema.name)
+                    )
+                ),
+                m("div", { class : css.menu },
+                    publish,
+                    version
+                ),
+                m("hr"),
+                m("div",
+                    m("label",
+                        "Name: ",
+                        m("input", {
+                            value   : ctrl.entry._name || "",
+                            oninput : m.withAttr("value", update.bind(null, ctrl.ref, "_name")),
+                            config  : function(el, init) {
+                                if(init) {
+                                    return;
+                                }
+
+                                el.select();
+                            }
+                        })
+                    )
+                ),
+                m("br"),
+                m("form", {
+                        config : function(el, init) {
                             if(init) {
                                 return;
                             }
 
-                            el.select();
+                            ctrl.form = el;
+
+                            // force a redraw so publishing component can get
+                            // new args w/ actual validity
+                            m.redraw();
                         }
+                    },
+                    m.component(children, {
+                        details : ctrl.schema.fields,
+                        ref     : ctrl.ref,
+                        data    : ctrl.entry,
+                        root    : ctrl.ref
                     })
+                ),
+                m("hr"),
+                m("div", { class : css.menu },
+                    publish,
+                    version
                 )
-            ),
-            m("br"),
-            m("form", {
-                    config : function(el, init) {
-                        if(init) {
-                            return;
-                        }
-
-                        ctrl.form = el;
-
-                        // force a redraw so publishing component can get
-                        // new args w/ actual validity
-                        m.redraw();
-                    }
-                },
-                m.component(children, {
-                    details : ctrl.schema.fields,
-                    ref     : ctrl.ref,
-                    data    : ctrl.entry,
-                    root    : ctrl.ref
-                })
-            ),
-            m("hr"),
-            m("div", { class : css.menu },
-                publish,
-                version
-            )
-        );
+            ]
+        });
     }
 };
