@@ -6,7 +6,8 @@
   "scripts": {
     "build": "browserify src/index.js --outfile gen/index.js -p [ modular-css --css gen/index.css ]",
     "watch": "watchify src/index.js --verbose --outfile gen/index.js --debug -p [ modular-css --css gen/index.css ]",
-    "start": "node build/serve.js"
+    "start": "node build/serve.js",
+    "lint": "eslint . && jscs ."
   },
   "keywords": [
     "cms",
@@ -19,7 +20,11 @@
     "browserify": "^12.0.1",
     "connect": "^3.4.0",
     "ecstatic": "^1.4.0",
+    "eslint": "^1.10.3",
+    "eslint-config-arenanet": "^1.0.2",
     "faker": "^3.0.1",
+    "jscs": "^2.7.0",
+    "jscs-preset-arenanet": "^1.0.1",
     "modular-css": "^0.7.3",
     "morgan": "^1.6.1",
     "randexp": "^0.4.2",
