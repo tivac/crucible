@@ -116,9 +116,6 @@ module.exports = {
         
         return m("div",
             m("div", { class : css.metas },
-                m("div", { class : css.searchMeta },
-                    m("input", { placeholder : "Filter", oninput : m.withAttr("value", ctrl.filter) })
-                ),
                 m("div", { class : css.addMeta },
                     m("button", {
                             onclick : ctrl.add,
@@ -126,6 +123,14 @@ module.exports = {
                         },
                         "Add " + ctrl.schema.name
                     )
+                ),
+                m("div", { class : css.searchMeta },
+                    m("input", {
+                        class       : css.search,
+                        placeholder : "Filter this content",
+                        
+                        oninput     : m.withAttr("value", ctrl.filter)
+                    })
                 ),
                 m("div", { class : css.editMeta },
                     m("a", {

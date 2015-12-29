@@ -5,27 +5,35 @@
     
     justify-content: space-between;
     
-    margin: 5px 0;
+    margin: 5px 0 10px;
 }
 
 .meta {
-    composes: global(pure-u);
+    composes: global(pure-u-1-3);
     
     padding: 0 5px;
-}
-
-.searchMeta {
-    composes: meta;
 }
 
 .addMeta {
     composes: meta;
 }
 
+.searchMeta {
+    composes: meta;
+    
+    /* So this is the same height as the buttons */
+    display: flex;
+    
+    text-align: center;
+}
+
+.search {
+    width: 100%;
+}
+
 .editMeta {
     composes: meta;
     
-    width: 50%;
     text-align: right;
 }
 
