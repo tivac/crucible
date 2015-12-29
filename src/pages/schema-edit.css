@@ -34,7 +34,7 @@
 }
 
 .fields {
-    composes: panes;
+    composes: panes, global(pure-form), global(pure-form-stacked);
 
     padding: 0 10px 10px 10px;
 }
