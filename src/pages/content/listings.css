@@ -12,3 +12,26 @@
     
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
+
+.pagination {
+    composes: global(pure-g);
+    
+    margin: 5px;
+    
+    text-align: center;
+    justify-content: center;
+}
+
+.link {
+    composes: global(pure-u), global(pure-button);
+    
+    margin: 0 5px;
+}
+
+.disabled {
+    composes: link, global(pure-button-disabled);
+}
+
+.arrow {
+    composes: link, global(pure-button-primary);
+}

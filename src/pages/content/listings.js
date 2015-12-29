@@ -156,18 +156,18 @@ module.exports = {
                     current.prev ?
                         m("a", {
                             key     : "prev",
-                            href    : "#/page" + current.prev - 1,
-                            class   : css.link,
+                            href    : "#/page" + (current.prev - 1),
+                            class   : css.arrow,
                             onclick : ctrl.change.bind(null, current.prev - 1)
                         }, m.trust("&lt; ")) :
-                        m("span", { class : css.link }, m.trust("&lt;")),
+                        m("span", { class : css.disabled }, m.trust("&lt;")),
                     pages.map(function(page) {
                         if(typeof page === "string") {
-                            return m("span", { class : css.link }, page);
+                            return m("span", { class : css.disabled }, page);
                         }
 
                         if(page.idx === current.idx) {
-                            return m("span", { class : css.link }, page.current);
+                            return m("span", { class : css.disabled }, page.current);
                         }
 
                         return m("a", {
@@ -180,11 +180,11 @@ module.exports = {
                     current.next ?
                         m("a", {
                             key     : "next",
-                            href    : "#/page" + current.next - 1,
-                            class   : css.link,
+                            href    : "#/page" + (current.next - 1),
+                            class   : css.arrow,
                             onclick : ctrl.change.bind(null, current.next - 1)
                         }, m.trust("&gt;")) :
-                        m("span", { class : css.link }, m.trust("&gt;"))
+                        m("span", { class : css.disabled }, m.trust("&gt;"))
                 ) :
                 null
         );
