@@ -1,3 +1,53 @@
+.button {
+    composes: global(pure-button);
+}
+
+.colorButton {
+    composes: button;
+    
+    color: #FFF;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.metas {
+    composes: global(pure-g);
+    
+    justify-content: space-between;
+    
+    margin: 5px 0;
+}
+
+.meta {
+    composes: global(pure-u);
+    
+    padding: 0 5px;
+}
+
+.searchMeta {
+    composes: meta;
+}
+
+.addMeta {
+    composes: meta;
+}
+
+.editMeta {
+    composes: meta;
+    
+    width: 50%;
+    text-align: right;
+}
+
+.add {
+    composes: colorButton;
+    
+    background: rgb(28, 184, 65);
+}
+
+.edit {
+    composes: button;
+}
+
 .table {
     composes: global(pure-table), global(pure-table-horizontal), global(pure-table-striped);
     
@@ -5,12 +55,9 @@
 }
 
 .delete {
-    composes: global(pure-button);
+    composes: colorButton;
     
-    color: white;
     background: rgb(202, 60, 60);
-    
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 
 .pagination {
@@ -23,7 +70,7 @@
 }
 
 .link {
-    composes: global(pure-u), global(pure-button);
+    composes: global(pure-u), button;
     
     margin: 0 5px;
 }

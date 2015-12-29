@@ -5,9 +5,9 @@ var m        = require("mithril"),
     moment   = require("moment"),
     fuzzy    = require("fuzzysearch"),
     debounce = require("lodash.debounce"),
-    sluggo   = require("sluggo"),
+    slug     = require("sluggo"),
     
-    db      = require("../../lib/firebase"),
+    db = require("../../lib/firebase"),
     
     css = require("./listings.css"),
 
@@ -34,7 +34,7 @@ module.exports = {
                 data.key = record.key();
                 data.created = moment(data._created);
                 data.updated = moment(data._updated);
-                data.search  = sluggo(data._name, { separator : "" });
+                data.search  = slug(data._name, { separator : "" });
 
                 entries.push(data);
             });
@@ -64,14 +64,14 @@ module.exports = {
 
         // m.redraw calls are necessary due to debouncing, this function
         // may not be executing during a planned redraw cycle
-        ctrl.filter = debounce(function(input, e) {
+        ctrl.filter = debounce(function(input) {
             if(input.length < 2) {
                 ctrl.results = false;
 
                 return m.redraw();
             }
 
-            input = input.toLowerCase();
+            input = slug(input);
 
             ctrl.results = ctrl.entries.filter(function(content) {
                 return fuzzy(input, content.search);
@@ -94,6 +94,8 @@ module.exports = {
         }
 
         if(ctrl.content && !ctrl.results) {
+            // Add leading or trailing "..." to indicate that we aren't
+            // showing all possible pages
             if(ctrl.content.pages.length > 15) {
                 if(current.idx > 5) {
                     pages.push("...");
@@ -113,17 +115,26 @@ module.exports = {
         }
         
         return m("div",
-            m("div", { class : css.meta },
-                m("button", { onclick : ctrl.add },
-                    m("i.material-icons", "add")
+            m("div", { class : css.metas },
+                m("div", { class : css.searchMeta },
+                    m("input", { placeholder : "Filter", oninput : m.withAttr("value", ctrl.filter) })
                 ),
-                m("div",
-                    m("label", { for : "search" },
-                        m("i.material-icons", "search")
-                    ),
-                    m("div",
-                        m("input", { id : "search", placeholder : "Search", oninput : m.withAttr("value", ctrl.filter) }),
-                        m("label", { for : "search" }, "Expandable Input")
+                m("div", { class : css.addMeta },
+                    m("button", {
+                            onclick : ctrl.add,
+                            class   : css.add
+                        },
+                        "Add " + ctrl.schema.name
+                    )
+                ),
+                m("div", { class : css.editMeta},
+                    m("a", {
+                            class : css.edit,
+                            
+                            href   : m.route() + "/edit",
+                            config : m.route
+                        },
+                        "Edit"
                     )
                 )
             ),
@@ -161,6 +172,7 @@ module.exports = {
                             onclick : ctrl.change.bind(null, current.prev - 1)
                         }, m.trust("&lt; ")) :
                         m("span", { class : css.disabled }, m.trust("&lt;")),
+                    
                     pages.map(function(page) {
                         if(typeof page === "string") {
                             return m("span", { class : css.disabled }, page);
@@ -177,6 +189,7 @@ module.exports = {
                             onclick : ctrl.change.bind(null, page.idx)
                         }, page.current);
                     }),
+                    
                     current.next ?
                         m("a", {
                             key     : "next",

@@ -27,13 +27,11 @@ module.exports = {
 
     view : function(ctrl) {
         if(!ctrl.schema) {
-            return m.component(layout, {
-                title   : "Loading..."
-            });
+            return m.component(layout);
         }
         
         return m.component(layout, {
-            title : ctrl.schema.name,
+            title   : ctrl.schema.name,
             content : m.component(listings, { schema : ctrl.schema })
         });
     }
