@@ -5,7 +5,6 @@ var m      = require("mithril"),
     slug   = require("sluggo"),
 
     update  = require("../lib/update"),
-    upgrade = require("../lib/mdl-upgrade"),
     types   = require("./types.css"),
     css     = require("./textarea.css");
 
@@ -16,9 +15,7 @@ module.exports = {
         ctrl.id   = slug(options.details.name);
         ctrl.text = options.data || "";
 
-        ctrl.resize = function(value, e) {
-            var lines;
-
+        ctrl.resize = function(value) {
             if(options.ref) {
                 update(options.ref, null, value);
             }
@@ -35,10 +32,14 @@ module.exports = {
             name += "*";
         }
 
-        return m("div.mdl-textfield.mdl-js-textfield", { class : options.class, config : upgrade },
+        return m("div", { class : options.class },
+            m("label", {
+                for   : ctrl.id,
+                class : types[details.required ? "required" : "label"]
+            }, name),
             m("div", { class : css.expander },
                 m("pre", { class : css.shadow }, m("span", ctrl.text), m("br")),
-                m("textarea.mdl-textfield__input", assign({
+                m("textarea", assign({
                         // attrs
                         id       : ctrl.id,
                         class    : css.textarea,
@@ -49,11 +50,7 @@ module.exports = {
                     },
                     details.attrs || {}
                 ), options.data || "")
-            ),
-            m("label.mdl-textfield__label", {
-                for   : ctrl.id,
-                class : types[details.required ? "required" : "label"]
-            }, name)
+            )
         );
     }
 };
