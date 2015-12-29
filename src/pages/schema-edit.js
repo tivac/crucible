@@ -22,10 +22,10 @@ require("codemirror/addon/comment/continuecomment");
 module.exports = {
     controller : function() {
         var ctrl = this,
-            id   = m.route.param("id"),
+            id   = m.route.param("schema"),
             ref  = db.child("schemas/" + id),
             // Weird path is because this isn't browserified
-            save = new Worker("/workers/save-schema.js");
+            save = new Worker("/src/workers/save-schema.js");
         
         ctrl.schema = null;
         ctrl.recent = null;
@@ -44,13 +44,6 @@ module.exports = {
             }
 
             ref.child("updated").set(db.TIMESTAMP);
-        });
-
-        // get recent entries using this schema to display
-        db.child("content").orderByChild("_schema").equalTo(id).limitToLast(5).on("value", function(snap) {
-            ctrl.recent = snap.val();
-
-            m.redraw();
         });
 
         // Take processed code from worker, save it to firebase
@@ -88,6 +81,7 @@ module.exports = {
                         
                         cm.execCommand(cm.options.indentWithTabs ? "insertTab" : "insertSoftTab");
                     },
+                    
                     "Shift-Tab" : function(cm) {
                         cm.indentSelection("subtract");
                     }
@@ -108,34 +102,13 @@ module.exports = {
     },
 
     view : function(ctrl) {
-        var recent;
-        
         if(!ctrl.schema) {
-            return m.component(layout, {
-                title   : "Loading..."
-            });
+            return m.component(layout);
         }
         
-        recent = Object.keys(ctrl.recent || {});
-        
         return m.component(layout, {
-            title   : ctrl.schema.name,
+            title   : "Edit - " + ctrl.schema.name,
             content : [
-                recent.length ?
-                    m("div", { class : css.meta },
-                        m("h3", "Recent Entries"),
-                        m("ul",
-                            recent.map(function(key) {
-                                var content = ctrl.recent[key];
-
-                                return m("li",
-                                    m("a", { href : "/content/" + content._schema + "/" + key, config : m.route }, content._name)
-                                );
-                            })
-                        ),
-                        m("hr")
-                    ) :
-                    null,
                 m("div", { class : css.contents },
                     m("div", { class : css.editor },
                         m("textarea", { config : ctrl.editorSetup, },
