@@ -2,6 +2,7 @@
 .expander {
     position: relative;
     max-height: 600px;
+    min-height: 2.3em;
 }
 
 .child {
