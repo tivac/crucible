@@ -7,13 +7,17 @@ var m = require("mithril"),
     css = require("./layout.css");
 
 module.exports = {
-    controller : function(options) {
+    controller : function() {
         var ctrl = this;
         
         ctrl.schemas = [];
         
         ctrl.add = function() {
             m.route("/schema/new");
+        };
+        
+        ctrl.updateTitle = function(options) {
+            document.title = options.title || "Loading...";
         };
         
         db.child("schemas").on("value", function(snap) {
@@ -32,7 +36,11 @@ module.exports = {
     view : function(ctrl, options) {
         var route = m.route();
         
-        return m("div",
+        if(!options) {
+            options = false;
+        }
+        
+        return m("div", { config : ctrl.updateTitle.bind(ctrl, options) },
             m("div", { class : css.header },
                 m("h1", { class : css.heading },
                     m("a", { href : "/" }, "Crucible")
@@ -45,9 +53,10 @@ module.exports = {
                             m("a", { class : css.link, href : url }, schema.name)
                         );
                     })
-                )
+                ),
+                options.content ? null : m("div", { class : css.progress }) 
             ),
-            m("div", { class : (options.content ? "" : css.progress) }, options.content || "")
+            options.content ? options.content : null
         );
     }
 }

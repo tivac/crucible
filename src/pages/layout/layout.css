@@ -1,11 +1,16 @@
 .header {
     composes: global(pure-menu), global(pure-menu-horizontal);
+    
+    margin-bottom: 10px;
+    
+    background: #DDD;
 }
 
 .heading {
     composes: global(pure-menu-heading), global(pure-menu-link);
     
     font-size: 1.2em;
+    margin: 0;
 }
 
 .items {
@@ -26,26 +31,13 @@
 
 .progress {
     height: 10px;
-    background: #666;
+    background: #EEE;
     
     position: relative;
     overflow: hidden;
 }
 
-.progress::before {
-    position: absolute;
-    z-index: 1;
-    content: "";
-    
-    top: 0;
-    bottom: 0;
-    width: 0;
-    
-    background: #00F;
-    
-    animation: progressBefore 2s linear infinite;
-}
-
+.progress::before,
 .progress::after {
     position: absolute;
     z-index: 1;
@@ -54,10 +46,14 @@
     top: 0;
     bottom: 0;
     width: 0;
-       
-    background: #F00;
     
-    animation: progressAfter 2s linear infinite;
+    background: rgb(66, 184, 221);
+    
+    animation: progressBefore 2s linear infinite;
+}
+
+.progress::after {
+    animation-name: progressAfter;
 }
 
 @keyframes progressBefore {
