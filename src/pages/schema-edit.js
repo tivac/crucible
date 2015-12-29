@@ -1,13 +1,5 @@
 "use strict";
 
-// Require codemirror extra JS bits and bobs so they're included
-// since codemirror isn't commonjs
-require("codemirror/mode/javascript/javascript");
-require("codemirror/addon/edit/matchbrackets");
-require("codemirror/addon/edit/closebrackets");
-require("codemirror/addon/selection/active-line");
-require("codemirror/addon/comment/continuecomment");
-
 var m        = require("mithril"),
     debounce = require("lodash.debounce"),
     Editor   = require("codemirror"),
@@ -18,6 +10,14 @@ var m        = require("mithril"),
     layout = require("./layout"),
 
     css    = require("./schema-edit.css");
+
+// Require codemirror extra JS bits and bobs so they're included
+// since codemirror isn't commonjs
+require("codemirror/mode/javascript/javascript");
+require("codemirror/addon/edit/matchbrackets");
+require("codemirror/addon/edit/closebrackets");
+require("codemirror/addon/selection/active-line");
+require("codemirror/addon/comment/continuecomment");
 
 module.exports = {
     controller : function() {
@@ -88,7 +88,7 @@ module.exports = {
                         
                         cm.execCommand(cm.options.indentWithTabs ? "insertTab" : "insertSoftTab");
                     },
-                    "Shift-Tab": function (cm) {
+                    "Shift-Tab" : function(cm) {
                         cm.indentSelection("subtract");
                     }
                 }

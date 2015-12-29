@@ -8,7 +8,7 @@ var m      = require("mithril"),
     css = require("./tabs.css");
 
 module.exports = {
-    controller : function(options) {
+    controller : function() {
         var ctrl = this;
         
         ctrl.tab = 0;
