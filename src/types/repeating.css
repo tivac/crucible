@@ -23,12 +23,12 @@
     flex: 1;
 }
 
+.remove {
+    composes: remove from "../buttons.css";
+}
+
 .add {
+    composes: add from "../buttons.css";
+    
     margin-top: 10px;
-    padding: 5px;
-    
-    background-color: #111;
-    color: #EEE;
-    
-    border-radius: 5px;
 }

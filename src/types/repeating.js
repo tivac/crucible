@@ -20,9 +20,10 @@ function child(ctrl, options, data, idx) {
         })),
         m("div", { class : css.counter },
             m("button", {
+                    class   : css.remove,
                     onclick : ctrl.remove.bind(ctrl, options, data, idx)
                 },
-                m("i.material-icons", "remove")
+                "X"
             )
         )
     );

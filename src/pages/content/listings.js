@@ -127,7 +127,7 @@ module.exports = {
                         "Add " + ctrl.schema.name
                     )
                 ),
-                m("div", { class : css.editMeta},
+                m("div", { class : css.editMeta },
                     m("a", {
                             class : css.edit,
                             
@@ -156,7 +156,7 @@ module.exports = {
                             m("td", { title : data.created.format("LLL") }, data.created.fromNow()),
                             m("td", { title : data.updated.format("LLL") }, data.updated.fromNow()),
                             m("td",
-                                m("button", { class : css.delete }, "Delete")
+                                m("button", { class : css.remove }, "Delete")
                             )
                         );
                     })

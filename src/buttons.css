@@ -1,0 +1,22 @@
+.button {
+    composes: global(pure-button);
+}
+
+.colorButton {
+    composes: button;
+    
+    color: #FFF;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.add {
+    composes: colorButton;
+    
+    background: rgb(28, 184, 65);
+}
+
+.remove {
+    composes: colorButton;
+    
+    background: rgb(202, 60, 60);
+}

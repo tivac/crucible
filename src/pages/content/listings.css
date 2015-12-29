@@ -1,13 +1,4 @@
-.button {
-    composes: global(pure-button);
-}
-
-.colorButton {
-    composes: button;
-    
-    color: #FFF;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-}
+@value buttons_css: "../../buttons.css";
 
 .metas {
     composes: global(pure-g);
@@ -38,26 +29,22 @@
     text-align: right;
 }
 
+.remove {
+    composes: remove from buttons_css;
+}
+
 .add {
-    composes: colorButton;
-    
-    background: rgb(28, 184, 65);
+    composes: add from buttons_css;
 }
 
 .edit {
-    composes: button;
+    composes: button from buttons_css;
 }
 
 .table {
     composes: global(pure-table), global(pure-table-horizontal), global(pure-table-striped);
     
     width: 100%;
-}
-
-.delete {
-    composes: colorButton;
-    
-    background: rgb(202, 60, 60);
 }
 
 .pagination {
@@ -70,7 +57,7 @@
 }
 
 .link {
-    composes: global(pure-u), button;
+    composes: global(pure-u), button from buttons_css;
     
     margin: 0 5px;
 }
