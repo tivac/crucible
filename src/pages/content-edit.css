@@ -1,9 +1,19 @@
 .menu {
-    display: flex;
-
-    flex-direction: row;
+    composes: global(pure-g);
 }
 
-.child {
-    /* ? */
+.publishing {
+    composes: global(pure-u-2-5);
+}
+
+.version {
+    composes: global(pure-u-2-5);
+}
+
+.type {
+    composes: global(pure-u-1-5);
+}
+
+.title {
+    text-align: center;
 }
