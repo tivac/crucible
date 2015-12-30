@@ -23,6 +23,7 @@
     "eslint": "^1.10.3",
     "eslint-config-arenanet": "^1.0.2",
     "faker": "^3.0.1",
+    "humanize-duration": "^3.4.0",
     "jscs": "^2.7.0",
     "jscs-preset-arenanet": "^1.0.1",
     "modular-css": "^0.7.3",
