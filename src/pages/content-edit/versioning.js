@@ -2,7 +2,9 @@
 
 var m  = require("mithril"),
     
-    db = require("../../lib/firebase");
+    db = require("../../lib/firebase"),
+    
+    css = require("./versioning.css");
 
 module.exports = {
     controller : function(options) {
@@ -27,6 +29,7 @@ module.exports = {
                 "Current Version: " + (options.data._version || 1)
             ),
             m("button", {
+                class   : css.save,
                 onclick : ctrl.snapshot
             }, "Save new Version")
         );

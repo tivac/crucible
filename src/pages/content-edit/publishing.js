@@ -46,33 +46,25 @@ module.exports = {
         }
         
         return m("div", { class : options.class },
-            m("label",
-                "Publish at: ",
-                m("input", {
-                    type    : "datetime-local",
-                    value   : (ctrl.date || ctrl.now).format("YYYY-MM-DD[T]HH:mm"),
-                    oninput : m.withAttr("value", function(value) {
-                        ctrl.date = moment(value, "YYYY-MM-DD[T]HH:mm");
+            m(".pure-form",
+                m("label",
+                    m("input", {
+                        type    : "datetime-local",
+                        value   : (ctrl.date || ctrl.now).format("YYYY-MM-DD[T]HH:mm"),
+                        oninput : m.withAttr("value", function(value) {
+                            ctrl.date = moment(value, "YYYY-MM-DD[T]HH:mm");
+                        })
                     })
-                })
-            ),
-            m("button", {
-                // Attrs
-                class    : !options.enabled ? css.disabled : null,
-                disabled : !options.enabled,
-                
-                // Events
-                onclick  : ctrl.publishAt
-            }, "Publish"),
-            " | ",
-            m("button", {
-                // Attrs
-                class    : !options.enabled ? css.disabled : null,
-                disabled : !options.enabled,
-                
-                // Events
-                onclick  : ctrl.publishAt
-            }, "Publish Now")
+                ),
+                m("button", {
+                    // Attrs
+                    class    : !options.enabled ? css.disabled : css.publish,
+                    disabled : !options.enabled,
+                    
+                    // Events
+                    onclick  : ctrl.publishAt
+                }, "Publish")
+            )
         );
     }
 };

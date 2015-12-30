@@ -1,11 +1,6 @@
 @value buttons_css: "../../buttons.css";
 
-.disabled {
-    color: #CCC;
-    opacity: 0.5;
-}
-
-.publish {
+.save {
     composes: primary from buttons_css;
     
     margin-left: 10px;
