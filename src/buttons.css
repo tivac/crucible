@@ -2,21 +2,25 @@
     composes: global(pure-button);
 }
 
-.colorButton {
+.color {
     composes: button;
     
     color: #FFF;
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 
+.primary {
+    composes: button, global(pure-button-primary);
+}
+
 .add {
-    composes: colorButton;
+    composes: color;
     
     background: rgb(28, 184, 65);
 }
 
 .remove {
-    composes: colorButton;
+    composes: color;
     
     background: rgb(202, 60, 60);
 }
