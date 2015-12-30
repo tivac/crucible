@@ -66,49 +66,36 @@ module.exports = {
         publish = m.component(publishing, {
             ref     : ctrl.ref,
             data    : ctrl.entry,
-            class   : css.child,
+            class   : css.publishing,
             enabled : ctrl.form && ctrl.form.checkValidity()
         });
 
         version = m.component(versioning, {
             ref   : ctrl.ref,
             data  : ctrl.entry,
-            class : css.child
+            class : css.version
         });
 
         return m.component(layout, {
             title   : ctrl.entry._name,
             content : [
-                m("h1", "\"" + (ctrl.entry._name || "") + "\""),
-            
-                m("div",
-                    m("label",
-                        "Type: ",
-                        m("a", { href : "/schemas/" + ctrl.entry._schema, config : m.route }, ctrl.schema.name)
-                    )
+                m("h1", {
+                        class : css.title,
+                        contenteditable : true,
+                        oninput : m.withAttr("value", update.bind(null, ctrl.ref, "_name"))
+                    },
+                    ctrl.entry._name || ""
                 ),
                 m("div", { class : css.menu },
                     publish,
-                    version
-                ),
-                m("hr"),
-                m("div",
-                    m("label",
-                        "Name: ",
-                        m("input", {
-                            value   : ctrl.entry._name || "",
-                            oninput : m.withAttr("value", update.bind(null, ctrl.ref, "_name")),
-                            config  : function(el, init) {
-                                if(init) {
-                                    return;
-                                }
-
-                                el.select();
-                            }
-                        })
+                    version,
+                    m("div", { class : css.type },
+                        m("label",
+                            "Type: ",
+                            m("a", { href : "/schemas/" + ctrl.entry._schema, config : m.route }, ctrl.schema.name)
+                        )
                     )
                 ),
-                m("br"),
                 m("form", {
                         config : function(el, init) {
                             if(init) {
