@@ -26,12 +26,12 @@ module.exports = {
     view : function(ctrl, options) {
         return m("div", { class : options.class },
             m("span",
-                "Current Version: " + (options.data._version || 1)
+                "Version: " + (options.data._version || 1)
             ),
             m("button", {
                 class   : css.save,
                 onclick : ctrl.snapshot
-            }, "Save new Version")
+            }, "New Version")
         );
     }
 };

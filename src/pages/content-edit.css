@@ -1,19 +1,27 @@
+.title {
+    text-align: center;
+}
+
 .menu {
     composes: global(pure-g);
+    
+    padding-bottom: 5px;
+    border-bottom: 1px solid #666;
+    margin-bottom: 10px;
+}
+
+.menuItem {
+    composes: global(pure-u-1-2);
+    
+    padding: 0 5px;
 }
 
 .publishing {
-    composes: global(pure-u-2-5);
+    composes: menuItem;
 }
 
 .version {
-    composes: global(pure-u-2-5);
-}
-
-.type {
-    composes: global(pure-u-1-5);
-}
-
-.title {
-    text-align: center;
+    composes: menuItem;
+    
+    text-align: right;
 }

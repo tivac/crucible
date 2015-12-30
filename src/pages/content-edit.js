@@ -56,45 +56,35 @@ module.exports = {
     },
 
     view : function(ctrl) {
-        var publish,
-            version;
-
         if(!ctrl.entry || !ctrl.schema) {
             return m.component(layout);
         }
 
-        publish = m.component(publishing, {
-            ref     : ctrl.ref,
-            data    : ctrl.entry,
-            class   : css.publishing,
-            enabled : ctrl.form && ctrl.form.checkValidity()
-        });
-
-        version = m.component(versioning, {
-            ref   : ctrl.ref,
-            data  : ctrl.entry,
-            class : css.version
-        });
-
         return m.component(layout, {
             title   : ctrl.entry._name,
             content : [
-                m("h1", {
-                        class : css.title,
-                        contenteditable : true,
-                        oninput : m.withAttr("value", update.bind(null, ctrl.ref, "_name"))
-                    },
-                    ctrl.entry._name || ""
+                m("h1", { class : css.title },
+                    ctrl.schema.name + " / ",
+                    m("span", {
+                            contenteditable : true,
+                        
+                            oninput : m.withAttr("innerText", update.bind(null, ctrl.ref, "_name"))
+                        },
+                        ctrl.entry._name || ""
+                    )
                 ),
                 m("div", { class : css.menu },
-                    publish,
-                    version,
-                    m("div", { class : css.type },
-                        m("label",
-                            "Type: ",
-                            m("a", { href : "/schemas/" + ctrl.entry._schema, config : m.route }, ctrl.schema.name)
-                        )
-                    )
+                    m.component(publishing, {
+                        ref     : ctrl.ref,
+                        data    : ctrl.entry,
+                        class   : css.publishing,
+                        enabled : ctrl.form && ctrl.form.checkValidity()
+                    }),
+                    m.component(versioning, {
+                        ref   : ctrl.ref,
+                        data  : ctrl.entry,
+                        class : css.version
+                    })
                 ),
                 m("form", {
                         config : function(el, init) {
@@ -115,11 +105,6 @@ module.exports = {
                         data    : ctrl.entry,
                         root    : ctrl.ref
                     })
-                ),
-                m("hr"),
-                m("div", { class : css.menu },
-                    publish,
-                    version
                 )
             ]
         });
