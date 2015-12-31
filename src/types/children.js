@@ -15,7 +15,7 @@ module.exports = {
     view : function(ctrl, options) {
         var details = options.details || [];
 
-        return m("div", { class : options.class || null },
+        return m("div", options.class ? { class : options.class } : null,
             details.map(function(field, index) {
                 var component = types[field.type || field],
                     data, ref;
