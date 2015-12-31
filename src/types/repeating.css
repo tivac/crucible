@@ -3,12 +3,23 @@
     flex-direction: column;
 }
 
-.child {
+.children {
     display: flex;
     flex-direction: row;
     
     border: 1px solid #CCC;
+    
     padding: 10px;
+}
+
+.child {
+    composes: children;
+    
+    border-top: 0;
+}
+
+.first {
+    composes: children;
 }
 
 .counter {

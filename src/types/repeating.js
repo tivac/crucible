@@ -10,7 +10,7 @@ var m      = require("mithril"),
     css   = require("./repeating.css");
 
 function child(ctrl, options, data, idx) {
-    return m("div", { class : css.child },
+    return m("div", { class : css[idx === 0 ? "first" : "child"] },
         m("div", { class : css.counter }, idx + 1),
         m.component(children, assign({}, options, {
             details : options.details.children,
