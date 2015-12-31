@@ -58,7 +58,7 @@ module.exports = {
                 ),
                 m("button", {
                     // Attrs
-                    class    : !options.enabled ? css.disabled : css.publish,
+                    class    : css[options.enabled ? "publish" : "disabled"],
                     disabled : !options.enabled,
                     
                     // Events
