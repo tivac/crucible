@@ -5,14 +5,15 @@ var m      = require("mithril"),
     slug   = require("sluggo"),
 
     update  = require("../lib/update"),
+    id      = require("../lib/id"),
     types   = require("./types.css");
 
 module.exports = function(type) {
     return {
         controller : function(options) {
             var ctrl = this;
-        
-            ctrl.id = slug(options.details.name);
+            
+            ctrl.id = id(options)
         },
 
         view : function(ctrl, options) {

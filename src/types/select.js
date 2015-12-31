@@ -4,17 +4,19 @@ var m      = require("mithril"),
     assign = require("lodash.assign"),
     slug   = require("sluggo"),
 
+    id = require("../lib/id"),
+
     types = require("./types.css");
 
 function optvalue(option) {
-    return option.value || option.name
+    return option.value || option.name;
 }
 
 module.exports = {
     controller : function(options) {
         var ctrl = this;
         
-        ctrl.id = slug(options.details.name);
+        ctrl.id = id(options);
 
         ctrl.onchange = function(options, index) {
             var opt = options.details.children[index];

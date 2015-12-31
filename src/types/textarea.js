@@ -5,6 +5,7 @@ var m      = require("mithril"),
     slug   = require("sluggo"),
 
     update  = require("../lib/update"),
+    id      = require("../lib/id"),
     types   = require("./types.css"),
     css     = require("./textarea.css");
 
@@ -12,7 +13,7 @@ module.exports = {
     controller : function(options) {
         var ctrl = this;
     
-        ctrl.id   = slug(options.details.name);
+        ctrl.id   = id(options);
         ctrl.text = options.data || "";
 
         ctrl.resize = function(value) {

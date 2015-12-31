@@ -7,6 +7,7 @@ var m      = require("mithril"),
     slug   = require("sluggo"),
     
     db = require("../lib/firebase"),
+    id = require("../lib/id"),
     
     types = require("./types.css"),
     css   = require("./relationship.css");
@@ -16,7 +17,7 @@ module.exports = {
         var ctrl = this,
             sources;
         
-        ctrl.id = slug(options.details.name);
+        ctrl.id = id(options);
 
         ctrl.sources = function() {
             if(sources) {
