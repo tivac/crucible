@@ -87,6 +87,7 @@ module.exports = {
                     })
                 ),
                 m("form", {
+                        class  : css.form,
                         config : function(el, init) {
                             if(init) {
                                 return;

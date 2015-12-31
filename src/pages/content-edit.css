@@ -25,3 +25,10 @@
     
     text-align: right;
 }
+
+.form {
+    width: 70%;
+    min-width: 700px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
