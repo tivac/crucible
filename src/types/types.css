@@ -21,3 +21,32 @@
 
     color: red;
 }
+
+.text {
+    width: 100%;
+}
+
+/* These are basically fancy aliases for text anyways */
+.email {
+    composes: text;
+}
+
+.url {
+    composes: text;
+}
+
+/* Types needing some special love */
+.number {
+    width: 30%;
+}
+
+.select {
+    min-width: 150px;
+}
+
+/* Not doing anything w/ these yet */
+/*
+.date {}
+.datetime-local {}
+.time {}
+*/

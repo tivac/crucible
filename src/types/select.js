@@ -53,6 +53,7 @@ module.exports = {
             m("select", assign({
                     // attrs
                     value    : value,
+                    class    : types.select,
                     required : details.required ? "required" : null,
 
                     // events

@@ -33,6 +33,7 @@ module.exports = function(type) {
                         // attrs
                         id       : ctrl.id,
                         type     : type || "text",
+                        class    : types[type || "text"],
                         value    : options.data || "",
                         required : details.required ? "required" : null,
 
