@@ -27,6 +27,8 @@
 }
 
 .form {
+    composes: global(pure-form), global(pure-form-stacked);
+    
     width: 70%;
     min-width: 700px;
     max-width: 1000px;

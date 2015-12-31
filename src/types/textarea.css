@@ -34,4 +34,8 @@
 
     /* Hide the text; just using it for sizing */
     visibility: hidden;
+    
+    /* Unfortunately these have to be copied out of pure */
+    margin: 0.25em 0;
+    padding: 0.5em 0.6em;
 }

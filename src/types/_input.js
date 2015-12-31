@@ -34,7 +34,6 @@ module.exports = function(type) {
                         id       : ctrl.id,
                         type     : type || "text",
                         value    : options.data || "",
-                        class    : types.input,
                         required : details.required ? "required" : null,
 
                         // events

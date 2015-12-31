@@ -1,25 +1,18 @@
-.block {
-    display: block;
-}
-
 .group {
     composes: global(pure-control-group);
 }
 
 .field {
-    display: block;
-    
-    margin: 10px;
+    margin-top: 20px;
 }
 
 .first {
     composes: field;
+    
     margin-top: 0;
 }
 
 .label {
-    composes: block;
-    
     font-weight: bold;
 }
 
@@ -27,9 +20,4 @@
     composes: label;
 
     color: red;
-}
-
-.input,
-.select {
-    composes: block;
 }
