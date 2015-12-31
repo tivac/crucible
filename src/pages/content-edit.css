@@ -32,5 +32,6 @@
     width: 70%;
     min-width: 700px;
     max-width: 1000px;
-    margin: 0 auto;
+    
+    margin: 20px auto 0;
 }
