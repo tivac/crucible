@@ -79,6 +79,12 @@ module.exports = {
 
             m.redraw();
         }, 100);
+        
+        ctrl.visit = function(url, e) {
+            e.preventDefault();
+            
+            m.route(url);
+        };
     },
 
     view : function(ctrl) {
@@ -154,9 +160,11 @@ module.exports = {
                 ),
                 m("tbody",
                     current.items.map(function(data) {
+                        var url = "/content/" + ctrl.schema.key + "/" + data.key;
+                        
                         return m("tr", { key : data.key },
-                            m("td",
-                                m("a", { href : "/content/" + ctrl.schema.key + "/" + data.key, config : m.route }, data._name)
+                            m("td", { onclick : ctrl.visit.bind(ctrl, url) },
+                                m("a", { href : url, config : m.route }, data._name)
                             ),
                             m("td", { title : data.created.format("LLL") }, data.created.fromNow()),
                             m("td", { title : data.updated.format("LLL") }, data.updated.fromNow()),
