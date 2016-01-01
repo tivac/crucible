@@ -50,8 +50,8 @@ module.exports = {
             if(snap.key() === "updated") {
                 return;
             }
-
-            ref.child("updated").set(db.TIMESTAMP);
+            
+            ref.child("_updated").set(db.TIMESTAMP);
         });
     },
 
@@ -63,11 +63,11 @@ module.exports = {
         return m.component(layout, {
             title   : ctrl.entry._name,
             content : [
-                m("h1", { class : css.title },
-                    ctrl.schema.name + " / ",
+                m("h1", { class : css.heading },
+                    m("span", { class : css.schema }, ctrl.schema.name, m.trust("&nbsp;/&nbsp;")),
                     m("span", {
+                            class : css.title,
                             contenteditable : true,
-                        
                             oninput : m.withAttr("innerText", update.bind(null, ctrl.ref, "_name"))
                         },
                         ctrl.entry._name || ""

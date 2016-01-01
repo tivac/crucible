@@ -1,5 +1,18 @@
-.title {
+.heading {
+    composes: global(pure-g);
+    
     text-align: center;
+    justify-content: center;
+}
+
+.schema {
+    composes: global(pure-u);
+}
+
+.title {
+    composes: global(pure-u);
+    
+    min-width: 50px;
 }
 
 .menu {
