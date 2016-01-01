@@ -2,9 +2,10 @@
 
 var m = require("mithril"),
 
-    children   = require("../types/children"),
-    db         = require("../lib/firebase"),
-    update     = require("../lib/update"),
+    children = require("../types/children"),
+    db       = require("../lib/firebase"),
+    update   = require("../lib/update"),
+    watch    = require("../lib/watch"),
     
     layout = require("./layout"),
     
@@ -44,15 +45,8 @@ module.exports = {
 
             m.redraw();
         });
-
-        // Ensure the updated timestamp is always accurate-ish
-        ref.on("child_changed", function(snap) {
-            if(snap.key() === "updated") {
-                return;
-            }
-            
-            ref.child("_updated").set(db.TIMESTAMP);
-        });
+        
+        watch(ref);
     },
 
     view : function(ctrl) {

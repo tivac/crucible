@@ -5,6 +5,8 @@ var m        = require("mithril"),
     Editor   = require("codemirror"),
 
     children = require("../types/children"),
+
+    watch    = require("../lib/watch"),
     db       = require("../lib/firebase"),
     
     layout = require("./layout"),
@@ -35,15 +37,6 @@ module.exports = {
             ctrl.schema = snap.val();
             
             m.redraw();
-        });
-
-        // Ensure the updated timestamp is always accurate-ish
-        ref.on("child_changed", function(snap) {
-            if(snap.key() === "updated") {
-                return;
-            }
-
-            ref.child("updated").set(db.TIMESTAMP);
         });
 
         // Take processed code from worker, save it to firebase
@@ -99,6 +92,8 @@ module.exports = {
             ref.child("source").set(text);
             save.postMessage(text);
         };
+        
+        watch(ref);
     },
 
     view : function(ctrl) {
