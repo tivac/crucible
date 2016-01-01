@@ -22,7 +22,7 @@ module.exports = {
             schema = db.child("schemas/" + m.route.param("schema"));
         
         ctrl.ref    = ref;
-        ctrl.entry  = null;
+        ctrl.data   = null;
         ctrl.schema = null;
         ctrl.form   = null;
         
@@ -31,12 +31,8 @@ module.exports = {
                 return m.route("/content");
             }
 
-            ctrl.entry = snap.val();
+            ctrl.data = snap.val();
 
-            if(!ctrl.entry.data) {
-                ctrl.entry.data = {};
-            }
-            
             m.redraw();
         });
         
@@ -50,33 +46,33 @@ module.exports = {
     },
 
     view : function(ctrl) {
-        if(!ctrl.entry || !ctrl.schema) {
+        if(!ctrl.data || !ctrl.schema) {
             return m.component(layout);
         }
 
         return m.component(layout, {
-            title   : ctrl.entry._name,
+            title   : ctrl.data.name,
             content : [
                 m("h1", { class : css.heading },
                     m("span", { class : css.schema }, ctrl.schema.name, m.trust("&nbsp;/&nbsp;")),
                     m("span", {
                             class : css.title,
                             contenteditable : true,
-                            oninput : m.withAttr("innerText", update.bind(null, ctrl.ref, "_name"))
+                            oninput : m.withAttr("innerText", update.bind(null, ctrl.ref, "name"))
                         },
-                        ctrl.entry._name || ""
+                        ctrl.data.name || ""
                     )
                 ),
                 m("div", { class : css.menu },
                     m.component(publishing, {
                         ref     : ctrl.ref,
-                        data    : ctrl.entry,
+                        data    : ctrl.data,
                         class   : css.publishing,
                         enabled : ctrl.form && ctrl.form.checkValidity()
                     }),
                     m.component(versioning, {
                         ref   : ctrl.ref,
-                        data  : ctrl.entry,
+                        data  : ctrl.data,
                         class : css.version
                     })
                 ),
@@ -96,8 +92,8 @@ module.exports = {
                     },
                     m.component(children, {
                         details : ctrl.schema.fields,
-                        ref     : ctrl.ref,
-                        data    : ctrl.entry,
+                        ref     : ctrl.ref.child("fields"),
+                        data    : ctrl.data.fields || {},
                         root    : ctrl.ref
                     })
                 )

@@ -16,29 +16,31 @@ for(x = 0; x < count; x++) {
     }
     
     data[new Randexp(/-\w{19}/).gen()] = {
-        _name    : faker.company.catchPhrase(),
-        _version : faker.random.number({ min : 1, max : 100 }),
-        _created : faker.date.past().valueOf(),
-        _updated : faker.date.recent().valueOf(),
-        "make-your-choice": faker.random.arrayElement([ 1, 2, 3 ]),
-        number : faker.random.number(),
-        tabs : faker.random.objectElement({
-            en : {
+        name    : faker.company.catchPhrase(),
+        version : faker.random.number({ min : 1, max : 100 }),
+        created : faker.date.past().valueOf(),
+        updated : faker.date.recent().valueOf(),
+        fields  : {
+            "make-your-choice": faker.random.arrayElement([ 1, 2, 3 ]),
+            number : faker.random.number(),
+            tabs : faker.random.objectElement({
                 en : {
-                    title : faker.company.catchPhrase(),
-                    body  : faker.lorem.paragraph()
-                }
-            },
-            
-            de : {
+                    en : {
+                        title : faker.company.catchPhrase(),
+                        body  : faker.lorem.paragraph()
+                    }
+                },
+                
                 de : {
-                    title : "DE " + faker.company.catchPhrase(),
-                    body  : "DE " + faker.lorem.paragraph()
+                    de : {
+                        title : "DE " + faker.company.catchPhrase(),
+                        body  : "DE " + faker.lorem.paragraph()
+                    }
                 }
-            }
-        }),
-        text : faker.lorem.sentence(),
-        repeating : repeating
+            }),
+            text : faker.lorem.sentence(),
+            repeating : repeating
+        }
     };
 }
 

@@ -13,7 +13,7 @@ module.exports = {
         ctrl.date = false;
 
         ctrl.publish = function(e) {
-            options.ref.child("_published").set(moment().subtract(10, "seconds").valueOf());
+            options.ref.child("published").set(moment().subtract(10, "seconds").valueOf());
         };
 
         ctrl.publishAt = function(e) {
@@ -21,16 +21,16 @@ module.exports = {
                 return console.error("Invalid date"); // TODO: Really Handle
             }
 
-            options.ref.child("_published").set(ctrl.date.valueOf());
+            options.ref.child("published").set(ctrl.date.valueOf());
         };
 
         ctrl.unpublish = function(e) {
-            options.ref.child("_published").remove();
+            options.ref.child("published").remove();
         };
     },
 
     view : function(ctrl, options) {
-        var published = options.data._published && moment(options.data._published);
+        var published = options.data.published && moment(options.data.published);
 
         if(published) {
             return m("div", { class : options.class },

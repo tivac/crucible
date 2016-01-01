@@ -13,12 +13,12 @@ module.exports = {
         ctrl.snapshot = function(e) {
             options.ref.once("value", function(snap) {
                 var data = snap.exportVal(),
-                    rev  = data._revision || 1,
+                    rev  = data.version || 1,
                     dest = db.child("versions").child(snap.key()).child(rev);
 
                 dest.set(data);
 
-                options.ref.child("_version").set(rev + 1);
+                options.ref.child("version").set(rev + 1);
             });
         };
     },
@@ -26,7 +26,7 @@ module.exports = {
     view : function(ctrl, options) {
         return m("div", { class : options.class },
             m("span",
-                "Version: " + (options.data._version || 1)
+                "Version: " + (options.data.version || 1)
             ),
             m("button", {
                 class   : css.save,

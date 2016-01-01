@@ -32,9 +32,9 @@ module.exports = {
                 var data = record.val();
 
                 data.key = record.key();
-                data.created = moment(data._created);
-                data.updated = moment(data._updated);
-                data.search  = slug(data._name, { separator : "" });
+                data.created = moment(data.created);
+                data.updated = moment(data.updated);
+                data.search  = slug(data.name, { separator : "" });
 
                 entries.push(data);
             });
@@ -49,8 +49,8 @@ module.exports = {
             var result;
                 
             result = db.child("content/" + ctrl.schema.key).push({
-                _name    : "New " + ctrl.schema.name,
-                _created : db.TIMESTAMP
+                name    : "New " + ctrl.schema.name,
+                created : db.TIMESTAMP
             });
 
             m.route("/content/" + ctrl.schema.key + "/" + result.key());
@@ -164,7 +164,7 @@ module.exports = {
                         
                         return m("tr", { key : data.key },
                             m("td", { onclick : ctrl.visit.bind(ctrl, url) },
-                                m("a", { href : url, config : m.route }, data._name)
+                                m("a", { href : url, config : m.route }, data.name)
                             ),
                             m("td", { title : data.created.format("LLL") }, data.created.fromNow()),
                             m("td", { title : data.updated.format("LLL") }, data.updated.fromNow()),
