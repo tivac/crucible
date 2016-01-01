@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "browserify src/index.js --outfile gen/index.js -p [ modular-css --css gen/index.css ]",
-    "watch": "watchify src/index.js --verbose --outfile gen/index.js --debug -p [ modular-css --css gen/index.css ]",
+    "lint": "eslint . && jscs .",
     "start": "node build/serve.js",
-    "lint": "eslint . && jscs ."
+    "fake": "node build/faker.js"
   },
   "keywords": [
     "cms",

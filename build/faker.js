@@ -2,6 +2,7 @@
 
 var faker = require("faker"),
     Randexp = require("randexp"),
+    moment = require("moment"),
     data = {},
     count = 100,
     x, y, repeating;
@@ -11,7 +12,7 @@ for(x = 0; x < count; x++) {
     
     for(y = faker.random.number({ min : 1, max : 10 }); y > 0; y--) {
         repeating.push({
-            start : faker.date.future().valueOf()
+            start : moment(faker.date.future()).format("YYYY-MM-DD")
         });
     }
     
