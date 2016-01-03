@@ -20,31 +20,52 @@ module.exports = {
         ctrl.schema = options.schema;
 
         ctrl.page = 0;
-
+        
         ctrl.entries = null;
         ctrl.content = null;
         ctrl.results = null;
         
-        db.child("content/" + ctrl.schema.key).on("value", function(snap) {
-            var entries = [];
+        ctrl.sorting = {
+            field : "updated",
+            desc  : true
+        };
 
-            snap.forEach(function(record) {
-                var data = record.val();
+        ctrl.fetch = function() {
+            db.child("content/" + ctrl.schema.key).orderByChild(ctrl.sorting.field).on("value", function(snap) {
+                var entries = [];
 
-                data.key = record.key();
-                data.created = moment(data.created);
-                data.updated = moment(data.updated);
-                data.search  = slug(data.name, { separator : "" });
+                snap.forEach(function(record) {
+                    var data = record.val();
 
-                entries.push(data);
+                    data.key = record.key();
+                    data._updated = data.updated;
+                    data.created = moment.utc(data.created);
+                    data.updated = moment.utc(data.updated);
+                    data.search  = slug(data.name, { separator : "" });
+
+                    entries.push(data);
+                });
+
+                ctrl.entries = entries;
+                
+                if(ctrl.sorting.desc) {
+                    ctrl.entries.reverse();
+                }
+                
+                ctrl.pagination();
+                
+                m.redraw();
             });
+        };
+        
+        ctrl.pagination = function() {
+            ctrl.content = paginate(ctrl.entries, { limit : size });
+        };
+        
+        // Go get initial data
+        ctrl.fetch();
 
-            ctrl.entries = entries;
-            ctrl.content = paginate(entries, { limit : size });
-
-            m.redraw();
-        });
-
+        // Event handlers
         ctrl.add = function() {
             var result;
                 
@@ -84,6 +105,23 @@ module.exports = {
             e.preventDefault();
             
             m.route(url);
+        };
+        
+        ctrl.sort = function(field) {
+            if(field === ctrl.sorting.field) {
+                ctrl.sorting.desc = !ctrl.sorting.desc;
+                
+                ctrl.entries.reverse();
+                                
+                return ctrl.pagination();
+            }
+            
+            ctrl.sorting.field = field;
+            ctrl.sorting.desc  = field !== "name";
+            
+            ctrl.content = [];
+            
+            ctrl.fetch();
         };
     },
 
@@ -150,11 +188,17 @@ module.exports = {
                 )
             ),
             m("table", { class : css.table },
+                m("colgroup",
+                    m("col", { class : css.namecol }),
+                    m("col", { class : css.datecol }),
+                    m("col", { class : css.datecol }),
+                    m("col", { class : css.deletecol })
+                ),
                 m("thead",
                     m("tr",
-                        m("th", "Name"),
-                        m("th", "Created"),
-                        m("th", "Updated"),
+                        m("th", { onclick : ctrl.sort.bind(ctrl, "name") }, "Name"),
+                        m("th", { onclick : ctrl.sort.bind(ctrl, "created") }, "Created"),
+                        m("th", { onclick : ctrl.sort.bind(ctrl, "updated") }, "Updated"),
                         m("th", "")
                     )
                 ),

@@ -56,6 +56,18 @@
     width: 100%;
 }
 
+.namecol {
+    width: 60%;
+}
+
+.datecol {
+    width: 150px;
+}
+
+.deletecol {
+    width: 100px;
+}
+
 .pagination {
     composes: global(pure-g);
     
