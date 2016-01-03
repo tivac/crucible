@@ -1,5 +1,21 @@
 @value buttons_css: "../../buttons.css";
 
+/* Utility */
+.arrow {
+    position: relative;
+}
+
+.arrow::after {
+    content: "";
+    
+    background: url("./arrow-light.svg");
+    background-size: contain;
+    
+    position: absolute;
+}
+
+
+/* Metadata controls */
 .metas {
     composes: global(pure-g);
     
@@ -38,10 +54,6 @@
     text-align: right;
 }
 
-.remove {
-    composes: remove from buttons_css;
-}
-
 .add {
     composes: add from buttons_css;
 }
@@ -50,6 +62,7 @@
     composes: button from buttons_css;
 }
 
+/* Table styling */
 .table {
     composes: global(pure-table), global(pure-table-horizontal), global(pure-table-striped);
     
@@ -68,6 +81,44 @@
     width: 100px;
 }
 
+.th {
+    cursor: pointer;
+    
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+.colArrow::after {
+    composes: arrow, th;
+    
+    background-image: url("./arrow-dark.svg");
+    
+    width: 24px;
+    height: 24px;
+
+    top: 50%;
+    margin-top: -12px;
+}
+
+.thAsc::after {
+    composes: colArrow;
+    
+    transform: rotate(-90deg);
+}
+
+.thDesc::after {
+    composes: colArrow;
+    
+    transform: rotate(90deg);
+}
+
+.remove {
+    composes: remove from buttons_css;
+}
+
+/* Pagination controls */
 .pagination {
     composes: global(pure-g);
     
@@ -87,41 +138,36 @@
     composes: link, global(pure-button-disabled);
 }
 
-.arrow {
-    composes: link, global(pure-button-primary);
+.navbutton {
+    composes: link, global(pure-button-primary), arrow;
     
-    position: relative;
     width: 40px;
 }
 
-.arrow::after {
-    content: url("/src/pages/content/arrow-light.svg");
-    
-    position: absolute;
-    
-    width: 25px;
-    height: 25px;
-}
-
-.arrowRight::after {
+.navbutton::after {
     composes: arrow;
     
-    top: 7px;
-    left: 9px;
+    width: 24px;
+    height: 24px;
+    
+    top: 4px;
+    left: 50%;
+    margin-left: -12px;
 }
 
-.arrowLeft::after {
-    composes: arrow;
+.prev::after {
+    composes: navbutton;
     transform: rotate(180deg);
-    
-    top: 2px;
-    left: 7px;
 }
 
-.disabledArrowLeft {
-    composes: arrowLeft, disabled;
+.next::after {
+    composes: navbutton;
 }
 
-.disabledArrowRight {
-    composes: arrowRight, disabled;
+.noPrev {
+    composes: prev, disabled;
+}
+
+.noNext {
+    composes: next, disabled;
 }

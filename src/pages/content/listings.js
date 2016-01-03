@@ -196,9 +196,22 @@ module.exports = {
                 ),
                 m("thead",
                     m("tr",
-                        m("th", { onclick : ctrl.sort.bind(ctrl, "name") }, "Name"),
-                        m("th", { onclick : ctrl.sort.bind(ctrl, "created") }, "Created"),
-                        m("th", { onclick : ctrl.sort.bind(ctrl, "updated") }, "Updated"),
+                        [ "Name", "Created", "Updated" ].map(function(title) {
+                            var field = title.toLowerCase(),
+                                attrs = {
+                                    onclick : ctrl.sort.bind(ctrl, field),
+                                    class   : css.th
+                                };
+                            
+                            if(ctrl.sorting.field === field) {
+                                attrs.class = css[ctrl.sorting.desc ? "thDesc" : "thAsc"];
+                            }
+                            
+                            console.log(attrs);
+                            
+                            return m("th", attrs, title);
+                        }),
+                        
                         m("th", "")
                     )
                 ),
@@ -225,10 +238,10 @@ module.exports = {
                         m("a", {
                             key     : "prev",
                             href    : "#/page" + (current.prev - 1),
-                            class   : css.arrowLeft,
+                            class   : css.prev,
                             onclick : ctrl.change.bind(null, current.prev - 1)
                         }, "") :
-                        m("span", { class : css.disabledArrowLeft }, ""),
+                        m("span", { class : css.noPrev }, ""),
                     
                     pages.map(function(page) {
                         if(typeof page === "string") {
@@ -251,12 +264,12 @@ module.exports = {
                         m("a", {
                                 key     : "next",
                                 href    : "#/page" + (current.next - 1),
-                                class   : css.arrowRight,
+                                class   : css.next,
                                 onclick : ctrl.change.bind(null, current.next - 1)
                             },
                             ""
                         ) :
-                        m("span", { class : css.disabledArrowRight }, "")
+                        m("span", { class : css.noNext }, "")
                 ) :
                 null
         );
