@@ -225,10 +225,10 @@ module.exports = {
                         m("a", {
                             key     : "prev",
                             href    : "#/page" + (current.prev - 1),
-                            class   : css.arrow,
+                            class   : css.arrowLeft,
                             onclick : ctrl.change.bind(null, current.prev - 1)
-                        }, m.trust("&lt; ")) :
-                        m("span", { class : css.disabled }, m.trust("&lt;")),
+                        }, "") :
+                        m("span", { class : css.disabledArrowLeft }, ""),
                     
                     pages.map(function(page) {
                         if(typeof page === "string") {
@@ -249,12 +249,14 @@ module.exports = {
                     
                     current.next ?
                         m("a", {
-                            key     : "next",
-                            href    : "#/page" + (current.next - 1),
-                            class   : css.arrow,
-                            onclick : ctrl.change.bind(null, current.next - 1)
-                        }, m.trust("&gt;")) :
-                        m("span", { class : css.disabled }, m.trust("&gt;"))
+                                key     : "next",
+                                href    : "#/page" + (current.next - 1),
+                                class   : css.arrowRight,
+                                onclick : ctrl.change.bind(null, current.next - 1)
+                            },
+                            ""
+                        ) :
+                        m("span", { class : css.disabledArrowRight }, "")
                 ) :
                 null
         );

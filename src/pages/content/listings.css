@@ -89,4 +89,39 @@
 
 .arrow {
     composes: link, global(pure-button-primary);
+    
+    position: relative;
+    width: 40px;
+}
+
+.arrow::after {
+    content: url("/src/pages/content/arrow-light.svg");
+    
+    position: absolute;
+    
+    width: 25px;
+    height: 25px;
+}
+
+.arrowRight::after {
+    composes: arrow;
+    
+    top: 7px;
+    left: 9px;
+}
+
+.arrowLeft::after {
+    composes: arrow;
+    transform: rotate(180deg);
+    
+    top: 2px;
+    left: 7px;
+}
+
+.disabledArrowLeft {
+    composes: arrowLeft, disabled;
+}
+
+.disabledArrowRight {
+    composes: arrowRight, disabled;
 }
