@@ -28,7 +28,7 @@ module.exports = {
                 updated : db.TIMESTAMP
             });
 
-            m.route("/schemas/" + ctrl.slug);
+            m.route("/content/" + ctrl.slug + "/edit");
         };
     },
 
