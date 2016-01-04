@@ -119,7 +119,7 @@ module.exports = {
                         m("input", {
                             class : css[ctrl.preview ? "preview" : "previewError"],
                             type  : "url",
-                            value : ctrl.schema.preview,
+                            value : ctrl.schema.preview || "",
                             
                             oninput : ctrl.previewChanged,
                             config  : function(el, init) {
