@@ -133,7 +133,10 @@ module.exports = {
                     )
                 ),
                 m("div", { class : css.contents },
-                    m("h3", { class : css.fieldsHd }, "Field Definitions"),
+                    m("div", { class : css.headings },
+                        m("h3", { class : css.fieldsHd }, "Field Definitions"),
+                        m("h3", { class : css.previewHd }, "Preview")
+                    ),
                     m("div", { class : css.editor },
                         m("textarea", { config : ctrl.editorSetup },
                             ctrl.schema.source || "{}"

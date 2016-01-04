@@ -31,8 +31,13 @@
     composes: panes;
 }
 
-.fieldsHd {
+.headings {
     composes: global(pure-u-1);
+}
+
+.fieldsHd,
+.previewHd {
+    composes: global(pure-u-1-2);
 }
 
 .fields {
