@@ -17,20 +17,22 @@
 }
 
 .contents {
+    composes: global(pure-g);
+    
     flex: 4;
-
-    display: flex;
-    flex-direction: row;
-
     overflow-y: auto;
 }
 
 .panes {
-    flex: 1;
+    composes: global(pure-u-1-2);
 }
 
 .editor {
     composes: panes;
+}
+
+.fieldsHd {
+    composes: global(pure-u-1);
 }
 
 .fields {

@@ -221,7 +221,8 @@ module.exports = {
                         
                         return m("tr", { key : data.key },
                             m("td", { onclick : ctrl.visit.bind(ctrl, url) },
-                                m("a", { href : url, config : m.route }, data.name)
+                                m("a", { href : url, config : m.route }, data.name),
+                                m("a", { href : ctrl.schema.preview + data.key }, "Preview")
                             ),
                             m("td", { title : data.created.format("LLL") }, data.created.fromNow()),
                             m("td", { title : data.updated.format("LLL") }, data.updated.fromNow()),

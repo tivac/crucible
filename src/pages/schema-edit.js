@@ -6,11 +6,10 @@ var m        = require("mithril"),
 
     children = require("../types/children"),
 
-    watch    = require("../lib/watch"),
-    db       = require("../lib/firebase"),
+    watch = require("../lib/watch"),
+    db    = require("../lib/firebase"),
     
     layout = require("./layout"),
-
     css    = require("./schema-edit.css");
 
 // Require codemirror extra JS bits and bobs so they're included
@@ -26,11 +25,13 @@ module.exports = {
         var ctrl = this,
             id   = m.route.param("schema"),
             ref  = db.child("schemas/" + id),
+            
             // Weird path is because this isn't browserified
             save = new Worker("/src/workers/save-schema.js");
         
-        ctrl.schema = null;
-        ctrl.recent = null;
+        ctrl.schema  = null;
+        ctrl.recent  = null;
+        ctrl.preview = true;
 
         // Listen for updates from Firebase
         ref.on("value", function(snap) {
@@ -93,6 +94,14 @@ module.exports = {
             save.postMessage(text);
         };
         
+        ctrl.previewChanged = function(e) {
+            var el = e.target;
+            
+            ctrl.preview = el.validity.valid;
+            
+            ref.child("preview").set(el.value);
+        };
+        
         watch(ref);
     },
 
@@ -104,9 +113,29 @@ module.exports = {
         return m.component(layout, {
             title   : "Edit - " + ctrl.schema.name,
             content : [
+                m("div", { class : css.meta },
+                    m("label",
+                        "Preview URL: ",
+                        m("input", {
+                            class : css[ctrl.preview ? "preview" : "previewError"],
+                            type  : "url",
+                            value : ctrl.schema.preview,
+                            
+                            oninput : ctrl.previewChanged,
+                            config  : function(el, init) {
+                                if(init) {
+                                    return;
+                                }
+                                
+                                ctrl.preview = el.validity.valid;
+                            }
+                        })
+                    )
+                ),
                 m("div", { class : css.contents },
+                    m("h3", { class : css.fieldsHd }, "Field Definitions"),
                     m("div", { class : css.editor },
-                        m("textarea", { config : ctrl.editorSetup, },
+                        m("textarea", { config : ctrl.editorSetup },
                             ctrl.schema.source || "{}"
                         )
                     ),
@@ -119,6 +148,5 @@ module.exports = {
                 )
             ]
         });
-
     }
 };
