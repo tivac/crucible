@@ -21,15 +21,23 @@ function bundle() {
     bundling = true;
     
     builder.bundle(function(err, out) {
+        bundling = false;
+        
         if(err) {
-            return console.error(err.toString());
+            console.error(err.toString());
+            
+            fs.writeFileSync(
+                "gen/index.js",
+                "document.body.innerHTML = \"<pre style='color: red;'>" + err.toString().replace(/\\/g, "/") + "</pre>\";"
+            );
+            
+            return done && done();
         }
+
+        console.error(bytes.toString(), "bytes written to gen/index.js in", duration(time));
         
         fs.writeFileSync("gen/index.js", out);
         
-        console.error(bytes.toString(), "bytes written to gen/index.js in", duration(time));
-        
-        bundling = false;
         done && done();
     });
 }
@@ -41,12 +49,15 @@ builder.plugin("modular-css", {
 
 // Start up watchify
 builder.on("update", bundle);
+
 builder.on("bytes", function(b) {
     bytes = b;
 });
+
 builder.on("time", function(t) {
     time = t;
 });
+
 bundle();
 
 // Log HTTP requests
