@@ -11,6 +11,7 @@ module.exports = {
         var ctrl = this;
         
         ctrl.schemas = null;
+        ctrl.auth    = db.getAuth();
         
         ctrl.add = function() {
             m.route("/schema/new");
@@ -40,27 +41,29 @@ module.exports = {
 
         document.title = options.title || "Loading...";
         
-        return m("div",
+        return m("div", { class : css.outer },
             m("div", { class : css.header },
                 m("h1", { class : css.heading },
                     m("a", { href : "/", config : m.route }, "Crucible")
                 ),
-                m("div", { class : css.schemas },
-                    (ctrl.schemas || []).map(function(schema) {
-                        var url = "/content/" + schema.key;
-                        
-                        return m("a", {
-                            class  : css[route === url ? "active" : "schema"],
-                            href   : url,
-                            config : m.route
-                        }, schema.name);
-                    })
-                ),
-                m("a", {
-                    class  : css.add,
-                    href   : "/content/new",
-                    config : m.route
-                }, "+ Add Content Type"),
+                ctrl.auth ? [
+                    m("div", { class : css.schemas },
+                        (ctrl.schemas || []).map(function(schema) {
+                            var url = "/content/" + schema.key;
+                            
+                            return m("a", {
+                                class  : css[route === url ? "active" : "schema"],
+                                href   : url,
+                                config : m.route
+                            }, schema.name);
+                        })
+                    ),
+                    m("a", {
+                        class  : css.add,
+                        href   : "/content/new",
+                        config : m.route
+                    }, "+ Add Content Type")
+                ] : null,
                 options.content ? null : m("div", { class : css.progress })
             ),
             options.content ? options.content : null

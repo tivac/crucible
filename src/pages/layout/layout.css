@@ -1,3 +1,13 @@
+:global(html),
+:global(body) {
+    min-width: 100%;
+    min-height: 100%;
+}
+
+.outer {
+    height: 100%;
+}
+
 .horizontal {
     display: flex;
     justify-content: space-between;
