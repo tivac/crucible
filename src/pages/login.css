@@ -1,0 +1,29 @@
+.container {
+    composes: global(pure-g);
+
+    height: 50%;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.form {
+    composes: global(pure-u), global(pure-form), global(pure-form-stacked);
+}
+
+.label {
+    font-weight: bold;
+}
+
+.button {
+    composes: primary from "../buttons.css";
+}
+
+.error {
+    composes: global(pure-u-1);
+
+    min-height: 20px;
+    text-align: center;
+
+    color: red;
+}

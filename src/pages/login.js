@@ -3,9 +3,10 @@
 
 var m = require("mithril"),
     
-    db = require("../lib/firebase"),
+    db     = require("../lib/firebase"),
     
-    nav = require("./nav");
+    layout = require("./layout"),
+    css    = require("./login.css");
 
 module.exports = {
     controller : function() {
@@ -25,6 +26,8 @@ module.exports = {
                     
                     return m.redraw();
                 }
+
+                console.log(auth); // TODO: REMOVE DEBUGGING
                 
                 document.location = "/";
             });
@@ -36,27 +39,23 @@ module.exports = {
     },
     
     view : function(ctrl) {
-        return [
-            m.component(nav, { unauth : true }),
-            m("h1", "CRUCIBLE LOGIN"),
-            
-            m("form", { onsubmit : ctrl.onsubmit },
-                m("p",
-                    m("label", "Email"),
-                    m("br"),
-                    m("input", { name : "email", type : "email" })
+        return m.component(layout, {
+            title   : "Login",
+            content : m("div", { class : css.container },
+                m("form", { class : css.form, onsubmit : ctrl.onsubmit },
+                    m("p",
+                        m("label", { class : css.label }, "Email"),
+                        m("input", { name : "email", type : "email" })
+                    ),
+                    m("p",
+                        m("label", { class : css.label }, "Password"),
+                        m("input", { name : "password", type : "password" })
+                    ),
+                    m("button", { class : css.button, type : "submit" }, "Login")
                 ),
-                m("p",
-                    m("label", "Password"),
-                    m("br"),
-                    m("input", { name : "password", type : "password" })
-                ),
-                m("button", { type : "submit" }, "Login")
-            ),
-            
-            ctrl.error ?
-                m("p", "ERROR: " + ctrl.error) :
-                null
-        ];
+                
+                m("p", { class : css.error }, ctrl.error ? "ERROR: " + ctrl.error : null)
+            )
+        });
     }
 };
