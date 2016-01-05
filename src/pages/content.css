@@ -1,0 +1,34 @@
+@value buttons_css: "../buttons.css";
+
+/* Metadata controls */
+.metas {
+    composes: global(pure-g);
+    
+    justify-content: space-between;
+    
+    margin: 5px 0 10px;
+}
+
+.meta {
+    composes: global(pure-u-1-2);
+    
+    padding: 0 5px;
+}
+
+.addMeta {
+    composes: meta;
+}
+
+.editMeta {
+    composes: meta;
+    
+    text-align: right;
+}
+
+.add {
+    composes: add from buttons_css;
+}
+
+.edit {
+    composes: button from buttons_css;
+}
