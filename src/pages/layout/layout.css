@@ -1,32 +1,73 @@
+.horizontal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .header {
-    composes: global(pure-menu), global(pure-menu-horizontal);
-    
+    composes: horizontal;
+
     margin-bottom: 10px;
     
     background: #DDD;
 }
 
 .heading {
-    composes: global(pure-menu-heading), global(pure-menu-link);
-    
+    flex: 1;
+
     font-size: 1.2em;
     margin: 0;
 }
 
-.items {
-    composes: global(pure-menu-list);
+.heading a,
+.heading a:active,
+.heading a:visited {
+    display: block;
+    padding: 0.5em 1em;
+
+    text-decoration: none;
+    color: #333;
 }
 
-.item {
-    composes: global(pure-menu-item);
+.heading a:hover {
+    color: #CCC;
+    background: #444;
 }
 
-.selected {
-    composes: item, global(pure-menu-selected);
+.schemas {
+    composes: horizontal;
+
+    flex: 4 0 50%;
+
+    margin: 0;
+    list-style: none;
 }
 
-.link {
-    composes: global(pure-menu-link);
+.schema,
+.schema:active,
+.schema:visited {
+    padding: 11px 10px;
+
+    text-decoration: none;
+    color: #333;
+}
+
+.schema:hover {
+    color: #CCC;
+    background: #444;
+}
+
+.active {
+    composes: schema;
+
+    color: #CCC;
+    background: #666;
+}
+
+.add {
+    composes: color from "../../buttons.css";
+
+    background: rgb(177,173,164);
 }
 
 .progress {

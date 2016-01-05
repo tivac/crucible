@@ -16,10 +16,6 @@ module.exports = {
             m.route("/schema/new");
         };
         
-        ctrl.updateTitle = function(options) {
-            document.title = options.title || "Loading...";
-        };
-        
         db.child("schemas").on("value", function(snap) {
             ctrl.schemas = [];
             
@@ -41,24 +37,33 @@ module.exports = {
         if(!options) {
             options = false;
         }
+
+        document.title = options.title || "Loading...";
         
-        return m("div", { config : ctrl.updateTitle.bind(ctrl, options) },
+        return m("div",
             m("div", { class : css.header },
                 m("h1", { class : css.heading },
-                    m("a", { href : "/" }, "Crucible")
+                    m("a", { href : "/", config : m.route }, "Crucible")
                 ),
-                m("ul", { class : css.items },
+                m("div", { class : css.schemas },
                     (ctrl.schemas || []).map(function(schema) {
                         var url = "/content/" + schema.key;
                         
-                        return m("li", { class : css[route === url ? "selected" : "item"] },
-                            m("a", { class : css.link, href : url }, schema.name)
-                        );
+                        return m("a", {
+                            class  : css[route === url ? "active" : "schema"],
+                            href   : url,
+                            config : m.route
+                        }, schema.name);
                     })
                 ),
-                options.content ? null : m("div", { class : css.progress }) 
+                m("a", {
+                    class  : css.add,
+                    href   : "/content/new",
+                    config : m.route
+                }, "+ Add Content Type"),
+                options.content ? null : m("div", { class : css.progress })
             ),
             options.content ? options.content : null
         );
     }
-}
+};
