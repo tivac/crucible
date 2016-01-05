@@ -192,7 +192,7 @@ module.exports = {
                     m("col", { class : css.namecol }),
                     m("col", { class : css.datecol }),
                     m("col", { class : css.datecol }),
-                    m("col", { class : css.deletecol })
+                    m("col", { class : css.metacol })
                 ),
                 m("thead",
                     m("tr",
@@ -207,8 +207,6 @@ module.exports = {
                                 attrs.class = css[ctrl.sorting.desc ? "thDesc" : "thAsc"];
                             }
                             
-                            console.log(attrs);
-                            
                             return m("th", attrs, title);
                         }),
                         
@@ -220,14 +218,21 @@ module.exports = {
                         var url = "/content/" + ctrl.schema.key + "/" + data.key;
                         
                         return m("tr", { key : data.key },
-                            m("td", { onclick : ctrl.visit.bind(ctrl, url) },
-                                m("a", { href : url, config : m.route }, data.name),
-                                m("a", { href : ctrl.schema.preview + data.key }, "Preview")
+                            m("td",
+                                m("a", { href : url, config : m.route }, data.name)
                             ),
                             m("td", { title : data.created.format("LLL") }, data.created.fromNow()),
                             m("td", { title : data.updated.format("LLL") }, data.updated.fromNow()),
                             m("td",
-                                m("button", { class : css.remove }, "Delete")
+                                m("a", { class : css.icon, href : url, config : m.route },
+                                    m("img", { src : "/src/pages/content/edit.svg" })
+                                ),
+                                m("a", { class : css.icon, href : ctrl.schema.preview + data.key },
+                                    m("img", { src : "/src/pages/content/preview.svg" })
+                                ),
+                                m("button", { class : css.icon },
+                                    m("img", { src : "/src/pages/content/remove.svg" })
+                                )
                             )
                         );
                     })

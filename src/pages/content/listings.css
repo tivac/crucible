@@ -1,19 +1,25 @@
 @value buttons_css: "../../buttons.css";
 
 /* Utility */
-.arrow {
+.svg {
     position: relative;
 }
 
-.arrow::after {
+.svg::after {
     content: "";
     
-    background: url("arrow-light.svg");
+    background: transparent 50% 50% no-repeat;
     background-size: contain;
     
     position: absolute;
+    z-index: 1;
 }
 
+.arrow::after {
+    composes: svg;
+
+    background-image: url("arrow-light.svg");
+}
 
 /* Metadata controls */
 .metas {
@@ -58,7 +64,7 @@
     composes: add from buttons_css;
 }
 
-.edit {
+.editType {
     composes: button from buttons_css;
 }
 
@@ -77,9 +83,10 @@
     width: 150px;
 }
 
-.deletecol {
-    width: 100px;
+.metacol {
+    width: 120px;
 }
+
 
 .th {
     cursor: pointer;
@@ -114,8 +121,28 @@
     transform: rotate(90deg);
 }
 
-.remove {
-    composes: remove from buttons_css;
+.icon {
+    display: inline-block;
+    width: 20px;
+    margin: 0 5px;
+
+    background: none;
+    outline: none;
+    border: 0;
+    padding: 0;
+}
+
+.icon img {
+    width: 20px;
+    height: 20px;
+}
+
+.icon:first-child {
+    margin-left: 0;
+}
+
+.icon:last-child {
+    margin-right: 0;
 }
 
 /* Pagination controls */
