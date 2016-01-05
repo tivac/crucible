@@ -5,6 +5,7 @@ var fs   = require("fs"),
     
     browserify = require("browserify"),
     duration   = require("humanize-duration"),
+    jsesc      = require("jsesc"),
     
     server   = require("connect")(),
     ecstatic = require("ecstatic")(process.cwd(), {
@@ -28,7 +29,7 @@ function bundle() {
             
             fs.writeFileSync(
                 "gen/index.js",
-                "document.body.innerHTML = \"<pre style='color: red;'>" + err.toString().replace(/\\/g, "/") + "</pre>\";"
+                "document.body.innerHTML = \"<pre style='color: red;'>" + jsesc(err.toString()) + "</pre>\";"
             );
             
             return done && done();
