@@ -114,36 +114,35 @@ module.exports = {
             title   : "Edit - " + ctrl.schema.name,
             content : [
                 m("div", { class : css.meta },
-                    m("label",
-                        "Preview URL: ",
-                        m("input", {
-                            class : css[ctrl.preview ? "preview" : "previewError"],
-                            type  : "url",
-                            value : ctrl.schema.preview || "",
-                            
-                            oninput : ctrl.previewChanged,
-                            config  : function(el, init) {
-                                if(init) {
-                                    return;
-                                }
-                                
-                                ctrl.preview = el.validity.valid;
+                    m("h3", "Metadata"),
+                    m("label", { class : css.label, for : "preview" }, "Preview URL Base"),
+                    m("input", {
+                        id    : "preview",
+                        class : css[ctrl.preview ? "preview" : "previewError"],
+                        type  : "url",
+                        value : ctrl.schema.preview || "",
+                        
+                        oninput : ctrl.previewChanged,
+                        config  : function(el, init) {
+                            if(init) {
+                                return;
                             }
-                        })
-                    )
+                            
+                            ctrl.preview = el.validity.valid;
+                        }
+                    }),
+                    m("p", { class : css.note }, ctrl.schema.preview ? ctrl.schema.preview + "-0IhUBgUFfhyLQ2m6s5x" : null)
                 ),
                 m("div", { class : css.contents },
-                    m("div", { class : css.headings },
-                        m("h3", { class : css.fieldsHd }, "Field Definitions"),
-                        m("h3", { class : css.previewHd }, "Preview")
-                    ),
                     m("div", { class : css.editor },
+                        m("h3", "Field Definitions"),
                         m("textarea", { config : ctrl.editorSetup },
                             ctrl.schema.source || "{}"
                         )
                     ),
 
                     m("div", { class : css.fields },
+                        m("h3", "Preview"),
                         m.component(children, {
                             details : ctrl.schema.fields
                         })
