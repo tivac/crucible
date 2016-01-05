@@ -52,30 +52,18 @@ module.exports = {
                     ctrl.entries.reverse();
                 }
                 
-                ctrl.pagination();
+                ctrl._paginate();
                 
                 m.redraw();
             });
         };
         
-        ctrl.pagination = function() {
+        ctrl._paginate = function() {
             ctrl.content = paginate(ctrl.entries, { limit : size });
         };
         
         // Go get initial data
         ctrl.fetch();
-
-        // Event handlers
-        ctrl.add = function() {
-            var result;
-                
-            result = db.child("content/" + ctrl.schema.key).push({
-                name    : "New " + ctrl.schema.name,
-                created : db.TIMESTAMP
-            });
-
-            m.route("/content/" + ctrl.schema.key + "/" + result.key());
-        };
 
         ctrl.change = function(page, e) {
             e.preventDefault();
@@ -101,19 +89,13 @@ module.exports = {
             m.redraw();
         }, 100);
         
-        ctrl.visit = function(url, e) {
-            e.preventDefault();
-            
-            m.route(url);
-        };
-        
         ctrl.sort = function(field) {
             if(field === ctrl.sorting.field) {
                 ctrl.sorting.desc = !ctrl.sorting.desc;
                 
                 ctrl.entries.reverse();
                                 
-                return ctrl.pagination();
+                return ctrl._paginate();
             }
             
             ctrl.sorting.field = field;
@@ -159,34 +141,6 @@ module.exports = {
         }
         
         return m("div",
-            m("div", { class : css.metas },
-                m("div", { class : css.addMeta },
-                    m("button", {
-                            onclick : ctrl.add,
-                            class   : css.add
-                        },
-                        "Add " + ctrl.schema.name
-                    )
-                ),
-                m("div", { class : css.searchMeta },
-                    m("input", {
-                        class       : css.search,
-                        placeholder : "Filter this content",
-                        
-                        oninput     : m.withAttr("value", ctrl.filter)
-                    })
-                ),
-                m("div", { class : css.editMeta },
-                    m("a", {
-                            class : css.edit,
-                            
-                            href   : m.route() + "/edit",
-                            config : m.route
-                        },
-                        "Edit"
-                    )
-                )
-            ),
             m("table", { class : css.table },
                 m("colgroup",
                     m("col", { class : css.namecol }),
@@ -238,7 +192,7 @@ module.exports = {
                     })
                 )
             ),
-            pages.length ?
+            m("div", { class : css.nav },
                 m("div", { class : css.pagination },
                     current.prev ?
                         m("a", {
@@ -276,8 +230,16 @@ module.exports = {
                             ""
                         ) :
                         m("span", { class : css.noNext }, "")
-                ) :
-                null
+                ),
+                m("div", { class : css.searching },
+                    m("input", {
+                        class       : css.search,
+                        placeholder : "Filter this content",
+                        
+                        oninput     : m.withAttr("value", ctrl.filter)
+                    })
+                )
+            )
         );
     }
 };
