@@ -1,11 +1,15 @@
 :global(html),
 :global(body) {
-    min-width: 100%;
-    min-height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 .outer {
     height: 100%;
+
+    display: flex;
+
+    flex-direction: column;
 }
 
 .horizontal {
