@@ -14,13 +14,13 @@
 
 .horizontal {
     display: flex;
-    justify-content: space-between;
     align-items: center;
 }
 
 .header {
     composes: horizontal;
 
+    justify-content: space-between;
     margin-bottom: 10px;
     
     background: #DDD;
