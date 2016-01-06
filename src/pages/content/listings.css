@@ -1,15 +1,5 @@
 @value buttons_css: "../../buttons.css";
-
-/* Utility */
-.icon {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    
-    margin-top: -2px;
-    
-    fill: currentColor;
-}
+@value icons_css: "../../icons.css";
 
 /* Table styling */
 .table {
@@ -47,7 +37,7 @@
 }
 
 .action {
-    composes: icon;
+    composes: icon from icons_css;
     
     color: #000;
     transition: color 0.1s ease-in;
@@ -111,28 +101,21 @@
     composes: link, global(pure-button-disabled);
 }
 
-.pagebutton {
+.pager {
     composes: link, global(pure-button-primary);
 }
 
-.pagebutton svg {
+.pagerOff {
+    composes: pager, disabled;
+}
+
+.prevIcon,
+.nextIcon {
+    composes: icon from icons_css;
+
     color: #FFF;
 }
 
-.prev svg {
-    composes: pagebutton;
-
+.prevIcon {
     transform: rotate(180deg);
-}
-
-.next {
-    composes: pagebutton;
-}
-
-.noPrev {
-    composes: prev, disabled;
-}
-
-.noNext {
-    composes: next, disabled;
 }

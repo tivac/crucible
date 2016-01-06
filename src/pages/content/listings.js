@@ -183,19 +183,29 @@ module.exports = {
                             m("td", { title : data.updated.format("LLL") }, data.updated.fromNow()),
                             m("td",
                                 m("div", { class : css.actions },
-                                    m("a", { href : url, config : m.route },
+                                    m("a", {
+                                            title  : "Edit",
+                                            href   : url,
+                                            config : m.route
+                                        },
                                         m("svg", { class : css.edit },
-                                            m("use", { href : "/src/pages/content/symbols.svg#icon-edit" })
+                                            m("use", { href : "/src/icons.svg#icon-edit" })
                                         )
                                     ),
-                                    m("a", { href : ctrl.schema.preview + data.key },
+                                    m("a", {
+                                            title : "Preview",
+                                            href  : ctrl.schema.preview + data.key
+                                        },
                                         m("svg", { class : css.preview },
-                                            m("use", { href : "/src/pages/content/symbols.svg#icon-preview" })
+                                            m("use", { href : "/src/icons.svg#icon-preview" })
                                         )
                                     ),
-                                    m("button", { class : css.remove },
+                                    m("button", {
+                                            class : css.remove,
+                                            title : "Remove"
+                                        },
                                         m("svg", { class : css.removeIcon },
-                                            m("use", { href : "/src/pages/content/symbols.svg#icon-remove" })
+                                            m("use", { href : "/src/icons.svg#icon-remove" })
                                         )
                                     )
                                 )
@@ -210,16 +220,16 @@ module.exports = {
                         m("a", {
                                 key     : "prev",
                                 href    : "#/page" + (current.prev - 1),
-                                class   : css.prev,
+                                class   : css.pager,
                                 onclick : ctrl.change.bind(null, current.prev - 1)
                             },
-                            m("svg", { class : css.icon },
-                                m("use", { href : "/src/pages/content/symbols.svg#icon-arrow" })
+                            m("svg", { class : css.prevIcon },
+                                m("use", { href : "/src/icons.svg#icon-arrow" })
                             )
                         ) :
-                        m("span", { class : css.noPrev },
-                            m("svg", { class : css.icon },
-                                m("use", { href : "/src/pages/content/symbols.svg#icon-arrow" })
+                        m("span", { class : css.pagerOff },
+                            m("svg", { class : css.prevIcon },
+                                m("use", { href : "/src/icons.svg#icon-arrow" })
                             )
                         ),
                     
@@ -244,16 +254,16 @@ module.exports = {
                         m("a", {
                                 key     : "next",
                                 href    : "#/page" + (current.next - 1),
-                                class   : css.next,
+                                class   : css.pager,
                                 onclick : ctrl.change.bind(null, current.next - 1)
                             },
-                            m("svg", { class : css.icon },
-                                m("use", { href : "/src/pages/content/symbols.svg#icon-arrow" })
+                            m("svg", { class : css.nextIcon },
+                                m("use", { href : "/src/icons.svg#icon-arrow" })
                             )
                         ) :
-                        m("span", { class : css.noNext },
-                            m("svg", { class : css.icon },
-                                m("use", { href : "/src/pages/content/symbols.svg#icon-arrow" })
+                        m("span", { class : css.pagerOff },
+                            m("svg", { class : css.nextIcon },
+                                m("use", { href : "/src/icons.svg#icon-arrow" })
                             )
                         )
                 ),
