@@ -59,6 +59,10 @@ module.exports = {
         };
         
         ctrl._paginate = function() {
+            if(!ctrl.entries.length) {
+                return;
+            }
+
             ctrl.content = paginate(ctrl.entries, { limit : size });
         };
         
