@@ -4,6 +4,9 @@
 // Don't actually want the exports, just want it bundled
 require("./global.css");
 
+// Attaches to window, so doesn't return anything useful
+require("whatwg-fetch");
+
 var m = require("mithril"),
     
     db     = require("./lib/firebase"),
