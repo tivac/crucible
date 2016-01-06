@@ -1,5 +1,16 @@
 @value buttons_css: "../../buttons.css";
 
+/* Utility */
+.icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    
+    margin-top: -2px;
+    
+    fill: currentColor;
+}
+
 /* Table styling */
 .table {
     composes: global(pure-table), global(pure-table-horizontal), global(pure-table-striped);
@@ -28,12 +39,37 @@
             user-select: none;
 }
 
-.icon {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
+.actions {
+    display: flex;
+    
+    justify-content: space-between;
+    align-items: center;
+}
 
-    fill: currentColor;
+.action {
+    composes: icon;
+    
+    color: #000;
+    transition: color 0.1s ease-in;
+}
+
+.action:hover {
+    color: rgb(0, 120, 231);
+    transition: color 0.1s ease-in;
+}
+
+.edit,
+.preview,
+.removeIcon {
+    composes: action;
+}
+
+.remove {
+    /* Strip <button> styling */
+    background: none;
+    outline: none;
+    border: 0;
+    padding: 0;
 }
 
 /* Table Nav */

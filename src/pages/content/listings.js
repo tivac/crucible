@@ -178,22 +178,23 @@ module.exports = {
                             m("td", { title : data.created.format("LLL") }, data.created.fromNow()),
                             m("td", { title : data.updated.format("LLL") }, data.updated.fromNow()),
                             m("td",
-                                m("a", { href : url, config : m.route },
-                                    m("svg", { class : css.icon },
-                                        m.trust("<use xlink:href='/src/pages/content/symbols.svg#icon-edit'></use>")
-                                    )
-                                ),
-                                m("a", { href : ctrl.schema.preview + data.key },
-                                    m("svg", { class : css.icon },
-                                        m.trust("<use xlink:href=/src/pages/content/symbols.svg#icon-preview></use>")
+                                m("div", { class : css.actions },
+                                    m("a", { href : url, config : m.route },
+                                        m("svg", { class : css.edit },
+                                            m("use", { href : "/src/pages/content/symbols.svg#icon-edit" })
+                                        )
+                                    ),
+                                    m("a", { href : ctrl.schema.preview + data.key },
+                                        m("svg", { class : css.preview },
+                                            m("use", { href : "/src/pages/content/symbols.svg#icon-preview" })
+                                        )
+                                    ),
+                                    m("button", { class : css.remove },
+                                        m("svg", { class : css.removeIcon },
+                                            m("use", { href : "/src/pages/content/symbols.svg#icon-remove" })
+                                        )
                                     )
                                 )
-                                // TODO: convert to working SVG
-                                /*,
-                                m("button", { class : css.icon },
-                                    m("svg", { class : css.icon }, m("use[xlink:href=/src/pages/content/symbols.svg#icon-arrow]"))
-                                )
-                                */
                             )
                         );
                     })
@@ -209,12 +210,12 @@ module.exports = {
                                 onclick : ctrl.change.bind(null, current.prev - 1)
                             },
                             m("svg", { class : css.icon },
-                                m.trust("<use xlink:href='/src/pages/content/symbols.svg#icon-arrow'></use>")
+                                m("use", { href : "/src/pages/content/symbols.svg#icon-arrow" })
                             )
                         ) :
                         m("span", { class : css.noPrev },
                             m("svg", { class : css.icon },
-                                m.trust("<use xlink:href='/src/pages/content/symbols.svg#icon-arrow'></use>")
+                                m("use", { href : "/src/pages/content/symbols.svg#icon-arrow" })
                             )
                         ),
                     
@@ -243,12 +244,12 @@ module.exports = {
                                 onclick : ctrl.change.bind(null, current.next - 1)
                             },
                             m("svg", { class : css.icon },
-                                m.trust("<use xlink:href='/src/pages/content/symbols.svg#icon-arrow'></use>")
+                                m("use", { href : "/src/pages/content/symbols.svg#icon-arrow" })
                             )
                         ) :
                         m("span", { class : css.noNext },
                             m("svg", { class : css.icon },
-                                m.trust("<use xlink:href='/src/pages/content/symbols.svg#icon-arrow'></use>")
+                                m("use", { href : "/src/pages/content/symbols.svg#icon-arrow" })
                             )
                         )
                 ),
