@@ -14,7 +14,9 @@ var m      = require("mithril"),
 
 module.exports = {
     controller : function(options) {
-        var ctrl = this,
+        var ctrl    = this,
+            schema  = options.details.schema,
+            content = db.child("content/" + schema),
             sources;
         
         ctrl.id = id(options);
@@ -24,12 +26,12 @@ module.exports = {
                 return;
             }
 
-            db.child("content").orderByChild("_schema").equalTo(options.details.schema).once("value", function(snap) {
+            content.once("value", function(snap) {
                 sources = map(snap.val(), function(details, id) {
                     return {
                         id    : id,
-                        name  : details._name,
-                        lower : details._name.toLowerCase()
+                        name  : details.name,
+                        lower : details.name.toLowerCase()
                     };
                 });
             });
@@ -58,18 +60,20 @@ module.exports = {
         // Set up a two-way relationship between these
         ctrl.add = function(id) {
             options.ref.child(id).set(true);
-            db.child("content/" + id + "/_relationships/" + options.root.key()).set(true);
+            
+            content.child(id + "/relationships/" + options.root.key()).set(true);
         };
 
         // BREAK THE RELATIONSHIP
         ctrl.remove = function(id) {
             options.ref.child(id).remove();
-            db.child("content/" + id + "/_relationships/" + options.root.key()).remove();
+
+            content.child(id + "/relationships/" + options.root.key()).remove();
         };
     },
     
     view : function(ctrl, options) {
-        var details = options.details
+        var details = options.details,
             name    = details.name;
             
         if(details.required) {
@@ -102,7 +106,7 @@ module.exports = {
                     return m("li", {
                         "data-id" : suggestion.id,
                         onclick   : options.ref && m.withAttr("data-id", ctrl.add)
-                    }, suggestion.name)
+                    }, suggestion.name);
                 })
             )
         );
