@@ -178,15 +178,22 @@ module.exports = {
                             m("td", { title : data.created.format("LLL") }, data.created.fromNow()),
                             m("td", { title : data.updated.format("LLL") }, data.updated.fromNow()),
                             m("td",
-                                m("a", { class : css.icon, href : url, config : m.route },
-                                    m("img", { src : "/src/pages/content/edit.svg" })
+                                m("a", { href : url, config : m.route },
+                                    m("svg", { class : css.icon },
+                                        m.trust("<use xlink:href='/src/pages/content/symbols.svg#icon-edit'></use>")
+                                    )
                                 ),
-                                m("a", { class : css.icon, href : ctrl.schema.preview + data.key },
-                                    m("img", { src : "/src/pages/content/preview.svg" })
-                                ),
-                                m("button", { class : css.icon },
-                                    m("img", { src : "/src/pages/content/remove.svg" })
+                                m("a", { href : ctrl.schema.preview + data.key },
+                                    m("svg", { class : css.icon },
+                                        m.trust("<use xlink:href=/src/pages/content/symbols.svg#icon-preview></use>")
+                                    )
                                 )
+                                // TODO: convert to working SVG
+                                /*,
+                                m("button", { class : css.icon },
+                                    m("svg", { class : css.icon }, m("use[xlink:href=/src/pages/content/symbols.svg#icon-arrow]"))
+                                )
+                                */
                             )
                         );
                     })
@@ -196,12 +203,20 @@ module.exports = {
                 m("div", { class : css.pagination },
                     current.prev ?
                         m("a", {
-                            key     : "prev",
-                            href    : "#/page" + (current.prev - 1),
-                            class   : css.prev,
-                            onclick : ctrl.change.bind(null, current.prev - 1)
-                        }, "") :
-                        m("span", { class : css.noPrev }, ""),
+                                key     : "prev",
+                                href    : "#/page" + (current.prev - 1),
+                                class   : css.prev,
+                                onclick : ctrl.change.bind(null, current.prev - 1)
+                            },
+                            m("svg", { class : css.icon },
+                                m.trust("<use xlink:href='/src/pages/content/symbols.svg#icon-arrow'></use>")
+                            )
+                        ) :
+                        m("span", { class : css.noPrev },
+                            m("svg", { class : css.icon },
+                                m.trust("<use xlink:href='/src/pages/content/symbols.svg#icon-arrow'></use>")
+                            )
+                        ),
                     
                     pages.map(function(page) {
                         if(typeof page === "string") {
@@ -227,9 +242,15 @@ module.exports = {
                                 class   : css.next,
                                 onclick : ctrl.change.bind(null, current.next - 1)
                             },
-                            ""
+                            m("svg", { class : css.icon },
+                                m.trust("<use xlink:href='/src/pages/content/symbols.svg#icon-arrow'></use>")
+                            )
                         ) :
-                        m("span", { class : css.noNext }, "")
+                        m("span", { class : css.noNext },
+                            m("svg", { class : css.icon },
+                                m.trust("<use xlink:href='/src/pages/content/symbols.svg#icon-arrow'></use>")
+                            )
+                        )
                 ),
                 m("div", { class : css.searching },
                     m("input", {

@@ -1,29 +1,5 @@
 @value buttons_css: "../../buttons.css";
 
-/* Utility */
-.svg {
-    position: relative;
-}
-
-.svg::after {
-    content: "";
-    
-    background: transparent 50% 50% no-repeat;
-    background-size: contain;
-    
-    position: absolute;
-    z-index: 1;
-}
-
-.arrow::after {
-    composes: svg;
-
-    background-image: url("arrow-light.svg");
-
-    width: 20px;
-    height: 20px;
-}
-
 /* Table styling */
 .table {
     composes: global(pure-table), global(pure-table-horizontal), global(pure-table-striped);
@@ -43,7 +19,6 @@
     width: 120px;
 }
 
-
 .th {
     cursor: pointer;
     
@@ -53,52 +28,12 @@
             user-select: none;
 }
 
-.colArrow::after {
-    composes: arrow, th;
-    
-    background-image: url("arrow-dark.svg");
-    
-    width: 24px;
-    height: 24px;
-
-    top: 50%;
-    margin-top: -12px;
-}
-
-.thAsc::after {
-    composes: colArrow;
-    
-    transform: rotate(-90deg);
-}
-
-.thDesc::after {
-    composes: colArrow;
-    
-    transform: rotate(90deg);
-}
-
 .icon {
     display: inline-block;
     width: 20px;
-    margin: 0 5px;
-
-    background: none;
-    outline: none;
-    border: 0;
-    padding: 0;
-}
-
-.icon img {
-    width: 20px;
     height: 20px;
-}
 
-.icon:first-child {
-    margin-left: 0;
-}
-
-.icon:last-child {
-    margin-right: 0;
+    fill: currentColor;
 }
 
 /* Table Nav */
@@ -140,23 +75,21 @@
     composes: link, global(pure-button-disabled);
 }
 
-.pagebutton::after {
-    composes: link, global(pure-button-primary), arrow;
-    
-    width: 24px;
-    height: 24px;
-    
-    top: 3px;
-    left: 50%;
-    margin-left: -12px;
+.pagebutton {
+    composes: link, global(pure-button-primary);
 }
 
-.prev::after {
+.pagebutton svg {
+    color: #FFF;
+}
+
+.prev svg {
     composes: pagebutton;
+
     transform: rotate(180deg);
 }
 
-.next::after {
+.next {
     composes: pagebutton;
 }
 
