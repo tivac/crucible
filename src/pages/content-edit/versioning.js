@@ -10,7 +10,10 @@ module.exports = {
     controller : function(options) {
         var ctrl = this;
 
-        ctrl.snapshot = function(e) {
+        ctrl.schema = m.route.param("schema");
+        ctrl.id     = m.route.param("id");
+
+        ctrl.snapshot = function() {
             options.ref.once("value", function(snap) {
                 var data = snap.exportVal(),
                     rev  = data.version || 1,
@@ -28,10 +31,13 @@ module.exports = {
             m("span",
                 "Version: " + (options.data.version || 1)
             ),
+            m("a", {
+                href : "/content/" + ctrl.schema + "/" + ctrl.id + "/history"
+            }, "History"),
             m("button", {
                 class   : css.save,
                 onclick : ctrl.snapshot
-            }, "New Version")
+            }, "Save")
         );
     }
 };
