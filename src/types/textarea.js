@@ -2,7 +2,6 @@
 
 var m      = require("mithril"),
     assign = require("lodash.assign"),
-    slug   = require("sluggo"),
 
     update  = require("../lib/update"),
     id      = require("../lib/id"),
@@ -12,7 +11,7 @@ var m      = require("mithril"),
 module.exports = {
     controller : function(options) {
         var ctrl = this;
-    
+
         ctrl.id   = id(options);
         ctrl.text = options.data || "";
 
@@ -28,7 +27,7 @@ module.exports = {
     view : function(ctrl, options) {
         var details = options.details,
             name    = details.name;
-        
+
         if(details.required) {
             name += "*";
         }

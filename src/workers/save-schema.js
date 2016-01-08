@@ -38,7 +38,7 @@ function process(obj) {
                     children : process(tab)
                 };
             });
-            
+
             delete field.tabs;
         }
 
@@ -67,7 +67,7 @@ function process(obj) {
 
             delete field.options;
         }
-        
+
         if(field.type === "split") {
             field.children = Object.keys(field.sections).map(function(name) {
                 return {
@@ -76,7 +76,7 @@ function process(obj) {
                     children : process(field.sections[name])
                 };
             });
-            
+
             delete field.sections;
         }
 

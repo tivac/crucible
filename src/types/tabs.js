@@ -2,7 +2,7 @@
 
 var m      = require("mithril"),
     assign = require("lodash.assign"),
-    
+
     children = require("./children"),
 
     css = require("./tabs.css");
@@ -10,12 +10,12 @@ var m      = require("mithril"),
 module.exports = {
     controller : function() {
         var ctrl = this;
-        
+
         ctrl.tab = 0;
 
         ctrl.switchtab = function(tab, e) {
             e.preventDefault();
-            
+
             ctrl.tab = tab;
         };
     },
