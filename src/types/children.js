@@ -67,5 +67,6 @@ types = {
     number   : input("number"),
     text     : input("text"),
     time     : input("time"),
-    url      : input("url")
+    url      : input("url"),
+    checkbox : input("checkbox")
 };
