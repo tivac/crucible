@@ -3,7 +3,7 @@
 var m      = require("mithril"),
     assign = require("lodash.assign"),
     times  = require("lodash.times"),
-    
+
     children     = require("./children"),
     instructions = require("./instructions"),
 
@@ -41,7 +41,7 @@ module.exports = {
             if(!options.ref) {
                 return;
             }
-    
+
             // Ensure that we have data placeholders for all the possible entries
             times(ctrl.children, function(idx) {
                 if(options.data && options.data[idx]) {
@@ -51,7 +51,7 @@ module.exports = {
                 options.ref.child(idx).set("placeholder");
             });
         };
-        
+
         ctrl.remove = function(options, data, idx, e) {
             // No ref means we don't much care
             if(!options.ref || !options.data) {

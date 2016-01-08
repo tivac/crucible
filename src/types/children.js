@@ -6,7 +6,7 @@ var m      = require("mithril"),
 
     input = require("./_input"),
 
-    css  = require("./types.css"),
+    css = require("./types.css"),
 
     // Bound below
     types;
@@ -19,22 +19,22 @@ module.exports = {
             details.map(function(field, index) {
                 var component = types[field.type || field],
                     data, ref;
-                
+
                 if(!component) {
                     return m("div",
                         m("p", "Unknown component"),
                         m("pre", JSON.stringify(field, null, 4))
                     );
                 }
-                
+
                 if(component.decorative) {
                     data = options.data;
-                    ref  = options.ref && options.ref;
+                    ref  = options.ref;
                 } else {
                     data = get(options, "data." + field.slug);
                     ref  = options.ref && options.ref.child(field.slug);
                 }
-                
+
                 return m.component(component, assign({}, options, {
                     details : field,
                     class   : css[index ? "field" : "first"],
@@ -49,17 +49,17 @@ module.exports = {
 // Have to bind these down here to avoid circular binding issues
 types = {
     // Structural
-    fieldset : require("./fieldset"),
+    fieldset  : require("./fieldset"),
     repeating : require("./repeating"),
-    split : require("./split"),
-    tabs : require("./tabs"),
+    split     : require("./split"),
+    tabs      : require("./tabs"),
 
     // Non-input fields
     instructions : require("./instructions"),
     relationship : require("./relationship"),
     select       : require("./select"),
     textarea     : require("./textarea"),
-    
+
     // These are all just variations on the input type
     date     : input("date"),
     datetime : input("datetime-local"),

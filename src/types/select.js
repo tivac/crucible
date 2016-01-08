@@ -2,7 +2,6 @@
 
 var m      = require("mithril"),
     assign = require("lodash.assign"),
-    slug   = require("sluggo"),
 
     id = require("../lib/id"),
 
@@ -15,36 +14,36 @@ function optvalue(option) {
 module.exports = {
     controller : function(options) {
         var ctrl = this;
-        
+
         ctrl.id = id(options);
 
         ctrl.onchange = function(options, index) {
             var opt = options.details.children[index];
-            
+
             options.ref.set(optvalue(opt));
         };
     },
-    
+
     view : function(ctrl, options) {
         var details = options.details,
             value   = options.data,
             name    = details.name;
-            
+
         if(details.required) {
             name += "*";
         }
-        
+
         // Need to go see if one of the options should be already selected
         if(!value) {
             details.children.some(function(opt) {
                 if(opt.selected) {
                     value = optvalue(opt);
                 }
-                
+
                 return value;
             });
         }
-        
+
         return m("div", { class : options.class },
             m("label", {
                 for   : ctrl.id,

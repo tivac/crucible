@@ -4,11 +4,10 @@ var m      = require("mithril"),
     assign = require("lodash.assign"),
     map    = require("lodash.map"),
     fuzzy  = require("fuzzysearch"),
-    slug   = require("sluggo"),
-    
+
     db = require("../lib/firebase"),
     id = require("../lib/id"),
-    
+
     types = require("./types.css"),
     css   = require("./relationship.css");
 
@@ -18,7 +17,7 @@ module.exports = {
             schema  = options.details.schema,
             content = db.child("content/" + schema),
             sources;
-        
+
         ctrl.id = id(options);
 
         ctrl.sources = function() {
@@ -60,7 +59,7 @@ module.exports = {
         // Set up a two-way relationship between these
         ctrl.add = function(id) {
             options.ref.child(id).set(true);
-            
+
             content.child(id + "/relationships/" + options.root.key()).set(true);
         };
 
@@ -71,15 +70,15 @@ module.exports = {
             content.child(id + "/relationships/" + options.root.key()).remove();
         };
     },
-    
+
     view : function(ctrl, options) {
         var details = options.details,
             name    = details.name;
-            
+
         if(details.required) {
             name += "*";
         }
-        
+
         return m("div", { class : options.class },
             m("ul",
                 options.data && Object.keys(options.data).map(function(key) {
