@@ -9,7 +9,7 @@
 
     display: flex;
 
-    flex-direction: column;
+    flex-wrap: wrap;
 }
 
 .horizontal {
@@ -17,11 +17,18 @@
     align-items: center;
 }
 
+.vertical {
+    display: flex;
+    flex-direction: column;
+}
+
 .header {
-    composes: horizontal;
+    /*composes: horizontal;*/
 
     justify-content: space-between;
-    margin-bottom: 10px;
+
+    flex-grow: 1;
+    flex-basis: 100%;
     
     background: #DDD;
 }
@@ -48,8 +55,26 @@
     background: #444;
 }
 
+.nav {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+
+    font-size: 0.9em;
+    color: #FFF;
+
+    background: #441604;
+}
+
+.section {
+    flex-grow: 1;
+    flex-basis: 1px; /* this is stupid but prevents needing a flex container around the nav and section */
+
+    background: #EEE;
+}
+
 .schemas {
-    composes: horizontal;
+    composes: vertical;
 
     flex: 4 0 50%;
 
@@ -62,25 +87,32 @@
 .schema:visited {
     padding: 11px 10px;
 
+    opacity: 0.5;
+
+    color: inherit;
     text-decoration: none;
-    color: #333;
 }
 
 .schema:hover {
-    color: #CCC;
-    background: #444;
+    opacity: 1;
+
+    background: rgba(0, 0, 0, 0.4);
 }
 
 .active {
     composes: schema;
 
-    color: #CCC;
-    background: #666;
+    opacity: 1;
+
+    border-right: solid #F00 7px;
+
+    background: rgba(0, 0, 0, 0.4);
 }
 
 .add {
     composes: color from "../../buttons.css";
 
+    align-self: flex-end;
     background: rgb(177,173,164);
 }
 

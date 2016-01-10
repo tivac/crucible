@@ -42,10 +42,14 @@ module.exports = {
         document.title = options.title || "Loading...";
         
         return m("div", { class : css.outer },
-            m("div", { class : css.header },
+            m("header", { class : css.header },
                 m("h1", { class : css.heading },
                     m("a", { href : "/", config : m.route }, "Crucible")
                 ),
+                options.content ? null : m("div", { class : css.progress })
+            ),
+            m("nav", 
+                { class : css.nav },
                 ctrl.auth ? [
                     m("div", { class : css.schemas },
                         (ctrl.schemas || []).map(function(schema) {
@@ -63,10 +67,9 @@ module.exports = {
                         href   : "/content/new",
                         config : m.route
                     }, "+ Add Content Type")
-                ] : null,
-                options.content ? null : m("div", { class : css.progress })
+                ] : null
             ),
-            options.content ? options.content : null
+            m("section", { class : css.section }, options.content ? options.content : null)
         );
     }
 };
