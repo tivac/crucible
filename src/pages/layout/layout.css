@@ -5,11 +5,10 @@
 }
 
 .outer {
-    height: 100%;
+    min-height: 100%;
 
     display: flex;
-
-    flex-wrap: wrap;
+    flex-flow: column wrap;
 }
 
 .horizontal {
@@ -23,20 +22,16 @@
 }
 
 .header {
-    /*composes: horizontal;*/
+    composes: horizontal;
 
-    justify-content: space-between;
+    flex: 0 1 auto;
 
-    flex-grow: 1;
-    flex-basis: 100%;
-    
-    background: #DDD;
+    color: #FFF;
+    background: #2F1003;
 }
 
 .heading {
-    flex: 1;
-
-    font-size: 1.2em;
+    font-size: 1.4em;
     margin: 0;
 }
 
@@ -47,36 +42,44 @@
     padding: 0.5em 1em;
 
     text-decoration: none;
-    color: #333;
+    color: inherit;
 }
 
 .heading a:hover {
-    color: #CCC;
-    background: #444;
+    background: rgba(0,0,0,0.4);
+}
+
+
+.section {
+    display: flex;
+    flex-flow: row nowrap;
+
+    flex: 1 0 auto;
+
+    background: #EEE;
 }
 
 .nav {
     display: flex;
-    flex-direction: column;
-    justify-content: stretch;
+    flex-flow:  column wrap;
 
-    font-size: 0.9em;
+    flex: 0 1 100px;
+
+    font-size: 0.8em;
     color: #FFF;
 
     background: #441604;
 }
 
-.section {
-    flex-grow: 1;
-    flex-basis: 1px; /* this is stupid but prevents needing a flex container around the nav and section */
-
-    background: #EEE;
+.article {
+    flex: 1 0 0;
 }
+
 
 .schemas {
     composes: vertical;
 
-    flex: 4 0 50%;
+    flex-grow: 1;
 
     margin: 0;
     list-style: none;
@@ -104,7 +107,7 @@
 
     opacity: 1;
 
-    border-right: solid #F00 7px;
+    border-right: solid #F00 3px;
 
     background: rgba(0, 0, 0, 0.4);
 }
@@ -119,7 +122,7 @@
 .progress {
     height: 10px;
     background: #EEE;
-    
+
     position: relative;
     overflow: hidden;
 }
@@ -129,13 +132,13 @@
     position: absolute;
     z-index: 1;
     content: "";
-    
+
     top: 0;
     bottom: 0;
     width: 0;
-    
+
     background: rgb(66, 184, 221);
-    
+
     animation: progressBefore 2s linear infinite;
 }
 
@@ -148,12 +151,12 @@
         left: 0%;
         width: 0%;
     }
-    
+
     50% {
         left: 25%;
         width: 75%;
     }
-    
+
     75% {
         left: 100%;
         width: 0%;
@@ -165,17 +168,17 @@
         left: 0%;
         width: 0%;
     }
-    
+
     50% {
         left: 0%;
         width: 0%;
     }
-    
+
     75% {
         left: 0%;
         width: 25%;
     }
-    
+
     100% {
         left: 100%;
         width: 0%;
