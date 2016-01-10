@@ -24,6 +24,10 @@
 .header {
     composes: horizontal;
 
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+
     flex: 0 1 auto;
 
     color: #FFF;
@@ -117,6 +121,13 @@
 
     align-self: flex-end;
     background: rgb(177,173,164);
+}
+
+.logout {
+    composes: color from "../../buttons.css";
+
+    background: rgb(240,128,128);
+    margin-right: 1em;
 }
 
 .progress {

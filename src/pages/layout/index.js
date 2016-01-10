@@ -46,6 +46,11 @@ module.exports = {
                 m("h1", { class : css.heading },
                     m("a", { href : "/", config : m.route }, "Crucible")
                 ),
+                m("a", {
+                    class  : css.logout,
+                    href   : "/logout",
+                    config : m.route
+                }, "Logout"),
                 options.content ? null : m("div", { class : css.progress })
             ),
             m("section", { class : css.section },
