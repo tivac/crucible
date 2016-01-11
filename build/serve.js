@@ -45,7 +45,8 @@ function bundle() {
 
 builder.plugin("watchify");
 builder.plugin("modular-css", {
-    css : "gen/index.css"
+    css   : "gen/index.css",
+    after : [ require("postcss-import") ]
 });
 
 // Start up watchify
