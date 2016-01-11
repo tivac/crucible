@@ -61,6 +61,7 @@ types = {
     textarea     : require("./textarea"),
 
     // These are all just variations on the input type
+    checkbox : input("checkbox"),
     date     : input("date"),
     datetime : input("datetime-local"),
     email    : input("email"),

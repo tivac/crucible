@@ -29,6 +29,19 @@
             user-select: none;
 }
 
+.asc,
+.desc {
+    composes: icon from icons_css;
+    
+    margin: 0 0 -4px 5px;
+    
+    transform: rotate(-90deg);
+}
+
+.desc {
+    transform: rotate(90deg);
+}
+
 .actions {
     display: flex;
     

@@ -155,17 +155,19 @@ module.exports = {
                 m("thead",
                     m("tr",
                         [ "Name", "Created", "Updated" ].map(function(title) {
-                            var field = title.toLowerCase(),
-                                attrs = {
+                            var field = title.toLowerCase();
+                            
+                            return m("th", {
                                     onclick : ctrl.sort.bind(ctrl, field),
                                     class   : css.th
-                                };
-                            
-                            if(ctrl.sorting.field === field) {
-                                attrs.class = css[ctrl.sorting.desc ? "thDesc" : "thAsc"];
-                            }
-                            
-                            return m("th", attrs, title);
+                                },
+                                title,
+                                ctrl.sorting.field === field ?
+                                    m("svg", { class : css[ctrl.sorting.desc ? "desc" : "asc"] },
+                                        m("use", { href : "/src/icons.svg#icon-arrow" })
+                                    ) :
+                                    null
+                            );
                         }),
                         
                         m("th", "")
