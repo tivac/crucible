@@ -1,18 +1,31 @@
-.heading {
-    composes: global(pure-g);
+.editable {
+    border-bottom: solid 2px #930;
+    background: #EEE;
+}
 
-    text-align: center;
-    justify-content: center;
+.editable:hover {
+    border-bottom-color: #B40;
+    background: #FBFBFB;
+}
+.editable:focus {
+    background: #FFF;
+    outline: none;
+    border-bottom-color: #D60;
 }
 
 .schema {
-    composes: global(pure-u);
+    margin: 0;
+
+    font-size: 0.9em;
+    font-weight: normal;
+    text-transform: uppercase;
+    color: #999;
 }
 
 .title {
-    composes: global(pure-u);
+    composes: editable;
 
-    min-width: 50px;
+    margin-top: 0;
 }
 
 .menu {
@@ -25,8 +38,6 @@
 
 .menuItem {
     composes: global(pure-u-1-2);
-
-    padding: 0 5px;
 }
 
 .publishing {

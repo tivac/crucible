@@ -4,16 +4,8 @@
     height: 100%;
 }
 
-.outer {
-    min-height: 100%;
-
-    display: flex;
-    flex-flow: column wrap;
-}
-
 .horizontal {
     display: flex;
-    align-items: center;
 }
 
 .vertical {
@@ -21,15 +13,36 @@
     flex-direction: column;
 }
 
+
+.outer {
+    composes: vertical;
+
+    flex-wrap: wrap;
+
+    min-height: 100%;
+}
+
+
+.hoverable {
+    text-decoration: none;
+    color: inherit;
+}
+
+.hoverable:hover {
+    background: rgba(255, 0, 0, 0.3);
+}
+
+
 .header {
     composes: horizontal;
 
-    display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
+    align-items: stretch;
 
     flex: 0 1 auto;
 
+    letter-spacing: 2px;
     color: #FFF;
     background: #2F1003;
 }
@@ -39,96 +52,25 @@
     margin: 0;
 }
 
-.heading a,
-.heading a:active,
-.heading a:visited {
+.heading-a,
+.heading-a:active,
+.heading-a:visited {
+    composes: hoverable;
+
     display: block;
-    padding: 0.5em 1em;
-
-    text-decoration: none;
-    color: inherit;
-}
-
-.heading a:hover {
-    background: rgba(0,0,0,0.4);
-}
-
-
-.section {
-    display: flex;
-    flex-flow: row nowrap;
-
-    flex: 1 0 auto;
-
-    background: #EEE;
-}
-
-.nav {
-    display: flex;
-    flex-flow:  column wrap;
-
-    flex: 0 1 100px;
-
-    font-size: 0.8em;
-    color: #FFF;
-
-    background: #441604;
-}
-
-.article {
-    flex: 1 0 0;
-}
-
-
-.schemas {
-    composes: vertical;
-
-    flex-grow: 1;
-
-    margin: 0;
-    list-style: none;
-}
-
-.schema,
-.schema:active,
-.schema:visited {
-    padding: 11px 10px;
-
-    opacity: 0.5;
-
-    color: inherit;
-    text-decoration: none;
-}
-
-.schema:hover {
-    opacity: 1;
-
-    background: rgba(0, 0, 0, 0.4);
-}
-
-.active {
-    composes: schema;
-
-    opacity: 1;
-
-    border-right: solid #F00 3px;
-
-    background: rgba(0, 0, 0, 0.4);
-}
-
-.add {
-    composes: color from "../../buttons.css";
-
-    align-self: flex-end;
-    background: rgb(177,173,164);
+    padding: 0.5em;
 }
 
 .logout {
-    composes: color from "../../buttons.css";
+    composes: hoverable;
 
-    background: rgb(240,128,128);
+    display: flex;
+    align-items: center;
+
+    padding: 0 1em;
     margin-right: 1em;
 }
+
 
 .progress {
     height: 10px;
@@ -194,4 +136,79 @@
         left: 100%;
         width: 0%;
     }
+}
+
+
+.section {
+    composes: horizontal;
+
+    flex-wrap: nowrap;
+
+    flex: 1 0 auto;
+
+    background: #EEE;
+}
+
+
+.nav {
+    composes: vertical;
+
+    flex: 0 1 150px;
+
+    font-size: 0.8em;
+    color: #FFF;
+
+    background: #441604;
+}
+
+
+.schemas {
+    composes: vertical;
+
+    margin: 0 0 2em;
+    list-style: none;
+
+    text-transform: uppercase;
+}
+
+.schema,
+.schema:active,
+.schema:visited {
+    padding: 1em;
+
+    opacity: 0.5;
+
+    color: inherit;
+    text-decoration: none;
+}
+
+.schema:hover {
+    opacity: 1;
+
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.active {
+    composes: schema;
+
+    opacity: 1;
+
+    border-right: solid #D60 3px;
+
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.add {
+    composes: color from "../../buttons.css";
+
+    border-radius: 0;
+
+    background: #D60;
+}
+
+
+.article {
+    flex: 1 0 0;
+
+    padding: 1em;
 }

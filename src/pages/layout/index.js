@@ -44,7 +44,7 @@ module.exports = {
         return m("div", { class : css.outer },
             m("header", { class : css.header },
                 m("h1", { class : css.heading },
-                    m("a", { href : "/", config : m.route }, "Crucible")
+                    m("a", { class : css["heading-a"], href : "/", config : m.route }, "Crucible")
                 ),
                 m("a", {
                     class  : css.logout,
