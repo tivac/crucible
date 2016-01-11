@@ -1,6 +1,6 @@
 .heading {
     composes: global(pure-g);
-    
+
     text-align: center;
     justify-content: center;
 }
@@ -11,13 +11,13 @@
 
 .title {
     composes: global(pure-u);
-    
+
     min-width: 50px;
 }
 
 .menu {
     composes: global(pure-g);
-    
+
     padding-bottom: 5px;
     border-bottom: 1px solid #666;
     margin-bottom: 10px;
@@ -25,7 +25,7 @@
 
 .menuItem {
     composes: global(pure-u-1-2);
-    
+
     padding: 0 5px;
 }
 
@@ -35,16 +35,14 @@
 
 .version {
     composes: menuItem;
-    
+
     text-align: right;
 }
 
 .form {
     composes: global(pure-form), global(pure-form-stacked);
-    
-    width: 70%;
-    min-width: 700px;
-    max-width: 1000px;
-    
+
+    width: 100%;
+
     margin: 20px auto;
 }
