@@ -58,7 +58,7 @@ module.exports = {
                                 href   : m.route() + "/edit",
                                 config : m.route
                             },
-                            "Edit Schema"
+                            "Edit Content Type"
                         )
                     )
                 ),

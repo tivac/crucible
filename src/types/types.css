@@ -8,7 +8,7 @@
 
 .first {
     composes: field;
-
+    
     margin-top: 0;
 }
 
