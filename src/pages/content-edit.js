@@ -73,7 +73,7 @@ module.exports = {
                     m("div", { class : css.actions }, [
                         m("a", {
                                 title  : "Preview",
-                                href   : "/content/" + ctrl.schema.preview + m.route.param("id"),
+                                href   : ctrl.schema.preview + m.route.param("id"),
                                 target : "_blank"
                             },
                             m("svg", { class : css.preview },
