@@ -8,13 +8,18 @@ var m = require("mithril"),
 
 module.exports = {
     controller : function() {
-        var ctrl = this;
+        var ctrl   = this;
 
+        ctrl.hidden = false;
         ctrl.schemas = null;
         ctrl.auth    = db.getAuth();
 
         ctrl.add = function() {
             m.route("/schema/new");
+        };
+
+        ctrl.hide = function() {
+            ctrl.hidden = !ctrl.hidden;
         };
 
         db.child("schemas").on("value", function(snap) {
@@ -42,41 +47,55 @@ module.exports = {
         document.title = options.title || "Loading...";
 
         return m("div", { class : css.outer },
+
             m("header", { class : css.header },
+                options.content ? null : m("div", { class : css.progress }),
+
                 m("h1", { class : css.heading },
-                    m("a", { class : css["heading-a"], href : "/", config : m.route }, "Crucible")
+                    m("a", { href : "/", config : m.route }, "Crucible")
                 ),
+
+                ctrl.auth ? [
+                    m("div", { class : css.schemas },
+                        (ctrl.schemas || []).map(function(schema) {
+                            var url = "/content/" + schema.key;
+
+                            return m("a", {
+                                class  : css[route === url ? "active" : "schema"],
+                                href   : url,
+                                config : m.route
+                            }, schema.name);
+                        })
+                    ),
+
+                    m("a", {
+                        class  : css.add,
+                        href   : "/content/new",
+                        config : m.route
+                    }, "New Schema")
+                ] : null,
+
                 m("a", {
                     class  : css.logout,
                     href   : "/logout",
                     config : m.route
-                }, "Logout"),
-                options.content ? null : m("div", { class : css.progress })
+                }, "Logout")
             ),
-            m("section", { class : css.section },
-                m("nav",
-                    { class : css.nav },
-                    ctrl.auth ? [
-                        m("div", { class : css.schemas },
-                            (ctrl.schemas || []).map(function(schema) {
-                                var url = "/content/" + schema.key;
 
-                                return m("a", {
-                                    class  : css[route === url ? "active" : "schema"],
-                                    href   : url,
-                                    config : m.route
-                                }, schema.name);
-                            })
-                        ),
-                        m("a", {
-                            class  : css.add,
-                            href   : "/content/new",
-                            config : m.route
-                        }, "New Schema")
-                    ] : null
+            options.nav ? m("nav", {
+                    class : ctrl.hidden ? css.navHidden : css.nav
+                },
+                m("div", {
+                        class   : css.hide,
+                        onclick : ctrl.hide
+                    },
+                    m("span", ctrl.hidden ? "show" : "hide")
                 ),
-                m("article", { class : css.article }, options.content ? options.content : null)
-            )
+
+                ctrl.hidden ? null : options.nav
+            ) : null,
+
+            m("section", { class : ctrl.hidden || !options.nav ? css.sectionHidden : css.section }, options.content ? options.content : null)
         );
     }
 };

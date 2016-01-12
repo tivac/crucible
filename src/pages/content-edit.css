@@ -1,36 +1,34 @@
-.editable {
-    border-bottom: solid 2px #930;
-    background: #EEE;
+@import "../../node_modules/codemirror/lib/codemirror.css";
+
+.heading {
+    composes: global(pure-g);
+    
+    text-align: center;
+    justify-content: center;
 }
 
-.editable:hover {
-    border-bottom-color: #B40;
-    background: #FBFBFB;
-}
-.editable:focus {
-    background: #FFF;
-    outline: none;
-    border-bottom-color: #D60;
-}
-
+.title,
 .schema {
-    margin: 0;
-
-    font-size: 0.9em;
-    font-weight: normal;
-    text-transform: uppercase;
-    color: #999;
+    composes: global(pure-u);
+    
+    padding: 0.15em;
 }
 
 .title {
-    composes: editable;
-
-    margin-top: 0;
+    min-width: 50px;
+    
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    
+    /* Stolen from pure's input element styling */
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 3px #ddd;
+    border-radius: 4px;
 }
 
 .menu {
     composes: global(pure-g);
-
+    
     padding-bottom: 5px;
     border-bottom: 1px solid #666;
     margin-bottom: 10px;
@@ -38,6 +36,8 @@
 
 .menuItem {
     composes: global(pure-u-1-2);
+    
+    padding: 0 5px;
 }
 
 .publishing {
@@ -46,14 +46,16 @@
 
 .version {
     composes: menuItem;
-
+    
     text-align: right;
 }
 
 .form {
     composes: global(pure-form), global(pure-form-stacked);
-
-    width: 100%;
-
+    
+    width: 70%;
+    min-width: 700px;
+    max-width: 1000px;
+    
     margin: 20px auto;
 }

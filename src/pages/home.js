@@ -1,9 +1,9 @@
 "use strict";
 
 var m  = require("mithril"),
-    
+
     db   = require("../lib/firebase"),
-    
+
     layout = require("./layout");
 
 module.exports = {
