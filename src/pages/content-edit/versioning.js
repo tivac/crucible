@@ -1,9 +1,9 @@
 "use strict";
 
 var m  = require("mithril"),
-    
+
     db = require("../../lib/firebase"),
-    
+
     css = require("./versioning.css");
 
 module.exports = {
@@ -28,6 +28,15 @@ module.exports = {
 
     view : function(ctrl, options) {
         return m("div", { class : options.class },
+            m("a", {
+                    title  : "Preview",
+                    href   : "/content/" + ctrl.schema + ctrl.id,
+                    target : "_blank"
+                },
+                m("svg", { class : css.preview },
+                    m("use", { href : "/src/icons.svg#icon-preview" })
+                )
+            ),
             m("span",
                 "Version: " + (options.data.version || 1)
             ),
