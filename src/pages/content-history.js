@@ -105,7 +105,7 @@ module.exports = {
                                         m("a", {
                                                 title  : "Preview",
                                                 href   : m.route() + "/" + data.version,
-                                                target : "_blank"
+                                                config : m.route
                                             },
                                             m("svg", { class : css.preview },
                                                 m("use", { href : "/src/icons.svg#icon-preview" })

@@ -1,17 +1,7 @@
 @value buttons_css: "../../buttons.css";
-@value icons_css: "../../icons.css";
 
 .save {
     composes: primary from buttons_css;
 
     margin-left: 10px;
-}
-
-.preview {
-    composes: icon from icons_css;
-
-    color: #000;
-    transition: color 0.1s ease-in;
-    margin-right: 10px;
-    vertical-align: middle;
 }

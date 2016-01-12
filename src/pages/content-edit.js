@@ -6,9 +6,9 @@ var m = require("mithril"),
     db       = require("../lib/firebase"),
     update   = require("../lib/update"),
     watch    = require("../lib/watch"),
-    
+
     layout = require("./layout"),
-    
+
     publishing = require("./content-edit/publishing"),
     versioning = require("./content-edit/versioning"),
 
@@ -17,15 +17,15 @@ var m = require("mithril"),
 module.exports = {
     controller : function() {
         var ctrl = this,
-            
+
             ref    = db.child("content/" + m.route.param("schema") + "/" + m.route.param("id")),
             schema = db.child("schemas/" + m.route.param("schema"));
-        
+
         ctrl.ref    = ref;
         ctrl.data   = null;
         ctrl.schema = null;
         ctrl.form   = null;
-        
+
         ref.on("value", function(snap) {
             if(!snap.exists()) {
                 return m.route("/content");
@@ -35,13 +35,13 @@ module.exports = {
 
             m.redraw();
         });
-        
+
         schema.on("value", function(snap) {
             ctrl.schema = snap.val();
 
             m.redraw();
         });
-        
+
         watch(ref);
     },
 
@@ -70,6 +70,17 @@ module.exports = {
                         class   : css.publishing,
                         enabled : ctrl.form && ctrl.form.checkValidity()
                     }),
+                    m("div", { class : css.actions }, [
+                        m("a", {
+                                title  : "Preview",
+                                href   : "/content/" + ctrl.schema.preview + m.route.param("id"),
+                                target : "_blank"
+                            },
+                            m("svg", { class : css.preview },
+                                m("use", { href : "/src/icons.svg#icon-preview" })
+                            )
+                        )
+                    ]),
                     m.component(versioning, {
                         ref   : ctrl.ref,
                         data  : ctrl.data,
