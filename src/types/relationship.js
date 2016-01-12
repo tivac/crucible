@@ -4,6 +4,8 @@ var m      = require("mithril"),
     assign = require("lodash.assign"),
     map    = require("lodash.map"),
     fuzzy  = require("fuzzysearch"),
+    
+    Awesomeplete = require("awesomplete"),
 
     db = require("../lib/firebase"),
     id = require("../lib/id"),
@@ -15,49 +17,56 @@ module.exports = {
     controller : function(options) {
         var ctrl    = this,
             schema  = options.details.schema,
-            content = db.child("content/" + schema),
-            sources;
+            content = db.child("content/" + schema);
 
-        ctrl.id = id(options);
+        ctrl.id     = id(options);
+        ctrl.lookup = null;
 
-        ctrl.sources = function() {
-            if(sources) {
+        ctrl.autocomplete = function(el, init) {
+            if(init) {
                 return;
             }
-
-            content.once("value", function(snap) {
-                sources = map(snap.val(), function(details, id) {
-                    return {
-                        id    : id,
-                        name  : details.name,
-                        lower : details.name.toLowerCase()
-                    };
+            
+            ctrl.autocomplete = new Awesomeplete(el, {
+                minChars  : 3,
+                maxItems  : 10,
+                autoFirst : true
+            });
+            
+            ctrl.input = el;
+            
+            el.addEventListener("awesomplete-selectcomplete", ctrl.add);
+            
+            content.on("value", function(snap) {
+                var names  = [];
+                
+                ctrl.lookup = {};
+                
+                snap.forEach(function(details) {
+                    var val = details.val();
+                    
+                    names.push(val.name);
+                    
+                    ctrl.lookup[val.name] = details.key();
                 });
+                
+                ctrl.autocomplete.list = names;
+                ctrl.autocomplete.evaluate();
             });
         };
-
-        ctrl.oninput = function(value) {
-            ctrl.sources();
-
-            if(!sources) {
-                return;
-            }
-
-            if(!value) {
-                ctrl.suggestions = null;
-
-                return;
-            }
-
-            value = value.toLowerCase();
-
-            ctrl.suggestions = sources.filter(function(source) {
-                return fuzzy(value, source.lower);
-            });
-        };
-
+        
         // Set up a two-way relationship between these
-        ctrl.add = function(id) {
+        ctrl.add = function(e) {
+            var id = ctrl.lookup[e.target.value];
+            
+            if(!id) {
+                console.error(e.target.value);
+                
+                return;
+            }
+            
+            e.target.value = "";
+            
             options.ref.child(id).set(true);
 
             content.child(id + "/relationships/" + options.root.key()).set(true);
@@ -93,21 +102,18 @@ module.exports = {
                 for   : ctrl.id,
                 class : types[details.required ? "required" : "label"]
             }, name),
-            m("input", assign({
-                    id      : ctrl.id,
-                    class   : types.input,
-                    oninput : m.withAttr("value", ctrl.oninput)
-                },
-                details.attrs || {}
-            )),
-            m("ul",
-                ctrl.suggestions && ctrl.suggestions.map(function(suggestion) {
-                    return m("li", {
-                        "data-id" : suggestion.id,
-                        onclick   : options.ref && m.withAttr("data-id", ctrl.add)
-                    }, suggestion.name);
-                })
-            )
+            m("input", assign(details.attrs || {}, {
+                id     : ctrl.id,
+                class  : types.input,
+                config : ctrl.autocomplete,
+                onkeydown : function(e) {
+                    if(e.keyCode !== 9 || ctrl.autocomplete.opened === false) {
+                        return;
+                    }
+                    
+                    ctrl.autocomplete.select();
+                }
+            }))
         );
     }
 };

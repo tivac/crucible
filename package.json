@@ -34,6 +34,7 @@
     "watchify": "^3.7.0"
   },
   "dependencies": {
+    "awesomplete": "github:leaverou/awesomplete#gh-pages",
     "codemirror": "^5.10.0",
     "firebase": "^2.3.2",
     "fuzzysearch": "^1.0.3",
