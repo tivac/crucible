@@ -42,36 +42,41 @@ module.exports = {
         document.title = options.title || "Loading...";
 
         return m("div", { class : css.outer },
-            m("div", { class : css.header },
+            m("header", { class : css.header },
                 m("h1", { class : css.heading },
-                    m("a", { href : "/", config : m.route }, "Crucible")
+                    m("a", { class : css["heading-a"], href : "/", config : m.route }, "Crucible")
                 ),
-                ctrl.auth ? [
-                    m("div", { class : css.schemas },
-                        (ctrl.schemas || []).map(function(schema) {
-                            var url = "/content/" + schema.key;
-
-                            return m("a", {
-                                class  : css[route === url ? "active" : "schema"],
-                                href   : url,
-                                config : m.route
-                            }, schema.name);
-                        })
-                    ),
-                    m("a", {
-                        class  : css.add,
-                        href   : "/content/new",
-                        config : m.route
-                    }, "+ Add Content Type"),
-                    m("a", {
-                        class  : css.logout,
-                        href   : "/logout",
-                        config : m.route
-                    }, "Logout")
-                ] : null,
+                m("a", {
+                    class  : css.logout,
+                    href   : "/logout",
+                    config : m.route
+                }, "Logout"),
                 options.content ? null : m("div", { class : css.progress })
             ),
-            options.content ? options.content : null
+            m("section", { class : css.section },
+                m("nav",
+                    { class : css.nav },
+                    ctrl.auth ? [
+                        m("div", { class : css.schemas },
+                            (ctrl.schemas || []).map(function(schema) {
+                                var url = "/content/" + schema.key;
+
+                                return m("a", {
+                                    class  : css[route === url ? "active" : "schema"],
+                                    href   : url,
+                                    config : m.route
+                                }, schema.name);
+                            })
+                        ),
+                        m("a", {
+                            class  : css.add,
+                            href   : "/content/new",
+                            config : m.route
+                        }, "New Schema")
+                    ] : null
+                ),
+                m("article", { class : css.article }, options.content ? options.content : null)
+            )
         );
     }
 };

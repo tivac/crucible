@@ -4,92 +4,73 @@
     height: 100%;
 }
 
-.outer {
-    height: 100%;
-
+.horizontal {
     display: flex;
+}
 
+.vertical {
+    display: flex;
     flex-direction: column;
 }
 
-.horizontal {
-    display: flex;
-    align-items: center;
+
+.outer {
+    composes: vertical;
+
+    flex-wrap: wrap;
+
+    min-height: 100%;
 }
+
+
+.hoverable {
+    text-decoration: none;
+    color: inherit;
+}
+
+.hoverable:hover {
+    background: rgba(255, 0, 0, 0.3);
+}
+
 
 .header {
     composes: horizontal;
 
+    flex-flow: row nowrap;
     justify-content: space-between;
-    margin-bottom: 10px;
+    align-items: stretch;
 
-    background: #DDD;
+    flex: 0 1 auto;
+
+    letter-spacing: 2px;
+    color: #FFF;
+    background: #2F1003;
 }
 
 .heading {
-    flex: 1;
-
-    font-size: 1.2em;
+    font-size: 1.4em;
     margin: 0;
 }
 
-.heading a,
-.heading a:active,
-.heading a:visited {
+.heading-a,
+.heading-a:active,
+.heading-a:visited {
+    composes: hoverable;
+
     display: block;
-    padding: 0.5em 1em;
-
-    text-decoration: none;
-    color: #333;
-}
-
-.heading a:hover {
-    color: #CCC;
-    background: #444;
-}
-
-.schemas {
-    composes: horizontal;
-
-    flex: 4 0 50%;
-
-    margin: 0;
-    list-style: none;
-}
-
-.schema,
-.schema:active,
-.schema:visited {
-    padding: 11px 10px;
-
-    text-decoration: none;
-    color: #333;
-}
-
-.schema:hover {
-    color: #CCC;
-    background: #444;
-}
-
-.active {
-    composes: schema;
-
-    color: #CCC;
-    background: #666;
-}
-
-.add {
-    composes: color from "../../buttons.css";
-
-    background: rgb(177,173,164);
+    padding: 0.5em;
 }
 
 .logout {
-    composes: color from "../../buttons.css";
+    composes: hoverable;
 
-    background: rgb(240,128,128);
-    margin-left: 5px;
+    display: flex;
+    align-items: center;
+
+    padding: 0 1em;
+    margin-right: 1em;
 }
+
 
 .progress {
     height: 10px;
@@ -155,4 +136,79 @@
         left: 100%;
         width: 0%;
     }
+}
+
+
+.section {
+    composes: horizontal;
+
+    flex-wrap: nowrap;
+
+    flex: 1 0 auto;
+
+    background: #EEE;
+}
+
+
+.nav {
+    composes: vertical;
+
+    flex: 0 1 150px;
+
+    font-size: 0.8em;
+    color: #FFF;
+
+    background: #441604;
+}
+
+
+.schemas {
+    composes: vertical;
+
+    margin: 0 0 2em;
+    list-style: none;
+
+    text-transform: uppercase;
+}
+
+.schema,
+.schema:active,
+.schema:visited {
+    padding: 1em;
+
+    opacity: 0.5;
+
+    color: inherit;
+    text-decoration: none;
+}
+
+.schema:hover {
+    opacity: 1;
+
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.active {
+    composes: schema;
+
+    opacity: 1;
+
+    border-right: solid #D60 3px;
+
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.add {
+    composes: color from "../../buttons.css";
+
+    border-radius: 0;
+
+    background: #D60;
+}
+
+
+.article {
+    flex: 1 0 0;
+
+    padding: 1em;
 }
