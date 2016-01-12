@@ -1,34 +1,37 @@
 @import "../../node_modules/codemirror/lib/codemirror.css";
 
 .heading {
-    composes: global(pure-g);
-    
     text-align: center;
     justify-content: center;
 }
 
-.title,
 .schema {
-    composes: global(pure-u);
-    
-    padding: 0.15em;
+    margin: 0;
+    color: #CCC;
+    font-size: 1em;
+    font-weight: normal;
 }
 
 .title {
-    min-width: 50px;
-    
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-    
-    /* Stolen from pure's input element styling */
-    border: 1px solid #ccc;
-    box-shadow: inset 0 1px 3px #ddd;
-    border-radius: 4px;
+    margin: 0;
+    border: solid 1px transparent;
+    border-bottom: solid 2px #68A;
+}
+
+.title:hover {
+    border-color: #DDD;
+    border-bottom-color: #68A;
+}
+
+.title:focus {
+    outline: none;
+    border-color: #BBB;
+    border-bottom-color: #68A;
 }
 
 .menu {
     composes: global(pure-g);
-    
+
     padding-bottom: 5px;
     border-bottom: 1px solid #666;
     margin-bottom: 10px;
@@ -36,7 +39,7 @@
 
 .menuItem {
     composes: global(pure-u-1-2);
-    
+
     padding: 0 5px;
 }
 
@@ -46,16 +49,16 @@
 
 .version {
     composes: menuItem;
-    
+
     text-align: right;
 }
 
 .form {
     composes: global(pure-form), global(pure-form-stacked);
-    
+
     width: 70%;
     min-width: 700px;
     max-width: 1000px;
-    
+
     margin: 20px auto;
 }

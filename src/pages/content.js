@@ -43,7 +43,6 @@ module.exports = {
         return m.component(layout, {
             title : ctrl.schema.name,
 
-            // todo: This should load a listings like component
             nav : m.component(nav, { schema : ctrl.schema }),
 
             content : [

@@ -8,6 +8,7 @@ var m = require("mithril"),
     watch    = require("../lib/watch"),
 
     layout = require("./layout"),
+    nav    = require("./content/nav"),
 
     publishing = require("./content-edit/publishing"),
     versioning = require("./content-edit/versioning"),
@@ -51,7 +52,10 @@ module.exports = {
         }
 
         return m.component(layout, {
-            title   : ctrl.data.name,
+            title : ctrl.data.name,
+
+            nav : m.component(nav, { schema : ctrl.schema }),
+
             content : [
                 m("h2", { class : css.schema }, m.trust("/"), ctrl.schema.name, m.trust("/")),
                 m("h1", {
