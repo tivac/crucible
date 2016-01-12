@@ -6,9 +6,9 @@ var m        = require("mithril"),
     fuzzy    = require("fuzzysearch"),
     debounce = require("lodash.debounce"),
     slug     = require("sluggo"),
-    
+
     db = require("../../lib/firebase"),
-    
+
     css = require("./listings.css"),
 
     size = 10;
@@ -20,11 +20,11 @@ module.exports = {
         ctrl.schema = options.schema;
 
         ctrl.page = 0;
-        
+
         ctrl.entries = null;
         ctrl.content = null;
         ctrl.results = null;
-        
+
         ctrl.sorting = {
             field : "updated",
             desc  : true
@@ -47,17 +47,17 @@ module.exports = {
                 });
 
                 ctrl.entries = entries;
-                
+
                 if(ctrl.sorting.desc) {
                     ctrl.entries.reverse();
                 }
-                
+
                 ctrl._paginate();
-                
+
                 m.redraw();
             });
         };
-        
+
         ctrl._paginate = function() {
             if(!ctrl.entries.length) {
                 return;
@@ -65,7 +65,7 @@ module.exports = {
 
             ctrl.content = paginate(ctrl.entries, { limit : size });
         };
-        
+
         // Go get initial data
         ctrl.fetch();
 
@@ -92,21 +92,21 @@ module.exports = {
 
             m.redraw();
         }, 100);
-        
+
         ctrl.sort = function(field) {
             if(field === ctrl.sorting.field) {
                 ctrl.sorting.desc = !ctrl.sorting.desc;
-                
+
                 ctrl.entries.reverse();
-                                
+
                 return ctrl._paginate();
             }
-            
+
             ctrl.sorting.field = field;
             ctrl.sorting.desc  = field !== "name";
-            
+
             ctrl.content = [];
-            
+
             ctrl.fetch();
         };
     },
@@ -143,7 +143,7 @@ module.exports = {
                 pages = ctrl.content.pages;
             }
         }
-        
+
         return m("div",
             m("table", { class : css.table },
                 m("colgroup",
@@ -156,7 +156,7 @@ module.exports = {
                     m("tr",
                         [ "Name", "Created", "Updated" ].map(function(title) {
                             var field = title.toLowerCase();
-                            
+
                             return m("th", {
                                     onclick : ctrl.sort.bind(ctrl, field),
                                     class   : css.th
@@ -169,14 +169,14 @@ module.exports = {
                                     null
                             );
                         }),
-                        
+
                         m("th", "")
                     )
                 ),
                 m("tbody",
                     current.items.map(function(data) {
                         var url = "/content/" + ctrl.schema.key + "/" + data.key;
-                        
+
                         return m("tr", { key : data.key },
                             m("td",
                                 m("a", { href : url, config : m.route }, data.name)
@@ -195,8 +195,9 @@ module.exports = {
                                         )
                                     ),
                                     m("a", {
-                                            title : "Preview",
-                                            href  : ctrl.schema.preview + data.key
+                                            title  : "Preview",
+                                            href   : ctrl.schema.preview + data.key,
+                                            target : "_blank"
                                         },
                                         m("svg", { class : css.preview },
                                             m("use", { href : "/src/icons.svg#icon-preview" })
@@ -234,7 +235,7 @@ module.exports = {
                                 m("use", { href : "/src/icons.svg#icon-arrow" })
                             )
                         ),
-                    
+
                     pages.map(function(page) {
                         if(typeof page === "string") {
                             return m("span", { class : css.disabled }, page);
@@ -251,7 +252,7 @@ module.exports = {
                             onclick : ctrl.change.bind(null, page.idx)
                         }, page.current);
                     }),
-                    
+
                     current.next ?
                         m("a", {
                                 key     : "next",
@@ -273,7 +274,7 @@ module.exports = {
                     m("input", {
                         class       : css.search,
                         placeholder : "Filter this content",
-                        
+
                         oninput     : m.withAttr("value", ctrl.filter)
                     })
                 )
