@@ -112,12 +112,23 @@ module.exports = {
         };
 
         ctrl.remove = function(data) {
-            var ref = db.child("content/" + ctrl.schema.key + "/" + data.key);
+            var ref = db.child("content").child(ctrl.schema.key).child(data.key);
 
             if(window.confirm("Remove " + data.name + "?")) {
+                ref.once("value", function(snap) {
+                    var data = snap.exportVal(),
+                        rev  = data.version || 1,
+                        dest = db.child("versions").child(snap.key()).child(rev);
+
+                    dest.set(data);
+                    ref.child("version").set(rev + 1);
+                });
+
                 remove(ref, function(error) {
                     if(error) {
                         console.error(error);
+                    } else {
+                        ctrl.fetch();
                     }
                 });
             }
