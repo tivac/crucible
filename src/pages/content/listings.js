@@ -121,15 +121,14 @@ module.exports = {
                         dest = db.child("versions").child(snap.key()).child(rev);
 
                     dest.set(data);
-                    ref.child("version").set(rev + 1);
-                });
 
-                remove(ref, function(error) {
-                    if(error) {
-                        console.error(error);
-                    } else {
-                        ctrl.fetch();
-                    }
+                    remove(ref, function(error) {
+                        if(error) {
+                            console.error(error);
+                        } else {
+                            ctrl.fetch();
+                        }
+                    });
                 });
             }
         };
