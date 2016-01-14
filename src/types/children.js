@@ -61,10 +61,10 @@ types = {
     textarea     : require("./textarea"),
 
     // Non-standard input fields
-    radio : require("./radio"),
+    radio    : require("./radio"),
+    checkbox : require("./checkbox"),
 
     // These are all just variations on the input type
-    checkbox : input("checkbox"),
     date     : input("date"),
     datetime : input("datetime-local"),
     email    : input("email"),

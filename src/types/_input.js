@@ -12,7 +12,7 @@ module.exports = function(type) {
         controller : function(options) {
             var ctrl = this;
 
-            ctrl.id = id(options)
+            ctrl.id = id(options);
         },
 
         view : function(ctrl, options) {
@@ -43,5 +43,5 @@ module.exports = function(type) {
                 ))
             );
         }
-    }
+    };
 };
