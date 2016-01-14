@@ -2,16 +2,16 @@
 
 var m      = require("mithril"),
     moment = require("moment"),
-    
+
     db = require("../lib/firebase"),
-    
+
     layout = require("./layout"),
     css    = require("./content-history.css");
 
 module.exports = {
     controller : function() {
         var ctrl   = this,
-            
+
             schema = m.route.param("schema"),
             id     = m.route.param("id"),
 
@@ -19,7 +19,7 @@ module.exports = {
             versions = db.child("versions/" + id),
 
             current;
-        
+
         ctrl.versions = null;
 
         content.on("value", function(snap) {
@@ -48,10 +48,10 @@ module.exports = {
             ctrl.versions.reverse();
 
             ctrl.versions.unshift(current);
-            
+
             m.redraw();
         });
-        
+
         // Event handlers
         ctrl.restore = function(version) {
             content.once("value", function(prev) {
@@ -77,7 +77,7 @@ module.exports = {
         if(!ctrl.versions) {
             return m.component(layout);
         }
-        
+
         return m.component(layout, {
             title   : ctrl.versions[0].name,
             content : m("div",

@@ -3,6 +3,8 @@ crucible
 
 Mithril.js single-page application talking to FireBase to build a customizable API CMS.
 
+![Crucible](https://cloud.githubusercontent.com/assets/921652/12213718/8ed4ca7a-b632-11e5-8f4e-b166c786de28.png)
+
 ## Installation/Development
 
 1. Clone

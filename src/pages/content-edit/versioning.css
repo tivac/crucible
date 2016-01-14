@@ -2,6 +2,6 @@
 
 .save {
     composes: primary from buttons_css;
-    
+
     margin-left: 10px;
 }
