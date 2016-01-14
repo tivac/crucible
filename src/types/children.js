@@ -60,6 +60,9 @@ types = {
     select       : require("./select"),
     textarea     : require("./textarea"),
 
+    // Non-standard input fields
+    radio : require("./radio"),
+
     // These are all just variations on the input type
     checkbox : input("checkbox"),
     date     : input("date"),

@@ -68,6 +68,20 @@ function process(obj) {
             delete field.options;
         }
 
+        if(field.type === "radio") {
+            field.children = Object.keys(field.options).map(function(name) {
+                var details = field.options[name];
+
+                return {
+                    name    : name,
+                    value   : details.value || details,
+                    checked : details.checked || false
+                };
+            });
+
+            delete field.options;
+        }
+
         if(field.type === "split") {
             field.children = Object.keys(field.sections).map(function(name) {
                 return {
