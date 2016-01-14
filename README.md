@@ -94,6 +94,23 @@ You'll want to create a schema first. Schemas are JSON-ish documents that look s
             },
             three : 3,
         }
+    },
+
+    // Checkbox
+    Checkbox : {
+        type : "checkbox"
+    },
+
+    // Radio buttons
+    Radio : {
+        type : "radio",
+        options : {
+            one : "foo",
+            two : {
+                value : "bar",
+                checked : true
+            }
+        }
     }
 }
 ```
