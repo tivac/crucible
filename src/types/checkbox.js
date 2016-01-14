@@ -45,7 +45,7 @@ module.exports = {
                         required : details.required ? "required" : null,
 
                         // events
-                        onclick : options.ref && m.withAttr("checked", ctrl.onclick.bind(ctrl, options))
+                        onclick : m.withAttr("checked", ctrl.onclick.bind(ctrl, options))
                     },
                     details.attrs || {}
                 ), options.data || "")
