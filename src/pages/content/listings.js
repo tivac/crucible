@@ -7,7 +7,8 @@ var m        = require("mithril"),
     debounce = require("lodash.debounce"),
     slug     = require("sluggo"),
 
-    db = require("../../lib/firebase"),
+    db     = require("../../lib/firebase"),
+    remove = require("../../lib/remove"),
 
     css = require("./listings.css"),
 
@@ -109,6 +110,28 @@ module.exports = {
 
             ctrl.fetch();
         };
+
+        ctrl.remove = function(data) {
+            var ref = db.child("content").child(ctrl.schema.key).child(data.key);
+
+            if(window.confirm("Remove " + data.name + "?")) {
+                ref.once("value", function(snap) {
+                    var data = snap.exportVal(),
+                        rev  = data.version || 1,
+                        dest = db.child("versions").child(snap.key()).child(rev);
+
+                    dest.set(data);
+
+                    remove(ref, function(error) {
+                        if(error) {
+                            console.error(error);
+                        } else {
+                            ctrl.fetch();
+                        }
+                    });
+                });
+            }
+        };
     },
 
     view : function(ctrl) {
@@ -205,7 +228,9 @@ module.exports = {
                                     ),
                                     m("button", {
                                             class : css.remove,
-                                            title : "Remove"
+                                            title : "Remove",
+
+                                            onclick : ctrl.remove.bind(ctrl, data)
                                         },
                                         m("svg", { class : css.removeIcon },
                                             m("use", { href : "/src/icons.svg#icon-remove" })
