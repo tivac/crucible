@@ -24,8 +24,6 @@
     padding: 10px 20px;
 
     border: 1px solid #CCC;
-    border-bottom: 0;
-    border-right: 0;
 
     text-decoration: none;
 
@@ -36,11 +34,18 @@
     background: #EEE;
 }
 
-.item:last-child {
+.inactive {
+    composes: item;
+
+    border-bottom: 0;
+    border-right: 0;
+}
+
+.inactive:last-child {
     border-right: 1px solid #CCC;
 }
 
-.item-active {
+.active {
     composes: item;
 
     border-color: #777;

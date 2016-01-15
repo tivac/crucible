@@ -26,7 +26,7 @@ module.exports = {
             m("div", { class : css.nav },
                 tabs.map(function(tab, idx) {
                     return m("a", {
-                            class   : css[idx === ctrl.tab ? "item-active" : "item"],
+                            class   : css[idx === ctrl.tab ? "active" : "inactive"],
                             href    : "#" + idx,
                             onclick : ctrl.switchtab.bind(ctrl, idx)
                         }, tab.name
