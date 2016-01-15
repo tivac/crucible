@@ -16,9 +16,7 @@ module.exports = {
         ctrl.text = options.data || "";
 
         ctrl.resize = function(value) {
-            if(options.ref) {
-                update(options.ref, null, value);
-            }
+            update(options.ref, null, value);
 
             ctrl.text = value;
         };

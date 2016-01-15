@@ -15,9 +15,7 @@ module.exports = {
         ctrl.checked = options.data === true;
 
         ctrl.onclick = function(options, checked) {
-            if(options.ref) {
-                update(options.ref, null, checked);
-            }
+            update(options.ref, null, checked);
 
             ctrl.checked = checked;
         };
