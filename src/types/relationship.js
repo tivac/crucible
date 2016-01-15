@@ -19,9 +19,11 @@ module.exports = {
             schema  = options.details.schema,
             content = db.child("content/" + schema);
 
-        ctrl.id     = id(options);
-        ctrl.lookup = null;
-
+        ctrl.id      = id(options);
+        ctrl.lookup  = null;
+        ctrl.handle  = null;
+        ctrl.related = null;
+        
         ctrl.autocomplete = function(el, init) {
             if(init) {
                 return;
@@ -37,10 +39,19 @@ module.exports = {
             
             el.addEventListener("awesomplete-selectcomplete", ctrl.add);
             
-            content.on("value", function(snap) {
+            ctrl.load();
+        };
+        
+        ctrl.load = function() {
+            if(ctrl.handle) {
+                return;
+            }
+            
+            ctrl.handle = content.on("value", function(snap) {
                 var names  = [];
                 
-                ctrl.lookup = {};
+                ctrl.lookup  = {};
+                ctrl.related = snap.val();
                 
                 snap.forEach(function(details) {
                     var val = details.val();
@@ -52,6 +63,8 @@ module.exports = {
                 
                 ctrl.autocomplete.list = names;
                 ctrl.autocomplete.evaluate();
+                
+                m.redraw();
             });
         };
         
@@ -78,6 +91,10 @@ module.exports = {
 
             content.child(id + "/relationships/" + options.root.key()).remove();
         };
+        
+        if(options.data) {
+            ctrl.load();
+        }
     },
 
     view : function(ctrl, options) {
@@ -89,15 +106,6 @@ module.exports = {
         }
 
         return m("div", { class : options.class },
-            m("ul",
-                options.data && Object.keys(options.data).map(function(key) {
-                    return m("li", key,
-                        m("button", {
-                            onclick : ctrl.remove.bind(ctrl, key)
-                        }, "✘")
-                    );
-                })
-            ),
             m("label", {
                 for   : ctrl.id,
                 class : types[details.required ? "required" : "label"]
@@ -113,7 +121,22 @@ module.exports = {
                     
                     ctrl.autocomplete.select();
                 }
-            }))
+            })),
+            m("div", { class : css.relationships },
+                options.data && Object.keys(options.data).map(function(key) {
+                    return m("div", { class : css.relationship },
+                        m("p", { class : css.name },
+                            ctrl.related ? ctrl.related[key].name : "Loading..."
+                        ),
+                        m("div", { class : css.actions },
+                            m("button", {
+                                class   : css.remove,
+                                onclick : ctrl.remove.bind(ctrl, key)
+                            }, "Remove")
+                        )
+                    );
+                })
+            )
         );
     }
 };
