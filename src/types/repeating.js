@@ -25,7 +25,7 @@ function child(ctrl, options, data, idx) {
                     class   : css.remove,
                     onclick : ctrl.remove.bind(ctrl, options, data, idx)
                 },
-                "X"
+                "Remove"
             )
         )
     );
@@ -54,7 +54,7 @@ module.exports = {
             });
         };
 
-        ctrl.remove = function(options, data, idx, e) {
+        ctrl.remove = function(options, data, idx) {
             // No ref means we don't much care
             if(!options.ref || !options.data) {
                 return --ctrl.children;

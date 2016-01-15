@@ -17,7 +17,7 @@ module.exports = {
         var details = options.details,
             hidden  = hide(options);
             
-        if(hidden){
+        if(hidden) {
             return hidden;
         }
 

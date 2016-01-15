@@ -20,6 +20,7 @@ module.exports = {
             ctrl.tab = tab;
         };
     },
+    
     view : function(ctrl, options) {
         var tabs   = options.details.children || [],
             hidden = hide(options);
@@ -44,7 +45,7 @@ module.exports = {
                     m.component(children, assign({}, options, {
                         details : tab.children,
                         data    : options.data && options.data[tab.slug],
-                        ref     : options.ref  && options.ref.child(tab.slug),
+                        ref     : options.ref  && options.ref.child(tab.slug)
                     }))
                 );
             })
