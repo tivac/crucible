@@ -3,9 +3,11 @@
 var m      = require("mithril"),
     assign = require("lodash.assign"),
 
-    id = require("../lib/id"),
+    id     = require("../lib/id"),
+    update = require("../lib/update"),
 
-    types = require("./types.css");
+    types = require("./types.css"),
+    css   = require("./radio.css");
 
 module.exports = {
     controller : function(options) {
@@ -13,9 +15,24 @@ module.exports = {
 
         ctrl.id = id(options);
 
-        ctrl.onclick = function(options, value) {
-            if(options.ref) {
-                options.ref.set(value);
+        // Work out which input, if any, should be checked
+        ctrl.checked = function(details, value) {
+            var match;
+
+            if(!value) {
+                return;
+            }
+
+            match = details.children.find(function(opt) {
+                return opt.value.toString() === value;
+            });
+
+            if(match) {
+                details.children = details.children.map(function(opt) {
+                    opt.checked = (opt === match);
+
+                    return opt;
+                });
             }
         };
     },
@@ -30,41 +47,29 @@ module.exports = {
             name += "*";
         }
 
-        // Work out which input, if any, should be checked
-        if(value) {
-            match = details.children.find(function(opt) {
-                return opt.value.toString() === value;
-            });
-
-            if(match) {
-                details.children.forEach(function(opt) {
-                    opt.checked = false;
-                });
-
-                match.checked = true;
-            }
-        }
+        ctrl.checked(details, options.data);
 
         return m("div", { class : options.class },
             m("label", {
                 class : types[details.required ? "required" : "label"]
             }, name),
             details.children.map(function(opt, i) {
-                var id = details.slug + "-" + i;
+                var id = ctrl.id + "-" + i;
 
                 return [
-                    m("label", { for : id }, opt.name),
-                    m("input", {
-                        // attrs
-                        id      : id,
-                        type    : "radio",
-                        name    : name,
-                        value   : opt.value,
-                        checked : opt.checked,
+                    m("label", { class : css.choice },
+                        m("input", {
+                            // attrs
+                            type    : "radio",
+                            name    : name,
+                            value   : opt.value,
+                            checked : opt.checked,
 
-                        // events
-                        onclick : m.withAttr("value", ctrl.onclick.bind(ctrl, options))
-                    })
+                            // events
+                            onclick : m.withAttr("value", update.bind(null, options.ref, null))
+                        }),
+                        " " + opt.name
+                    )
                 ];
             })
         );

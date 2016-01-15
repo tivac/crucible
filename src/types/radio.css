@@ -1,0 +1,3 @@
+.choice {
+    composes: global(pure-radio);
+}
