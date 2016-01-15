@@ -2,8 +2,7 @@
 
 var m = require("mithril"),
 
-    types = require("./types.css"),
-    css   = require("./instructions.css");
+    css = require("./instructions.css");
 
 module.exports = {
     view : function(ctrl, options) {

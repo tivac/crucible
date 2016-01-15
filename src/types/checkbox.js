@@ -3,9 +3,10 @@
 var m      = require("mithril"),
     assign = require("lodash.assign"),
 
-    id     = require("../lib/id"),
     update = require("../lib/update"),
-    types  = require("./types.css");
+    
+    id    = require("./lib/id"),
+    types = require("./lib/types.css");
 
 module.exports = {
     controller : function(options) {

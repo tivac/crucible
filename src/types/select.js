@@ -3,9 +3,8 @@
 var m      = require("mithril"),
     assign = require("lodash.assign"),
 
-    id = require("../lib/id"),
-
-    types = require("./types.css");
+    id    = require("./lib/id"),
+    types = require("./lib/types.css");
 
 function optvalue(option) {
     return option.value || option.name;

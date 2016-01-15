@@ -2,10 +2,9 @@
 
 var m      = require("mithril"),
     assign = require("lodash.assign"),
-
+    
     children = require("./children"),
-
-    css = require("./tabs.css");
+    css      = require("./tabs.css");
 
 module.exports = {
     controller : function() {
@@ -21,7 +20,7 @@ module.exports = {
     },
     view : function(ctrl, options) {
         var tabs = options.details.children || [];
-
+        
         return m("div", { class : options.class },
             m("div", { class : css.nav },
                 tabs.map(function(tab, idx) {

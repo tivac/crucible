@@ -4,9 +4,11 @@ var m      = require("mithril"),
     assign = require("lodash.assign"),
 
     update  = require("../lib/update"),
-    id      = require("../lib/id"),
-    types   = require("./types.css"),
-    css     = require("./textarea.css");
+    
+    id    = require("./lib/id"),
+    types = require("./lib/types.css"),
+    
+    css = require("./textarea.css");
 
 module.exports = {
     controller : function(options) {

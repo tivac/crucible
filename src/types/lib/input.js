@@ -3,8 +3,9 @@
 var m      = require("mithril"),
     assign = require("lodash.assign"),
 
-    update  = require("../lib/update"),
-    id      = require("../lib/id"),
+    update  = require("../../lib/update"),
+    
+    id      = require("./id"),
     types   = require("./types.css");
 
 module.exports = function(type) {
@@ -18,7 +19,7 @@ module.exports = function(type) {
         view : function(ctrl, options) {
             var details = options.details,
                 name    = details.name;
-
+            
             if(details.required) {
                 name += "*";
             }

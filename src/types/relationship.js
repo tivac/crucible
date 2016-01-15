@@ -8,9 +8,10 @@ var m      = require("mithril"),
     Awesomeplete = require("awesomplete"),
 
     db = require("../lib/firebase"),
-    id = require("../lib/id"),
 
-    types = require("./types.css"),
+    id    = require("./lib/id"),
+    types = require("./lib/types.css"),
+    
     css   = require("./relationship.css");
 
 module.exports = {

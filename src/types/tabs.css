@@ -1,10 +1,10 @@
 .field {
-    composes: field from "./types.css";
+    composes: field from "./lib/types.css";
     composes: global(pure-menu), global(pure-menu-horizontal);
 }
 
 .first {
-    composes: first from "./types.css";
+    composes: first from "./lib/types.css";
     composes: field;
 }
 

@@ -4,9 +4,9 @@ var m      = require("mithril"),
     get    = require("lodash.get"),
     assign = require("lodash.assign"),
 
-    input = require("./_input"),
+    input = require("./lib/input"),
 
-    css = require("./types.css"),
+    css = require("./lib/types.css"),
 
     // Bound below
     types;
