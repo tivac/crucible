@@ -5,9 +5,9 @@ var m      = require("mithril"),
 
     update  = require("../../lib/update"),
     
-    hide = require("./hide"),
-    id      = require("./id"),
-    types   = require("./types.css");
+    hide  = require("./hide"),
+    id    = require("./id"),
+    types = require("./types.css");
 
 module.exports = function(type) {
     return {

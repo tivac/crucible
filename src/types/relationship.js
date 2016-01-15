@@ -10,6 +10,7 @@ var m      = require("mithril"),
     db = require("../lib/firebase"),
 
     id    = require("./lib/id"),
+    hide  = require("./lib/hide"),
     types = require("./lib/types.css"),
     
     css   = require("./relationship.css");
@@ -24,8 +25,9 @@ module.exports = {
         ctrl.lookup  = null;
         ctrl.handle  = null;
         ctrl.related = null;
+        ctrl.names   = [];
         
-        ctrl.autocomplete = function(el, init) {
+        ctrl.config = function(el, init) {
             if(init) {
                 return;
             }
@@ -40,6 +42,8 @@ module.exports = {
             
             el.addEventListener("awesomplete-selectcomplete", ctrl.add);
             
+            ctrl.autocomplete.list = ctrl.names;
+            
             ctrl.load();
         };
         
@@ -49,21 +53,22 @@ module.exports = {
             }
             
             ctrl.handle = content.on("value", function(snap) {
-                var names  = [];
-                
                 ctrl.lookup  = {};
                 ctrl.related = snap.val();
+                ctrl.names   = [];
                 
                 snap.forEach(function(details) {
                     var val = details.val();
                     
-                    names.push(val.name);
+                    ctrl.names.push(val.name);
                     
                     ctrl.lookup[val.name] = details.key();
                 });
                 
-                ctrl.autocomplete.list = names;
-                ctrl.autocomplete.evaluate();
+                if(ctrl.autocomplete) {
+                    ctrl.autocomplete.list = ctrl.names;
+                    ctrl.autocomplete.evaluate();
+                }
                 
                 m.redraw();
             });
@@ -100,7 +105,12 @@ module.exports = {
 
     view : function(ctrl, options) {
         var details = options.details,
-            name    = details.name;
+            name    = details.name,
+            hidden  = hide(options);
+            
+        if(hidden) {
+            return hidden;
+        }
 
         if(details.required) {
             name += "*";
@@ -114,7 +124,7 @@ module.exports = {
             m("input", assign(details.attrs || {}, {
                 id     : ctrl.id,
                 class  : types.input,
-                config : ctrl.autocomplete,
+                config : ctrl.config,
                 onkeydown : function(e) {
                     if(e.keyCode !== 9 || ctrl.autocomplete.opened === false) {
                         return;

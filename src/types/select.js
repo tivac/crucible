@@ -4,6 +4,7 @@ var m      = require("mithril"),
     assign = require("lodash.assign"),
 
     id    = require("./lib/id"),
+    hide  = require("./lib/hide"),
     types = require("./lib/types.css");
 
 function optvalue(option) {
@@ -26,7 +27,12 @@ module.exports = {
     view : function(ctrl, options) {
         var details = options.details,
             value   = options.data,
-            name    = details.name;
+            name    = details.name,
+            hidden  = hide(options);
+
+        if(hidden) {
+            return hidden;
+        }
 
         if(details.required) {
             name += "*";

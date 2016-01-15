@@ -6,6 +6,7 @@ var m      = require("mithril"),
     update = require("../lib/update"),
 
     id    = require("./lib/id"),
+    hide  = require("./lib/hide"),
     types = require("./lib/types.css"),
     
     css = require("./radio.css");
@@ -42,7 +43,12 @@ module.exports = {
         var details = options.details,
             value   = options.data,
             name    = details.name,
+            hidden  = hide(options),
             match;
+        
+        if(hidden) {
+            return hidden;
+        }
 
         if(details.required) {
             name += "*";

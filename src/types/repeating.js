@@ -4,6 +4,8 @@ var m      = require("mithril"),
     assign = require("lodash.assign"),
     times  = require("lodash.times"),
 
+    hide = require("./lib/hide"),
+
     children     = require("./children"),
     instructions = require("./instructions"),
 
@@ -67,8 +69,13 @@ module.exports = {
     },
 
     view : function(ctrl, options) {
-        var details = options.details;
-
+        var details = options.details,
+            hidden  = hide(options);
+        
+        if(hidden) {
+            return hidden;
+        }
+        
         return m("div", { class : options.class + " " + css.container },
             options.data ?
                 options.data.map(child.bind(null, ctrl, options)) :

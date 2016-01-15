@@ -6,6 +6,7 @@ var m      = require("mithril"),
     update  = require("../lib/update"),
     
     id    = require("./lib/id"),
+    hide  = require("./lib/hide"),
     types = require("./lib/types.css"),
     
     css = require("./textarea.css");
@@ -26,7 +27,12 @@ module.exports = {
 
     view : function(ctrl, options) {
         var details = options.details,
-            name    = details.name;
+            name    = details.name,
+            hidden  = hide(options);
+            
+        if(hidden) {
+            return hidden;
+        }
 
         if(details.required) {
             name += "*";

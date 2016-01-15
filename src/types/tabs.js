@@ -3,6 +3,8 @@
 var m      = require("mithril"),
     assign = require("lodash.assign"),
     
+    hide = require("./lib/hide"),
+    
     children = require("./children"),
     css      = require("./tabs.css");
 
@@ -19,7 +21,12 @@ module.exports = {
         };
     },
     view : function(ctrl, options) {
-        var tabs = options.details.children || [];
+        var tabs   = options.details.children || [],
+            hidden = hide(options);
+            
+        if(hidden) {
+            return hidden;
+        }
         
         return m("div", { class : options.class },
             m("div", { class : css.nav },
