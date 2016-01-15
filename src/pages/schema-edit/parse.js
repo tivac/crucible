@@ -1,6 +1,7 @@
 "use strict";
 
-var required = /\*$/;
+var required = /\*$/,
+    types;
 
 function slugger(name) {
     return name.replace(/\s+/g, "-").replace(/[^a-zA-Z0-9-]/g, "").toLowerCase();
@@ -27,6 +28,16 @@ function process(obj) {
 
         field.name = name;
         field.slug = slugger(name);
+        
+        if(field.show) {
+            field.show.field = slugger(field.show.field);
+            
+            // Regular expressions need to be saved out specially
+            if(field.show.value instanceof RegExp) {
+                field.show.type  = "regexp";
+                field.show.value = field.show.value.source;
+            }
+        }
 
         if(field.type === "tabs") {
             field.children = Object.keys(field.tabs).map(function(tabName) {
@@ -42,13 +53,7 @@ function process(obj) {
             delete field.tabs;
         }
 
-        if(field.type === "repeating") {
-            field.children = process(field.fields);
-
-            delete field.fields;
-        }
-
-        if(field.type === "fieldset") {
+        if(field.type === "repeating" || field.type === "fieldset") {
             field.children = process(field.fields);
 
             delete field.fields;

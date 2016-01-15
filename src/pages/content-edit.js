@@ -107,6 +107,7 @@ module.exports = {
                         details : ctrl.schema.fields,
                         ref     : ctrl.ref.child("fields"),
                         data    : ctrl.data.fields || {},
+                        state   : ctrl.data.fields,
                         root    : ctrl.ref
                     })
                 )

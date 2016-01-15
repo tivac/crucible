@@ -27,7 +27,7 @@ module.exports = {
             ref  = db.child("schemas/" + id),
             
             // Weird path is because this isn't browserified
-            save = new Worker("/src/workers/save-schema.js");
+            parse = new Worker("/src/pages/schema-edit/parse.js");
         
         ctrl.schema  = null;
         ctrl.recent  = null;
@@ -40,8 +40,10 @@ module.exports = {
             m.redraw();
         });
 
-        // Take processed code from worker, save it to firebase
-        save.addEventListener("message", function(e) {
+        // Take processed schema from worker, save it to firebase
+        parse.addEventListener("message", function(e) {
+            console.log(e);
+            
             ref.child("fields").set(e.data);
         });
         
@@ -91,7 +93,7 @@ module.exports = {
             var text = ctrl.editor.doc.getValue();
 
             ref.child("source").set(text);
-            save.postMessage(text);
+            parse.postMessage(text);
         };
         
         ctrl.previewChanged = function(e) {
