@@ -1,6 +1,7 @@
 "use strict";
 
-var m = require("mithril"),
+var m   = require("mithril"),
+    get = require("lodash.get"),
 
     children = require("../types/children"),
     db       = require("../lib/firebase"),
@@ -8,7 +9,7 @@ var m = require("mithril"),
     watch    = require("../lib/watch"),
 
     layout = require("./layout"),
-    nav    = require("./content/nav"),
+    nav    = require("./content-edit/nav"),
 
     publishing = require("./content-edit/publishing"),
     versioning = require("./content-edit/versioning"),
@@ -20,28 +21,29 @@ module.exports = {
         var ctrl = this,
 
             id     = m.route.param("id"),
-            ref    = db.child("content/" + m.route.param("schema") + "/" + id),
-            schema = db.child("schemas/" + m.route.param("schema"));
-
+            schema = db.child("schemas/" + m.route.param("schema")),
+            ref    = db.child("content/" + m.route.param("schema") + "/" + id);
+        
         ctrl.id     = id;
         ctrl.ref    = ref;
         ctrl.data   = null;
         ctrl.schema = null;
         ctrl.form   = null;
 
-        ref.on("value", function(snap) {
-            if(!snap.exists()) {
-                return m.route("/content");
-            }
-
-            ctrl.data = snap.val();
-
-            m.redraw();
-        });
-
         schema.on("value", function(snap) {
             ctrl.schema = snap.val();
             ctrl.schema.key = snap.key();
+
+            m.redraw();
+        });
+        
+        // No sense doing any work if we don't have an id to operate on
+        if(!id) {
+            return;
+        }
+        
+        ref.on("value", function(snap) {
+            ctrl.data = snap.val();
 
             m.redraw();
         });
@@ -50,17 +52,17 @@ module.exports = {
     },
 
     view : function(ctrl) {
-        if(!ctrl.data || !ctrl.schema) {
+        if(!ctrl.schema) {
             return m.component(layout);
         }
 
         return m.component(layout, {
-            title : ctrl.data.name,
+            title : get(ctrl.data, "name"),
 
             nav : m.component(nav, { schema : ctrl.schema }),
 
-            content : [
-                m(".head", { class : css.menu },
+            content : ctrl.id ? [
+                m("div", { class : css.menu },
                     m.component(publishing, {
                         ref     : ctrl.ref,
                         data    : ctrl.data,
@@ -84,7 +86,7 @@ module.exports = {
                         class : css.version
                     })
                 ),
-                m(".body", { class : css.body },
+                m("div", { class : css.body },
                     m("h2", { class : css.schema }, m.trust("/"), ctrl.schema.name, m.trust("/")),
                     m("h1", {
                             class : css.title,
@@ -116,7 +118,10 @@ module.exports = {
                         })
                     )
                 )
-            ]
+            ] :
+            m("div", { class : css.empty },
+                m("p", "Select an entry from the list")
+            )
         });
     }
 };

@@ -1,15 +1,8 @@
 @value headerWidth: 180px;
 @value navWidth:    340px;
 
-@value sm: 35.5em;
-@value md: 48em;
-@value lg: 64em;
-@value xl: 80em;
-
-@value small:  screen and (min-width: sm);
-@value medium: screen and (min-width: md);
-@value large:  screen and (min-width: lg);
-@value xlarge: screen and (min-width: xl);
+@value small from "../media.css";
+@value medium from "../media.css";
 
 :global(html),
 :global(body) {
@@ -27,22 +20,23 @@
 }
 
 .outer {
-    /*composes: global(pure-g);*/
     display: flex;
     flex-flow: column nowrap;
 }
-.header,
+
 .nav,
+.header,
 .content {
-    /*composes: global(pure-u);*/
     width: 100%;
 }
+
 .header {
     z-index: 1;
     font-size: 0.8em;
     color: #FFF;
     background: #2F343C;
 }
+
 .nav {
     display: none;
     border-right: solid 1px #CCC;
@@ -50,7 +44,6 @@
 }
 
 .head {
-    /*composes: global(pure-g);*/
     display: flex;
 
     flex-flow: row nowrap;
@@ -62,8 +55,8 @@
     padding: 0.3em 20px;
     border-bottom: solid 1px #CCC;
 }
+
 .body {
-    /*composes: global(pure-g);*/
     display: flex;
 
     flex-flow: column nowrap;
@@ -71,9 +64,11 @@
 
     overflow-y: auto;
 }
+
 .header .body {
     display: none;
 }
+
 .content .body {
     padding: 1em 20px;
 }
@@ -83,27 +78,32 @@
         height: 100%;
         flex-flow: row nowrap;
     }
+    
     .header,
     .nav,
     .content {
         height: 100%;
         flex-flow: column nowrap;
     }
+    
     .header,
     .content {
         display: flex;
     }
+    
     .header {
         flex: 0 0 180px;
     }
+    
     .header .body {
-    display: flex;
+        display: flex;
 
-    flex-flow: column nowrap;
-    flex: 1 0 auto;
+        flex-flow: column nowrap;
+        flex: 1 0 auto;
 
-    overflow-y: auto;
+        overflow-y: auto;
     }
+    
     .content {
         flex: 1;
     }
@@ -115,7 +115,6 @@
         flex: 0 0 340px;
     }
 }
-
 
 .progress {
     position: absolute;

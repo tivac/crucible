@@ -1,15 +1,15 @@
-.nav {
-    composes: nav from "../layout/layout.css";
-}
+@value icons_css: "../../icons.css";
+@value layout_css: "../layout/layout.css";
+@value anchor: #446;
+@value iconTransition: color 0.2s ease-in;
+@value colorRemove from "../../buttons.css";
 
-.navHidden {
-    composes: nav;
-    overflow: visible;
-    flex: 0 1 0;
+.nav {
+    composes: nav from layout_css;
 }
 
 .filter {
-    composes: head from "../layout/layout.css";
+    composes: head from layout_css;
     composes: global(pure-form);
 
     overflow: hidden;
@@ -36,11 +36,13 @@
     background: #2F343C;
     color: white;
 }
+
 .hide:hover {
     left: auto;
     right: 0;
 }
-.hide:before {
+
+.hide::before {
     content: "";
     position: absolute;
     height: 0;
@@ -52,21 +54,18 @@
     border-right: solid 12px #2F343C;
 }
 
-.navHidden .filter {
-    padding: 0;
-    overflow: visible;
-}
-
 .show {
     composes: hide;
     left: auto;
     right: 0;
 }
+
 .show:hover {
     right: auto;
     left: 0;
 }
-.show:before {
+
+.show::before {
     right: auto;
     left: 100%;
 
@@ -75,9 +74,8 @@
 }
 
 .body {
-    composes: body from "../layout/layout.css";
+    composes: body from layout_css;
 }
-
 
 .list {
     list-style: none;
@@ -86,6 +84,8 @@
 }
 
 .item {
+    position: relative;
+    
     padding: 0;
     border-bottom: solid 1px #CCC;
 }
@@ -98,11 +98,12 @@
 
 .anchor {
     display: block;
-    padding: 1em 16px 1em 20px;
+    padding: 1em 26px 1em 20px;
 
     text-decoration: none;
-    color: #446;
+    color: anchor;
 }
+
 .published .anchor {
     padding-left: 16px;
 }
@@ -127,3 +128,68 @@
 
     font-size: 0.8em;
 }
+
+.actions {
+    position: absolute;
+    
+    top: 0;
+    right: 4px;
+    bottom: 0;
+    
+    display: flex;
+    flex-direction: column;
+    
+    justify-content: center;
+    align-items: center;
+}
+
+.action {
+    composes: icon from icons_css;
+    
+    color: anchor;
+    transition: iconTransition;
+}
+
+.action:hover {
+    color: #2F343C;
+    
+    transition: iconTransition;
+}
+
+.preview {}
+
+.previewIcon {
+    composes: action;
+}
+
+.remove {
+    /* Strip <button> styling */
+    background: none;
+    outline: none;
+    border: 0;
+    padding: 0;
+}
+
+.removeIcon {
+    composes: action;
+    
+    /* work-around for https://github.com/tivac/modular-css/issues/56 */
+    background: transparent;
+}
+
+.removeIcon:hover {
+    color: colorRemove;
+}
+
+.hidden {
+    composes: nav;
+    overflow: visible;
+    flex: 0 1 0;
+}
+
+.hidden .filter {
+    padding: 0;
+    overflow: visible;
+}
+
+

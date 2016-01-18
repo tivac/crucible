@@ -5,7 +5,7 @@ var m = require("mithril"),
     db = require("../../lib/firebase"),
 
     layout = require("./layout.css"),
-    header = require("./header.css");
+    nav    = require("./nav.css");
 
 module.exports = {
     controller : function() {
@@ -45,11 +45,11 @@ module.exports = {
         return m(".outer", { class : layout.outer },
             options.content ? null : m("div", { class : layout.progress }),
 
-            m(".header", { class : layout.header },
+            m("div", { class : layout.header },
 
-                m(".head", { class : header.head },
+                m("div", { class : nav.head },
                     m("a", {
-                            class  : header.heading,
+                            class  : nav.heading,
                             href   : "/",
                             config : m.route
                         },
@@ -57,29 +57,42 @@ module.exports = {
                     )
                 ),
 
-                m(".body", { class : header.body },
+                m("div", { class : nav.body },
                     ctrl.auth ? [
-                        m(".schemas", { class : header.schemas },
+                        m("div", { class : nav.schemas },
                             (ctrl.schemas || []).map(function(schema) {
                                 var url = "/content/" + schema.key;
-
-                                return m("a", {
-                                    class  : header[route === url ? "active" : "schema"],
-                                    href   : url,
-                                    config : m.route
-                                }, schema.name);
+                                
+                                return m("div", { class : nav[route.indexOf(url) === 0 ? "active" : "schema"] },
+                                    m("a", {
+                                        class  : nav.link,
+                                        href   : url,
+                                        config : m.route
+                                    }, schema.name),
+                                    
+                                    m("a", {
+                                            class  : nav.edit,
+                                            title  : "Edit Schema",
+                                            href   : url + "/edit",
+                                            config : m.route
+                                        },
+                                        m("svg", { class : nav.editIcon },
+                                            m("use", { href : "/src/icons.svg#icon-edit" })
+                                        )
+                                    )
+                                );
                             })
                         ),
 
                         m("a", {
-                            class  : header.add,
+                            class  : nav.add,
                             href   : "/content/new",
                             config : m.route
                         }, "New Schema")
                     ] : null,
 
                     m("a", {
-                        class  : header.logout,
+                        class  : nav.logout,
                         href   : "/logout",
                         config : m.route
                     }, "Logout")

@@ -1,3 +1,6 @@
+@value colorRemove: rgb(202, 60, 60);
+@value colorAdd: rgb(28, 184, 65);
+
 .button {
     composes: global(pure-button);
 }
@@ -16,11 +19,11 @@
 .add {
     composes: color;
     
-    background: rgb(28, 184, 65);
+    background: colorAdd;
 }
 
 .remove {
     composes: color;
     
-    background: rgb(202, 60, 60);
+    background: colorRemove;
 }

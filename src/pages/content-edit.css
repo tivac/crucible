@@ -5,28 +5,17 @@
     composes: body from "./layout/layout.css";
 }
 
-.actions {
-    composes: menuItem;
+.empty {
+    composes: body;
     
-    display: flex;
-
-    justify-content: space-between;
-    align-items: center;
+    text-align: center;
+    justify-content: center;
+    align-content: center;    
 }
 
-.action {
-    composes: icon from icons_css;
-
-    color: #000;
-    transition: color 0.1s ease-in;
+.empty p {
+    color: #666;
 }
-
-
-
-.preview {
-    composes: action;
-}
-
 
 .heading {
     composes: global(pure-g);
@@ -36,7 +25,6 @@
 }
 
 .schema {
-    
     margin: 0;
     color: #CCC;
     font-size: 1em;
@@ -48,7 +36,6 @@
     border: solid 1px transparent;
     border-bottom: solid 2px #68A;
 }
-
 
 .title:hover {
     border-color: #DDD;
@@ -63,20 +50,38 @@
 
 .menu {
     composes: head from "./layout/layout.css";
-    
 }
 
-.menuItem {
+.item {
     composes: global(pure-u-1-2);
+}
+
+.actions {
+    composes: item;
     
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+}
+
+.action {
+    composes: icon from icons_css;
+
+    color: #000;
+    transition: color 0.1s ease-in;
+}
+
+.preview {
+    composes: action;
 }
 
 .publishing {
-    composes: menuItem;
+    composes: item;
 }
 
 .version {
-    composes: menuItem;
+    composes: item;
 
     text-align: right;
 }
