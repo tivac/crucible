@@ -1,8 +1,8 @@
 @value headerWidth: 180px;
 @value navWidth:    340px;
 
-@value small from "../media.css";
-@value medium from "../media.css";
+@value small from "../../media.css";
+@value medium from "../../media.css";
 
 :global(html),
 :global(body) {
