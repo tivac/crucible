@@ -12,19 +12,20 @@ module.exports = {
         ctrl.now  = moment();
         ctrl.date = false;
 
-        ctrl.publish = function(e) {
+        ctrl.publish = function() {
             options.ref.child("published").set(moment().subtract(10, "seconds").valueOf());
         };
 
-        ctrl.publishAt = function(e) {
+        ctrl.publishAt = function() {
             if(!ctrl.date || !ctrl.date.isValid()) {
-                return console.error("Invalid date"); // TODO: Really Handle
+                // TODO: Really Handle these errors
+                return console.error("Invalid date");
             }
 
             options.ref.child("published").set(ctrl.date.valueOf());
         };
 
-        ctrl.unpublish = function(e) {
+        ctrl.unpublish = function() {
             options.ref.child("published").remove();
         };
     },

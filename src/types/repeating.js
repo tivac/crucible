@@ -4,6 +4,8 @@ var m      = require("mithril"),
     assign = require("lodash.assign"),
     times  = require("lodash.times"),
 
+    hide = require("./lib/hide"),
+
     children     = require("./children"),
     instructions = require("./instructions"),
 
@@ -23,7 +25,7 @@ function child(ctrl, options, data, idx) {
                     class   : css.remove,
                     onclick : ctrl.remove.bind(ctrl, options, data, idx)
                 },
-                "X"
+                "Remove"
             )
         )
     );
@@ -52,7 +54,7 @@ module.exports = {
             });
         };
 
-        ctrl.remove = function(options, data, idx, e) {
+        ctrl.remove = function(options, data, idx) {
             // No ref means we don't much care
             if(!options.ref || !options.data) {
                 return --ctrl.children;
@@ -67,8 +69,13 @@ module.exports = {
     },
 
     view : function(ctrl, options) {
-        var details = options.details;
-
+        var details = options.details,
+            hidden  = hide(options);
+        
+        if(hidden) {
+            return hidden;
+        }
+        
         return m("div", { class : options.class + " " + css.container },
             options.data ?
                 options.data.map(child.bind(null, ctrl, options)) :

@@ -2,10 +2,11 @@
 
 var m      = require("mithril"),
     assign = require("lodash.assign"),
-
+    
+    hide = require("./lib/hide"),
+    
     children = require("./children"),
-
-    css = require("./tabs.css");
+    css      = require("./tabs.css");
 
 module.exports = {
     controller : function() {
@@ -19,14 +20,20 @@ module.exports = {
             ctrl.tab = tab;
         };
     },
+    
     view : function(ctrl, options) {
-        var tabs = options.details.children || [];
-
+        var tabs   = options.details.children || [],
+            hidden = hide(options);
+            
+        if(hidden) {
+            return hidden;
+        }
+        
         return m("div", { class : options.class },
             m("div", { class : css.nav },
                 tabs.map(function(tab, idx) {
                     return m("a", {
-                            class   : css[idx === ctrl.tab ? "item-active" : "item"],
+                            class   : css[idx === ctrl.tab ? "active" : "inactive"],
                             href    : "#" + idx,
                             onclick : ctrl.switchtab.bind(ctrl, idx)
                         }, tab.name
@@ -38,7 +45,7 @@ module.exports = {
                     m.component(children, assign({}, options, {
                         details : tab.children,
                         data    : options.data && options.data[tab.slug],
-                        ref     : options.ref  && options.ref.child(tab.slug),
+                        ref     : options.ref  && options.ref.child(tab.slug)
                     }))
                 );
             })
