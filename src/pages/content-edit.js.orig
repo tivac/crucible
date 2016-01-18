@@ -6,10 +6,14 @@ var m = require("mithril"),
     db       = require("../lib/firebase"),
     update   = require("../lib/update"),
     watch    = require("../lib/watch"),
-
+    
     layout = require("./layout"),
+<<<<<<< HEAD
     nav    = require("./content/nav"),
 
+=======
+    
+>>>>>>> master
     publishing = require("./content-edit/publishing"),
     versioning = require("./content-edit/versioning"),
 
@@ -18,15 +22,15 @@ var m = require("mithril"),
 module.exports = {
     controller : function() {
         var ctrl = this,
-
+            
             ref    = db.child("content/" + m.route.param("schema") + "/" + m.route.param("id")),
             schema = db.child("schemas/" + m.route.param("schema"));
-
+        
         ctrl.ref    = ref;
         ctrl.data   = null;
         ctrl.schema = null;
         ctrl.form   = null;
-
+        
         ref.on("value", function(snap) {
             if(!snap.exists()) {
                 return m.route("/content");
@@ -36,13 +40,13 @@ module.exports = {
 
             m.redraw();
         });
-
+        
         schema.on("value", function(snap) {
             ctrl.schema = snap.val();
 
             m.redraw();
         });
-
+        
         watch(ref);
     },
 
@@ -57,6 +61,16 @@ module.exports = {
             nav : m.component(nav, { schema : ctrl.schema }),
 
             content : [
+                m("h1", { class : css.heading },
+                    m("span", { class : css.schema }, ctrl.schema.name, m.trust("&nbsp;/&nbsp;")),
+                    m("span", {
+                            class : css.title,
+                            contenteditable : true,
+                            oninput : m.withAttr("innerText", update.bind(null, ctrl.ref, "name"))
+                        },
+                        ctrl.data.name || ""
+                    )
+                ),
                 m("div", { class : css.menu },
                     m.component(publishing, {
                         ref     : ctrl.ref,
@@ -70,36 +84,26 @@ module.exports = {
                         class : css.version
                     })
                 ),
-                m(".body", { class : css.body },
-                    m("h2", { class : css.schema }, m.trust("/"), ctrl.schema.name, m.trust("/")),
-                    m("h1", {
-                            class : css.title,
-                            contenteditable : true,
-                            oninput : m.withAttr("innerText", update.bind(null, ctrl.ref, "name"))
-                        },
-                        ctrl.data.name || ""
-                    ),
-                    m("form", {
-                            class  : css.form,
-                            config : function(el, init) {
-                                if(init) {
-                                    return;
-                                }
-
-                                ctrl.form = el;
-
-                                // force a redraw so publishing component can get
-                                // new args w/ actual validity
-                                m.redraw();
+                m("form", {
+                        class  : css.form,
+                        config : function(el, init) {
+                            if(init) {
+                                return;
                             }
-                        },
-                        m.component(children, {
-                            details : ctrl.schema.fields,
-                            ref     : ctrl.ref.child("fields"),
-                            data    : ctrl.data.fields || {},
-                            root    : ctrl.ref
-                        })
-                    )
+
+                            ctrl.form = el;
+
+                            // force a redraw so publishing component can get
+                            // new args w/ actual validity
+                            m.redraw();
+                        }
+                    },
+                    m.component(children, {
+                        details : ctrl.schema.fields,
+                        ref     : ctrl.ref.child("fields"),
+                        data    : ctrl.data.fields || {},
+                        root    : ctrl.ref
+                    })
                 )
             ]
         });

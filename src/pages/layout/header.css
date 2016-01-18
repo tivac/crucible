@@ -1,0 +1,88 @@
+@value sm: 35.5em;
+@value md: 48em;
+@value lg: 64em;
+@value xl: 80em;
+
+@value small:  screen and (min-width: sm);
+@value medium: screen and (min-width: md);
+@value large:  screen and (min-width: lg);
+@value xlarge: screen and (min-width: xl);
+
+@media small {
+    .sep {
+        border-bottom: solid 1px #222;
+        box-shadow: 0 1px 0 #545454;
+    }
+}
+
+
+.head {
+    composes: head from "./layout.css";
+    composes: sep;
+}
+
+.heading {
+    composes: global(pure-g);
+    align-items: center;
+    flex: 1 0 auto;
+
+    margin: 0;
+    padding: 0 16px;
+    font-size: 1.8em;
+
+    text-decoration: none;
+    color: inherit;
+}
+.heading:hover {
+    background: #346;
+}
+.heading h1 {
+    font-size: 1.4em;
+    margin: 0;
+}
+
+.schemas {
+    composes: vertical from "./layout.css";
+    composes: sep;
+
+    margin: 0 0 2em;
+    list-style: none;
+
+    text-transform: uppercase;
+}
+
+.schema,
+.schema:active,
+.schema:visited {
+    /*composes: vertical;*/
+    padding: 1em 16px;
+
+    opacity: 0.5;
+
+    text-decoration: none;
+    color: inherit;
+    color: inherit;
+    text-decoration: none;
+}
+
+.schema:hover {
+    opacity: 1;
+
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.active {
+    composes: schema;
+
+    opacity: 1;
+
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.add,
+.logout {
+    margin-bottom: 0.4em;
+    padding: 0.4em 16px;
+    color: inherit;
+    text-decoration: none;
+}

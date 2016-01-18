@@ -1,6 +1,27 @@
 @import "../../node_modules/codemirror/lib/codemirror.css";
 
+.editable {
+    border-bottom: solid 2px #930;
+    background: #EEE;
+}
+
+.editable:hover {
+    border-bottom-color: #B40;
+    background: #FBFBFB;
+}
+.editable:focus {
+    background: #FFF;
+    outline: none;
+    border-bottom-color: #D60;
+}
+
+.body {
+    composes: body from "./layout/layout.css";
+}
+
 .heading {
+    composes: global(pure-g);
+
     text-align: center;
     justify-content: center;
 }
@@ -18,6 +39,7 @@
     border-bottom: solid 2px #68A;
 }
 
+
 .title:hover {
     border-color: #DDD;
     border-bottom-color: #68A;
@@ -30,17 +52,16 @@
 }
 
 .menu {
+    composes: head from "./layout/layout.css";
     composes: global(pure-g);
+    padding: 0.3em 20px;
 
-    padding-bottom: 5px;
-    border-bottom: 1px solid #666;
+    border-bottom: 1px solid #CCC;
     margin-bottom: 10px;
 }
 
 .menuItem {
     composes: global(pure-u-1-2);
-
-    padding: 0 5px;
 }
 
 .publishing {

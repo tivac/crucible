@@ -44,13 +44,14 @@ module.exports = {
                 }, "Unpublish")
             );
         }
-        
+
         return m("div", { class : options.class },
             m(".pure-form",
                 m("label",
                     m("input", {
                         type    : "datetime-local",
                         value   : (ctrl.date || ctrl.now).format("YYYY-MM-DD[T]HH:mm"),
+                        class   : css.date,
                         oninput : m.withAttr("value", function(value) {
                             ctrl.date = moment(value, "YYYY-MM-DD[T]HH:mm");
                         })
@@ -60,7 +61,7 @@ module.exports = {
                     // Attrs
                     class    : css[options.enabled ? "publish" : "disabled"],
                     disabled : !options.enabled,
-                    
+
                     // Events
                     onclick  : ctrl.publishAt
                 }, "Publish")

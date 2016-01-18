@@ -4,22 +4,18 @@ var m = require("mithril"),
 
     db = require("../../lib/firebase"),
 
-    css = require("./layout.css");
+    layout = require("./layout.css"),
+    header = require("./header.css");
 
 module.exports = {
     controller : function() {
         var ctrl   = this;
 
-        ctrl.hidden = false;
         ctrl.schemas = null;
-        ctrl.auth    = db.getAuth();
+        ctrl.auth = db.getAuth();
 
         ctrl.add = function() {
             m.route("/schema/new");
-        };
-
-        ctrl.hide = function() {
-            ctrl.hidden = !ctrl.hidden;
         };
 
         db.child("schemas").on("value", function(snap) {
@@ -46,56 +42,58 @@ module.exports = {
 
         document.title = options.title || "Loading...";
 
-        return m("div", { class : css.outer },
+        return m(".outer", { class : layout.outer },
+            options.content ? null : m("div", { class : layout.progress }),
 
-            m("header", { class : css.header },
-                options.content ? null : m("div", { class : css.progress }),
+            m(".header", { class : layout.header },
 
-                m("h1", { class : css.heading },
-                    m("a", { href : "/", config : m.route }, "Crucible")
+                m(".head", { class : header.head },
+                    m("a", {
+                            class : header.heading,
+                            href  : "/",
+                            config : m.route
+                        },
+                        m("h1", "Crucible")
+                    )
                 ),
 
-                ctrl.auth ? [
-                    m("div", { class : css.schemas },
-                        (ctrl.schemas || []).map(function(schema) {
-                            var url = "/content/" + schema.key;
+                m(".body", { class : layout.body },
+                    ctrl.auth ? [
+                        m(".schemas", { class : header.schemas },
+                            (ctrl.schemas || []).map(function(schema) {
+                                var url = "/content/" + schema.key;
 
-                            return m("a", {
-                                class  : css[route === url ? "active" : "schema"],
-                                href   : url,
-                                config : m.route
-                            }, schema.name);
-                        })
-                    ),
+                                return m("a", {
+                                    class  : header[route === url ? "active" : "schema"],
+                                    href   : url,
+                                    config : m.route
+                                }, schema.name);
+                            })
+                        ),
+
+                        m("a", {
+                            class  : header.add,
+                            href   : "/content/new",
+                            config : m.route
+                        }, "New Schema")
+                    ] : null,
 
                     m("a", {
-                        class  : css.add,
-                        href   : "/content/new",
+                        class  : header.logout,
+                        href   : "/logout",
                         config : m.route
-                    }, "New Schema")
-                ] : null,
-
-                m("a", {
-                    class  : css.logout,
-                    href   : "/logout",
-                    config : m.route
-                }, "Logout")
+                    }, "Logout")
+                )
             ),
 
-            options.nav ? m("nav", {
-                    class : ctrl.hidden ? css.navHidden : css.nav
+            options.nav ? options.nav : null,
+
+            m(".content", {
+                    // class : ctrl.hidden || !options.nav ? layout.sectionHidden : layout.section
+                    class : layout.content
                 },
-                m("div", {
-                        class   : css.hide,
-                        onclick : ctrl.hide
-                    },
-                    m("span", ctrl.hidden ? "show" : "hide")
-                ),
-
-                ctrl.hidden ? null : options.nav
-            ) : null,
-
-            m("section", { class : ctrl.hidden || !options.nav ? css.sectionHidden : css.section }, options.content ? options.content : null)
+                options.content ? options.content : null
+            )
         );
     }
 };

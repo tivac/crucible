@@ -29,14 +29,11 @@
 
     text-decoration: none;
 
-    background: #FFF;
-
     color: #101010;
 }
 
 .item:hover {
-    border-color: #999;
-    background: #CCC;
+    background: #EEE;
 }
 
 .item:last-child {
@@ -46,9 +43,9 @@
 .item-active {
     composes: item;
 
-    border-color: #999;
+    border-color: #777;
 
-    background: #DDD;
+    background: #BCBCBC;
     font-weight: bold;
 }
 

@@ -3,15 +3,15 @@
 /* Metadata controls */
 .metas {
     composes: global(pure-g);
-    
+
     justify-content: space-between;
-    
+
     margin: 5px 0 10px;
 }
 
 .meta {
     composes: global(pure-u-1-2);
-    
+
     padding: 0 5px;
 }
 
@@ -21,7 +21,7 @@
 
 .editMeta {
     composes: meta;
-    
+
     text-align: right;
 }
 

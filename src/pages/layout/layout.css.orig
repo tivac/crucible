@@ -1,0 +1,339 @@
+@value headerWidth: 180px;
+@value navWidth:    340px;
+
+:global(html),
+:global(body) {
+    width: 100%;
+    height: 100%;
+}
+
+.outer {
+    height: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+.horizontal {
+    display: flex;
+    align-items: center;
+}
+
+<<<<<<< HEAD
+.fixed {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    overflow: auto;
+}
+
+.sep {
+    border-bottom: solid 1px #222;
+    box-shadow: 0 1px 0 #545454;
+}
+
+
+.outer {
+    min-height: 100%;
+}
+
+.header {
+    composes: fixed;
+    composes: vertical;
+
+    flex: 0 1 auto;
+
+    left: 0;
+    width: headerWidth;
+
+    z-index: 1;
+
+    font-size: 0.8em;
+    color: #FFF;
+    background: #2F343C;
+}
+
+.heading {
+    composes: sep;
+
+    margin: 0;
+    font-size: 1.8em;
+}
+=======
+.header {
+    composes: horizontal;
+
+    justify-content: space-between;
+    margin-bottom: 10px;
+
+    background: #DDD;
+}
+
+.heading {
+    flex: 1;
+
+    font-size: 1.2em;
+    margin: 0;
+}
+
+>>>>>>> master
+.heading a,
+.heading a:active,
+.heading a:visited {
+    display: block;
+<<<<<<< HEAD
+    padding: 0.4em 16px;
+=======
+    padding: 0.5em 1em;
+>>>>>>> master
+
+    text-decoration: none;
+    color: #333;
+}
+<<<<<<< HEAD
+.heading a:hover {
+    background: #346;
+}
+
+.schemas {
+    composes: vertical;
+    composes: sep;
+
+    margin: 0 0 2em;
+    list-style: none;
+
+    text-transform: uppercase;
+=======
+
+.heading a:hover {
+    color: #CCC;
+    background: #444;
+}
+
+.schemas {
+    composes: horizontal;
+
+    flex: 4 0 50%;
+
+    margin: 0;
+    list-style: none;
+>>>>>>> master
+}
+
+.schema,
+.schema:active,
+.schema:visited {
+<<<<<<< HEAD
+    composes: vertical;
+    padding: 1em 16px;
+
+    opacity: 0.5;
+
+    text-decoration: none;
+    color: inherit;
+    color: inherit;
+    text-decoration: none;
+}
+
+.schema:hover {
+    opacity: 1;
+
+    background: rgba(0, 0, 0, 0.4);
+=======
+    padding: 11px 10px;
+
+    text-decoration: none;
+    color: #333;
+}
+
+.schema:hover {
+    color: #CCC;
+    background: #444;
+>>>>>>> master
+}
+
+.active {
+    composes: schema;
+
+<<<<<<< HEAD
+    opacity: 1;
+
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.add,
+.logout {
+    margin-bottom: 0.4em;
+    padding: 0.4em 16px;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nav {
+    composes: fixed;
+
+    left: headerWidth;
+    width: navWidth;
+
+    border-right: solid 1px #CBCBCB;
+    background: #EEE;
+}
+
+.navHidden {
+    composes: nav;
+    overflow: visible;
+    left: -160px; /* headerWidth - navWidth */
+}
+
+.hide {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+
+    position: absolute;
+    top: 3px;
+    right: -40px;
+
+    height: 40px;
+    padding: 0 0.3em;
+
+    cursor: pointer;
+
+    color: #FFF;
+    background: #2F343C;
+}
+
+.hide:hover {
+    right: 0;
+}
+
+.hide:before {
+    position: absolute;
+    top: 0;
+    left: -32px;
+    content: "";
+    height: 0;
+    width: 0;
+
+    border: solid 20px transparent;
+    border-right: solid 12px #2F343C;
+}
+
+
+.navHidden .hide {
+    right: 0;
+}
+
+.navHidden .hide:hover {
+    right: -48px;
+}
+
+.navHidden .hide:after {
+    position: absolute;
+    top: 0;
+    right: -32px;
+    content: "";
+    height: 0;
+    width: 0;
+
+    border: solid 20px transparent;
+    border-left: solid 12px #2F343C;
+}
+
+.section {
+    margin-left: 520px; /*(headerWidth + navWidth);*/
+    padding: 1em;
+}
+
+.sectionHidden {
+    composes: section;
+
+    margin-left: headerWidth;
+=======
+    color: #CCC;
+    background: #666;
+}
+
+.add {
+    composes: color from "../../buttons.css";
+
+    background: rgb(177,173,164);
+>>>>>>> master
+}
+
+.logout {
+    composes: color from "../../buttons.css";
+
+    background: rgb(240,128,128);
+    margin-left: 5px;
+}
+
+.progress {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+
+    height: 3px;
+
+    background: #EEE;
+}
+
+.progress::before,
+.progress::after {
+    position: absolute;
+    z-index: 1;
+    content: "";
+
+    top: 0;
+    bottom: 0;
+    width: 0;
+
+    background: rgb(66, 184, 221);
+
+    animation: progressBefore 2s linear infinite;
+}
+
+.progress::after {
+    animation-name: progressAfter;
+}
+
+@keyframes progressBefore {
+    0% {
+        left: 0%;
+        width: 0%;
+    }
+
+    50% {
+        left: 25%;
+        width: 75%;
+    }
+
+    75% {
+        left: 100%;
+        width: 0%;
+    }
+}
+
+@keyframes progressAfter {
+    0% {
+        left: 0%;
+        width: 0%;
+    }
+
+    50% {
+        left: 0%;
+        width: 0%;
+    }
+
+    75% {
+        left: 0%;
+        width: 25%;
+    }
+
+    100% {
+        left: 100%;
+        width: 0%;
+    }
+}

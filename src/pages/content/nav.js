@@ -25,6 +25,11 @@ module.exports = {
         ctrl.entries = null;
         ctrl.content = null;
         ctrl.results = null;
+        ctrl.hide    = false;
+
+        ctrl.hide = function() {
+            ctrl.hidden = !ctrl.hidden;
+        };
 
         ctrl.fetch = function() {
             db.child("content/" + ctrl.schema.key).orderByChild("published").on("value", function(snap) {
@@ -121,32 +126,43 @@ module.exports = {
             }
         }
 
-        return m("div",
-            m("div", { class : css.filter },
+        return m(".nav", {
+                class : css.nav
+                // class : ctrl.hidden ? layout.navHidden : layout.nav
+            },
+            m(".head", { class : css.filter },
+                // m("div", {
+                //         class   : layout.hide,
+                //         onclick : ctrl.hide
+                //     },
+                //     m("span", ctrl.hidden ? "show" : "hide")
+                // ),
                 m("input", {
                     class       : css.text,
                     placeholder : "search",
                     oninput     : m.withAttr("value", ctrl.filter)
                 })
             ),
-            m("ul", { class : css.list },
-                current.items.map(function(data) {
-                    var date = data.published ?
-                        "published: " + data.published.format("L") :
-                        "updated: " + data.updated.format("L");
+            m(".body",
+                m("ul", { class : css.list },
+                    current.items.map(function(data) {
+                        var date = data.published ?
+                            "published: " + data.published.format("L") :
+                            "updated: " + data.updated.format("L");
 
-                    return m("li", { class : data.published ? css.published : css.item },
-                        m("a", {
-                            class  : css.anchor,
-                            href   : "/content/" + ctrl.schema.key + "/" + data.key,
-                            config : m.route
-                        },
-                            m("h3", { class : css.heading }, data.name),
-                            m("p", { class : css.date }, date),
-                            m("p", { class : css.excerpt }, data.excerpt)
-                        )
-                    );
-                })
+                        return m("li", { class : data.published ? css.published : css.item },
+                            m("a", {
+                                class  : css.anchor,
+                                href   : "/content/" + ctrl.schema.key + "/" + data.key,
+                                config : m.route
+                            },
+                                m("h3", { class : css.heading }, data.name),
+                                m("p", { class : css.date }, date),
+                                m("p", { class : css.excerpt }, data.excerpt)
+                            )
+                        );
+                    })
+                )
             )
         );
     }

@@ -2,6 +2,11 @@
 
 .save {
     composes: primary from buttons_css;
-    
+
     margin-left: 10px;
+}
+
+.verHist {
+    composes: global(pure-g);
+    justify-content: flex-end;
 }

@@ -1,10 +1,10 @@
-.border {
-    border-bottom: solid 1px #CBCBCB;
+.nav {
+    composes: nav from "../layout/layout.css";
 }
 
 .filter {
-    composes: border;
     composes: global(pure-form);
+    composes: head from "../layout/layout.css";
     padding: 0.3em 20px;
 }
 
@@ -20,8 +20,8 @@
 }
 
 .item {
-    composes: border;
     padding: 0;
+    border-bottom: solid 1px #CCC;
 
     border-left: solid 4px transparent;
 }
