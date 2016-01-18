@@ -127,24 +127,23 @@ module.exports = {
         }
 
         return m(".nav", {
-                class : css.nav
-                // class : ctrl.hidden ? layout.navHidden : layout.nav
+                class : ctrl.hidden ? css.navHidden : css.nav
             },
             m(".head", { class : css.filter },
-                // m("div", {
-                //         class   : layout.hide,
-                //         onclick : ctrl.hide
-                //     },
-                //     m("span", ctrl.hidden ? "show" : "hide")
-                // ),
-                m("input", {
+                !ctrl.hidden ? m("input", {
                     class       : css.text,
                     placeholder : "search",
                     oninput     : m.withAttr("value", ctrl.filter)
-                })
+                }) : null,
+                m("div", {
+                        class   : ctrl.hidden ? css.show : css.hide,
+                        onclick : ctrl.hide
+                    },
+                    m("span", ctrl.hidden ? "show" : "hide")
+                )
             ),
-            m(".body",
-                m("ul", { class : css.list },
+            m(".body", { class : css.body },
+                !ctrl.hidden ? m("ul", { class : css.list },
                     current.items.map(function(data) {
                         var date = data.published ?
                             "published: " + data.published.format("L") :
@@ -162,7 +161,7 @@ module.exports = {
                             )
                         );
                     })
-                )
+                ) : null
             )
         );
     }

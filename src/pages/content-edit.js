@@ -18,7 +18,6 @@ var m = require("mithril"),
 module.exports = {
     controller : function() {
         var ctrl = this,
-
             ref    = db.child("content/" + m.route.param("schema") + "/" + m.route.param("id")),
             schema = db.child("schemas/" + m.route.param("schema"));
 
@@ -39,6 +38,7 @@ module.exports = {
 
         schema.on("value", function(snap) {
             ctrl.schema = snap.val();
+            ctrl.schema.key = snap.key();
 
             m.redraw();
         });
@@ -57,7 +57,7 @@ module.exports = {
             nav : m.component(nav, { schema : ctrl.schema }),
 
             content : [
-                m("div", { class : css.menu },
+                m(".head", { class : css.menu },
                     m.component(publishing, {
                         ref     : ctrl.ref,
                         data    : ctrl.data,

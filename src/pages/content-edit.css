@@ -53,15 +53,10 @@
 
 .menu {
     composes: head from "./layout/layout.css";
-    composes: global(pure-g);
-    padding: 0.3em 20px;
-
-    border-bottom: 1px solid #CCC;
-    margin-bottom: 10px;
 }
 
 .menuItem {
-    composes: global(pure-u-1-2);
+    /*composes: global(pure-u-1-2);*/
 }
 
 .publishing {
@@ -77,8 +72,7 @@
 .form {
     composes: global(pure-form), global(pure-form-stacked);
 
-    width: 70%;
-    min-width: 700px;
+    width: 100%;
     max-width: 1000px;
 
     margin: 20px auto;

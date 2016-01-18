@@ -4,13 +4,14 @@ var m      = require("mithril"),
     sluggo = require("sluggo"),
 
     db = require("../lib/firebase"),
-    
-    layout = require("./layout");
+
+    layout = require("./layout"),
+    css    = require("./schema-edit.css");
 
 module.exports = {
     controller : function() {
         var ctrl  = this;
-        
+
         ctrl.name = "";
         ctrl.slug = false;
 
@@ -35,15 +36,17 @@ module.exports = {
     view : function(ctrl) {
         return m.component(layout, {
             title   : "Create a Schema",
-            content : m("form", { onsubmit : ctrl.onsubmit },
-                m("input[name=name]", {
-                    oninput : m.withAttr("value", ctrl.oninput),
-                    value   : ctrl.name
-                }),
-                m("p",
-                    "Slug: " + (ctrl.slug || "???")
-                ),
-                m("input[type=submit]", { value : "Add" })
+            content : m(".body", { class : css.body },
+                m("form", { onsubmit : ctrl.onsubmit },
+                    m("input[name=name]", {
+                        oninput : m.withAttr("value", ctrl.oninput),
+                        value   : ctrl.name
+                    }),
+                    m("p",
+                        "Slug: " + (ctrl.slug || "???")
+                    ),
+                    m("input[type=submit]", { value : "Add" })
+                )
             )
         });
     }

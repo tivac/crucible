@@ -49,15 +49,15 @@ module.exports = {
 
                 m(".head", { class : header.head },
                     m("a", {
-                            class : header.heading,
-                            href  : "/",
+                            class  : header.heading,
+                            href   : "/",
                             config : m.route
                         },
                         m("h1", "Crucible")
                     )
                 ),
 
-                m(".body", { class : layout.body },
+                m(".body", { class : header.body },
                     ctrl.auth ? [
                         m(".schemas", { class : header.schemas },
                             (ctrl.schemas || []).map(function(schema) {
@@ -88,10 +88,7 @@ module.exports = {
 
             options.nav ? options.nav : null,
 
-            m(".content", {
-                    // class : ctrl.hidden || !options.nav ? layout.sectionHidden : layout.section
-                    class : layout.content
-                },
+            m(".content", { class : layout.content },
                 options.content ? options.content : null
             )
         );

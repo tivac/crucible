@@ -8,7 +8,7 @@ var m        = require("mithril"),
 
     watch = require("../lib/watch"),
     db    = require("../lib/firebase"),
-    
+
     layout = require("./layout"),
     css    = require("./schema-edit.css");
 
@@ -25,10 +25,10 @@ module.exports = {
         var ctrl = this,
             id   = m.route.param("schema"),
             ref  = db.child("schemas/" + id),
-            
+
             // Weird path is because this isn't browserified
             save = new Worker("/src/workers/save-schema.js");
-        
+
         ctrl.schema  = null;
         ctrl.recent  = null;
         ctrl.preview = true;
@@ -36,7 +36,7 @@ module.exports = {
         // Listen for updates from Firebase
         ref.on("value", function(snap) {
             ctrl.schema = snap.val();
-            
+
             m.redraw();
         });
 
@@ -44,7 +44,7 @@ module.exports = {
         save.addEventListener("message", function(e) {
             ref.child("fields").set(e.data);
         });
-        
+
         // Set up codemirror
         ctrl.editorSetup = function(el, init) {
             if(init) {
@@ -54,16 +54,16 @@ module.exports = {
             ctrl.editor = Editor.fromTextArea(el, {
                 mode : "application/javascript",
                 lint : true,
-                
+
                 indentUnit   : 4,
                 smartIndent  : false,
                 lineNumbers  : true,
                 lineWrapping : true,
-                
+
                 // Plugin options
                 styleActiveLine  : true,
                 continueComments : true,
-                
+
                 autoCloseBrackets : true,
                 matchBrackets     : true,
 
@@ -72,10 +72,10 @@ module.exports = {
                         if(cm.somethingSelected()) {
                             return cm.indentSelection("add");
                         }
-                        
+
                         cm.execCommand(cm.options.indentWithTabs ? "insertTab" : "insertSoftTab");
                     },
-                    
+
                     "Shift-Tab" : function(cm) {
                         cm.indentSelection("subtract");
                     }
@@ -85,7 +85,7 @@ module.exports = {
             // Respond to editor changes, but debounced.
             ctrl.editor.on("changes", debounce(ctrl.editorChanged, 100, { maxWait : 10000 }));
         };
-        
+
         // Handle codemirror change events
         ctrl.editorChanged = function() {
             var text = ctrl.editor.doc.getValue();
@@ -93,15 +93,15 @@ module.exports = {
             ref.child("source").set(text);
             save.postMessage(text);
         };
-        
+
         ctrl.previewChanged = function(e) {
             var el = e.target;
-            
+
             ctrl.preview = el.validity.valid;
-            
+
             ref.child("preview").set(el.value);
         };
-        
+
         watch(ref);
     },
 
@@ -109,43 +109,45 @@ module.exports = {
         if(!ctrl.schema) {
             return m.component(layout);
         }
-        
+
         return m.component(layout, {
             title   : "Edit - " + ctrl.schema.name,
             content : [
-                m("div", { class : css.meta },
-                    m("h3", "Metadata"),
-                    m("label", { class : css.label, for : "preview" }, "Preview URL Base"),
-                    m("input", {
-                        id    : "preview",
-                        class : css[ctrl.preview ? "preview" : "previewError"],
-                        type  : "url",
-                        value : ctrl.schema.preview || "",
-                        
-                        oninput : ctrl.previewChanged,
-                        config  : function(el, init) {
-                            if(init) {
-                                return;
-                            }
-                            
-                            ctrl.preview = el.validity.valid;
-                        }
-                    }),
-                    m("p", { class : css.note }, ctrl.schema.preview ? ctrl.schema.preview + "-0IhUBgUFfhyLQ2m6s5x" : null)
-                ),
-                m("div", { class : css.contents },
-                    m("div", { class : css.editor },
-                        m("h3", "Field Definitions"),
-                        m("textarea", { config : ctrl.editorSetup },
-                            ctrl.schema.source || "{}"
-                        )
-                    ),
+                m(".body", { class : css.body },
+                        m("div", { class : css.meta },
+                        m("h3", "Metadata"),
+                        m("label", { class : css.label, for : "preview" }, "Preview URL Base"),
+                        m("input", {
+                            id    : "preview",
+                            class : css[ctrl.preview ? "preview" : "previewError"],
+                            type  : "url",
+                            value : ctrl.schema.preview || "",
 
-                    m("div", { class : css.fields },
-                        m("h3", "Preview"),
-                        m.component(children, {
-                            details : ctrl.schema.fields
-                        })
+                            oninput : ctrl.previewChanged,
+                            config  : function(el, init) {
+                                if(init) {
+                                    return;
+                                }
+
+                                ctrl.preview = el.validity.valid;
+                            }
+                        }),
+                        m("p", { class : css.note }, ctrl.schema.preview ? ctrl.schema.preview + "-0IhUBgUFfhyLQ2m6s5x" : null)
+                    ),
+                    m("div", { class : css.contents },
+                        m("div", { class : css.editor },
+                            m("h3", "Field Definitions"),
+                            m("textarea", { config : ctrl.editorSetup },
+                                ctrl.schema.source || "{}"
+                            )
+                        ),
+
+                        m("div", { class : css.fields },
+                            m("h3", "Preview"),
+                            m.component(children, {
+                                details : ctrl.schema.fields
+                            })
+                        )
                     )
                 )
             ]
