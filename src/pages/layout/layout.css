@@ -1,102 +1,131 @@
+@value headerWidth: 180px;
+@value navWidth:    340px;
+
+@value sm: 35.5em;
+@value md: 48em;
+@value lg: 64em;
+@value xl: 80em;
+
+@value small:  screen and (min-width: sm);
+@value medium: screen and (min-width: md);
+@value large:  screen and (min-width: lg);
+@value xlarge: screen and (min-width: xl);
+
 :global(html),
 :global(body) {
     width: 100%;
     height: 100%;
 }
 
-.outer {
-    height: 100%;
-
+.horizontal {
     display: flex;
+}
 
+.vertical {
+    display: flex;
     flex-direction: column;
 }
 
-.horizontal {
+.outer {
+    /*composes: global(pure-g);*/
     display: flex;
-    align-items: center;
+    flex-flow: column nowrap;
 }
-
+.header,
+.nav,
+.content {
+    /*composes: global(pure-u);*/
+    width: 100%;
+}
 .header {
-    composes: horizontal;
+    z-index: 1;
+    font-size: 0.8em;
+    color: #FFF;
+    background: #2F343C;
+}
+.nav {
+    display: none;
+    border-right: solid 1px #CCC;
+    background: #EEE;
+}
 
+.head {
+    /*composes: global(pure-g);*/
+    display: flex;
+
+    flex-flow: row nowrap;
     justify-content: space-between;
-    margin-bottom: 10px;
+    align-items: stretch;
 
-    background: #DDD;
+    flex: 0 0 48px;
+
+    padding: 0.3em 20px;
+    border-bottom: solid 1px #CCC;
+}
+.body {
+    /*composes: global(pure-g);*/
+    display: flex;
+
+    flex-flow: column nowrap;
+    flex: 1 0 auto;
+
+    overflow-y: auto;
+}
+.header .body {
+    display: none;
+}
+.content .body {
+    padding: 1em 20px;
 }
 
-.heading {
-    flex: 1;
+@media small {
+    .outer {
+        height: 100%;
+        flex-flow: row nowrap;
+    }
+    .header,
+    .nav,
+    .content {
+        height: 100%;
+        flex-flow: column nowrap;
+    }
+    .header,
+    .content {
+        display: flex;
+    }
+    .header {
+        flex: 0 0 180px;
+    }
+    .header .body {
+    display: flex;
 
-    font-size: 1.2em;
-    margin: 0;
+    flex-flow: column nowrap;
+    flex: 1 0 auto;
+
+    overflow-y: auto;
+    }
+    .content {
+        flex: 1;
+    }
 }
 
-.heading a,
-.heading a:active,
-.heading a:visited {
-    display: block;
-    padding: 0.5em 1em;
-
-    text-decoration: none;
-    color: #333;
+@media medium {
+    .nav {
+        display: flex;
+        flex: 0 0 340px;
+    }
 }
 
-.heading a:hover {
-    color: #CCC;
-    background: #444;
-}
-
-.schemas {
-    composes: horizontal;
-
-    flex: 4 0 50%;
-
-    margin: 0;
-    list-style: none;
-}
-
-.schema,
-.schema:active,
-.schema:visited {
-    padding: 11px 10px;
-
-    text-decoration: none;
-    color: #333;
-}
-
-.schema:hover {
-    color: #CCC;
-    background: #444;
-}
-
-.active {
-    composes: schema;
-
-    color: #CCC;
-    background: #666;
-}
-
-.add {
-    composes: color from "../../buttons.css";
-
-    background: rgb(177,173,164);
-}
-
-.logout {
-    composes: color from "../../buttons.css";
-
-    background: rgb(240,128,128);
-    margin-left: 5px;
-}
 
 .progress {
-    height: 10px;
-    background: #EEE;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
 
-    position: relative;
-    overflow: hidden;
+    height: 3px;
+
+    background: #EEE;
 }
 
 .progress::before,

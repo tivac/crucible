@@ -28,16 +28,22 @@ module.exports = {
 
     view : function(ctrl, options) {
         return m("div", { class : options.class },
-            m("span",
-                "Version: " + (options.data.version || 1)
-            ),
-            m("a", {
-                href : "/content/" + ctrl.schema + "/" + ctrl.id + "/history"
-            }, "History"),
-            m("button", {
-                class   : css.save,
-                onclick : ctrl.snapshot
-            }, "Save")
+            m("div", { class : css.verHist },
+                m(".pure-u",
+                    m("div",
+                        "Version: " + (options.data.version || 1)
+                    ),
+                    m("a", {
+                        href : "/content/" + ctrl.schema + "/" + ctrl.id + "/history"
+                    }, "History")
+                ),
+                m(".pure-u",
+                    m("button", {
+                        class   : css.save,
+                        onclick : ctrl.snapshot
+                    }, "Save")
+                )
+            )
         );
     }
 };

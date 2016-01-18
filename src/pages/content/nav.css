@@ -1,0 +1,129 @@
+.nav {
+    composes: nav from "../layout/layout.css";
+}
+
+.navHidden {
+    composes: nav;
+    overflow: visible;
+    flex: 0 1 0;
+}
+
+.filter {
+    composes: head from "../layout/layout.css";
+    composes: global(pure-form);
+
+    overflow: hidden;
+    position: relative;
+}
+
+.text {
+    width: 100%;
+}
+
+.hide {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 100%;
+
+    padding: 0 8px;
+
+    cursor: pointer;
+    background: #2F343C;
+    color: white;
+}
+.hide:hover {
+    left: auto;
+    right: 0;
+}
+.hide:before {
+    content: "";
+    position: absolute;
+    height: 0;
+    width: 0;
+
+    right: 100%;
+
+    border: solid 23.5px transparent;
+    border-right: solid 12px #2F343C;
+}
+
+.navHidden .filter {
+    padding: 0;
+    overflow: visible;
+}
+
+.show {
+    composes: hide;
+    left: auto;
+    right: 0;
+}
+.show:hover {
+    right: auto;
+    left: 0;
+}
+.show:before {
+    right: auto;
+    left: 100%;
+
+    border: solid 23.5px transparent;
+    border-left: solid 12px #2F343C;
+}
+
+.body {
+    composes: body from "../layout/layout.css";
+}
+
+
+.list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.item {
+    padding: 0;
+    border-bottom: solid 1px #CCC;
+}
+
+.published {
+    composes: item;
+
+    border-left: solid 4px #68A;
+}
+
+.anchor {
+    display: block;
+    padding: 1em 16px 1em 20px;
+
+    text-decoration: none;
+    color: #446;
+}
+.published .anchor {
+    padding-left: 16px;
+}
+
+.anchor:hover {
+    background: #FFF;
+}
+
+.heading {
+    margin: 0 0 0.2em;
+}
+
+.date {
+    margin: 0 0 0.4em;
+
+    color: #888;
+    font-size: 0.8em;
+}
+
+.excerpt {
+    margin: 0;
+
+    font-size: 0.8em;
+}

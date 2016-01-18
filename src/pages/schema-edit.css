@@ -1,15 +1,8 @@
-.page {
-    display: flex;
-    flex-direction: column;
-    
-    width: 100%;
-    height: 100%;
+.body {
+    composes: body from "./layout/layout.css";
 }
-
 .meta {
     composes: global(pure-form), global(pure-form-stacked);
-
-    padding: 10px;
 }
 
 .label {
@@ -28,7 +21,7 @@
 
 .contents {
     composes: global(pure-g);
-    
+
     flex: 4;
     overflow-y: auto;
 }

@@ -2,10 +2,14 @@
 
 .publish {
     composes: primary from buttons_css;
-    
+
     margin-left: 10px;
 }
 
 .disabled {
     composes: publish;
+}
+
+.date {
+    padding: 0.3em 0.6em 0.35em !important; /*lol*/
 }

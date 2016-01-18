@@ -8,6 +8,7 @@ var m = require("mithril"),
     watch    = require("../lib/watch"),
 
     layout = require("./layout"),
+    nav    = require("./content/nav"),
 
     publishing = require("./content-edit/publishing"),
     versioning = require("./content-edit/versioning"),
@@ -40,6 +41,7 @@ module.exports = {
 
         schema.on("value", function(snap) {
             ctrl.schema = snap.val();
+            ctrl.schema.key = snap.key();
 
             m.redraw();
         });
@@ -53,19 +55,12 @@ module.exports = {
         }
 
         return m.component(layout, {
-            title   : ctrl.data.name,
+            title : ctrl.data.name,
+
+            nav : m.component(nav, { schema : ctrl.schema }),
+
             content : [
-                m("h1", { class : css.heading },
-                    m("span", { class : css.schema }, ctrl.schema.name, m.trust("&nbsp;/&nbsp;")),
-                    m("span", {
-                            class : css.title,
-                            contenteditable : true,
-                            oninput : m.withAttr("innerText", update.bind(null, ctrl.ref, "name"))
-                        },
-                        ctrl.data.name || ""
-                    )
-                ),
-                m("div", { class : css.menu },
+                m(".head", { class : css.menu },
                     m.component(publishing, {
                         ref     : ctrl.ref,
                         data    : ctrl.data,
@@ -89,27 +84,37 @@ module.exports = {
                         class : css.version
                     })
                 ),
-                m("form", {
-                        class  : css.form,
-                        config : function(el, init) {
-                            if(init) {
-                                return;
+                m(".body", { class : css.body },
+                    m("h2", { class : css.schema }, m.trust("/"), ctrl.schema.name, m.trust("/")),
+                    m("h1", {
+                            class : css.title,
+                            contenteditable : true,
+                            oninput : m.withAttr("innerText", update.bind(null, ctrl.ref, "name"))
+                        },
+                        ctrl.data.name || ""
+                    ),
+                    m("form", {
+                            class  : css.form,
+                            config : function(el, init) {
+                                if(init) {
+                                    return;
+                                }
+
+                                ctrl.form = el;
+
+                                // force a redraw so publishing component can get
+                                // new args w/ actual validity
+                                m.redraw();
                             }
-
-                            ctrl.form = el;
-
-                            // force a redraw so publishing component can get
-                            // new args w/ actual validity
-                            m.redraw();
-                        }
-                    },
-                    m.component(children, {
-                        details : ctrl.schema.fields,
-                        ref     : ctrl.ref.child("fields"),
-                        data    : ctrl.data.fields || {},
-                        state   : ctrl.data.fields,
-                        root    : ctrl.ref
-                    })
+                        },
+                        m.component(children, {
+                            details : ctrl.schema.fields,
+                            ref     : ctrl.ref.child("fields"),
+                            data    : ctrl.data.fields || {},
+                            state   : ctrl.data.fields,
+                            root    : ctrl.ref
+                        })
+                    )
                 )
             ]
         });

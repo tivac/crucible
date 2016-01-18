@@ -5,3 +5,8 @@
 
     margin-left: 10px;
 }
+
+.verHist {
+    composes: global(pure-g);
+    justify-content: flex-end;
+}

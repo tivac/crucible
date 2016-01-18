@@ -2,17 +2,10 @@
 
 /* Metadata controls */
 .metas {
-    composes: global(pure-g);
-    
-    justify-content: space-between;
-    
-    margin: 5px 0 10px;
+    composes: head from "./layout/layout.css";
 }
 
 .meta {
-    composes: global(pure-u-1-2);
-    
-    padding: 0 5px;
 }
 
 .addMeta {
@@ -21,7 +14,7 @@
 
 .editMeta {
     composes: meta;
-    
+
     text-align: right;
 }
 
@@ -31,4 +24,7 @@
 
 .edit {
     composes: button from buttons_css;
+}
+.body {
+    composes: body from "./layout/layout.css";
 }
