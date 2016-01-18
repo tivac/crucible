@@ -4,9 +4,9 @@ var m      = require("mithril"),
     get    = require("lodash.get"),
     assign = require("lodash.assign"),
 
-    input = require("./_input"),
+    input = require("./lib/input"),
 
-    css = require("./types.css"),
+    css = require("./lib/types.css"),
 
     // Bound below
     types;
@@ -60,8 +60,11 @@ types = {
     select       : require("./select"),
     textarea     : require("./textarea"),
 
+    // Non-standard input fields
+    radio    : require("./radio"),
+    checkbox : require("./checkbox"),
+
     // These are all just variations on the input type
-    checkbox : input("checkbox"),
     date     : input("date"),
     datetime : input("datetime-local"),
     email    : input("email"),

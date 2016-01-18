@@ -20,14 +20,12 @@ module.exports = {
             db.authWithPassword({
                 email : form.email.value,
                 password : form.password.value
-            }, function(error, auth) {
+            }, function(error) {
                 if(error) {
                     ctrl.error = error.message;
                     
                     return m.redraw();
                 }
-
-                console.log(auth); // TODO: REMOVE DEBUGGING
                 
                 document.location = "/";
             });

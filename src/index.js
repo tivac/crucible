@@ -1,11 +1,11 @@
 /* global crucible */
 "use strict";
 
-// Don't actually want the exports, just want it bundled
-require("./global.css");
-
 var db     = require("./lib/firebase"),
     routes = require("./routes");
+
+// Don't actually want the exports, just want it bundled
+require("./global.css");
 
 // IIFE so I can return w/o complaints from ESLint
 (function() {
@@ -18,4 +18,4 @@ var db     = require("./lib/firebase"),
     }
 
     routes.default();
-}())
+}());

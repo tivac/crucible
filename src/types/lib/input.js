@@ -3,22 +3,29 @@
 var m      = require("mithril"),
     assign = require("lodash.assign"),
 
-    update  = require("../lib/update"),
-    id      = require("../lib/id"),
-    types   = require("./types.css");
+    update  = require("../../lib/update"),
+    
+    hide  = require("./hide"),
+    id    = require("./id"),
+    types = require("./types.css");
 
 module.exports = function(type) {
     return {
         controller : function(options) {
             var ctrl = this;
 
-            ctrl.id = id(options)
+            ctrl.id = id(options);
         },
 
         view : function(ctrl, options) {
             var details = options.details,
-                name    = details.name;
-
+                name    = details.name,
+                hidden  = hide(options);
+            
+            if(hidden) {
+                return hidden;
+            }
+            
             if(details.required) {
                 name += "*";
             }
@@ -43,5 +50,5 @@ module.exports = function(type) {
                 ))
             );
         }
-    }
+    };
 };

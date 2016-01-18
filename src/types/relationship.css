@@ -1,1 +1,27 @@
 @import "../../node_modules/awesomplete/awesomplete.css";
+
+@value buttons_css: "../buttons.css";
+
+.relationships {
+    margin-left: 20px;
+}
+
+.relationship {
+    composes: global(pure-g);
+    
+    align-items: center;
+}
+
+.name {
+    composes: global(pure-u);
+}
+
+.actions {
+    composes: global(pure-u);
+ 
+    margin-left: 20px;
+}
+
+.remove {
+    composes: remove from buttons_css;
+}

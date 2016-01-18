@@ -18,9 +18,12 @@ var m = require("mithril"),
 module.exports = {
     controller : function() {
         var ctrl = this,
-            ref    = db.child("content/" + m.route.param("schema") + "/" + m.route.param("id")),
+
+            id     = m.route.param("id"),
+            ref    = db.child("content/" + m.route.param("schema") + "/" + id),
             schema = db.child("schemas/" + m.route.param("schema"));
 
+        ctrl.id     = id;
         ctrl.ref    = ref;
         ctrl.data   = null;
         ctrl.schema = null;
@@ -64,6 +67,17 @@ module.exports = {
                         class   : css.publishing,
                         enabled : ctrl.form && ctrl.form.checkValidity()
                     }),
+                    m("div", { class : css.actions }, [
+                        m("a", {
+                                title  : "Preview",
+                                href   : ctrl.schema.preview + ctrl.id,
+                                target : "_blank"
+                            },
+                            m("svg", { class : css.preview },
+                                m("use", { href : "/src/icons.svg#icon-preview" })
+                            )
+                        )
+                    ]),
                     m.component(versioning, {
                         ref   : ctrl.ref,
                         data  : ctrl.data,
@@ -97,6 +111,7 @@ module.exports = {
                             details : ctrl.schema.fields,
                             ref     : ctrl.ref.child("fields"),
                             data    : ctrl.data.fields || {},
+                            state   : ctrl.data.fields,
                             root    : ctrl.ref
                         })
                     )

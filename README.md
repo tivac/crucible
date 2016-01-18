@@ -3,6 +3,8 @@ crucible
 
 Mithril.js single-page application talking to FireBase to build a customizable API CMS.
 
+![Crucible](https://cloud.githubusercontent.com/assets/921652/12213718/8ed4ca7a-b632-11e5-8f4e-b166c786de28.png)
+
 ## Installation/Development
 
 1. Clone
@@ -12,7 +14,81 @@ Mithril.js single-page application talking to FireBase to build a customizable A
 
 ## Usage
 
-You'll want to create a schema first. Schemas are JSON-ish documents that look something like this.
+You'll want to create a schema first. Schemas are JSON-ish documents that contain some number of fields.
+
+Once you've created a schema you can create instances of that schema. All edits are synced in near-real-time to FireBase, so your data should always be in sync.
+
+### Input Fields
+
+#### `text`
+
+Simple `<input type="text">` field
+
+#### `textarea`
+
+A `<textarea>` that will automatically grow in height (to a reasonable maximum) to fit its content.
+
+#### `number`
+
+Simple `<input type="number">` field
+
+#### `date`
+
+Simple `<input type="date">` field
+
+#### `datetime`
+
+Simple `<input type="datetime-local">` field
+
+#### `email`
+
+Simple `<input type="email">` field
+
+#### `url`
+
+Simple `<input type="url">` field
+
+#### `radio`
+
+A group of `<input type="radio">` fields
+
+#### `checkbox`
+
+A single `<input type="checkbox">` field
+
+#### `select`
+
+A `<select>` and a number of `<option>` elements contained within
+
+#### `relationship`
+
+Renders an input that autocompletes entries in the specified schema to set up many-to-many relationships.
+
+### Structural Fields
+
+#### `fieldset`
+
+Renders a `<fieldset>` (with an optional `<legend>`) that will wrap all the child elements
+
+#### `repeating`
+
+Allows for repeating a group of child fields multiple times
+
+#### `split`
+
+Split multiple fields horizontally.
+
+#### `tabs`
+
+Group fields into a series of tabs.
+
+### Miscellaneous Fields
+
+#### `instructions`
+
+Provide instructions for CMS end-users.
+
+### Example schema
 
 ```js
 {
@@ -92,10 +168,23 @@ You'll want to create a schema first. Schemas are JSON-ish documents that look s
             },
             three : 3,
         }
+    },
+
+    // Checkbox
+    Checkbox : {
+        type : "checkbox"
+    },
+
+    // Radio buttons
+    Radio : {
+        type : "radio",
+        options : {
+            one : "foo",
+            two : {
+                value : "bar",
+                checked : true
+            }
+        }
     }
 }
 ```
-
-(A proper schema for all the supported types of fields is on the todo list)
-
-Once you've created a schema you can create instances of that schema. All edits are synced in near-real-time to FireBase, so your data should always be in sync.

@@ -3,6 +3,8 @@
 var m      = require("mithril"),
     assign = require("lodash.assign"),
 
+    hide = require("./lib/hide"),
+
     children     = require("./children"),
     instructions = require("./instructions"),
     css          = require("./split.css");
@@ -12,7 +14,12 @@ module.exports = {
     decorative : true,
 
     view : function(ctrl, options) {
-        var details = options.details;
+        var details = options.details,
+            hidden  = hide(options);
+            
+        if(hidden) {
+            return hidden;
+        }
 
         return m("div", { class : css.container },
             details.instructions ? m.component(instructions, { details : details.instructions }) : null,

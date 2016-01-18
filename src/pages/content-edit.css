@@ -1,23 +1,32 @@
 @import "../../node_modules/codemirror/lib/codemirror.css";
-
-.editable {
-    border-bottom: solid 2px #930;
-    background: #EEE;
-}
-
-.editable:hover {
-    border-bottom-color: #B40;
-    background: #FBFBFB;
-}
-.editable:focus {
-    background: #FFF;
-    outline: none;
-    border-bottom-color: #D60;
-}
+@value icons_css: "../icons.css";
 
 .body {
     composes: body from "./layout/layout.css";
 }
+
+.actions {
+    composes: menuItem;
+    
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+}
+
+.action {
+    composes: icon from icons_css;
+
+    color: #000;
+    transition: color 0.1s ease-in;
+}
+
+
+
+.preview {
+    composes: action;
+}
+
 
 .heading {
     composes: global(pure-g);
@@ -27,6 +36,7 @@
 }
 
 .schema {
+    
     margin: 0;
     color: #CCC;
     font-size: 1em;
@@ -53,10 +63,12 @@
 
 .menu {
     composes: head from "./layout/layout.css";
+    
 }
 
 .menuItem {
-    /*composes: global(pure-u-1-2);*/
+    composes: global(pure-u-1-2);
+    
 }
 
 .publishing {

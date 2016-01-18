@@ -22,7 +22,7 @@ for(x = 0; x < count; x++) {
         created : faker.date.past().valueOf(),
         updated : faker.date.recent().valueOf(),
         fields  : {
-            "make-your-choice": faker.random.arrayElement([ 1, 2, 3 ]),
+            "make-your-choice" : faker.random.arrayElement([ 1, 2, 3 ]),
             number : faker.random.number(),
             tabs : faker.random.objectElement({
                 en : {
