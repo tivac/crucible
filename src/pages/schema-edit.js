@@ -8,7 +8,9 @@ var m        = require("mithril"),
     watch  = require("../lib/watch"),
     db     = require("../lib/firebase"),
     update = require("../lib/update"),
-    
+
+    capitalize = require("../lib/capitalize"),
+
     editor = require("./schema-edit/editor"),
 
     layout = require("./layout"),
@@ -19,7 +21,7 @@ module.exports = {
         var ctrl = this,
             id   = m.route.param("schema"),
             ref  = db.child("schemas/" + id);
-            
+
         ctrl.ref     = ref;
         ctrl.schema  = null;
         ctrl.data    = {};
@@ -31,24 +33,24 @@ module.exports = {
         // Get Firebase data
         ref.on("value", function(snap) {
             ctrl.schema = snap.val();
-            
+
             if(!ctrl.preview.value) {
                 ctrl.preview.value = ctrl.schema.preview || "";
             }
 
             m.redraw();
         });
-        
+
         // Event Handlers
         ctrl.previewChanged = function(e) {
             var el = e.target;
 
             ctrl.preview.valid = el.validity.valid;
             ctrl.preview.value = el.value;
-            
+
             ref.child("preview").set(el.value);
         };
-        
+
         watch(ref);
     },
 
@@ -56,9 +58,9 @@ module.exports = {
         if(!ctrl.schema) {
             return m.component(layout);
         }
-        
+
         return m.component(layout, {
-            title   : "Edit - " + ctrl.schema.name,
+            title   : "Edit - " + capitalize(ctrl.schema.name),
             content : [
                 m(".body", { class : css.body },
                         m("div", { class : css.meta },

@@ -11,6 +11,8 @@ var m      = require("mithril"),
     update   = require("../lib/update"),
     watch    = require("../lib/watch"),
 
+    capitalize = require("../lib/capitalize"),
+
     layout = require("./layout"),
     nav    = require("./content-edit/nav"),
 
@@ -26,7 +28,7 @@ module.exports = {
             id     = m.route.param("id"),
             schema = db.child("schemas/" + m.route.param("schema")),
             ref    = db.child("content/" + m.route.param("schema") + "/" + id);
-        
+
         ctrl.id     = id;
         ctrl.ref    = ref;
         ctrl.data   = null;
@@ -40,23 +42,23 @@ module.exports = {
 
             m.redraw();
         });
-        
+
         // No sense doing any work if we don't have an id to operate on
         if(!id) {
             return;
         }
-        
+
         // On updates from firebase we need to merge in fields carefully
         ref.on("value", function(snap) {
             var data = snap.val();
-            
+
             ctrl.data = assign(data, {
                 fields : merge(data.fields, ctrl.data.fields)
             });
 
             m.redraw();
         });
-        
+
         watch(ref);
     },
 
@@ -64,9 +66,9 @@ module.exports = {
         if(!ctrl.schema) {
             return m.component(layout);
         }
-        
+
         return m.component(layout, {
-            title : get(ctrl.data, "name"),
+            title : capitalize(get(ctrl.data, "name")) + " | " + capitalize(ctrl.schema.name),
 
             nav : m.component(nav, { schema : ctrl.schema }),
 

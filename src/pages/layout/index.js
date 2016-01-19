@@ -62,14 +62,14 @@ module.exports = {
                         m("div", { class : nav.schemas },
                             (ctrl.schemas || []).map(function(schema) {
                                 var url = "/content/" + schema.key;
-                                
+
                                 return m("div", { class : nav[route.indexOf(url) === 0 ? "active" : "schema"] },
                                     m("a", {
                                         class  : nav.link,
                                         href   : url,
                                         config : m.route
                                     }, schema.name),
-                                    
+
                                     m("a", {
                                             class  : nav.edit,
                                             title  : "Edit Schema",

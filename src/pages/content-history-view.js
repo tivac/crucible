@@ -4,9 +4,11 @@ var m = require("mithril"),
 
     children = require("../types/children"),
     db       = require("../lib/firebase"),
-    
+
+    capitalize = require("../lib/capitalize"),
+
     layout = require("./layout"),
-    
+
     css = require("./content-edit.css");
 
 module.exports = {
@@ -17,7 +19,7 @@ module.exports = {
             version = m.route.param("version"),
 
             ref;
-        
+
         ctrl.data   = null;
         ctrl.schema = null;
 
@@ -36,7 +38,7 @@ module.exports = {
 
             m.redraw();
         });
-        
+
         db.child("schemas/" + schema).on("value", function(snap) {
             ctrl.schema = snap.val();
 
@@ -50,7 +52,7 @@ module.exports = {
         }
 
         return m.component(layout, {
-            title   : ctrl.data.name,
+            title   : capitalize(ctrl.data.name),
             content : [
                 m("h1", { class : css.heading },
                     m("span", { class : css.schema }, ctrl.schema.name, m.trust("&nbsp;/&nbsp;")),

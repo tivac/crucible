@@ -11,6 +11,8 @@ var m        = require("mithril"),
     db     = require("../../lib/firebase"),
     remove = require("../../lib/remove"),
 
+    capitalize = require("../../lib/capitalize"),
+
     css = require("./nav.css"),
 
     size = 30;
@@ -104,6 +106,10 @@ module.exports = {
     view : function(ctrl) {
         var pages = [],
             current;
+
+        if(!m.route.param("id")) {
+            document.title = capitalize(ctrl.schema.name);
+        }
 
         if(ctrl.results) {
             current = {
