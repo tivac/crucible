@@ -3,8 +3,6 @@
 var m      = require("mithril"),
     assign = require("lodash.assign"),
 
-    update = require("../lib/update"),
-
     id    = require("./lib/id"),
     hide  = require("./lib/hide"),
     types = require("./lib/types.css"),
@@ -41,7 +39,6 @@ module.exports = {
 
     view : function(ctrl, options) {
         var details = options.details,
-            value   = options.data,
             name    = details.name,
             hidden  = hide(options),
             match;
@@ -53,7 +50,7 @@ module.exports = {
         if(details.required) {
             name += "*";
         }
-
+        
         ctrl.checked(details, options.data);
 
         return m("div", { class : options.class },
@@ -73,7 +70,7 @@ module.exports = {
                             checked : opt.checked,
 
                             // events
-                            onclick : m.withAttr("value", update.bind(null, options.ref, null))
+                            onclick : m.withAttr("value", options.update(options.path))
                         }),
                         " " + opt.name
                     )

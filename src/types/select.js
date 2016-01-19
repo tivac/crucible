@@ -20,7 +20,7 @@ module.exports = {
         ctrl.onchange = function(options, index) {
             var opt = options.details.children[index];
 
-            options.ref.set(optvalue(opt));
+            options.update(options.path, optvalue(opt));
         };
     },
 
@@ -61,7 +61,7 @@ module.exports = {
                     required : details.required ? "required" : null,
 
                     // events
-                    onchange : options.ref && m.withAttr("selectedIndex", ctrl.onchange.bind(ctrl, options))
+                    onchange : m.withAttr("selectedIndex", ctrl.onchange.bind(null, options))
                 }, details.attrs),
                 details.children.map(function(opt) {
                     return m("option", {

@@ -4,7 +4,7 @@ var required = /\*$/,
     types;
 
 function slugger(name) {
-    return name.replace(/\s+/g, "-").replace(/[^a-zA-Z0-9-]/g, "").toLowerCase();
+    return name.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
 }
 
 function process(obj) {
@@ -27,7 +27,10 @@ function process(obj) {
         }
 
         field.name = name;
-        field.slug = slugger(name);
+        
+        if(!field.key) {
+            field.key = slugger(name);
+        }
         
         if(field.show) {
             field.show.field = slugger(field.show.field);
@@ -40,12 +43,12 @@ function process(obj) {
         }
 
         if(field.type === "tabs") {
-            field.children = Object.keys(field.tabs).map(function(tabName) {
-                var tab = field.tabs[tabName];
+            field.children = Object.keys(field.tabs).map(function(label) {
+                var tab = field.tabs[label];
 
                 return {
-                    name     : tabName,
-                    slug     : slugger(tabName),
+                    name     : label,
+                    key      : tab.key || slugger(label),
                     children : process(tab)
                 };
             });
@@ -60,11 +63,11 @@ function process(obj) {
         }
 
         if(field.type === "select") {
-            field.children = Object.keys(field.options).map(function(name) {
-                var details = field.options[name];
+            field.children = Object.keys(field.options).map(function(label) {
+                var details = field.options[label];
 
                 return {
-                    name     : name,
+                    name     : label,
                     value    : details.value || details,
                     selected : details.selected || false
                 };
@@ -72,13 +75,14 @@ function process(obj) {
 
             delete field.options;
         }
-
+        
+        // TODO: this and select are almost identical, unify them
         if(field.type === "radio") {
-            field.children = Object.keys(field.options).map(function(name) {
-                var details = field.options[name];
+            field.children = Object.keys(field.options).map(function(label) {
+                var details = field.options[label];
 
                 return {
-                    name    : name,
+                    name    : label,
                     value   : details.value || details,
                     checked : details.checked || false
                 };
@@ -86,13 +90,16 @@ function process(obj) {
 
             delete field.options;
         }
-
+        
+        // TODO: This and tab are almost identical, unify them
         if(field.type === "split") {
-            field.children = Object.keys(field.sections).map(function(name) {
+            field.children = Object.keys(field.sections).map(function(label) {
+                var section = field.sections[label];
+                
                 return {
-                    name     : name,
-                    slug     : slugger(name),
-                    children : process(field.sections[name])
+                    name     : label,
+                    key      : section.key || slugger(label),
+                    children : process(section)
                 };
             });
 

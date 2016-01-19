@@ -1,13 +1,3 @@
-.field {
-    composes: field from "./lib/types.css";
-    composes: global(pure-menu), global(pure-menu-horizontal);
-}
-
-.first {
-    composes: first from "./lib/types.css";
-    composes: field;
-}
-
 .nav {
     display: flex;
     flex-direction: row;
@@ -56,7 +46,7 @@
 
 .contents {
     border: 1px solid #CCC;
-    padding: 0 20px 20px;
+    padding: 20px;
 
     display: none;
 }

@@ -3,8 +3,6 @@
 var m      = require("mithril"),
     assign = require("lodash.assign"),
 
-    update  = require("../../lib/update"),
-    
     hide  = require("./hide"),
     id    = require("./id"),
     types = require("./types.css");
@@ -44,7 +42,7 @@ module.exports = function(type) {
                         required : details.required ? "required" : null,
 
                         // events
-                        oninput : options.ref && m.withAttr("value", update.bind(null, options.ref, null))
+                        oninput : m.withAttr("value", options.update(options.path))
                     },
                     details.attrs || {}
                 ))

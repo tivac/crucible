@@ -86,16 +86,20 @@ module.exports = {
             
             e.target.value = "";
             
-            options.ref.child(id).set(true);
+            options.update(options.path.concat(id), true);
 
-            content.child(id + "/relationships/" + options.root.key()).set(true);
+            if(options.root) {
+                content.child(id + "/relationships/" + options.root.key()).set(true);
+            }
         };
 
         // BREAK THE RELATIONSHIP
         ctrl.remove = function(id) {
-            options.ref.child(id).remove();
-
-            content.child(id + "/relationships/" + options.root.key()).remove();
+            options.update(options.path.concat(id), false);
+            
+            if(options.root) {
+                content.child(id + "/relationships/" + options.root.key()).remove();
+            }
         };
         
         if(options.data) {
