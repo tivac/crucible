@@ -157,10 +157,20 @@ module.exports = {
                     m("ul", { class : css.list },
                         current.items.map(function(data) {
                             var url = "/content/" + ctrl.schema.key + "/" + data.key,
+                                cssClass = css.item;
 
-                                inactive = data.published ? "published" : "item";
+                            if(data.published && route.indexOf(url) === 0) {
+                                cssClass = css.activePublished;
+                            } else {
+                                if(data.published) {
+                                    cssClass = css.published;
+                                }
+                                if(route.indexOf(url) === 0) {
+                                    cssClass = css.active;
+                                }
+                            }
 
-                            return m("li", { class : css[route.indexOf(url) === 0 ? "active" : inactive] },
+                            return m("li", { class : cssClass },
                                 m("a", {
                                     class  : css.anchor,
                                     href   : "/content/" + ctrl.schema.key + "/" + data.key,
