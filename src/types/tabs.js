@@ -43,9 +43,10 @@ module.exports = {
             tabs.map(function(tab, idx) {
                 return m("div", { class : css[idx === ctrl.tab ? "contents-active" : "contents"] },
                     m.component(children, assign({}, options, {
+                        class   : false,
                         details : tab.children,
-                        data    : options.data && options.data[tab.slug],
-                        ref     : options.ref  && options.ref.child(tab.slug)
+                        data    : options.data && options.data[tab.key],
+                        path    : options.path.concat(tab.key)
                     }))
                 );
             })

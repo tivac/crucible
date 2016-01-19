@@ -18,8 +18,8 @@ module.exports = {
         ctrl.id   = id(options);
         ctrl.text = options.data || "";
 
-        ctrl.resize = function(value) {
-            update(options.ref, null, value);
+        ctrl.resize = function(options, value) {
+            options.update(options.path, value);
 
             ctrl.text = value;
         };
@@ -52,7 +52,7 @@ module.exports = {
                         required : details.required ? "required" : null,
 
                         // events
-                        oninput : m.withAttr("value", ctrl.resize)
+                        oninput : m.withAttr("value", ctrl.resize.bind(null, options))
                     },
                     details.attrs || {}
                 ), options.data || "")

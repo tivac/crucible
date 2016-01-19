@@ -18,7 +18,7 @@ function child(ctrl, options, data, idx) {
             details : options.details.children,
             class   : css.fields,
             data    : data,
-            ref     : options.ref && options.ref.child(idx)
+            path    : options.path.concat(idx)
         })),
         m("div", { class : css.counter },
             m("button", {
@@ -40,31 +40,22 @@ module.exports = {
         ctrl.add = function(options) {
             ctrl.children += 1;
 
-            if(!options.ref) {
-                return;
-            }
-
             // Ensure that we have data placeholders for all the possible entries
             times(ctrl.children, function(idx) {
                 if(options.data && options.data[idx]) {
                     return;
                 }
-
-                options.ref.child(idx).set("placeholder");
+                
+                options.update(options.path.concat(idx), "placeholder");
             });
         };
 
         ctrl.remove = function(options, data, idx) {
-            // No ref means we don't much care
-            if(!options.ref || !options.data) {
-                return --ctrl.children;
-            }
-
             options.data.splice(idx, 1);
 
             ctrl.children = options.data.length;
-
-            options.ref.set(options.data);
+            
+            options.update(options.path, options.data);
         };
     },
 

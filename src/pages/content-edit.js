@@ -1,7 +1,10 @@
 "use strict";
 
-var m   = require("mithril"),
-    get = require("lodash.get"),
+var m      = require("mithril"),
+    get    = require("lodash.get"),
+    set    = require("lodash.set"),
+    merge  = require("lodash.merge"),
+    assign = require("lodash.assign"),
 
     children = require("../types/children"),
     db       = require("../lib/firebase"),
@@ -29,6 +32,7 @@ module.exports = {
         ctrl.data   = null;
         ctrl.schema = null;
         ctrl.form   = null;
+        ctrl.data   = {};
 
         schema.on("value", function(snap) {
             ctrl.schema = snap.val();
@@ -42,12 +46,17 @@ module.exports = {
             return;
         }
         
+        // On updates from firebase we need to merge in fields carefully
         ref.on("value", function(snap) {
-            ctrl.data = snap.val();
+            var data = snap.val();
+            
+            ctrl.data = assign(data, {
+                fields : merge(data.fields, ctrl.data.fields)
+            });
 
             m.redraw();
         });
-
+        
         watch(ref);
     },
 
@@ -55,7 +64,7 @@ module.exports = {
         if(!ctrl.schema) {
             return m.component(layout);
         }
-
+        
         return m.component(layout, {
             title : get(ctrl.data, "name"),
 
@@ -87,11 +96,11 @@ module.exports = {
                     })
                 ),
                 m("div", { class : css.body },
-                    m("h2", { class : css.schema }, m.trust("/"), ctrl.schema.name, m.trust("/")),
+                    m("h2", { class : css.schema }, "/" + ctrl.schema.name + "/"),
                     m("h1", {
                             class : css.title,
                             contenteditable : true,
-                            oninput : m.withAttr("innerText", update.bind(null, ctrl.ref, "name"))
+                            oninput : m.withAttr("innerText", update(ctrl.ref, ctrl.data, [ "name" ]))
                         },
                         ctrl.data.name || ""
                     ),
@@ -110,11 +119,13 @@ module.exports = {
                             }
                         },
                         m.component(children, {
+                            data   : ctrl.data.fields || {},
+                            // TODO: Change to "fields"?
                             details : ctrl.schema.fields,
-                            ref     : ctrl.ref.child("fields"),
-                            data    : ctrl.data.fields || {},
-                            state   : ctrl.data.fields,
-                            root    : ctrl.ref
+                            path   : [ "fields" ],
+                            root   : ctrl.ref,
+                            state  : ctrl.data.fields,
+                            update : update.bind(null, ctrl.ref, ctrl.data)
                         })
                     )
                 )

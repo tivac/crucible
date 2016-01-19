@@ -10,9 +10,6 @@ var m      = require("mithril"),
     css          = require("./split.css");
 
 module.exports = {
-    // Ignore this component in the data hierarchy
-    decorative : true,
-
     view : function(ctrl, options) {
         var details = options.details,
             hidden  = hide(options);
@@ -20,17 +17,16 @@ module.exports = {
         if(hidden) {
             return hidden;
         }
-
+        
         return m("div", { class : css.container },
             details.instructions ? m.component(instructions, { details : details.instructions }) : null,
             (details.children || []).map(function(section) {
                 return m("div", { class : css.section },
-                    m.component(children, {
-                        details : section.children,
-                        data    : options.data,
-                        root    : options.root,
-                        ref     : options.ref && options.ref
-                    })
+                    m.component(children, assign({}, options, {
+                        // Don't want to repeat any incoming class that children might've passed in
+                        class   : false,
+                        details : section.children
+                    }))
                 );
             })
         );

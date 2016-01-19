@@ -9,9 +9,6 @@ var m      = require("mithril"),
     css      = require("./fieldset.css");
 
 module.exports = {
-    // Ignore this component in the data hierarchy
-    decorative : true,
-
     view : function(ctrl, options) {
         var hidden = hide(options);
         

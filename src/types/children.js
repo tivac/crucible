@@ -17,8 +17,7 @@ module.exports = {
 
         return m("div", options.class ? { class : options.class } : null,
             details.map(function(field, index) {
-                var component = types[field.type || field],
-                    data, ref;
+                var component = types[field.type || field];
 
                 if(!component) {
                     return m("div",
@@ -27,19 +26,11 @@ module.exports = {
                     );
                 }
 
-                if(component.decorative) {
-                    data = options.data;
-                    ref  = options.ref;
-                } else {
-                    data = get(options, "data." + field.slug);
-                    ref  = options.ref && options.ref.child(field.slug);
-                }
-
                 return m.component(component, assign({}, options, {
                     details : field,
                     class   : css[index ? "field" : "first"],
-                    data    : data,
-                    ref     : ref
+                    data    : get(options.data, field.key),
+                    path    : options.path.concat(field.key)
                 }));
             })
         );
