@@ -1,11 +1,10 @@
 "use strict";
 
-var m = require("mithril"),
+var m          = require("mithril"),
+    capitalize = require("lodash.capitalize"),
 
     children = require("../types/children"),
     db       = require("../lib/firebase"),
-
-    capitalize = require("lodash.capitalize"),
 
     layout = require("./layout"),
 

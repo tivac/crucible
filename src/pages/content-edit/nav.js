@@ -1,17 +1,16 @@
 "use strict";
 
-var m        = require("mithril"),
-    paginate = require("paginationator"),
-    moment   = require("moment"),
-    fuzzy    = require("fuzzysearch"),
-    debounce = require("lodash.debounce"),
-    get      = require("lodash.get"),
-    slug     = require("sluggo"),
+var m          = require("mithril"),
+    paginate   = require("paginationator"),
+    moment     = require("moment"),
+    fuzzy      = require("fuzzysearch"),
+    debounce   = require("lodash.debounce"),
+    get        = require("lodash.get"),
+    capitalize = require("lodash.capitalize"),
+    slug       = require("sluggo"),
 
     db     = require("../../lib/firebase"),
     remove = require("../../lib/remove"),
-
-    capitalize = require("lodash.capitalize"),
 
     css = require("./nav.css"),
 

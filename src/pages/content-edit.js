@@ -1,17 +1,16 @@
 "use strict";
 
-var m      = require("mithril"),
-    get    = require("lodash.get"),
-    set    = require("lodash.set"),
-    merge  = require("lodash.merge"),
-    assign = require("lodash.assign"),
+var m          = require("mithril"),
+    get        = require("lodash.get"),
+    set        = require("lodash.set"),
+    merge      = require("lodash.merge"),
+    assign     = require("lodash.assign"),
+    capitalize = require("lodash.capitalize"),
 
     children = require("../types/children"),
     db       = require("../lib/firebase"),
     update   = require("../lib/update"),
     watch    = require("../lib/watch"),
-
-    capitalize = require("lodash.capitalize"),
 
     layout = require("./layout"),
     nav    = require("./content-edit/nav"),

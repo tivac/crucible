@@ -1,15 +1,14 @@
 "use strict";
 
-var m        = require("mithril"),
-    debounce = require("lodash.debounce"),
+var m          = require("mithril"),
+    debounce   = require("lodash.debounce"),
+    capitalize = require("lodash.capitalize"),
 
     children = require("../types/children"),
 
     watch  = require("../lib/watch"),
     db     = require("../lib/firebase"),
     update = require("../lib/update"),
-
-    capitalize = require("lodash.capitalize"),
 
     editor = require("./schema-edit/editor"),
 

@@ -1,11 +1,10 @@
 "use strict";
 
-var m      = require("mithril"),
-    moment = require("moment"),
+var m          = require("mithril"),
+    moment     = require("moment"),
+    capitalize = require("lodash.capitalize"),
 
     db = require("../lib/firebase"),
-
-    capitalize = require("lodash.capitalize"),
 
     layout = require("./layout"),
     css    = require("./content-history.css");
