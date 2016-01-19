@@ -21,8 +21,6 @@ function update(ref, obj, path, val) {
         return;
     }
     
-    console.log(arguments);
-
     if(ref) {
         firebase(ref, path, val);
     }

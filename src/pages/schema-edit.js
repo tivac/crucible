@@ -57,8 +57,6 @@ module.exports = {
             return m.component(layout);
         }
         
-        console.log(ctrl.data);
-
         return m.component(layout, {
             title   : "Edit - " + ctrl.schema.name,
             content : [
