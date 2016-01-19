@@ -103,6 +103,7 @@ module.exports = {
 
     view : function(ctrl) {
         var pages = [],
+            route = m.route(),
             current;
 
         if(ctrl.results) {
@@ -155,7 +156,11 @@ module.exports = {
                     null :
                     m("ul", { class : css.list },
                         current.items.map(function(data) {
-                            return m("li", { class : data.published ? css.published : css.item },
+                            var url = "/content/" + ctrl.schema.key + "/" + data.key,
+
+                                inactive = data.published ? "published" : "item";
+
+                            return m("li", { class : css[route.indexOf(url) === 0 ? "active" : inactive] },
                                 m("a", {
                                     class  : css.anchor,
                                     href   : "/content/" + ctrl.schema.key + "/" + data.key,
