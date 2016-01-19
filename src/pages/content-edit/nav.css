@@ -83,9 +83,9 @@
     padding: 0;
 }
 
-.item {
+.item, .active {
     position: relative;
-    
+
     padding: 0;
     border-bottom: solid 1px #CCC;
 }
@@ -109,6 +109,11 @@
 }
 
 .anchor:hover {
+    background: #DFDFDF;
+}
+
+.active .anchor,
+.active .anchor:hover {
     background: #FFF;
 }
 
@@ -131,28 +136,28 @@
 
 .actions {
     position: absolute;
-    
+
     top: 0;
     right: 4px;
     bottom: 0;
-    
+
     display: flex;
     flex-direction: column;
-    
+
     justify-content: center;
     align-items: center;
 }
 
 .action {
     composes: icon from icons_css;
-    
+
     color: anchor;
     transition: iconTransition;
 }
 
 .action:hover {
     color: #2F343C;
-    
+
     transition: iconTransition;
 }
 
@@ -172,7 +177,7 @@
 
 .removeIcon {
     composes: action;
-    
+
     /* work-around for https://github.com/tivac/modular-css/issues/56 */
     background: transparent;
 }
@@ -191,5 +196,3 @@
     padding: 0;
     overflow: visible;
 }
-
-
