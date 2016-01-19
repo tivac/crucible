@@ -5,7 +5,7 @@ var m      = require("mithril"),
 
     db = require("../lib/firebase"),
 
-    capitalize = require("../lib/capitalize"),
+    capitalize = require("lodash.capitalize"),
 
     layout = require("./layout"),
     css    = require("./content-history.css");

@@ -9,7 +9,7 @@ var m        = require("mithril"),
     db     = require("../lib/firebase"),
     update = require("../lib/update"),
 
-    capitalize = require("../lib/capitalize"),
+    capitalize = require("lodash.capitalize"),
 
     editor = require("./schema-edit/editor"),
 

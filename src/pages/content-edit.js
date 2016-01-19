@@ -11,7 +11,7 @@ var m      = require("mithril"),
     update   = require("../lib/update"),
     watch    = require("../lib/watch"),
 
-    capitalize = require("../lib/capitalize"),
+    capitalize = require("lodash.capitalize"),
 
     layout = require("./layout"),
     nav    = require("./content-edit/nav"),

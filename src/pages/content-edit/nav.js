@@ -11,7 +11,7 @@ var m        = require("mithril"),
     db     = require("../../lib/firebase"),
     remove = require("../../lib/remove"),
 
-    capitalize = require("../../lib/capitalize"),
+    capitalize = require("lodash.capitalize"),
 
     css = require("./nav.css"),
 
