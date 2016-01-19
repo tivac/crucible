@@ -8,7 +8,8 @@ var m        = require("mithril"),
     get      = require("lodash.get"),
     slug     = require("sluggo"),
 
-    db = require("../../lib/firebase"),
+    db     = require("../../lib/firebase"),
+    remove = require("../../lib/remove"),
 
     css = require("./nav.css"),
 
@@ -78,7 +79,7 @@ module.exports = {
 
             m.redraw();
         }, 100);
-        
+
         ctrl.remove = function(data) {
             var ref = db.child("content").child(ctrl.schema.key).child(data.key);
 
@@ -93,8 +94,6 @@ module.exports = {
                     remove(ref, function(error) {
                         if(error) {
                             console.error(error);
-                        } else {
-                            ctrl.fetch();
                         }
                     });
                 });
@@ -171,7 +170,7 @@ module.exports = {
                                     m("p", { class : css.excerpt }, data.excerpt)
                                 ),
                                 m("div", { class : css.actions },
-                                    ctrl.schema.preview ? 
+                                    ctrl.schema.preview ?
                                         m("a", {
                                                 class  : css.preview,
                                                 title  : "Preview",
