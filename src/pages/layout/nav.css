@@ -62,9 +62,15 @@
     color: inherit;
 }
 
-.schema {
-    position: relative;
+.add,
+.logout {
+    composes: link;
     
+    margin-bottom: 0.4em;
+    padding: 0.4em 16px;
+}
+
+.schema {
     opacity: 0.5;
 }
 
@@ -74,38 +80,6 @@
     background: rgba(0, 0, 0, 0.2);
 }
 
-.edit {
-    position: absolute;
-    
-    top: 0;
-    right: 4px;
-    bottom: 0px;
-    
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-    justify-content: center;
-    
-    opacity: 0;
-    
-    color: #BBB;
-    
-    color: inherit;
-}
-
-.schema:hover .edit {
-    opacity: 0.75;
-}
-
-.active .edit,
-.active:hover .edit {
-    opacity: 1;
-}
-
-.editIcon {
-    composes: icon from icons_css;
-}
-
 .active,
 .active:hover {
     composes: schema;
@@ -113,12 +87,4 @@
     opacity: 1;
 
     background: rgba(0, 0, 0, 0.4);
-}
-
-.add,
-.logout {
-    composes: link;
-    
-    margin-bottom: 0.4em;
-    padding: 0.4em 16px;
 }

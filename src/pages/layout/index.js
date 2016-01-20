@@ -68,18 +68,7 @@ module.exports = {
                                         class  : nav.link,
                                         href   : url,
                                         config : m.route
-                                    }, schema.name),
-
-                                    m("a", {
-                                            class  : nav.edit,
-                                            title  : "Edit Schema",
-                                            href   : url + "/edit",
-                                            config : m.route
-                                        },
-                                        m("svg", { class : nav.editIcon },
-                                            m("use", { href : "/src/icons.svg#icon-edit" })
-                                        )
-                                    )
+                                    }, schema.name)
                                 );
                             })
                         ),
