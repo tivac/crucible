@@ -1,9 +1,5 @@
 @value icons_css: "../../icons.css";
-
 @value small from "../../media.css";
-
-/* Bogus rule here works around https://github.com/tivac/modular-css/issues/57 */
-.fooga { }
 
 @media small {
     .sep {
