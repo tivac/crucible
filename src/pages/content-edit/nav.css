@@ -88,10 +88,14 @@
 
     padding-left: 4px;
     border-bottom: solid 1px #CCC;
+
+    transition: background-color 0.2s ease-in;
 }
 
 .item:hover {
     background: #DFDFDF;
+
+    transition: background-color 0.2s ease-in;
 }
 
 .published {
