@@ -236,13 +236,11 @@ module.exports = {
                     )
             ),
             m("div", { class : css.metas }, [
-                m("div", { class : css.addMeta },
-                    m("button", {
-                            onclick : ctrl.add,
-                            class   : css.add
-                        },
-                        "Add " + ctrl.schema.name
-                    )
+                m("button", {
+                        onclick : ctrl.add,
+                        class   : css.add
+                    },
+                    "Add " + ctrl.schema.name
                 )
             ])
         );

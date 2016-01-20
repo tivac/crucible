@@ -1,8 +1,8 @@
 @value icons_css: "../../icons.css";
 @value layout_css: "../layout/layout.css";
+@value buttons_css: "../../buttons.css";
 @value anchor: #446;
 @value iconTransition: color 0.2s ease-in;
-@value buttons_css: "../../buttons.css";
 
 .nav {
     composes: nav from layout_css;
@@ -201,14 +201,16 @@
 
 /* Metadata controls */
 .metas {
-    composes: head from layout_css;
-}
+    display: flex;
 
-.meta {
-}
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: stretch;
 
-.addMeta {
-    composes: meta;
+    flex: 0 0 48px;
+
+    padding: 0.3em 20px;
+    border-top: solid 1px #CCC;
 }
 
 .add {
