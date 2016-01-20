@@ -69,7 +69,7 @@ module.exports = {
         return m.component(layout, {
             title : capitalize(get(ctrl.data, "name")) + " | " + capitalize(ctrl.schema.name),
 
-            nav : m.component(nav, { schema : ctrl.schema }),
+            nav : m.component(nav),
 
             content : ctrl.id ? [
                 m("div", { class : css.menu },
@@ -121,6 +121,7 @@ module.exports = {
                         },
                         m.component(children, {
                             data   : ctrl.data.fields || {},
+
                             // TODO: Change to "fields"?
                             details : ctrl.schema.fields,
                             path   : [ "fields" ],

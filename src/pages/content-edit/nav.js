@@ -17,17 +17,25 @@ var m          = require("mithril"),
     size = 30;
 
 module.exports = {
-    controller : function(options) {
-        var ctrl = this;
+    controller : function() {
+        var ctrl = this,
 
-        ctrl.schema = options.schema;
+            schema = db.child("schemas/" + m.route.param("schema"));
 
         ctrl.page = 0;
 
+        ctrl.schema  = null;
         ctrl.entries = null;
         ctrl.content = null;
         ctrl.results = null;
         ctrl.hide    = false;
+
+        schema.on("value", function(snap) {
+            ctrl.schema = snap.val();
+            ctrl.schema.key = snap.key();
+
+            m.redraw();
+        });
 
         // Go get initial data
         db.child("content/" + ctrl.schema.key).orderByChild("published").on("value", function(snap) {
