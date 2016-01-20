@@ -1,8 +1,8 @@
 @value icons_css: "../../icons.css";
 @value layout_css: "../layout/layout.css";
+@value buttons_css: "../../buttons.css";
 @value anchor: #446;
 @value iconTransition: color 0.2s ease-in;
-@value colorRemove from "../../buttons.css";
 
 .nav {
     composes: nav from layout_css;
@@ -185,7 +185,7 @@
 }
 
 .removeIcon:hover {
-    color: colorRemove;
+    color: colorRemove from buttons_css;
 }
 
 .hidden {
@@ -197,4 +197,22 @@
 .hidden .filter {
     padding: 0;
     overflow: visible;
+}
+
+/* Metadata controls */
+.metas {
+    display: flex;
+
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: stretch;
+
+    flex: 0 0 48px;
+
+    padding: 0.3em 20px;
+    border-top: solid 1px #CCC;
+}
+
+.add {
+    composes: add from buttons_css;
 }
