@@ -61,6 +61,17 @@ module.exports = {
         });
 
         // Event handlers
+        ctrl.add = function() {
+            var result;
+
+            result = db.child("content/" + ctrl.schema.key).push({
+                name    : "New " + ctrl.schema.name,
+                created : db.TIMESTAMP
+            });
+
+            m.route("/content/" + ctrl.schema.key + "/" + result.key());
+        };
+
         ctrl.hide = function() {
             ctrl.hidden = !ctrl.hidden;
         };
@@ -175,11 +186,10 @@ module.exports = {
                             if(data.published && route.indexOf(url) === 0) {
                                 cssClass = css.activePublished;
                             } else {
-                                if(data.published) {
-                                    cssClass = css.published;
-                                }
                                 if(route.indexOf(url) === 0) {
                                     cssClass = css.active;
+                                } else if(data.published) {
+                                    cssClass = css.published;
                                 }
                             }
 
@@ -224,7 +234,17 @@ module.exports = {
                             );
                         })
                     )
-            )
+            ),
+            m("div", { class : css.metas }, [
+                m("div", { class : css.addMeta },
+                    m("button", {
+                            onclick : ctrl.add,
+                            class   : css.add
+                        },
+                        "Add " + ctrl.schema.name
+                    )
+                )
+            ])
         );
     }
 };
