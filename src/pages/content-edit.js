@@ -50,6 +50,11 @@ module.exports = {
         // On updates from firebase we need to merge in fields carefully
         ref.on("value", function(snap) {
             var data = snap.val();
+            
+            // Don't try to grab non-existent data
+            if(!snap.exists()) {
+                return m.route("/content/" + m.route.param("schema"));
+            }
 
             ctrl.data = assign(data, {
                 fields : merge(data.fields, ctrl.data.fields)
