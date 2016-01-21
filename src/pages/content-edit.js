@@ -67,16 +67,29 @@ module.exports = {
     },
 
     view : function(ctrl) {
+        var title;
+        
         if(!ctrl.schema) {
             return m.component(layout);
         }
+        
+        title = capitalize(get(ctrl.data, "name")) + " | " + capitalize(ctrl.schema.name);
+        
+        if(!ctrl.id) {
+            return m.component(layout, {
+                title   : title,
+                content : [
+                    m.component(nav),
+                    m("div", { class : css.empty },
+                        m("p", "Select an entry from the list")
+                    )
+                ]
+            });
+        }
 
         return m.component(layout, {
-            title : capitalize(get(ctrl.data, "name")) + " | " + capitalize(ctrl.schema.name),
-
-            nav : m.component(nav),
-
-            content : ctrl.id ? [
+            title   : title, 
+            content : [
                 m("div", { class : css.menu },
                     m.component(publishing, {
                         ref     : ctrl.ref,
@@ -136,10 +149,7 @@ module.exports = {
                         })
                     )
                 )
-            ] :
-            m("div", { class : css.empty },
-                m("p", "Select an entry from the list")
-            )
+            ]
         });
     }
 };

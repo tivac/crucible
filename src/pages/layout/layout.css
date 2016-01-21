@@ -21,7 +21,7 @@
 
 .outer {
     display: flex;
-    flex-flow: column nowrap;
+    flex-direction: column;
 }
 
 .nav,
@@ -46,7 +46,7 @@
 .head {
     display: flex;
 
-    flex-flow: row nowrap;
+    flex-direction: row;
     justify-content: space-between;
     align-items: stretch;
 
@@ -59,7 +59,7 @@
 .body {
     display: flex;
 
-    flex-flow: column nowrap;
+    flex-direction: column;
     flex: 1 0 auto;
 
     overflow-y: auto;
@@ -76,14 +76,14 @@
 @media small {
     .outer {
         height: 100%;
-        flex-flow: row nowrap;
+        flex-direction: row;
     }
     
     .header,
     .nav,
     .content {
         height: 100%;
-        flex-flow: column nowrap;
+        flex-direction: column;
     }
     
     .header,
@@ -98,7 +98,7 @@
     .header .body {
         display: flex;
 
-        flex-flow: column nowrap;
+        flex-direction: column;
         flex: 1 0 auto;
 
         overflow-y: auto;

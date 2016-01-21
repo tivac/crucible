@@ -78,7 +78,8 @@ module.exports = {
                             href   : "/content/new",
                             config : m.route
                         }, "New Schema")
-                    ] : null,
+                    ] :
+                    null,
 
                     m("a", {
                         class  : nav.logout,
@@ -87,12 +88,11 @@ module.exports = {
                     }, "Logout")
                 )
             ),
-
-            options.nav ? options.nav : null,
-
-            m(".content", { class : layout.content },
-                options.content ? options.content : null
-            )
+            options.content ?
+                m(".content", { class : layout.content },
+                    options.content
+                )  :
+                null
         );
     }
 };
