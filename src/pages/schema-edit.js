@@ -60,51 +60,52 @@ module.exports = {
 
         return m.component(layout, {
             title   : "Edit - " + capitalize(ctrl.schema.name),
-            content : m(".body", { class : css.body },
+            content : m("div", { class : layout.css.content },
                 m("div", { class : css.meta },
-                m("h3", "Metadata"),
-                m("label", { class : css.label, for : "preview" }, "Preview URL Base"),
-                m("input", {
-                    id    : "preview",
-                    class : css[ctrl.preview.valid ? "preview" : "previewError"],
-                    type  : "url",
-                    value : ctrl.preview.value || "",
+                    m("h3", "Metadata"),
+                    m("label", { class : css.label, for : "preview" }, "Preview URL Base"),
+                    m("input", {
+                        id    : "preview",
+                        class : css[ctrl.preview.valid ? "preview" : "previewError"],
+                        type  : "url",
+                        value : ctrl.preview.value || "",
 
-                    oninput : ctrl.previewChanged,
-                    config  : function(el, init) {
-                        if(init) {
-                            return;
+                        oninput : ctrl.previewChanged,
+                        config  : function(el, init) {
+                            if(init) {
+                                return;
+                            }
+
+                            ctrl.preview.valid = el.validity.valid;
                         }
-
-                        ctrl.preview.valid = el.validity.valid;
-                    }
-                }),
-                m("p", { class : css.note },
-                    ctrl.preview.value ?
-                        ctrl.preview.value + "-0IhUBgUFfhyLQ2m6s5x" :
-                        null
-                )
-            ),
-            m("div", { class : css.contents },
-                m("div", { class : css.editor },
-                    m("h3", "Field Definitions"),
-                    m.component(editor, {
-                        ref    : ctrl.ref,
-                        source : ctrl.schema.source || "{\n\n}"
-                    })
+                    }),
+                    m("p", { class : css.note },
+                        ctrl.preview.value ?
+                            ctrl.preview.value + "-0IhUBgUFfhyLQ2m6s5x" :
+                            null
+                    )
                 ),
+                m("div", { class : css.contents },
+                    m("div", { class : css.editor },
+                        m("h3", "Field Definitions"),
+                        m.component(editor, {
+                            ref    : ctrl.ref,
+                            source : ctrl.schema.source || "{\n\n}"
+                        })
+                    ),
 
-                m("div", { class : css.fields },
-                    m("h3", "Preview"),
-                    m.component(children, {
-                        details : ctrl.schema.fields,
-                        data    : ctrl.data,
-                        path    : [],
-                        state   : ctrl.data,
-                        update  : update.bind(null, false, ctrl.data)
-                    })
+                    m("div", { class : css.fields },
+                        m("h3", "Preview"),
+                        m.component(children, {
+                            details : ctrl.schema.fields,
+                            data    : ctrl.data,
+                            path    : [],
+                            state   : ctrl.data,
+                            update  : update.bind(null, false, ctrl.data)
+                        })
+                    )
                 )
             )
-        )});
+        });
     }
 };

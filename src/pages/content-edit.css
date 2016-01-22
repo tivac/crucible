@@ -6,7 +6,7 @@
 @value small from "../media.css";
 
 .content {
-    composes: section from layout_css;
+    composes: content from layout_css;
 
     flex: 2 0;
 }

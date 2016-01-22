@@ -29,6 +29,12 @@
     width: 100%;
 }
 
+.content {
+    composes: section;
+    
+    padding: 1em 20px;
+}
+
 .head {
     composes: vertical;
 
