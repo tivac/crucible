@@ -39,7 +39,7 @@ module.exports = {
     view : function(ctrl) {
         return m.component(layout, {
             title   : "Login",
-            content : m("div", { class : css.container },
+            content : m("div", { class : layout.css.content },
                 m("form", { class : css.form, onsubmit : ctrl.onsubmit },
                     m("p",
                         m("label", { class : css.label }, "Email"),
