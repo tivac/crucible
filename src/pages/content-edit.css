@@ -1,12 +1,24 @@
 @import "../../node_modules/codemirror/lib/codemirror.css";
+
+@value layout_css: "./layout/layout.css";
 @value icons_css: "../icons.css";
 
-.body {
-    composes: body from "./layout/layout.css";
+@value small from "../media.css";
+
+.content {
+    composes: section from layout_css;
+
+    flex: 2 0;
+}
+
+@media small {
+    .content {
+        flex-basis: 400px;
+    }
 }
 
 .empty {
-    composes: body;
+    composes: content;
     
     text-align: center;
     justify-content: center;

@@ -5,7 +5,12 @@
 @value iconTransition: color 0.2s ease-in;
 
 .nav {
-    composes: nav from layout_css;
+    composes: section from layout_css;
+    
+    flex: 1 1 200px;
+    
+    border-right: solid 1px #CCC;
+    background: #EEE;
 }
 
 .filter {
@@ -183,9 +188,6 @@
 
 .removeIcon {
     composes: action;
-
-    /* work-around for https://github.com/tivac/modular-css/issues/56 */
-    background: transparent;
 }
 
 .removeIcon:hover {
@@ -193,7 +195,7 @@
 }
 
 .hidden {
-    composes: nav;
+    /*composes: nav;*/
     overflow: visible;
     flex: 0 1 0;
 }

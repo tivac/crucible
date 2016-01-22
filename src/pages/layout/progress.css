@@ -1,0 +1,68 @@
+.bar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+
+    height: 3px;
+
+    background: #EEE;
+}
+
+.bar::before,
+.bar::after {
+    position: absolute;
+    z-index: 1;
+    content: "";
+
+    top: 0;
+    bottom: 0;
+    width: 0;
+
+    background: rgb(66, 184, 221);
+
+    animation: progressBefore 2s linear infinite;
+}
+
+.bar::after {
+    animation-name: progressAfter;
+}
+
+@keyframes progressBefore {
+    0% {
+        left: 0%;
+        width: 0%;
+    }
+
+    50% {
+        left: 25%;
+        width: 75%;
+    }
+
+    75% {
+        left: 100%;
+        width: 0%;
+    }
+}
+
+@keyframes progressAfter {
+    0% {
+        left: 0%;
+        width: 0%;
+    }
+
+    50% {
+        left: 0%;
+        width: 0%;
+    }
+
+    75% {
+        left: 0%;
+        width: 25%;
+    }
+
+    100% {
+        left: 100%;
+        width: 0%;
+    }
+}

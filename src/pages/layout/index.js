@@ -4,10 +4,14 @@ var m = require("mithril"),
 
     db = require("../../lib/firebase"),
 
-    layout = require("./layout.css"),
-    nav    = require("./nav.css");
+    layout   = require("./layout.css"),
+    header   = require("./header.css"),
+    progress = require("./progress.css");
 
 module.exports = {
+    // exporting so others can use it more easily
+    css : layout,
+    
     controller : function() {
         var ctrl   = this;
 
@@ -42,14 +46,14 @@ module.exports = {
 
         document.title = options.title || "Loading...";
 
-        return m(".outer", { class : layout.outer },
-            options.content ? null : m("div", { class : layout.progress }),
+        return m("div", { class : layout.container },
+            options.content ? null : m("div", { class : progress.bar }),
 
-            m("div", { class : layout.header },
+            m("div", { class : header.container },
 
-                m("div", { class : nav.head },
+                m("div", { class : header.head },
                     m("a", {
-                            class  : nav.heading,
+                            class  : header.heading,
                             href   : "/",
                             config : m.route
                         },
@@ -57,15 +61,15 @@ module.exports = {
                     )
                 ),
 
-                m("div", { class : nav.body },
+                m("div", { class : header.body },
                     ctrl.auth ? [
-                        m("div", { class : nav.schemas },
+                        m("div", { class : header.schemas },
                             (ctrl.schemas || []).map(function(schema) {
                                 var url = "/content/" + schema.key;
 
-                                return m("div", { class : nav[route.indexOf(url) === 0 ? "active" : "schema"] },
+                                return m("div", { class : header[route.indexOf(url) === 0 ? "active" : "schema"] },
                                     m("a", {
-                                        class  : nav.link,
+                                        class  : header.link,
                                         href   : url,
                                         config : m.route
                                     }, schema.name)
@@ -74,7 +78,7 @@ module.exports = {
                         ),
 
                         m("a", {
-                            class  : nav.add,
+                            class  : header.add,
                             href   : "/content/new",
                             config : m.route
                         }, "New Schema")
@@ -82,17 +86,13 @@ module.exports = {
                     null,
 
                     m("a", {
-                        class  : nav.logout,
+                        class  : header.logout,
                         href   : "/logout",
                         config : m.route
                     }, "Logout")
                 )
             ),
-            options.content ?
-                m(".content", { class : layout.content },
-                    options.content
-                )  :
-                null
+            options.content ? options.content : null
         );
     }
 };

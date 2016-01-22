@@ -1,22 +1,27 @@
 @value icons_css: "../../icons.css";
+@value layout_css: "./layout.css";
+
 @value small from "../../media.css";
 
-@media small {
-    .sep {
-        border-bottom: solid 1px #222;
-        box-shadow: 0 1px 0 #545454;
-    }
+.container {
+    composes: section from layout_css;
+    
+    flex: 0 0 180px;
+    
+    z-index: 1;
+    font-size: 0.8em;
+    color: #FFF;
+    background: #2F343C;
 }
 
 .head {
-    composes: head from "./layout.css";
+    composes: head from layout_css;
     composes: sep;
 
     padding: 0;
 }
 
 .heading {
-    /*composes: global(pure-g);*/
     display: flex;
     align-items: center;
     flex: 1 0 auto;
@@ -39,11 +44,14 @@
 }
 
 .body {
-    composes: body from "./layout.css";
+    composes: body from layout_css;
+
+    /* Hide header body at small sizes */
+    display: none;
 }
 
 .schemas {
-    composes: vertical from "./layout.css";
+    composes: vertical from layout_css;
     composes: sep;
 
     margin: 0 0 2em;
@@ -87,4 +95,31 @@
     opacity: 1;
 
     background: rgba(0, 0, 0, 0.4);
+}
+
+@media small {
+    .sep {
+        border-bottom: solid 1px #222;
+        box-shadow: 0 1px 0 #545454;
+    }
+    
+    .header {
+        height: 100%;
+        flex-direction: column;
+    }
+    
+    .header {
+        display: flex;
+        
+        flex: 0 0 180px;
+    }
+    
+    .body {
+        display: flex;
+
+        flex-direction: column;
+        flex: 1 0 auto;
+
+        overflow-y: auto;
+    }
 }

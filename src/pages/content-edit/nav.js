@@ -159,9 +159,7 @@ module.exports = {
             }
         }
 
-        return m(".nav", {
-                class : ctrl.hidden ? css.hidden : css.nav
-            },
+        return m("div", { class : css[ctrl.hidden ? "hidden" : "nav"] },
             m(".head", { class : css.filter },
                 !ctrl.hidden ? m("input", {
                     class       : css.text,
@@ -175,9 +173,8 @@ module.exports = {
                     m("span", ctrl.hidden ? "show" : "hide")
                 )
             ),
-            m(".body", { class : css.body },
-                ctrl.hidden ?
-                    null :
+            ctrl.hidden ? null : [
+                m("div", { class : css.body },
                     m("ul", { class : css.list },
                         current.items.map(function(data) {
                             var url = "/content/" + ctrl.schema.key + "/" + data.key,
@@ -234,15 +231,16 @@ module.exports = {
                             );
                         })
                     )
-            ),
-            m("div", { class : css.metas }, [
-                m("button", {
-                        onclick : ctrl.add,
-                        class   : css.add
-                    },
-                    "Add " + ctrl.schema.name
+                ),
+                m("div", { class : css.metas },
+                    m("button", {
+                            onclick : ctrl.add,
+                            class   : css.add
+                        },
+                        "Add " + ctrl.schema.name
+                    )
                 )
-            ])
+            ]
         );
     }
 };
