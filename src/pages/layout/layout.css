@@ -29,10 +29,12 @@
     width: 100%;
 }
 
-.content {
-    composes: section;
-    
+.padding {
     padding: 1em 20px;
+}
+
+.content {
+    composes: section, padding;
 }
 
 .head {

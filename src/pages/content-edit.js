@@ -92,29 +92,33 @@ module.exports = {
             content : [
                 m.component(nav),
                 m("div", { class : css.content },
-                    m("div", { class : css.menu },
-                        m.component(publishing, {
-                            ref     : ctrl.ref,
-                            data    : ctrl.data,
-                            class   : css.publishing,
-                            enabled : ctrl.form && ctrl.form.checkValidity()
-                        }),
-                        m("div", { class : css.actions }, [
-                            m("a", {
-                                    title  : "Preview",
-                                    href   : ctrl.schema.preview + ctrl.id,
-                                    target : "_blank"
-                                },
-                                m("svg", { class : css.preview },
-                                    m("use", { href : "/src/icons.svg#icon-preview" })
+                    m("div", { class : css.head },
+                        m("div", { class : css.actions },
+                            m.component(publishing, {
+                                ref     : ctrl.ref,
+                                data    : ctrl.data,
+                                class   : css.publishing,
+                                enabled : ctrl.form && ctrl.form.checkValidity()
+                            }),
+                            m("div", { class : css.previewing },
+                                m("button", {
+                                        class  : css.preview,
+                                        title  : "Preview",
+                                        href   : ctrl.schema.preview + ctrl.id,
+                                        target : "_blank"
+                                    },
+                                    m("svg", { class : css.previewIcon },
+                                        m("use", { href : "/src/icons.svg#icon-preview" })
+                                    ),
+                                    "Preview"
                                 )
-                            )
-                        ]),
-                        m.component(versioning, {
-                            ref   : ctrl.ref,
-                            data  : ctrl.data,
-                            class : css.version
-                        })
+                            ),
+                            m.component(versioning, {
+                                ref   : ctrl.ref,
+                                data  : ctrl.data,
+                                class : css.versioning
+                            })
+                        )
                     ),
                     m("div", { class : css.body },
                         m("h2", { class : css.schema }, "/" + ctrl.schema.name + "/"),
