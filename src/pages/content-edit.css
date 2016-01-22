@@ -61,7 +61,7 @@
 }
 
 .menu {
-    composes: head from "./layout/layout.css";
+    composes: head from layout_css;
 }
 
 .item {

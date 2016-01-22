@@ -1,16 +1,28 @@
 @value icons_css: "../../icons.css";
 @value layout_css: "../layout/layout.css";
 @value buttons_css: "../../buttons.css";
+
+@value small from "../../media.css";
+
 @value anchor: #446;
 @value iconTransition: color 0.2s ease-in;
 
+/* Hidden at small sizes */
 .nav {
     composes: section from layout_css;
     
-    flex: 1 1 200px;
+    display: none;
     
     border-right: solid 1px #CCC;
     background: #EEE;
+}
+
+@media small {
+    .nav {
+        display: flex;
+        
+        flex: 1 0;
+    }
 }
 
 .filter {
