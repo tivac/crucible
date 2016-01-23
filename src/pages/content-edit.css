@@ -20,6 +20,9 @@
 
 .head {
     composes: head from layout_css;
+    
+    padding-left: 5px;
+    padding-right: 5px; 
 }
 
 .body {
@@ -48,12 +51,8 @@
     align-items: center;
 }
 
-.action {
-    flex: 1 1 40%;
-} 
-
 .publishing {
-    composes: action;
+    flex: 1 1 50%;
 }
 
 .previewing {
@@ -73,7 +72,7 @@
 }
 
 .versioning {
-    composes: action;
+    flex: 1 1 180px;
     
     text-align: right;
 }

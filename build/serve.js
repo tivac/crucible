@@ -46,6 +46,9 @@ function bundle() {
 builder.plugin("watchify");
 builder.plugin("modular-css", {
     css   : "gen/index.css",
+    before : [
+        require("postcss-nested")
+    ],
     after : [
         require("postcss-import")
     ]

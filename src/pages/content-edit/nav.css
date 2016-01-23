@@ -15,13 +15,11 @@
     
     border-right: solid 1px #CCC;
     background: #EEE;
-}
-
-@media small {
-    .nav {
+    
+    @media small {
         display: flex;
         
-        flex: 1 0;
+        flex: 1 0 200px;;
     }
 }
 
