@@ -1,11 +1,25 @@
 @value icons_css: "../../icons.css";
 @value layout_css: "../layout/layout.css";
 @value buttons_css: "../../buttons.css";
+
+@value medium from "../../media.css";
+
 @value anchor: #446;
 @value iconTransition: color 0.2s ease-in;
 
 .nav {
-    composes: nav from layout_css;
+    composes: section from layout_css;
+    
+    display: none;
+    
+    border-right: solid 1px #CCC;
+    background: #EEE;
+    
+    @media medium {
+        display: flex;
+        
+        flex: 1 0 200px;;
+    }
 }
 
 .filter {
@@ -183,9 +197,6 @@
 
 .removeIcon {
     composes: action;
-
-    /* work-around for https://github.com/tivac/modular-css/issues/56 */
-    background: transparent;
 }
 
 .removeIcon:hover {
@@ -193,7 +204,7 @@
 }
 
 .hidden {
-    composes: nav;
+    /*composes: nav;*/
     overflow: visible;
     flex: 0 1 0;
 }

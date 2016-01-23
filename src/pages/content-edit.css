@@ -1,12 +1,38 @@
 @import "../../node_modules/codemirror/lib/codemirror.css";
-@value icons_css: "../icons.css";
 
-.body {
-    composes: body from "./layout/layout.css";
+@value layout_css:  "./layout/layout.css";
+@value icons_css:   "../icons.css";
+@value buttons_css: "../buttons.css";
+
+@value small from "../media.css";
+
+.content {
+    composes: section from layout_css;
+
+    flex: 2 0;
 }
 
+@media small {
+    .content {
+        flex-basis: 400px;
+    }
+}
+
+.head {
+    composes: head from layout_css;
+    
+    padding-left: 5px;
+    padding-right: 5px; 
+}
+
+.body {
+    composes: body from layout_css;
+    composes: padding from layout_css;
+}
+
+/* No item selected */
 .empty {
-    composes: body;
+    composes: content;
     
     text-align: center;
     justify-content: center;
@@ -17,13 +43,42 @@
     color: #666;
 }
 
-.heading {
-    composes: global(pure-g);
-
-    text-align: center;
-    justify-content: center;
+/* Actions bar */
+.actions {
+    composes: horizontal from layout_css;
+    
+    justify-content: space-between;
+    align-items: center;
 }
 
+.publishing {
+    flex: 1 1 50%;
+}
+
+.previewing {
+    flex: 1 1 20%;
+}
+
+.preview {
+    composes: primary from buttons_css;
+}
+
+.previewIcon {
+    composes: icon from icons_css;
+    
+    width: 1.1em;
+    height: 1.1em;
+    margin-right: 5px;
+}
+
+.versioning {
+    flex: 1 1 180px;
+    
+    text-align: right;
+}
+
+
+/* Title */
 .schema {
     margin: 0;
     color: #CCC;
@@ -48,44 +103,7 @@
     border-bottom-color: #68A;
 }
 
-.menu {
-    composes: head from "./layout/layout.css";
-}
-
-.item {
-    composes: global(pure-u-1-2);
-}
-
-.actions {
-    composes: item;
-    
-    display: flex;
-
-    justify-content: space-between;
-    align-items: center;
-}
-
-.action {
-    composes: icon from icons_css;
-
-    color: #000;
-    transition: color 0.1s ease-in;
-}
-
-.preview {
-    composes: action;
-}
-
-.publishing {
-    composes: item;
-}
-
-.version {
-    composes: item;
-
-    text-align: right;
-}
-
+/* Form contents */
 .form {
     composes: global(pure-form), global(pure-form-stacked);
 

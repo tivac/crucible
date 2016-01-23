@@ -67,79 +67,96 @@ module.exports = {
     },
 
     view : function(ctrl) {
+        var title;
+        
         if(!ctrl.schema) {
             return m.component(layout);
         }
+        
+        title = capitalize(get(ctrl.data, "name")) + " | " + capitalize(ctrl.schema.name);
+        
+        if(!ctrl.id) {
+            return m.component(layout, {
+                title   : title,
+                content : [
+                    m.component(nav),
+                    m("div", { class : css.empty },
+                        m("p", "Select an entry from the list")
+                    )
+                ]
+            });
+        }
 
         return m.component(layout, {
-            title : capitalize(get(ctrl.data, "name")) + " | " + capitalize(ctrl.schema.name),
-
-            nav : m.component(nav),
-
-            content : ctrl.id ? [
-                m("div", { class : css.menu },
-                    m.component(publishing, {
-                        ref     : ctrl.ref,
-                        data    : ctrl.data,
-                        class   : css.publishing,
-                        enabled : ctrl.form && ctrl.form.checkValidity()
-                    }),
-                    m("div", { class : css.actions }, [
-                        m("a", {
-                                title  : "Preview",
-                                href   : ctrl.schema.preview + ctrl.id,
-                                target : "_blank"
-                            },
-                            m("svg", { class : css.preview },
-                                m("use", { href : "/src/icons.svg#icon-preview" })
-                            )
+            title   : title, 
+            content : [
+                m.component(nav),
+                m("div", { class : css.content },
+                    m("div", { class : css.head },
+                        m("div", { class : css.actions },
+                            m.component(publishing, {
+                                ref     : ctrl.ref,
+                                data    : ctrl.data,
+                                class   : css.publishing,
+                                enabled : ctrl.form && ctrl.form.checkValidity()
+                            }),
+                            m("div", { class : css.previewing },
+                                m("button", {
+                                        class  : css.preview,
+                                        title  : "Preview",
+                                        href   : ctrl.schema.preview + ctrl.id,
+                                        target : "_blank"
+                                    },
+                                    m("svg", { class : css.previewIcon },
+                                        m("use", { href : "/src/icons.svg#icon-preview" })
+                                    ),
+                                    "Preview"
+                                )
+                            ),
+                            m.component(versioning, {
+                                ref   : ctrl.ref,
+                                data  : ctrl.data,
+                                class : css.versioning
+                            })
                         )
-                    ]),
-                    m.component(versioning, {
-                        ref   : ctrl.ref,
-                        data  : ctrl.data,
-                        class : css.version
-                    })
-                ),
-                m("div", { class : css.body },
-                    m("h2", { class : css.schema }, "/" + ctrl.schema.name + "/"),
-                    m("h1", {
-                            class : css.title,
-                            contenteditable : true,
-                            oninput : m.withAttr("innerText", update(ctrl.ref, ctrl.data, [ "name" ]))
-                        },
-                        ctrl.data.name || ""
                     ),
-                    m("form", {
-                            class  : css.form,
-                            config : function(el, init) {
-                                if(init) {
-                                    return;
+                    m("div", { class : css.body },
+                        m("h2", { class : css.schema }, "/" + ctrl.schema.name + "/"),
+                        m("h1", {
+                                class : css.title,
+                                contenteditable : true,
+                                oninput : m.withAttr("innerText", update(ctrl.ref, ctrl.data, [ "name" ]))
+                            },
+                            ctrl.data.name || ""
+                        ),
+                        m("form", {
+                                class  : css.form,
+                                config : function(el, init) {
+                                    if(init) {
+                                        return;
+                                    }
+
+                                    ctrl.form = el;
+
+                                    // force a redraw so publishing component can get
+                                    // new args w/ actual validity
+                                    m.redraw();
                                 }
+                            },
+                            m.component(children, {
+                                data   : ctrl.data.fields || {},
 
-                                ctrl.form = el;
-
-                                // force a redraw so publishing component can get
-                                // new args w/ actual validity
-                                m.redraw();
-                            }
-                        },
-                        m.component(children, {
-                            data   : ctrl.data.fields || {},
-
-                            // TODO: Change to "fields"?
-                            details : ctrl.schema.fields,
-                            path   : [ "fields" ],
-                            root   : ctrl.ref,
-                            state  : ctrl.data.fields,
-                            update : update.bind(null, ctrl.ref, ctrl.data)
-                        })
+                                // TODO: Change to "fields"?
+                                details : ctrl.schema.fields,
+                                path   : [ "fields" ],
+                                root   : ctrl.ref,
+                                state  : ctrl.data.fields,
+                                update : update.bind(null, ctrl.ref, ctrl.data)
+                            })
+                        )
                     )
                 )
-            ] :
-            m("div", { class : css.empty },
-                m("p", "Select an entry from the list")
-            )
+            ]
         });
     }
 };

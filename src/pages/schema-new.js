@@ -36,7 +36,7 @@ module.exports = {
     view : function(ctrl) {
         return m.component(layout, {
             title   : "Create a Schema",
-            content : m(".body", { class : css.body },
+            content : m("div", { class : layout.css.content },
                 m("form", { onsubmit : ctrl.onsubmit },
                     m("input[name=name]", {
                         oninput : m.withAttr("value", ctrl.oninput),
