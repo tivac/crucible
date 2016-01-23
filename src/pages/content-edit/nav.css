@@ -2,12 +2,11 @@
 @value layout_css: "../layout/layout.css";
 @value buttons_css: "../../buttons.css";
 
-@value small from "../../media.css";
+@value medium from "../../media.css";
 
 @value anchor: #446;
 @value iconTransition: color 0.2s ease-in;
 
-/* Hidden at small sizes */
 .nav {
     composes: section from layout_css;
     
@@ -16,7 +15,7 @@
     border-right: solid 1px #CCC;
     background: #EEE;
     
-    @media small {
+    @media medium {
         display: flex;
         
         flex: 1 0 200px;;

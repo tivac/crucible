@@ -6,12 +6,16 @@
 .container {
     composes: section from layout_css;
     
-    flex: 0 0 180px;
+    flex: 0 0;
     
     z-index: 1;
     font-size: 0.8em;
     color: #FFF;
     background: #2F343C;
+    
+    @media small {
+        flex-basis: 180px;
+    }
 }
 
 .sep {
