@@ -34,6 +34,7 @@
     "postcss-nested": "^1.0.0",
     "pretty-bytes": "^3.0.0",
     "randexp": "^0.4.2",
+    "uglify-js": "^2.6.1",
     "watchify": "^3.7.0"
   },
   "dependencies": {

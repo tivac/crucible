@@ -6,6 +6,7 @@ var fs   = require("fs"),
     browserify = require("browserify"),
     duration   = require("humanize-duration"),
     bytes      = require("pretty-bytes"),
+    uglify     = require("uglify-js"),
 
     builder  = browserify("src/index.js"),
     
@@ -22,12 +23,17 @@ builder.plugin("modular-css", {
 start = Date.now();
 
 builder.bundle(function(err, out) {
-    console.log("Finished in:", duration(Date.now() - start));
-    console.log("Output size:", bytes(out.length));
+    var result;
     
     if(err) {
+        console.log("Error in:", duration(Date.now() - start));
         return console.error(err.toString());
     }
     
-    fs.writeFileSync("gen/index.js", out);
+    result = uglify.minify(out.toString(), { fromString : true });
+    
+    console.log("Bundled & compressed in:", duration(Date.now() - start));
+    console.log("Output size:", bytes(result.code.length));
+    
+    fs.writeFileSync("gen/index.js", result.code);
 });
