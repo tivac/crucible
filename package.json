@@ -28,7 +28,7 @@
     "jscs": "^2.8.0",
     "jscs-preset-arenanet": "^1.0.3",
     "jsesc": "^0.5.0",
-    "modular-css": "^0.10.0",
+    "modular-css": "^0.11.1",
     "morgan": "^1.6.1",
     "postcss-import": "^7.1.3",
     "postcss-nested": "^1.0.0",
