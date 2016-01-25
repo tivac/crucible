@@ -18,7 +18,7 @@
   "license": "MIT",
   "devDependencies": {
     "browserify": "^13.0.0",
-    "connect": "^3.4.0",
+    "connect": "^3.4.1",
     "cssnano": "^3.4.0",
     "ecstatic": "^1.4.0",
     "eslint": "^1.10.3",
@@ -40,7 +40,7 @@
   "dependencies": {
     "awesomplete": "github:leaverou/awesomplete#gh-pages",
     "codemirror": "^5.11.0",
-    "firebase": "^2.3.2",
+    "firebase": "^2.4.0",
     "fuzzysearch": "^1.0.3",
     "lodash.assign": "^4.0.0",
     "lodash.capitalize": "^4.0.1",
