@@ -7,7 +7,10 @@ var m  = require("mithril"),
 module.exports = function(component) {
     return {
         controller : function() {
-            if(!db.getAuth()) {
+            var auth = db.getAuth();
+            
+            // Unauthed or expired auth? BOUNCED
+            if(!auth || (auth.expires * 1000) < Date.now()) {
                 return m.route("/login");
             }
         },

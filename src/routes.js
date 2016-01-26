@@ -10,7 +10,6 @@ exports.default = function() {
     m.route(document.body, "/", {
         "/" : auth(require("./pages/home")),
 
-        "/login"  : require("./pages/login"),
         "/logout" : require("./pages/logout"),
 
         "/content/new" : auth(require("./pages/schema-new")),
