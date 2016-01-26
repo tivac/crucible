@@ -46,7 +46,7 @@ module.exports = {
 
                 data.key       = record.key();
                 data.created   = moment.utc(data.created);
-                data.updated   = moment.utc(data.updated);
+                data.updated   = moment.utc(data.updated_at);
                 data.published = data.published ? moment.utc(data.published) : null;
                 data.excerpt   = get(data, "fields.tabs.en.excerpt", null) || get(data, "fields.tabs.en.title", null);
                 data.search    = slug(data.name, { separator : "" });
