@@ -20,6 +20,8 @@ builder.plugin("modular-css", {
     ]
 });
 
+builder.plugin("bundle-collapser/plugin");
+
 start = Date.now();
 
 builder.bundle(function(err, out) {

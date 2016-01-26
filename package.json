@@ -18,6 +18,7 @@
   "license": "MIT",
   "devDependencies": {
     "browserify": "^13.0.0",
+    "bundle-collapser": "^1.2.1",
     "connect": "^3.4.1",
     "cssnano": "^3.4.0",
     "ecstatic": "^1.4.0",
