@@ -13,45 +13,44 @@ function Entry(opts) {
 }
 
 Entry.prototype = {
-    version : function(done) {
+    version : function() {
         var ref = this.ref;
         
-        ref.once("value", function(snap) {
+        return db.value(ref, "once").then(function(snap) {
             var data = snap.exportVal(),
                 rev  = data.version || 1;
-
-            db.child("versions").child(snap.key()).child(rev).set(data);
-
-            ref.child("version").set(++rev);
             
-            typeof done === "function" && done(null, rev);
+            return Promise.all([
+                db.set(db.child("versions").child(snap.key()).child(rev), data),
+                db.set(ref.child("version"), ++rev)
+            ]);
         });
     },
     
-    remove : function(done) {
+    remove : function() {
         var ref = this.ref;
         
-        // Save off a revision and then remove        
-        this.version(function() {
-            ref.remove(done);
-        });s
+        // Save off a revision first
+        return this.version().then(function() {
+            
+            // And then remove
+            return db.remove(ref);
+        });
     },
     
-    restore : function(version, done) {
+    restore : function(version) {
         var ref     = this.ref,
-            history = db.child("versions").child(this.id);
+            history = db.child("versions").child(this.id).child(version);
         
-        // Save current revision off
-        this.version(function(error, rev) {
-            
-            // Then go grab historical revision and make it the thing
-            history.child(version).once("value", function(snap) {
-                var out = snap.exportVal();
+        // Save current data
+        return this.version().then(function() {
+            return db.value(history, "once");
+        }).then(function(snap) {
+            var out = snap.exportVal();
 
-                out.version = rev;
+            out.version = rev;
 
-                ref.set(out, done);
-            });
+            return db.set(ref, out);
         });
     }
 };

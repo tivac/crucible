@@ -7,6 +7,11 @@ var db     = require("./lib/firebase"),
 // Don't actually want the exports, just want it bundled
 require("./global.css");
 
+// Ensure that promises exist
+if(!window.Promise) {
+    window.Promise = require("promiscuous");
+}
+
 // IIFE so I can return w/o complaints from ESLint
 (function() {
     if(!global.crucible) {
