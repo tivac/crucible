@@ -3,42 +3,60 @@
 var m      = require("mithril"),
     moment = require("moment"),
 
-    css = require("./publishing.css");
+    css = require("./publishing.css"),
+    
+    format = "YYYY-MM-DD[T]HH:mm",
+    redraw = m.redraw.bind(m);
 
 module.exports = {
     controller : function(options) {
         var ctrl = this;
-
-        ctrl.now  = moment();
-        ctrl.date = false;
-
-        ctrl.publish = function() {
-            options.ref.child("published").set(moment().subtract(10, "seconds").valueOf());
-        };
+        
+        ctrl.date      = moment().format(format);
+        ctrl.entry     = options.entry;
+        ctrl.published = false;
+        
+        // Get data from the entry
+        ctrl.entry.data(function(snap) {
+            var data = snap.val(), 
+                pub  = moment(data.published);
+            
+            if(pub.isValid()) {
+                ctrl.date      = pub.format(format);
+                ctrl.published = pub;
+            }
+            
+            m.redraw();
+        });
 
         ctrl.publishAt = function() {
-            if(!ctrl.date || !ctrl.date.isValid()) {
+            var date = moment(ctrl.date, format);
+            
+            if(!date.isValid()) {
                 // TODO: Really Handle these errors
                 return console.error("Invalid date");
             }
-
-            options.ref.child("published").set(ctrl.date.valueOf());
+            
+            ctrl.published = date;
+            
+            ctrl.entry.publish(date.valueOf());
         };
-
+        
         ctrl.unpublish = function() {
-            options.ref.child("published").remove();
+            ctrl.published = false;
+            
+            ctrl.entry.unpublish();
         };
     },
 
     view : function(ctrl, options) {
-        var published = options.data.published && moment(options.data.published);
-
-        if(published) {
+        ctrl.entry = options.entry;
+        
+        if(ctrl.published) {
             return m("div", { class : options.class },
                 m("span",
-                    published.isBefore(ctrl.now) ?
-                        "Published at " + published.format("lll") :
-                        "Publishing at " + published.format("lll")
+                    (ctrl.published.isBefore() ? "Published at " : "Publishing at ") + 
+                    ctrl.published.format("lll")
                 ),
                 m("button", {
                     onclick : ctrl.unpublish
@@ -51,10 +69,10 @@ module.exports = {
                 m("label",
                     m("input", {
                         type    : "datetime-local",
-                        value   : (ctrl.date || ctrl.now).format("YYYY-MM-DD[T]HH:mm"),
+                        value   : ctrl.date,
                         class   : css.date,
                         oninput : m.withAttr("value", function(value) {
-                            ctrl.date = moment(value, "YYYY-MM-DD[T]HH:mm");
+                            ctrl.date = value;
                         })
                     })
                 ),

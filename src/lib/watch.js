@@ -4,7 +4,7 @@ var db = require("./firebase");
 
 // Ensure the updated timestamp is always accurate-ish
 module.exports = function(ref) {
-    ref.on("child_changed", function(snap) {
+    return ref.on("child_changed", function(snap) {
         var key = snap.key(),
             auth;
         

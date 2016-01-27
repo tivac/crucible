@@ -7,7 +7,7 @@ module.exports = new Firebase(crucible.firebase);
 module.exports.TIMESTAMP = Firebase.ServerValue.TIMESTAMP;
 
 module.exports.set = function(ref, value) {
-    return new Promise(function(reject, resolve) {
+    return new Promise(function(resolve, reject) {
         ref.set(value, function(error) {
             if(error) {
                 return reject(error);
@@ -19,7 +19,7 @@ module.exports.set = function(ref, value) {
 };
 
 module.exports.remove = function(ref) {
-    return new Promise(function(reject, resolve) {
+    return new Promise(function(resolve, reject) {
         ref.remove(function(error) {
             if(error) {
                 return reject(error);
@@ -31,10 +31,8 @@ module.exports.remove = function(ref) {
 };
 
 module.exports.value = function(ref, type) {
-    return new Promise(function(reject, resolve) {
-        ref[type]("value", function(snap) {
-            return resolve(snap);
-        }, reject);
+    return new Promise(function(resolve, reject) {
+        ref[type]("value", resolve, reject);
     });
 };
 

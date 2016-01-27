@@ -10,7 +10,7 @@ var m          = require("mithril"),
     children = require("../types/children"),
     db       = require("../lib/firebase"),
     update   = require("../lib/update"),
-    watch    = require("../lib/watch"),
+    Entry    = require("../lib/entry"),
 
     layout = require("./layout"),
     nav    = require("./content-edit/nav"),
@@ -18,7 +18,9 @@ var m          = require("mithril"),
     publishing = require("./content-edit/publishing"),
     versioning = require("./content-edit/versioning"),
 
-    css = require("./content-edit.css");
+    css = require("./content-edit.css"),
+    
+    redraw = m.redraw.bind();
 
 module.exports = {
     controller : function() {
@@ -26,58 +28,45 @@ module.exports = {
 
             id     = m.route.param("id"),
             schema = db.child("schemas/" + m.route.param("schema")),
-            ref    = db.child("content/" + m.route.param("schema") + "/" + id);
-
-        ctrl.id     = id;
-        ctrl.ref    = ref;
-        ctrl.data   = null;
+            entry  = new Entry({
+                schema : m.route.param("schema"),
+                id     : m.route.param("id")
+            });
+        
+        ctrl.entry  = entry;
         ctrl.schema = null;
         ctrl.form   = null;
         ctrl.data   = {};
 
+        // No sense doing any work if we don't have an id to operate on
+        if(!entry.id) {
+            return;
+        }
+        
+        // Listen for data updates from firebase
+        entry.data(function(data) {
+            ctrl.data = data;
+            
+            m.redraw();
+        });
+        
+        // Go load the schema
         schema.on("value", function(snap) {
             ctrl.schema = snap.val();
             ctrl.schema.key = snap.key();
 
             m.redraw();
         });
-
-        // No sense doing any work if we don't have an id to operate on
-        if(!id) {
-            return;
-        }
-
-        // On updates from firebase we need to merge in fields carefully
-        ref.on("value", function(snap) {
-            var data = snap.val();
-            
-            // Don't try to grab non-existent data
-            if(!snap.exists()) {
-                return m.route("/content/" + m.route.param("schema"));
-            }
-
-            ctrl.data = assign(data, {
-                fields : merge(data.fields, ctrl.data.fields)
-            });
-
-            m.redraw();
-        });
-
-        watch(ref);
     },
 
     view : function(ctrl) {
-        var title;
-        
         if(!ctrl.schema) {
             return m.component(layout);
         }
         
-        title = capitalize(get(ctrl.data, "name")) + " | " + capitalize(ctrl.schema.name);
-        
-        if(!ctrl.id) {
+        if(!ctrl.entry.id) {
             return m.component(layout, {
-                title   : title,
+                title   : capitalize(ctrl.schema.name),
                 content : [
                     m.component(nav),
                     m("div", { class : css.empty },
@@ -88,14 +77,14 @@ module.exports = {
         }
 
         return m.component(layout, {
-            title   : title, 
+            title   : capitalize(get(ctrl.data, "name")) + " | " + capitalize(ctrl.schema.name), 
             content : [
                 m.component(nav),
                 m("div", { class : css.content },
                     m("div", { class : css.head },
                         m("div", { class : css.actions },
                             m.component(publishing, {
-                                ref     : ctrl.ref,
+                                entry   : ctrl.entry,
                                 data    : ctrl.data,
                                 class   : css.publishing,
                                 enabled : ctrl.form && ctrl.form.checkValidity()
@@ -114,7 +103,7 @@ module.exports = {
                                 )
                             ),
                             m.component(versioning, {
-                                ref   : ctrl.ref,
+                                entry : ctrl.entry,
                                 data  : ctrl.data,
                                 class : css.versioning
                             })
@@ -149,7 +138,7 @@ module.exports = {
                                 // TODO: Change to "fields"?
                                 details : ctrl.schema.fields,
                                 path   : [ "fields" ],
-                                root   : ctrl.ref,
+                                root   : ctrl.entry,
                                 state  : ctrl.data.fields,
                                 update : update.bind(null, ctrl.ref, ctrl.data)
                             })
