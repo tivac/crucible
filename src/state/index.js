@@ -1,11 +1,40 @@
 "use strict";
 
-var redux = require("redux"),
+var redux  = require("redux"),
+    thunk  = require("redux-thunk"),
+    assign = require("lodash.assign"),
+    
+    ui = require("./ui"),
     
     store;
-    
-store = redux.createStore(redux.combineReducers({
-    ui : require("./ui-reducer")
+
+// This looks bonkers
+store = redux.applyMiddleware(thunk)(redux.createStore)(redux.combineReducers({
+    ui : ui.reducer
 }));
 
-module.exports = store;
+exports.store = store;
+exports.actions = assign({}, ui.actions);
+
+// State Object
+/*
+{
+    schemas : {
+        id : {
+            <schema-id> : <schema-details>
+        },
+        name : {
+            <schema-name> : <schema-id>
+        }
+    },
+    
+    items : {
+        id : {
+            <item-id> : <item-details>
+        },
+        schema : {
+            <schema-name> : [ <item-ids>, ... ]
+        }
+    }
+}
+*/

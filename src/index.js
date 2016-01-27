@@ -7,9 +7,8 @@ var db     = require("./lib/firebase"),
 // Don't actually want the exports, just want it bundled
 require("./global.css");
 
-var state = require("./state");
-
-debugger;
+// TESTING
+window.redux = require("./state");
 
 // IIFE so I can return w/o complaints from ESLint
 (function() {
