@@ -10,7 +10,7 @@ module.exports = require("./lib/multiple")({
     },
 
     function(ctrl, options) {
-        var details = options.details;
+        var field = options.field;
 
         return m("select", assign({
                 // attrs
@@ -19,12 +19,12 @@ module.exports = require("./lib/multiple")({
                 // events
                 onchange : function(e) {
                     var tgt = e.target,
-                        opt = details.children[tgt.selectedIndex];
+                        opt = field.children[tgt.selectedIndex];
 
                     ctrl.value(options, opt.key, opt.value);
                 }
-            }, details.attrs),
-            details.children.map(function(option) {
+            }, field.attrs),
+            field.children.map(function(option) {
                 return m("option", assign({}, option.attrs, { value : option.value }),
                     option.name
                 );

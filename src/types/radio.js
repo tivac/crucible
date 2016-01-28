@@ -10,14 +10,14 @@ module.exports = require("./lib/multiple")({
     },
         
     function(ctrl, options) {
-        var details = options.details;
+        var field = options.field;
         
-        return (details.children || []).map(function(opt) {
+        return (field.children || []).map(function(opt) {
             return m("label", { class : css.choice },
                 m("input", assign({}, opt.attrs, {
                     // attrs
                     type    : "radio",
-                    name    : details.name,
+                    name    : field.name,
                     value   : opt.value,
                     checked : opt.checked,
 

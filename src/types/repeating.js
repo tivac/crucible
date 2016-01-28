@@ -59,7 +59,7 @@ module.exports = {
     },
 
     view : function(ctrl, options) {
-        var details = options.details,
+        var field = options.field,
             hidden  = hide(options);
         
         if(hidden) {
@@ -73,7 +73,7 @@ module.exports = {
             m("button", {
                 class   : css.add,
                 onclick : ctrl.add.bind(ctrl, options)
-            }, details.button || "Add")
+            }, field.button || "Add")
         );
     }
 };

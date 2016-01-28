@@ -60,6 +60,10 @@ module.exports = {
 
             m.redraw();
         });
+        
+        ctrl.save = function() {
+            ref.child("fields").set(ctrl.data.fields);
+        };
 
         watch(ref);
     },
@@ -84,7 +88,7 @@ module.exports = {
                 ]
             });
         }
-
+        
         return m.component(layout, {
             title   : title,
             content : [
@@ -121,7 +125,7 @@ module.exports = {
                                 contenteditable : true,
                                 
                                 // Events
-                                oninput : m.withAttr("innerText", update(ctrl.ref, ctrl.data, [ "name" ]))
+                                oninput : m.withAttr("innerText", update(ctrl.data, [ "name" ]))
                             },
                             ctrl.data.name || ""
                         ),
@@ -140,16 +144,19 @@ module.exports = {
                                 }
                             },
                             m.component(children, {
-                                data : ctrl.data.fields || {},
-
-                                // TODO: Change to "fields"?
-                                details : ctrl.schema.fields,
-                                path    : [ "fields" ],
-                                root    : ctrl.ref,
-                                state   : ctrl.data.fields,
-                                update  : update.bind(null, ctrl.ref, ctrl.data)
+                                data   : ctrl.data.fields || {},
+                                fields : ctrl.schema.fields,
+                                path   : [ "fields" ],
+                                root   : ctrl.ref,
+                                state  : ctrl.data.fields,
+                                update : update.bind(null, ctrl.data)
                             })
                         )
+                    ),
+                    m("div", { class : css.footer },
+                        m("button", {
+                            onclick : ctrl.save
+                        }, "Save")
                     )
                 )
             ]

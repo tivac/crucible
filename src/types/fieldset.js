@@ -10,16 +10,16 @@ var m      = require("mithril"),
 
 module.exports = {
     view : function(ctrl, options) {
-        var hidden = hide(options);
+        var hidden  = hide(options);
         
         if(hidden) {
             return hidden;
         }
         
         return m("fieldset", { class : options.class },
-            options.details.name ? m("legend", { class : css.legend }, options.details.name) : null,
+            options.field.name ? m("legend", { class : css.legend }, options.field.name) : null,
             m.component(children, assign({}, options, {
-                details : options.details.children
+                fields : options.field.children
             }))
         );
     }

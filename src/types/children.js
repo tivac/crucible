@@ -13,10 +13,10 @@ var m      = require("mithril"),
 
 module.exports = {
     view : function(ctrl, options) {
-        var details = options.details || [];
+        var fields = options.fields || [];
 
         return m("div", options.class ? { class : options.class } : null,
-            details.map(function(field, index) {
+            fields.map(function(field, index) {
                 var component = types[field.type || field];
 
                 if(!component) {
@@ -27,10 +27,10 @@ module.exports = {
                 }
 
                 return m.component(component, assign({}, options, {
-                    details : field,
-                    class   : css[index ? "field" : "first"],
-                    data    : get(options.data, field.key),
-                    path    : options.path.concat(field.key)
+                    field : field,
+                    class : css[index ? "field" : "first"],
+                    data  : get(options.data, field.key),
+                    path  : options.path.concat(field.key)
                 }));
             })
         );
