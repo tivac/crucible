@@ -88,6 +88,23 @@ Group fields into a series of tabs.
 
 Provide instructions for CMS end-users.
 
+### Attributes
+
+You can attach dom-specific attributes to most types by specifying an `attrs` key w/ an associated object.
+
+```js
+{
+    "Number" : {
+        type  : "number",
+        attrs :  {
+            min  : 0,
+            max  : 10,
+            step : 2
+        }
+    }
+}
+```
+
 ### Example schema
 
 ```js
