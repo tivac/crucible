@@ -71,13 +71,6 @@
     margin-right: 5px;
 }
 
-.versioning {
-    flex: 1 1 180px;
-    
-    text-align: right;
-}
-
-
 /* Title */
 .schema {
     margin: 0;

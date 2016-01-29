@@ -16,10 +16,7 @@ exports.default = function() {
 
         "/content/:schema"      : auth(require("./pages/content-edit")),
         "/content/:schema/edit" : auth(require("./pages/schema-edit")),
-        "/content/:schema/:id"  : auth(require("./pages/content-edit")),
-
-        "/content/:schema/:id/history"          : auth(require("./pages/content-history")),
-        "/content/:schema/:id/history/:version" : auth(require("./pages/content-history-view"))
+        "/content/:schema/:id"  : auth(require("./pages/content-edit"))
     });
 };
 

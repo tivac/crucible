@@ -9,7 +9,6 @@ var m          = require("mithril"),
     slug       = require("sluggo"),
 
     db     = require("../../lib/firebase"),
-    remove = require("../../lib/remove"),
 
     css = require("./nav.css");
 
@@ -44,7 +43,6 @@ module.exports = {
                 data.created   = moment.utc(data.created);
                 data.updated   = moment.utc(data.updated_at);
                 data.published = data.published ? moment.utc(data.published) : null;
-                data.excerpt   = get(data, "fields.tabs.en.excerpt", null) || get(data, "fields.tabs.en.title", null);
                 data.search    = slug(data.name, { separator : "" });
 
                 content.push(data);
@@ -99,19 +97,7 @@ module.exports = {
             var ref = db.child("content").child(ctrl.schema.key).child(data.key);
 
             if(window.confirm("Remove " + data.name + "?")) {
-                ref.once("value", function(snap) {
-                    var data = snap.exportVal(),
-                        rev  = data.version || 1,
-                        dest = db.child("versions").child(snap.key()).child(rev);
-
-                    dest.set(data);
-
-                    remove(ref, function(error) {
-                        if(error) {
-                            console.error(error);
-                        }
-                    });
-                });
+                ref.remove().catch(console.error.bind(console));
             }
         };
     },
@@ -158,6 +144,7 @@ module.exports = {
                             m("a", {
                                     class  : css.anchor,
                                     href   : "/content/" + ctrl.schema.key + "/" + data.key,
+                                    href   : "/content/" + ctrl.schema.key + "/" + data.key,
                                     config : m.route
                                 },
                                 m("h3", { class : css.heading }, data.name),
@@ -165,8 +152,7 @@ module.exports = {
                                     data.published ?
                                         "published: " + data.published.format("L") :
                                         "updated: " + data.updated.format("L")
-                                ),
-                                m("p", { class : css.excerpt }, data.excerpt)
+                                )
                             ),
                             m("div", { class : css.actions },
                                 ctrl.schema.preview ?

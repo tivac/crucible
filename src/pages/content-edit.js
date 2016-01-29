@@ -16,7 +16,6 @@ var m          = require("mithril"),
     nav    = require("./content-edit/nav"),
 
     publishing = require("./content-edit/publishing"),
-    versioning = require("./content-edit/versioning"),
 
     css = require("./content-edit.css");
 
@@ -112,12 +111,7 @@ module.exports = {
                                     ),
                                     "Preview"
                                 )
-                            ),
-                            m.component(versioning, {
-                                ref   : ctrl.ref,
-                                data  : ctrl.data,
-                                class : css.versioning
-                            })
+                            )
                         )
                     ),
                     m("div", { class : css.body },
