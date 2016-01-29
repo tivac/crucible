@@ -102,17 +102,28 @@ module.exports = {
                                 class   : css.publishing,
                                 enabled : ctrl.form && ctrl.form.checkValidity()
                             }),
-                            m("div", { class : css.previewing },
+                            m("div", { class : css.actions },
                                 m("button", {
                                         class  : css.preview,
                                         title  : "Preview",
                                         href   : ctrl.schema.preview + ctrl.id,
                                         target : "_blank"
                                     },
-                                    m("svg", { class : css.previewIcon },
+                                    m("svg", { class : css.icon },
                                         m("use", { href : "/src/icons.svg#icon-preview" })
                                     ),
                                     "Preview"
+                                ),
+                                
+                                m("button", {
+                                        class   : css.save,
+                                        onclick : ctrl.save,
+                                        title   : "Save your changes"
+                                    },
+                                     m("svg", { class : css.icon },
+                                        m("use", { href : "/src/icons.svg#icon-save" })
+                                    ),
+                                    "Save"
                                 )
                             )
                         )
@@ -152,11 +163,6 @@ module.exports = {
                                 update : update.bind(null, ctrl.data)
                             })
                         )
-                    ),
-                    m("div", { class : css.footer },
-                        m("button", {
-                            onclick : ctrl.save
-                        }, "Save")
                     )
                 )
             ]

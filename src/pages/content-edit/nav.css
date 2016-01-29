@@ -174,9 +174,7 @@
     transition: iconTransition;
 }
 
-.preview {}
-
-.previewIcon {
+.icon {
     composes: action;
 }
 
@@ -189,7 +187,7 @@
 }
 
 .removeIcon {
-    composes: action;
+    composes: icon;
 }
 
 .removeIcon:hover {
@@ -197,7 +195,6 @@
 }
 
 .hidden {
-    /*composes: nav;*/
     overflow: visible;
     flex: 0 1 0;
 }
