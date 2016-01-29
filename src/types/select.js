@@ -19,7 +19,7 @@ module.exports = {
 
         ctrl.onchange = function(options, index) {
             var opt = options.details.children[index];
-
+            
             options.update(options.path, optvalue(opt));
         };
     },
@@ -63,11 +63,11 @@ module.exports = {
                     // events
                     onchange : m.withAttr("selectedIndex", ctrl.onchange.bind(null, options))
                 }, details.attrs),
-                details.children.map(function(opt) {
-                    return m("option", {
-                            value : opt.value || opt.name
-                        },
-                        opt.name
+                details.children.map(function(option) {
+                    return m("option", assign({
+                            value : optvalue(option)
+                        }, option.attrs),
+                        option.name
                     );
                 })
             )

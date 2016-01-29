@@ -7,6 +7,33 @@ function slugger(name) {
     return name.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
 }
 
+function processChildren(children, field) {
+    return Object.keys(children).map(function(label) {
+        var details = children[label],
+            output  = {
+                name     : label,
+                value    : details.value || details,
+                attrs    : details.attrs || {}
+            };
+        
+        output[field] = details[field] || false;
+        
+        return output;
+    });
+}
+
+function processSections(sections) {
+    return Object.keys(sections).map(function(label) {
+        var section = sections[label];
+
+        return {
+            name     : label,
+            key      : section.key || slugger(label),
+            children : process(section)
+        };
+    });
+}
+
 function process(obj) {
     var out = [];
 
@@ -43,17 +70,15 @@ function process(obj) {
         }
 
         if(field.type === "tabs") {
-            field.children = Object.keys(field.tabs).map(function(label) {
-                var tab = field.tabs[label];
-
-                return {
-                    name     : label,
-                    key      : tab.key || slugger(label),
-                    children : process(tab)
-                };
-            });
-
+            field.children = processSections(field.tabs);
+            
             delete field.tabs;
+        }
+        
+        if(field.type === "split") {
+            field.children = processSections(field.sections);
+
+            delete field.sections;
         }
 
         if(field.type === "repeating" || field.type === "fieldset") {
@@ -63,47 +88,15 @@ function process(obj) {
         }
 
         if(field.type === "select") {
-            field.children = Object.keys(field.options).map(function(label) {
-                var details = field.options[label];
-
-                return {
-                    name     : label,
-                    value    : details.value || details,
-                    selected : details.selected || false
-                };
-            });
+            field.children = processChildren(field.options, "selected");
 
             delete field.options;
         }
         
-        // TODO: this and select are almost identical, unify them
         if(field.type === "radio") {
-            field.children = Object.keys(field.options).map(function(label) {
-                var details = field.options[label];
-
-                return {
-                    name    : label,
-                    value   : details.value || details,
-                    checked : details.checked || false
-                };
-            });
+            field.children = processChildren(field.options, "checked");
 
             delete field.options;
-        }
-        
-        // TODO: This and tab are almost identical, unify them
-        if(field.type === "split") {
-            field.children = Object.keys(field.sections).map(function(label) {
-                var section = field.sections[label];
-                
-                return {
-                    name     : label,
-                    key      : section.key || slugger(label),
-                    children : process(section)
-                };
-            });
-
-            delete field.sections;
         }
 
         out.push(field);
@@ -121,6 +114,8 @@ self.onmessage = function(e) {
         // This is super-gross but in a worker should be (mostly) safe
         eval("config = " + e.data);
     } catch(e) {
+        console.error("Invalid config");
+        
         return;
     }
 
