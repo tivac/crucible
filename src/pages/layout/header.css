@@ -1,21 +1,15 @@
 @value icons_css: "../../icons.css";
 @value layout_css: "./layout.css";
 
-@value small from "../../media.css";
-
 .container {
     composes: section from layout_css;
     
-    flex: 0 0;
+    flex: 0 0 180px;
     
     z-index: 1;
     font-size: 0.8em;
     color: #FFF;
     background: #2F343C;
-    
-    @media small {
-        flex-basis: 180px;
-    }
 }
 
 .sep {
@@ -55,17 +49,12 @@
 .body {
     composes: body from layout_css;
 
-    /* Hide header body at small sizes */
-    display: none;
-    
-    @media small {
-        display: flex;
+    display: flex;
 
-        flex-direction: column;
-        flex: 1 0 auto;
+    flex-direction: column;
+    flex: 1 0 auto;
 
-        overflow-y: auto;
-    }
+    overflow-y: auto;
 }
 
 .schemas {

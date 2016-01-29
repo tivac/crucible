@@ -4,18 +4,10 @@
 @value icons_css:   "../icons.css";
 @value buttons_css: "../buttons.css";
 
-@value small from "../media.css";
-
 .content {
     composes: section from layout_css;
 
-    flex: 2 0;
-}
-
-@media small {
-    .content {
-        flex-basis: 400px;
-    }
+    flex: 2 0 400px;
 }
 
 .head {

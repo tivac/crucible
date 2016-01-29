@@ -1,9 +1,0 @@
-@value sm: 35.5em;
-@value md: 48em;
-@value lg: 64em;
-@value xl: 80em;
-
-@value small:  screen and (min-width: sm);
-@value medium: screen and (min-width: md);
-@value large:  screen and (min-width: lg);
-@value xlarge: screen and (min-width: xl);
