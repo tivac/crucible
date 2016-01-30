@@ -15,13 +15,13 @@
 
 .container {
     composes: horizontal;
-    
+
     height: 100%;
 }
 
 .section {
     composes: vertical;
-    
+
     width: 100%;
 }
 
@@ -47,8 +47,6 @@
 
 .body {
     composes: vertical;
-    
-    flex: 1 0 auto;
 
     overflow-y: auto;
 }
