@@ -7,10 +7,6 @@ var m      = require("mithril"),
     hide  = require("./lib/hide"),
     types = require("./lib/types.css");
 
-function optvalue(option) {
-    return option.value || option.name;
-}
-
 module.exports = {
     controller : function(options) {
         var ctrl = this;
@@ -20,7 +16,7 @@ module.exports = {
         ctrl.onchange = function(options, index) {
             var opt = options.details.children[index];
             
-            options.update(options.path, optvalue(opt));
+            options.update(options.path, opt.value);
         };
     },
 
@@ -40,9 +36,9 @@ module.exports = {
 
         // Need to go see if one of the options should be already selected
         if(!value) {
-            details.children.some(function(opt) {
-                if(opt.selected) {
-                    value = optvalue(opt);
+            details.children.some(function(option) {
+                if(option.selected) {
+                    value = option.value;
                 }
 
                 return value;
@@ -65,7 +61,7 @@ module.exports = {
                 }, details.attrs),
                 details.children.map(function(option) {
                     return m("option", assign({
-                            value : optvalue(option)
+                            value : option.value
                         }, option.attrs),
                         option.name
                     );
