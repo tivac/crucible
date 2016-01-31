@@ -7,18 +7,16 @@ function slugger(name) {
     return name.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
 }
 
-function processChildren(children, field) {
+function processChildren(children) {
     return Object.keys(children).map(function(label) {
-        var details = children[label],
-            output  = {
-                name     : label,
-                value    : details.value || details,
-                attrs    : details.attrs || {}
-            };
+        var details = children[label];
         
-        output[field] = details[field] || false;
-        
-        return output;
+        return {
+            name     : label,
+            value    : details.value || details,
+            attrs    : details.attrs || {},
+            selected : Boolean(details.selected)
+        };
     });
 }
 
@@ -88,13 +86,19 @@ function process(obj) {
         }
 
         if(field.type === "select") {
-            field.children = processChildren(field.options, "selected");
+            field.children = processChildren(field.options);
+
+            delete field.options;
+        }
+        
+        if(field.type === "checkbox") {
+            field.children = processChildren(field.options);
 
             delete field.options;
         }
         
         if(field.type === "radio") {
-            field.children = processChildren(field.options, "checked");
+            field.children = processChildren(field.options);
 
             delete field.options;
         }

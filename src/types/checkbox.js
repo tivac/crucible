@@ -7,27 +7,46 @@ var m      = require("mithril"),
     hide  = require("./lib/hide"),
     types = require("./lib/types.css"),
     
-    css   = require("./checkbox.css");
+    css = require("./checkbox.css");
 
 module.exports = {
     controller : function(options) {
         var ctrl = this;
 
-        ctrl.id      = id(options);
-        ctrl.checked = options.data === true;
+        ctrl.id = id(options);
 
-        ctrl.onclick = function(options, checked) {
-            options.update(options.path, checked);
-            
-            ctrl.checked = checked;
+        // Work out which input, if any, should be checked
+        ctrl.checked = function(details, value) {
+            var match;
+
+            if(!value) {
+                return;
+            }
+
+            match = details.children.find(function(opt) {
+                return opt.value.toString() === value;
+            });
+
+            if(match) {
+                details.children = details.children.map(function(opt) {
+                    opt.checked = (opt === match);
+
+                    return opt;
+                });
+            }
+        };
+        
+        ctrl.value = function(options, name, e) {
+            console.log(arguments);
         };
     },
 
     view : function(ctrl, options) {
         var details = options.details,
             name    = details.name,
-            hidden  = hide(options);
-            
+            hidden  = hide(options),
+            match;
+        
         if(hidden) {
             return hidden;
         }
@@ -35,27 +54,32 @@ module.exports = {
         if(details.required) {
             name += "*";
         }
+        
+        // ctrl.checked(details, options.data);
 
         return m("div", { class : options.class },
             m("label", {
-                    for   : ctrl.id,
-                    class : types[details.required ? "required" : "label"]
-                },
-                m("input", assign({
-                        // attrs
-                        id       : ctrl.id,
-                        type     : "checkbox",
-                        class    : css.checkbox,
-                        checked  : ctrl.checked,
-                        required : details.required ? "required" : null,
+                class : types[details.required ? "required" : "label"]
+            }, name),
+            (details.children || []).map(function(opt, i) {
+                var id = ctrl.id + "-" + i;
 
-                        // events
-                        onclick : m.withAttr("checked", ctrl.onclick.bind(ctrl, options))
-                    },
-                    details.attrs || {}
-                ), options.data || ""),
-                name
-            )
+                return [
+                    m("label", { class : css.checkbox },
+                        m("input", {
+                            // attrs
+                            type    : "checkbox",
+                            name    : name,
+                            value   : opt.value,
+                            checked : opt.selected,
+
+                            // events
+                            onclick : ctrl.value.bind(ctrl, options, name)
+                        }),
+                        " " + opt.name
+                    )
+                ];
+            })
         );
     }
 };
