@@ -12,6 +12,7 @@ function processChildren(children) {
         var details = children[label];
         
         return {
+            key      : slugger(label),
             name     : label,
             value    : details.value || details,
             attrs    : details.attrs || {},
