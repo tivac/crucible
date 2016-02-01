@@ -58,8 +58,9 @@ module.exports = {
             var result;
 
             result = db.child("content/" + ctrl.schema.key).push({
-                name    : "New " + ctrl.schema.name,
-                created : db.TIMESTAMP
+                name       : "New " + ctrl.schema.name,
+                created_at : db.TIMESTAMP,
+                created_by : db.getAuth().uid
             });
 
             m.route("/content/" + ctrl.schema.key + "/" + result.key());
@@ -143,7 +144,6 @@ module.exports = {
                         return m("li", { class : cssClass },
                             m("a", {
                                     class  : css.anchor,
-                                    href   : "/content/" + ctrl.schema.key + "/" + data.key,
                                     href   : "/content/" + ctrl.schema.key + "/" + data.key,
                                     config : m.route
                                 },
