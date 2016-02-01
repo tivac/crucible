@@ -1,85 +1,33 @@
 "use strict";
 
-var m      = require("mithril"),
-    assign = require("lodash.assign"),
+var m = require("mithril"),
 
-    id    = require("./lib/id"),
-    hide  = require("./lib/hide"),
-    types = require("./lib/types.css"),
-    
     css = require("./checkbox.css");
 
-module.exports = {
-    controller : function(options) {
-        var ctrl = this;
-
-        ctrl.id = id(options);
-
-        // Work out which input, if any, should be checked
-        ctrl.checked = function(details, value) {
-            var match;
-
-            if(!value) {
-                return;
-            }
-
-            match = details.children.find(function(opt) {
-                return opt.value.toString() === value;
-            });
-
-            if(match) {
-                details.children = details.children.map(function(opt) {
-                    opt.checked = (opt === match);
-
-                    return opt;
-                });
-            }
-        };
-        
-        ctrl.value = function(options, name, e) {
-            console.log(arguments);
-        };
+module.exports = require("./lib/multiple")({
+        multiple : true
     },
-
-    view : function(ctrl, options) {
-        var details = options.details,
-            name    = details.name,
-            hidden  = hide(options),
-            match;
+    
+    // View function
+    function(ctrl, options) {
+        var details = options.details;
         
-        if(hidden) {
-            return hidden;
-        }
+        return (details.children || []).map(function(opt) {
+            return m("label", { class : css.checkbox },
+                m("input", {
+                    // attrs
+                    type    : "checkbox",
+                    name    : details.name,
+                    value   : opt.value,
+                    checked : opt.selected,
 
-        if(details.required) {
-            name += "*";
-        }
-        
-        // ctrl.checked(details, options.data);
-
-        return m("div", { class : options.class },
-            m("label", {
-                class : types[details.required ? "required" : "label"]
-            }, name),
-            (details.children || []).map(function(opt, i) {
-                var id = ctrl.id + "-" + i;
-
-                return [
-                    m("label", { class : css.checkbox },
-                        m("input", {
-                            // attrs
-                            type    : "checkbox",
-                            name    : name,
-                            value   : opt.value,
-                            checked : opt.selected,
-
-                            // events
-                            onclick : ctrl.value.bind(ctrl, options, name)
-                        }),
-                        " " + opt.name
-                    )
-                ];
-            })
-        );
+                    // events
+                    onchange : m.withAttr("checked", function(state) {
+                        ctrl.value(options, opt.key, state && opt.value);
+                    })
+                }),
+                " " + opt.name
+            );
+        });
     }
-};
+);
