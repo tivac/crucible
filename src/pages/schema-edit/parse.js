@@ -85,19 +85,7 @@ function process(obj) {
             delete field.fields;
         }
 
-        if(field.type === "select") {
-            field.children = processChildren(field.options);
-
-            delete field.options;
-        }
-        
-        if(field.type === "checkbox") {
-            field.children = processChildren(field.options);
-
-            delete field.options;
-        }
-        
-        if(field.type === "radio") {
+        if(field.type === "select" || field.type === "checkbox" || field.type === "radio") {
             field.children = processChildren(field.options);
 
             delete field.options;
