@@ -48,14 +48,14 @@ types = {
     // Non-input fields
     instructions : require("./instructions"),
     relationship : require("./relationship"),
-    select       : require("./select"),
     textarea     : require("./textarea"),
-
-    // Non-standard input fields
+    
+    // Implementations based on lib/multiple.js
+    select   : require("./select"),
     radio    : require("./radio"),
     checkbox : require("./checkbox"),
 
-    // These are all just variations on the input type
+    // Implementations based on lib/input.js
     date     : input("date"),
     datetime : input("datetime-local"),
     email    : input("email"),

@@ -2,71 +2,33 @@
 
 var m      = require("mithril"),
     assign = require("lodash.assign"),
+    
+    css = require("./select.css");
 
-    id    = require("./lib/id"),
-    hide  = require("./lib/hide"),
-    types = require("./lib/types.css");
-
-module.exports = {
-    controller : function(options) {
-        var ctrl = this;
-
-        ctrl.id = id(options);
-
-        ctrl.onchange = function(options, index) {
-            var opt = options.details.children[index];
-            
-            options.update(options.path, opt.value);
-        };
+module.exports = require("./lib/multiple")({
+        multiple : false
     },
 
-    view : function(ctrl, options) {
-        var details = options.details,
-            value   = options.data,
-            name    = details.name,
-            hidden  = hide(options);
+    function(ctrl, options) {
+        var details = options.details;
 
-        if(hidden) {
-            return hidden;
-        }
-
-        if(details.required) {
-            name += "*";
-        }
-
-        // Need to go see if one of the options should be already selected
-        if(!value) {
-            details.children.some(function(option) {
-                if(option.selected) {
-                    value = option.value;
+        return m("select", assign({
+                // attrs
+                class : css.select,
+                
+                // events
+                onchange : function(e) {
+                    var tgt = e.target,
+                        opt = details.children[tgt.selectedIndex];
+                    
+                    ctrl.value(options, opt.key, opt.value);
                 }
-
-                return value;
-            });
-        }
-
-        return m("div", { class : options.class },
-            m("label", {
-                for   : ctrl.id,
-                class : types[details.required ? "required" : "label"]
-            }, name),
-            m("select", assign({
-                    // attrs
-                    value    : value,
-                    class    : types.select,
-                    required : details.required ? "required" : null,
-
-                    // events
-                    onchange : m.withAttr("selectedIndex", ctrl.onchange.bind(null, options))
-                }, details.attrs),
-                details.children.map(function(option) {
-                    return m("option", assign({
-                            value : option.value
-                        }, option.attrs),
-                        option.name
-                    );
-                })
-            )
+            }, details.attrs),
+            details.children.map(function(option) {
+                return m("option", assign({}, option.attrs, { value : option.value }),
+                    option.name
+                );
+            })
         );
     }
-};
+);
