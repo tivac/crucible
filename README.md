@@ -189,7 +189,11 @@ You can attach dom-specific attributes to most types by specifying an `attrs` ke
 
     // Checkbox
     Checkbox : {
-        type : "checkbox"
+        type : "checkbox",
+        options : {
+            one : "option 1",
+            two : "option 2"
+        }
     },
 
     // Radio buttons
