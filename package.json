@@ -57,5 +57,11 @@
     "normalize.css": "^3.0.3",
     "purecss": "^0.6.0",
     "sluggo": "^0.2.0"
+  },
+  "eslintConfig": {
+    "extends": "arenanet",
+    "env": {
+      "node": true
+    }
   }
 }
