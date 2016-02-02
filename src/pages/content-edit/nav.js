@@ -159,7 +159,7 @@ module.exports = {
                                             href   : ctrl.schema.preview + data.key,
                                             target : "_blank"
                                         },
-                                        m("svg", { class : css.previewIcon },
+                                        m("svg", { class : css.icon },
                                             m("use", { href : "/src/icons.svg#icon-preview" })
                                         )
                                     ) :
@@ -170,7 +170,7 @@ module.exports = {
 
                                         onclick : ctrl.remove.bind(ctrl, data)
                                     },
-                                    m("svg", { class : css.removeIcon },
+                                    m("svg", { class : css.icon },
                                         m("use", { href : "/src/icons.svg#icon-remove" })
                                     )
                                 )
