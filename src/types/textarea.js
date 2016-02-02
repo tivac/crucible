@@ -34,7 +34,7 @@ module.exports = {
             return hidden;
         }
 
-        if(details.required && !/\*$/.test(name)) {
+        if(details.required && !requiredRegex.test(name)) {
             name += "*";
         }
 
