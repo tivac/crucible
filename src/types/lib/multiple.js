@@ -4,8 +4,10 @@ var m      = require("mithril"),
 
     id    = require("./id"),
     hide  = require("./hide"),
-    
-    css = require("./types.css");
+
+    css = require("./types.css"),
+
+    requiredRegex = /\*$/;
 
 module.exports = function(args, view) {
     return {
@@ -19,30 +21,30 @@ module.exports = function(args, view) {
                 var details = opts.details,
                     values  = opts.data,
                     matches;
-                
+
                 if(!values) {
                     return;
                 }
-                
+
                 matches = details.children.filter(function(opt) {
                     if(!args.multiple) {
                         return opt.value === values;
                     }
-                    
+
                     return values[opt.key] === opt.value;
                 });
-                
+
                 if(!args.multiple && matches.length) {
                     matches.length = 1;
                 }
-                
+
                 details.children = details.children.map(function(opt) {
                     opt.selected = matches.indexOf(opt) > -1;
-                    
+
                     return opt;
                 });
             };
-            
+
             ctrl.value = function(opts, key, value) {
                 return opts.update(
                     args.multiple ? opts.path.concat(key) : opts.path,
@@ -54,15 +56,15 @@ module.exports = function(args, view) {
         view : function(ctrl, options) {
             var details = options.details,
                 hidden  = hide(options);
-            
+
             if(hidden) {
                 return hidden;
             }
 
-            if(details.required) {
+            if(details.required && !requiredRegex.test(details.name)) {
                 details.name += "*";
             }
-            
+
             ctrl.selected(options);
 
             return m("div", { class : options.class },
