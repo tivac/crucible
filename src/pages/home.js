@@ -2,8 +2,6 @@
 
 var m  = require("mithril"),
 
-    db   = require("../lib/firebase"),
-
     layout = require("./layout"),
     css    = require("./layout/layout.css");
 

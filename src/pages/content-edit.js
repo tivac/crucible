@@ -2,7 +2,6 @@
 
 var m          = require("mithril"),
     get        = require("lodash.get"),
-    set        = require("lodash.set"),
     merge      = require("lodash.merge"),
     assign     = require("lodash.assign"),
     capitalize = require("lodash.capitalize"),
@@ -87,7 +86,7 @@ module.exports = {
         }
 
         return m.component(layout, {
-            title   : title, 
+            title   : title,
             content : [
                 m.component(nav),
                 m("div", { class : css.content },
@@ -117,8 +116,11 @@ module.exports = {
                     m("div", { class : css.body },
                         m("h2", { class : css.schema }, "/" + ctrl.schema.name + "/"),
                         m("h1", {
-                                class : css.title,
+                                // Attrs
+                                class           : css.title,
                                 contenteditable : true,
+                                
+                                // Events
                                 oninput : m.withAttr("innerText", update(ctrl.ref, ctrl.data, [ "name" ]))
                             },
                             ctrl.data.name || ""
@@ -138,14 +140,14 @@ module.exports = {
                                 }
                             },
                             m.component(children, {
-                                data   : ctrl.data.fields || {},
+                                data : ctrl.data.fields || {},
 
                                 // TODO: Change to "fields"?
                                 details : ctrl.schema.fields,
-                                path   : [ "fields" ],
-                                root   : ctrl.ref,
-                                state  : ctrl.data.fields,
-                                update : update.bind(null, ctrl.ref, ctrl.data)
+                                path    : [ "fields" ],
+                                root    : ctrl.ref,
+                                state   : ctrl.data.fields,
+                                update  : update.bind(null, ctrl.ref, ctrl.data)
                             })
                         )
                     )

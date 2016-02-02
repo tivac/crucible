@@ -23,7 +23,11 @@ for(x = 0; x < count; x++) {
         updated : faker.date.recent().valueOf(),
         fields  : {
             "make-your-choice" : faker.random.arrayElement([ 1, 2, 3 ]),
-            number : faker.random.number(),
+            
+            number    : faker.random.number(),
+            text      : faker.lorem.sentence(),
+            repeating : repeating,
+            
             tabs : faker.random.objectElement({
                 en : {
                     en : {
@@ -38,9 +42,7 @@ for(x = 0; x < count; x++) {
                         body  : "DE " + faker.lorem.paragraph()
                     }
                 }
-            }),
-            text : faker.lorem.sentence(),
-            repeating : repeating
+            })
         }
     };
 }

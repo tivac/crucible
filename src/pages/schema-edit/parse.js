@@ -1,7 +1,6 @@
 "use strict";
 
-var required = /\*$/,
-    types;
+var required = /\*$/;
 
 function slugger(name) {
     return name.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
@@ -37,6 +36,7 @@ function process(obj) {
     var out = [];
 
     Object.keys(obj).forEach(function(name) {
+        /* eslint complexity:[2, 13] */
         var field = obj[name];
 
         if(typeof field !== "object") {
@@ -101,13 +101,14 @@ function process(obj) {
 // This worker takes the nice, human-friendly config format and turns it into
 // ugly arrays of objects for firebase
 self.onmessage = function(e) {
+    /* eslint no-eval:0, no-console:0 */
     var config;
 
     try {
         // This is super-gross but in a worker should be (mostly) safe
         eval("config = " + e.data);
-    } catch(e) {
-        console.error("Invalid config");
+    } catch(error) {
+        console.error("Invalid config", error);
         
         return;
     }

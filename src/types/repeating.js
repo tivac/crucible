@@ -7,7 +7,6 @@ var m      = require("mithril"),
     hide = require("./lib/hide"),
 
     children     = require("./children"),
-    instructions = require("./instructions"),
 
     css   = require("./repeating.css");
 
@@ -37,25 +36,25 @@ module.exports = {
 
         ctrl.children = (options.data && options.data.length) || 1;
 
-        ctrl.add = function(options) {
+        ctrl.add = function(opts) {
             ctrl.children += 1;
 
             // Ensure that we have data placeholders for all the possible entries
             times(ctrl.children, function(idx) {
-                if(options.data && options.data[idx]) {
+                if(opts.data && opts.data[idx]) {
                     return;
                 }
                 
-                options.update(options.path.concat(idx), "placeholder");
+                opts.update(opts.path.concat(idx), "placeholder");
             });
         };
 
-        ctrl.remove = function(options, data, idx) {
-            options.data.splice(idx, 1);
+        ctrl.remove = function(opts, data, idx) {
+            opts.data.splice(idx, 1);
 
-            ctrl.children = options.data.length;
+            ctrl.children = opts.data.length;
             
-            options.update(options.path, options.data);
+            opts.update(opts.path, opts.data);
         };
     },
 

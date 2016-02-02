@@ -1,4 +1,3 @@
-/* global crucible */
 "use strict";
 
 var db     = require("./lib/firebase"),

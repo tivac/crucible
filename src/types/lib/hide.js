@@ -8,12 +8,13 @@ var m   = require("mithril"),
     dom = m("div", "");
 
 module.exports = function(options) {
+    /* eslint: eqeqeq:0 */
     var dep = get(options, field),
-        src, tgt, hide;
+        src, tgt;
     
     // No conditional visibility config or missing target field
     if(!dep) {
-        return;
+        return false;
     }
     
     src = options.details.show.value;
@@ -24,13 +25,13 @@ module.exports = function(options) {
         src = new RegExp(src, "i");
         
         if(src.test(tgt)) {
-            return;
+            return false;
         }
     }
     
     // Values match-ish
     if(src == tgt) {
-        return;
+        return false;
     }
     
     // Otherwise this field should hide

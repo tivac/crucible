@@ -1,3 +1,4 @@
+/* eslint no-console:0 */
 "use strict";
 
 var fs   = require("fs"),
@@ -39,13 +40,17 @@ function bundle() {
         
         fs.writeFileSync("gen/index.js", out);
         
-        done && done();
+        if(done) {
+            done();
+        }
     });
 }
 
 builder.plugin("watchify");
 builder.plugin("modular-css", {
-    css   : "gen/index.css",
+    css : "gen/index.css",
+    
+    // Plugins
     before : [
         require("postcss-nested")
     ],

@@ -1,7 +1,6 @@
 "use strict";
 
 var m      = require("mithril"),
-    assign = require("lodash.assign"),
 
     id    = require("./id"),
     hide  = require("./hide"),
@@ -16,9 +15,9 @@ module.exports = function(args, view) {
             ctrl.id = id(options);
 
             // Decorate children w/ their selection status
-            ctrl.selected = function(options) {
-                var details = options.details,
-                    values  = options.data,
+            ctrl.selected = function(opts) {
+                var details = opts.details,
+                    values  = opts.data,
                     matches;
                 
                 if(!values) {
@@ -44,9 +43,9 @@ module.exports = function(args, view) {
                 });
             };
             
-            ctrl.value = function(options, key, value) {
-                return options.update(
-                    args.multiple ? options.path.concat(key) : options.path,
+            ctrl.value = function(opts, key, value) {
+                return opts.update(
+                    args.multiple ? opts.path.concat(key) : opts.path,
                     value
                 );
             };
@@ -54,8 +53,7 @@ module.exports = function(args, view) {
 
         view : function(ctrl, options) {
             var details = options.details,
-                hidden  = hide(options),
-                match;
+                hidden  = hide(options);
             
             if(hidden) {
                 return hidden;
@@ -74,5 +72,5 @@ module.exports = function(args, view) {
                 view(ctrl, options)
             );
         }
-    }
+    };
 };

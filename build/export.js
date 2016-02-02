@@ -1,7 +1,7 @@
+/* eslint no-console:0 */
 "use strict";
 
 var fs   = require("fs"),
-    path = require("path"),
     
     browserify = require("browserify"),
     duration   = require("humanize-duration"),

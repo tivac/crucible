@@ -3,8 +3,6 @@
 var m      = require("mithril"),
     assign = require("lodash.assign"),
 
-    update  = require("../lib/update"),
-    
     id    = require("./lib/id"),
     hide  = require("./lib/hide"),
     types = require("./lib/types.css"),
@@ -18,8 +16,8 @@ module.exports = {
         ctrl.id   = id(options);
         ctrl.text = options.data || "";
 
-        ctrl.resize = function(options, value) {
-            options.update(options.path, value);
+        ctrl.resize = function(opt, value) {
+            opt.update(opt.path, value);
 
             ctrl.text = value;
         };
