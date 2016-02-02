@@ -4,7 +4,6 @@ var m          = require("mithril"),
     moment     = require("moment"),
     fuzzy      = require("fuzzysearch"),
     debounce   = require("lodash.debounce"),
-    get        = require("lodash.get"),
     capitalize = require("lodash.capitalize"),
     slug       = require("sluggo"),
 
@@ -133,12 +132,10 @@ module.exports = {
 
                         if(data.published && route.indexOf(url) === 0) {
                             cssClass = css.activePublished;
-                        } else {
-                            if(route.indexOf(url) === 0) {
-                                cssClass = css.active;
-                            } else if(data.published) {
-                                cssClass = css.published;
-                            }
+                        } else if(route.indexOf(url) === 0) {
+                            cssClass = css.active;
+                        } else if(data.published) {
+                            cssClass = css.published;
                         }
 
                         return m("li", { class : cssClass },

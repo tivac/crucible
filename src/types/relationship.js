@@ -2,8 +2,6 @@
 
 var m      = require("mithril"),
     assign = require("lodash.assign"),
-    map    = require("lodash.map"),
-    fuzzy  = require("fuzzysearch"),
     
     Awesomeplete = require("awesomplete"),
 
@@ -76,9 +74,9 @@ module.exports = {
         
         // Set up a two-way relationship between these
         ctrl.add = function(e) {
-            var id = ctrl.lookup[e.target.value];
+            var key = ctrl.lookup[e.target.value];
             
-            if(!id) {
+            if(!key) {
                 console.error(e.target.value);
                 
                 return;
@@ -86,19 +84,19 @@ module.exports = {
             
             e.target.value = "";
             
-            options.update(options.path.concat(id), true);
+            options.update(options.path.concat(key), true);
 
             if(options.root) {
-                content.child(id + "/relationships/" + options.root.key()).set(true);
+                content.child(key + "/relationships/" + options.root.key()).set(true);
             }
         };
 
         // BREAK THE RELATIONSHIP
-        ctrl.remove = function(id) {
-            options.update(options.path.concat(id), false);
+        ctrl.remove = function(key) {
+            options.update(options.path.concat(key), false);
             
             if(options.root) {
-                content.child(id + "/relationships/" + options.root.key()).remove();
+                content.child(key + "/relationships/" + options.root.key()).remove();
             }
         };
         
@@ -126,9 +124,12 @@ module.exports = {
                 class : types[details.required ? "required" : "label"]
             }, name),
             m("input", assign(details.attrs || {}, {
+                // Attrs
                 id     : ctrl.id,
                 class  : types.input,
                 config : ctrl.config,
+                
+                // Events
                 onkeydown : function(e) {
                     if(e.keyCode !== 9 || ctrl.autocomplete.opened === false) {
                         return;

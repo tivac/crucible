@@ -5,8 +5,7 @@ var m      = require("mithril"),
 
     db = require("../lib/firebase"),
 
-    layout = require("./layout"),
-    css    = require("./schema-edit.css");
+    layout = require("./layout");
 
 module.exports = {
     controller : function() {

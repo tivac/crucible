@@ -14,7 +14,7 @@ module.exports = require("./lib/multiple")({
         
         return (details.children || []).map(function(opt) {
             return m("label", { class : css.choice },
-                m("input", {
+                m("input", assign({}, opt.attrs, {
                     // attrs
                     type    : "radio",
                     name    : details.name,
@@ -25,7 +25,7 @@ module.exports = require("./lib/multiple")({
                     onchange : function() {
                         ctrl.value(options, opt.key, opt.value);
                     }
-                }),
+                })),
                 " " + opt.name
             );
         });

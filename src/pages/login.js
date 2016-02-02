@@ -18,7 +18,7 @@ module.exports = {
             e.preventDefault();
             
             db.authWithPassword({
-                email : form.email.value,
+                email    : form.email.value,
                 password : form.password.value
             }, function(error) {
                 if(error) {

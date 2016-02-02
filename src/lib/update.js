@@ -1,7 +1,6 @@
 "use strict";
 
-var m   = require("mithril"),
-    set = require("lodash.set");
+var set = require("lodash.set");
 
 function firebase(ref, path, val) {
     var db = path.length ? ref.child(path.join("/")) : ref;
@@ -11,7 +10,7 @@ function firebase(ref, path, val) {
     }
     
     return db.set(val);
-};
+}
 
 function update(ref, obj, path, val) {
     if(!obj) {

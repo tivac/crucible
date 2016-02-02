@@ -64,7 +64,7 @@ module.exports = {
                     disabled : !options.enabled,
 
                     // Events
-                    onclick  : ctrl.publishAt
+                    onclick : ctrl.publishAt
                 }, "Publish")
             )
         );

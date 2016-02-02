@@ -1,7 +1,6 @@
 "use strict";
 
 var m          = require("mithril"),
-    debounce   = require("lodash.debounce"),
     capitalize = require("lodash.capitalize"),
 
     children = require("../types/children"),
