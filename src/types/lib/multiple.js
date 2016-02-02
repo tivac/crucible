@@ -17,15 +17,15 @@ module.exports = function(args, view) {
 
             // Decorate children w/ their selection status
             ctrl.selected = function(opts) {
-                var details = opts.details,
-                    values  = opts.data,
+                var field  = opts.field,
+                    values = opts.data,
                     matches;
 
                 if(!values) {
                     return;
                 }
 
-                matches = details.children.filter(function(opt) {
+                matches = field.children.filter(function(opt) {
                     if(!args.multiple) {
                         return opt.value === values;
                     }
@@ -37,7 +37,7 @@ module.exports = function(args, view) {
                     matches.length = 1;
                 }
 
-                details.children = details.children.map(function(opt) {
+                field.children = field.children.map(function(opt) {
                     opt.selected = matches.indexOf(opt) > -1;
 
                     return opt;
