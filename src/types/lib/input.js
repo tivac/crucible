@@ -5,9 +5,9 @@ var m      = require("mithril"),
 
     hide  = require("./hide"),
     id    = require("./id"),
-    types = require("./types.css"),
-
-    requiredRegex = /\*$/;
+    label = require("./label"),
+    
+    css = require("./types.css");
 
 module.exports = function(type) {
     return {
@@ -19,27 +19,19 @@ module.exports = function(type) {
 
         view : function(ctrl, options) {
             var details = options.details,
-                name    = details.name,
                 hidden  = hide(options);
 
             if(hidden) {
                 return hidden;
             }
 
-            if(details.required && !requiredRegex.test(name)) {
-                name += "*";
-            }
-
             return m("div", { class : options.class },
-                m("label", {
-                    for   : ctrl.id,
-                    class : types[details.required ? "required" : "label"]
-                }, name),
+                label(ctrl, options),
                 m("input", assign({
                         // attrs
                         id       : ctrl.id,
                         type     : type || "text",
-                        class    : types[type || "text"],
+                        class    : css[type || "text"],
                         value    : options.data || "",
                         required : details.required ? "required" : null,
 

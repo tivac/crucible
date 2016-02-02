@@ -4,10 +4,9 @@ var m      = require("mithril"),
 
     id    = require("./id"),
     hide  = require("./hide"),
-
-    css = require("./types.css"),
-
-    requiredRegex = /\*$/;
+    label = require("./label"),
+    
+    css = require("./types.css");
 
 module.exports = function(args, view) {
     return {
@@ -54,23 +53,16 @@ module.exports = function(args, view) {
         },
 
         view : function(ctrl, options) {
-            var details = options.details,
-                hidden  = hide(options);
-
+            var hidden  = hide(options);
+            
             if(hidden) {
                 return hidden;
             }
 
-            if(details.required && !requiredRegex.test(details.name)) {
-                details.name += "*";
-            }
-
             ctrl.selected(options);
-
+            
             return m("div", { class : options.class },
-                m("label", {
-                    class : css[details.required ? "required" : "label"]
-                }, details.name),
+                label(ctrl, options),
                 view(ctrl, options)
             );
         }

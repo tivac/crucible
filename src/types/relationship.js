@@ -9,11 +9,10 @@ var m      = require("mithril"),
 
     id    = require("./lib/id"),
     hide  = require("./lib/hide"),
+    label = require("./lib/label"),
     types = require("./lib/types.css"),
 
-    css   = require("./relationship.css"),
-
-    requiredRegex = /\*$/;
+    css   = require("./relationship.css");
 
 module.exports = {
     controller : function(options) {
@@ -109,22 +108,14 @@ module.exports = {
 
     view : function(ctrl, options) {
         var details = options.details,
-            name    = details.name,
             hidden  = hide(options);
 
         if(hidden) {
             return hidden;
         }
 
-        if(details.required && !requiredRegex.test(name)) {
-            name += "*";
-        }
-
         return m("div", { class : options.class },
-            m("label", {
-                for   : ctrl.id,
-                class : types[details.required ? "required" : "label"]
-            }, name),
+            label(ctrl, options),
             m("input", assign(details.attrs || {}, {
                 // Attrs
                 id     : ctrl.id,
