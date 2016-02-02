@@ -1,12 +1,9 @@
 "use strict";
 
-var m        = require("mithril"),
-    set      = require("lodash.set"),
-    debounce = require("lodash.debounce"),
-    
-    firebase;
+var m   = require("mithril"),
+    set = require("lodash.set");
 
-firebase = debounce(function(ref, path, val) {
+function firebase(ref, path, val) {
     var db = path.length ? ref.child(path.join("/")) : ref;
     
     if(val === false) {
@@ -14,7 +11,7 @@ firebase = debounce(function(ref, path, val) {
     }
     
     return db.set(val);
-}, 1000, { maxWait : 10000 });
+};
 
 function update(ref, obj, path, val) {
     if(!obj) {
@@ -26,8 +23,6 @@ function update(ref, obj, path, val) {
     }
     
     set(obj, path, val === false ? undefined : val);
-    
-    m.redraw();
 }
 
 module.exports = function(ref, obj, path, val) {
