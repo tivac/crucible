@@ -60,6 +60,10 @@ module.exports = {
 
             m.redraw();
         });
+        
+        ctrl.save = function() {
+            ref.child("fields").set(ctrl.data.fields);
+        };
 
         watch(ref);
     },
@@ -84,7 +88,7 @@ module.exports = {
                 ]
             });
         }
-
+        
         return m.component(layout, {
             title   : title,
             content : [
@@ -98,17 +102,28 @@ module.exports = {
                                 class   : css.publishing,
                                 enabled : ctrl.form && ctrl.form.checkValidity()
                             }),
-                            m("div", { class : css.previewing },
+                            m("div", { class : css.actions },
                                 m("button", {
                                         class  : css.preview,
                                         title  : "Preview",
                                         href   : ctrl.schema.preview + ctrl.id,
                                         target : "_blank"
                                     },
-                                    m("svg", { class : css.previewIcon },
+                                    m("svg", { class : css.icon },
                                         m("use", { href : "/src/icons.svg#icon-preview" })
                                     ),
                                     "Preview"
+                                ),
+                                
+                                m("button", {
+                                        class   : css.save,
+                                        onclick : ctrl.save,
+                                        title   : "Save your changes"
+                                    },
+                                     m("svg", { class : css.icon },
+                                        m("use", { href : "/src/icons.svg#icon-save" })
+                                    ),
+                                    "Save"
                                 )
                             )
                         )
@@ -121,7 +136,7 @@ module.exports = {
                                 contenteditable : true,
                                 
                                 // Events
-                                oninput : m.withAttr("innerText", update(ctrl.ref, ctrl.data, [ "name" ]))
+                                oninput : m.withAttr("innerText", update(ctrl.data, [ "name" ]))
                             },
                             ctrl.data.name || ""
                         ),
@@ -140,14 +155,12 @@ module.exports = {
                                 }
                             },
                             m.component(children, {
-                                data : ctrl.data.fields || {},
-
-                                // TODO: Change to "fields"?
-                                details : ctrl.schema.fields,
-                                path    : [ "fields" ],
-                                root    : ctrl.ref,
-                                state   : ctrl.data.fields,
-                                update  : update.bind(null, ctrl.ref, ctrl.data)
+                                data   : ctrl.data.fields || {},
+                                fields : ctrl.schema.fields,
+                                path   : [ "fields" ],
+                                root   : ctrl.ref,
+                                state  : ctrl.data.fields,
+                                update : update.bind(null, ctrl.data)
                             })
                         )
                     )

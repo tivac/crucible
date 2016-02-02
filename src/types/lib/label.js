@@ -6,11 +6,11 @@ var m = require("mithril"),
 
  
 module.exports = function(ctrl, options) {
-    var details = options.details,
-        name    = details.name,
-        style   = css.label;
+    var field = options.field,
+        name  = field.name,
+        style = css.label;
     
-    if(details.required) {
+    if(field.required) {
         name += "*";
         style = css.required;
     }

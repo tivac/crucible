@@ -47,20 +47,26 @@
     flex: 1 1 50%;
 }
 
-.previewing {
+.actions {
     flex: 1 1 20%;
 }
 
 .preview {
-    composes: primary from buttons_css;
+    composes: button from buttons_css;
 }
 
-.previewIcon {
+.icon {
     composes: icon from icons_css;
     
     width: 1.1em;
     height: 1.1em;
     margin-right: 5px;
+}
+
+.save {
+    composes: primary from buttons_css;
+    
+    margin-left: 10px;
 }
 
 /* Title */

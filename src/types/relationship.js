@@ -17,7 +17,7 @@ var m      = require("mithril"),
 module.exports = {
     controller : function(options) {
         var ctrl    = this,
-            schema  = options.details.schema,
+            schema  = options.field.schema,
             content = db.child("content/" + schema);
 
         ctrl.id      = id(options);
@@ -93,9 +93,11 @@ module.exports = {
         };
 
         // BREAK THE RELATIONSHIP
-        ctrl.remove = function(key) {
-            options.update(options.path.concat(key), false);
-
+        ctrl.remove = function(id, e) {
+            e.preventDefault();
+            
+            options.update(options.path.concat(id), false);
+            
             if(options.root) {
                 content.child(key + "/relationships/" + options.root.key()).remove();
             }
@@ -107,16 +109,16 @@ module.exports = {
     },
 
     view : function(ctrl, options) {
-        var details = options.details,
-            hidden  = hide(options);
-
+        var field  = options.field,
+            hidden = hide(options);
+            
         if(hidden) {
             return hidden;
         }
 
         return m("div", { class : options.class },
             label(ctrl, options),
-            m("input", assign(details.attrs || {}, {
+            m("input", assign(field.attrs || {}, {
                 // Attrs
                 id     : ctrl.id,
                 class  : types.input,

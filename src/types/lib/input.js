@@ -18,8 +18,8 @@ module.exports = function(type) {
         },
 
         view : function(ctrl, options) {
-            var details = options.details,
-                hidden  = hide(options);
+            var field  = options.field,
+                hidden = hide(options);
 
             if(hidden) {
                 return hidden;
@@ -33,12 +33,12 @@ module.exports = function(type) {
                         type     : type || "text",
                         class    : css[type || "text"],
                         value    : options.data || "",
-                        required : details.required ? "required" : null,
+                        required : field.required ? "required" : null,
 
                         // events
                         oninput : m.withAttr("value", options.update(options.path))
                     },
-                    details.attrs || {}
+                    field.attrs || {}
                 ))
             );
         }

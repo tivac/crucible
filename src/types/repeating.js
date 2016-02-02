@@ -14,10 +14,10 @@ function child(ctrl, options, data, idx) {
     return m("div", { class : css[idx === 0 ? "first" : "child"] },
         m("div", { class : css.counter }, idx + 1),
         m.component(children, assign({}, options, {
-            details : options.details.children,
-            class   : css.fields,
-            data    : data,
-            path    : options.path.concat(idx)
+            fields : options.field.children,
+            class  : css.fields,
+            data   : data,
+            path   : options.path.concat(idx)
         })),
         m("div", { class : css.counter },
             m("button", {
@@ -59,8 +59,8 @@ module.exports = {
     },
 
     view : function(ctrl, options) {
-        var details = options.details,
-            hidden  = hide(options);
+        var field  = options.field,
+            hidden = hide(options);
         
         if(hidden) {
             return hidden;
@@ -73,7 +73,7 @@ module.exports = {
             m("button", {
                 class   : css.add,
                 onclick : ctrl.add.bind(ctrl, options)
-            }, details.button || "Add")
+            }, field.button || "Add")
         );
     }
 };

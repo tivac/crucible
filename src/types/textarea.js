@@ -24,7 +24,7 @@ module.exports = {
     },
 
     view : function(ctrl, options) {
-        var details = options.details,
+        var field = options.field,
             hidden  = hide(options);
 
         if(hidden) {
@@ -39,12 +39,12 @@ module.exports = {
                         // attrs
                         id       : ctrl.id,
                         class    : css.textarea,
-                        required : details.required ? "required" : null,
+                        required : field.required ? "required" : null,
 
                         // events
                         oninput : m.withAttr("value", ctrl.resize.bind(null, options))
                     },
-                    details.attrs || {}
+                    field.attrs || {}
                 ), options.data || "")
             )
         );

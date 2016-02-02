@@ -8,16 +8,16 @@ var m = require("mithril"),
 
 module.exports = {
     view : function(ctrl, options) {
-        var details = options.details,
-            hidden  = hide(options);
+        var field  = options.field,
+            hidden = hide(options);
         
         if(hidden) {
             return hidden;
         }
 
         return m("div", { class : options.class },
-            details.head ? m("p", { class : css.head }, details.head) : null,
-            details.body ? m("p", details.body) : null
+            field.head ? m("p", { class : css.head }, field.head) : null,
+            field.body ? m("p", field.body) : null
         );
     }
 };
