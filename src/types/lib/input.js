@@ -18,8 +18,8 @@ module.exports = function(type) {
         },
 
         view : function(ctrl, options) {
-            var field = options.details,
-                hidden  = hide(options);
+            var field  = options.field,
+                hidden = hide(options);
 
             if(hidden) {
                 return hidden;
