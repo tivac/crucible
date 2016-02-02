@@ -2,7 +2,7 @@
 
 var m      = require("mithril"),
     assign = require("lodash.assign"),
-    
+
     css = require("./select.css");
 
 module.exports = require("./lib/multiple")({
@@ -15,12 +15,12 @@ module.exports = require("./lib/multiple")({
         return m("select", assign({
                 // attrs
                 class : css.select,
-                
+
                 // events
                 onchange : function(e) {
                     var tgt = e.target,
                         opt = details.children[tgt.selectedIndex];
-                    
+
                     ctrl.value(options, opt.key, opt.value);
                 }
             }, details.attrs),

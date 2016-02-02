@@ -2,7 +2,7 @@
 
 var m      = require("mithril"),
     assign = require("lodash.assign"),
-    
+
     Awesomeplete = require("awesomplete"),
 
     db = require("../lib/firebase"),
@@ -10,8 +10,10 @@ var m      = require("mithril"),
     id    = require("./lib/id"),
     hide  = require("./lib/hide"),
     types = require("./lib/types.css"),
-    
-    css   = require("./relationship.css");
+
+    css   = require("./relationship.css"),
+
+    requiredRegex = /\*$/;
 
 module.exports = {
     controller : function(options) {
@@ -24,66 +26,66 @@ module.exports = {
         ctrl.handle  = null;
         ctrl.related = null;
         ctrl.names   = [];
-        
+
         ctrl.config = function(el, init) {
             if(init) {
                 return;
             }
-            
+
             ctrl.autocomplete = new Awesomeplete(el, {
                 minChars  : 3,
                 maxItems  : 10,
                 autoFirst : true
             });
-            
+
             ctrl.input = el;
-            
+
             el.addEventListener("awesomplete-selectcomplete", ctrl.add);
-            
+
             ctrl.autocomplete.list = ctrl.names;
-            
+
             ctrl.load();
         };
-        
+
         ctrl.load = function() {
             if(ctrl.handle) {
                 return;
             }
-            
+
             ctrl.handle = content.on("value", function(snap) {
                 ctrl.lookup  = {};
                 ctrl.related = snap.val();
                 ctrl.names   = [];
-                
+
                 snap.forEach(function(details) {
                     var val = details.val();
-                    
+
                     ctrl.names.push(val.name);
-                    
+
                     ctrl.lookup[val.name] = details.key();
                 });
-                
+
                 if(ctrl.autocomplete) {
                     ctrl.autocomplete.list = ctrl.names;
                     ctrl.autocomplete.evaluate();
                 }
-                
+
                 m.redraw();
             });
         };
-        
+
         // Set up a two-way relationship between these
         ctrl.add = function(e) {
             var key = ctrl.lookup[e.target.value];
-            
+
             if(!key) {
                 console.error(e.target.value);
-                
+
                 return;
             }
-            
+
             e.target.value = "";
-            
+
             options.update(options.path.concat(key), true);
 
             if(options.root) {
@@ -94,12 +96,12 @@ module.exports = {
         // BREAK THE RELATIONSHIP
         ctrl.remove = function(key) {
             options.update(options.path.concat(key), false);
-            
+
             if(options.root) {
                 content.child(key + "/relationships/" + options.root.key()).remove();
             }
         };
-        
+
         if(options.data) {
             ctrl.load();
         }
@@ -109,12 +111,12 @@ module.exports = {
         var details = options.details,
             name    = details.name,
             hidden  = hide(options);
-            
+
         if(hidden) {
             return hidden;
         }
 
-        if(details.required) {
+        if(details.required && !requiredRegex.test(name)) {
             name += "*";
         }
 
@@ -128,13 +130,13 @@ module.exports = {
                 id     : ctrl.id,
                 class  : types.input,
                 config : ctrl.config,
-                
+
                 // Events
                 onkeydown : function(e) {
                     if(e.keyCode !== 9 || ctrl.autocomplete.opened === false) {
                         return;
                     }
-                    
+
                     ctrl.autocomplete.select();
                 }
             })),

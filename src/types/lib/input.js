@@ -5,7 +5,9 @@ var m      = require("mithril"),
 
     hide  = require("./hide"),
     id    = require("./id"),
-    types = require("./types.css");
+    types = require("./types.css"),
+
+    requiredRegex = /\*$/;
 
 module.exports = function(type) {
     return {
@@ -19,12 +21,12 @@ module.exports = function(type) {
             var details = options.details,
                 name    = details.name,
                 hidden  = hide(options);
-            
+
             if(hidden) {
                 return hidden;
             }
-            
-            if(details.required) {
+
+            if(details.required && !requiredRegex.test(name)) {
                 name += "*";
             }
 

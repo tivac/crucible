@@ -6,8 +6,10 @@ var m      = require("mithril"),
     id    = require("./lib/id"),
     hide  = require("./lib/hide"),
     types = require("./lib/types.css"),
-    
-    css = require("./textarea.css");
+
+    css = require("./textarea.css"),
+
+    requiredRegex = /\*$/;
 
 module.exports = {
     controller : function(options) {
@@ -27,12 +29,12 @@ module.exports = {
         var details = options.details,
             name    = details.name,
             hidden  = hide(options);
-            
+
         if(hidden) {
             return hidden;
         }
 
-        if(details.required) {
+        if(details.required && !/\*$/.test(name)) {
             name += "*";
         }
 
