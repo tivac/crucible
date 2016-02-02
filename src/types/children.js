@@ -47,6 +47,8 @@ types = {
 
     // Non-input fields
     instructions : require("./instructions"),
+    
+    // Custom input types
     relationship : require("./relationship"),
     textarea     : require("./textarea"),
     

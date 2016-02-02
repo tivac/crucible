@@ -5,11 +5,9 @@ var m      = require("mithril"),
 
     id    = require("./lib/id"),
     hide  = require("./lib/hide"),
-    types = require("./lib/types.css"),
-
-    css = require("./textarea.css"),
-
-    requiredRegex = /\*$/;
+    label = require("./lib/label"),
+    
+    css = require("./textarea.css");
 
 module.exports = {
     controller : function(options) {
@@ -27,22 +25,14 @@ module.exports = {
 
     view : function(ctrl, options) {
         var details = options.details,
-            name    = details.name,
             hidden  = hide(options);
 
         if(hidden) {
             return hidden;
         }
 
-        if(details.required && !requiredRegex.test(name)) {
-            name += "*";
-        }
-
         return m("div", { class : options.class },
-            m("label", {
-                for   : ctrl.id,
-                class : types[details.required ? "required" : "label"]
-            }, name),
+            label(ctrl, options),
             m("div", { class : css.expander },
                 m("pre", { class : css.shadow }, m("span", ctrl.text), m("br")),
                 m("textarea", assign({

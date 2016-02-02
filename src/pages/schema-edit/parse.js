@@ -102,16 +102,17 @@ function process(obj) {
 // ugly arrays of objects for firebase
 self.onmessage = function(e) {
     /* eslint no-eval:0, no-console:0 */
-    var config;
+    var config, parsed;
 
     try {
         // This is super-gross but in a worker should be (mostly) safe
         eval("config = " + e.data);
+        parsed = process(config)
+        
+        self.postMessage(parsed);
     } catch(error) {
         console.error("Invalid config", error);
         
         return;
     }
-
-    self.postMessage(process(config));
 };
