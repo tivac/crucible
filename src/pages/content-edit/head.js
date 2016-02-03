@@ -29,6 +29,10 @@ module.exports = {
         ctrl.unpublish = function() {
             ref.child("published").remove();
         };
+        
+        ctrl.save = function() {
+            ref.child("fields").set(options.data.fields);
+        };
     },
     
     view : function(ctrl, options) {
@@ -46,6 +50,16 @@ module.exports = {
         return m("div", { class : css.head },
             m("p", { class : css.status },
                 status
+            ),
+            m("button", {
+                    class   : css.save,
+                    onclick : ctrl.save,
+                    title   : "Save your changes"
+                },
+                m("svg", { class : css.icon },
+                    m("use", { href : "/src/icons.svg#save" })
+                ),
+                "Save"
             ),
             m("div", { class : css.publishing },
                 m("button", { class : css.schedule },

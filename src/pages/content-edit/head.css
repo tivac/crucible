@@ -13,9 +13,14 @@
     align-items: center;
 }
 
+.save,
 .status,
 .publishing {
-    flex: 1 0 50%;;
+    flex: 1 0;
+}
+
+.save {
+    composes: primary from buttons_css;
 }
 
 .publishing {
@@ -29,7 +34,7 @@
 }
 
 .publish {
-    composes: primary from buttons_css;
+    composes: add from buttons_css;
 
     margin-left: 10px;
 }
