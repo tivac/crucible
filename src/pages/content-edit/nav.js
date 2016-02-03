@@ -110,7 +110,7 @@ module.exports = {
             document.title = capitalize(ctrl.schema.name);
         }
 
-        return m("div", { class : css[ctrl.hidden ? "hidden" : "nav"] },
+        return m("div", { class : css[ctrl.hidden ? "hide" : "nav"] },
             m(".head", { class : css.filter },
                 m("input", {
                     class       : css.text,
@@ -160,7 +160,7 @@ module.exports = {
                                             target : "_blank"
                                         },
                                         m("svg", { class : css.icon },
-                                            m("use", { href : "/src/icons.svg#icon-preview" })
+                                            m("use", { href : "/src/icons.svg#preview" })
                                         )
                                     ) :
                                     null,
@@ -171,7 +171,7 @@ module.exports = {
                                         onclick : ctrl.remove.bind(ctrl, data)
                                     },
                                     m("svg", { class : css.icon },
-                                        m("use", { href : "/src/icons.svg#icon-remove" })
+                                        m("use", { href : "/src/icons.svg#remove" })
                                     )
                                 )
                             )

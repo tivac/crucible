@@ -1,5 +1,3 @@
-@import "../../node_modules/codemirror/lib/codemirror.css";
-
 @value layout_css:  "./layout/layout.css";
 @value icons_css:   "../icons.css";
 @value buttons_css: "../buttons.css";
@@ -13,8 +11,12 @@
 .head {
     composes: head from layout_css;
     
-    padding-left: 5px;
-    padding-right: 5px; 
+    flex-direction: row;
+    
+    padding-left: 10px;
+    padding-right: 10px; 
+    
+    align-items: center;
 }
 
 .body {
@@ -36,37 +38,18 @@
 }
 
 /* Actions bar */
-.actions {
-    composes: horizontal from layout_css;
-    
-    justify-content: space-between;
-    align-items: center;
-}
-
-.publishing {
-    flex: 1 1 50%;
-}
-
-.actions {
-    flex: 1 1 20%;
-}
-
-.preview {
-    composes: button from buttons_css;
-}
-
-.icon {
-    composes: icon from icons_css;
-    
-    width: 1.1em;
-    height: 1.1em;
-    margin-right: 5px;
+.action {
+    flex: 1 1;
 }
 
 .save {
     composes: primary from buttons_css;
     
     margin-left: 10px;
+}
+
+.icon {
+    composes: button from icons_css;
 }
 
 /* Title */

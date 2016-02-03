@@ -1,0 +1,39 @@
+@value icons_css:   "../../icons.css";
+@value layout_css:  "../layout/layout.css";
+@value buttons_css: "../../buttons.css";
+
+.head {
+    composes: head from layout_css;
+    
+    flex-direction: row;
+    
+    padding-left: 10px;
+    padding-right: 10px; 
+    
+    align-items: center;
+}
+
+.status,
+.publishing {
+    flex: 1 0 50%;;
+}
+
+.publishing {
+    composes: horizontal from layout_css;
+}
+
+.schedule {
+    composes: color from buttons_css;
+    
+    background-color: teal;
+}
+
+.publish {
+    composes: primary from buttons_css;
+
+    margin-left: 10px;
+}
+
+.icon {
+    composes: button from icons_css;
+}
