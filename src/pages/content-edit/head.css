@@ -13,18 +13,23 @@
     align-items: center;
 }
 
-.save,
 .status,
+.actions,
 .publishing {
     flex: 1 0;
 }
 
-.save {
-    composes: primary from buttons_css;
+.status {
+    margin: 0;
 }
 
+.actions,
 .publishing {
     composes: horizontal from layout_css;
+}
+
+.save {
+    composes: primary from buttons_css;
 }
 
 .schedule {
@@ -41,4 +46,12 @@
 
 .icon {
     composes: button from icons_css;
+}
+
+.back {
+    composes: remove from buttons_css;
+}
+
+.back svg {
+    transform: rotate(180deg);
 }
