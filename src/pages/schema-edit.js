@@ -96,11 +96,11 @@ module.exports = {
                     m("div", { class : css.fields },
                         m("h3", "Preview"),
                         m.component(children, {
-                            details : ctrl.schema.fields,
-                            data    : ctrl.data,
-                            path    : [],
-                            state   : ctrl.data,
-                            update  : update.bind(null, false, ctrl.data)
+                            fields : ctrl.schema.fields,
+                            data   : ctrl.data,
+                            path   : [],
+                            state  : ctrl.data,
+                            update : update.bind(null, false, ctrl.data)
                         })
                     )
                 )
