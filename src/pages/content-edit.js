@@ -62,6 +62,7 @@ module.exports = {
         });
         
         ctrl.save = function() {
+            ref.child("name").set(ctrl.data.name);
             ref.child("fields").set(ctrl.data.fields);
         };
 
