@@ -5,12 +5,36 @@
 .head {
     composes: head from layout_css;
     
-    flex-direction: row;
+    align-items: center;
+}
+
+.main {
+    composes: horizontal from layout_css;
     
+    flex: 1 0;
+    width: 100%;
+
     padding-left: 10px;
     padding-right: 10px; 
     
     align-items: center;
+}
+
+.details {
+    composes: horizontal from layout_css;
+    
+    flex: 1 0;
+    
+    position: relative;
+    top: 6px;
+    
+    width: 80%;
+    
+    border: 1px solid #CCC;
+    border-top: 0;
+    background: #FFF;
+    
+    padding: 20px;
 }
 
 .status,
@@ -45,7 +69,7 @@
 }
 
 .icon {
-    composes: button from icons_css;
+    composes: icon from icons_css;
 }
 
 .back {
@@ -54,4 +78,13 @@
 
 .back svg {
     transform: rotate(180deg);
+}
+
+.date {
+    
+}
+
+.start,
+.end {
+    flex: 1 0 50%;
 }

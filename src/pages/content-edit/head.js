@@ -2,43 +2,76 @@
 
 var m      = require("mithril"),
     moment = require("moment"),
+    set    = require("lodash.set"),
+    
+    db = require("../../lib/firebase"),
     
     css = require("./head.css");
 
 module.exports = {
     controller : function(options) {
         var ctrl = this,
-            ref  = options.ref;
+            ref  = options.ref,
+            user = db.getAuth().uid;
         
         ctrl.schedule   = false;
         ctrl.unschedule = false;
+        
+        ctrl.start = {};
+        ctrl.end   = {};
         
         ctrl.toggle = function(force) {
             ctrl.schedule = typeof force !== "undefined" ? Boolean(force) : !ctrl.schedule;
         };
         
         ctrl.publish = function() {
-            ref.child("published").set(moment().subtract(10, "seconds").valueOf());
-        };
-        
-        ctrl.publishAt = function(start, end) {
-            if(!ctrl.start || !ctrl.start.isValid()) {
-                // TODO: Really Handle these errors
-                return console.error("Invalid start");
+            var start, end;
+            
+            if(ctrl.start.date) {
+                start = moment(
+                    ctrl.start.date + " " + (ctrl.start.time || "00:00"),
+                    "YYYY-MM-DD HH:mm"
+                );
+            } else {
+                start = moment().subtract(10, "seconds");
             }
-
+            
+            if(ctrl.end.date) {
+                end = moment(
+                    ctrl.end.date + " " + (ctrl.end.time || "00:00"),
+                    "YYYY-MM-DD HH:mm"
+                );
+                
+                if(end.isSameOrBefore(start)) {
+                    // TODO: handle
+                    return console.error("Invalid end date");
+                }
+            }
+            
             ref.update({
-                published   : ctrl.start.valueOf(),
-                unpublished : ctrl.end.valueOf()
+                published_at   : start.valueOf(),
+                published_by   : user,
+                unpublished_at : end ? end.valueOf() : false,
+                unpublished_by : end ? user : false
             });
         };
 
         ctrl.unpublish = function() {
-            ref.child("published").remove();
+            ref.child("published_at").remove();
+            ref.child("published_by").remove();
+            
+            ref.update({
+                unpublished_at : db.timestamp,
+                unpublished_by : user
+            });
         };
         
         ctrl.save = function() {
             ref.child("fields").set(options.data.fields);
+        };
+        
+        ctrl.date = function(path, value) {
+            set(ctrl, path, value);
         };
     },
     
@@ -46,16 +79,16 @@ module.exports = {
         var now    = Date.now(),
             status = "draft";
             
-        if(options.data.published > now) {
+        if(options.data.published_at > now) {
             status = "scheduled";
         }
         
-        if(options.data.published < now) {
+        if(options.data.published_at < now) {
             status = "published";
         }
         
         return m("div", { class : css.head },
-            !ctrl.schedule ? [
+            m("div", { class : css.main },
                 m("p", { class : css.status },
                     status
                 ),
@@ -102,54 +135,59 @@ module.exports = {
                         "Publish"
                     )
                 )
-            ] : [
-                m("button", {
-                        // Attrs
-                        class : css.back,
-                        title : "Go back",
-                        
-                        // Events
-                        onclick : ctrl.toggle.bind(null, undefined)
-                    },
-                    m("svg", { class : css.icon },
-                        m("use", { href : "/src/icons.svg#arrow" })
+            ),
+            ctrl.schedule ? m("div", { class : css.details },
+                m("div", { class : css.start },
+                    m("p",
+                        m("label", { for : "publish_at_date" }, "Publish at")
                     ),
-                    "Back"
+                    m("p",
+                        m("input", {
+                            class : css.date,
+                            type  : "date",
+                            id    : "publish_at_date",
+                                
+                            // Events
+                            oninput : m.withAttr("value", set.bind(null, ctrl, "start.date"))
+                        })
+                    ),
+                    m("p",
+                        m("input", {
+                            class : css.date,
+                            type  : "time",
+                            id    : "publish_at_time",
+                                
+                            // Events
+                            oninput : m.withAttr("value", set.bind(null, ctrl, "start.time"))
+                        })
+                    )
                 ),
-                m("label", { for : "publish_at" }, "Publish at"),
-                m("input", {
-                    type : "datetime-local",
-                    id   : "publish_at"
-                }),
-                m("label", { for : "publish_until" }, "until"),
-                (!ctrl.unschedule ?
-                    m("a", {
-                        href : "#unpublish",
-                        
-                        onclick : function(e) {
-                            e.preventDefault();
-                            
-                            ctrl.unschedule = true;
-                        }
-                    }, "Forever") :
-                    m("input", {
-                        type : "datetime-local",
-                        id   : "publish_until"
-                    })),
-                 m("button", {
-                        // Attrs
-                        class : css.publish,
-                        title : "Schedule publish"
-                        
-                        // Events
-                        // onclick : ctrl.publish
-                    },
-                    m("svg", { class : css.icon },
-                        m("use", { href : "/src/icons.svg#calendar" })
+                m("div", { class : css.end },
+                    m("p",
+                        m("label", { for : "unpublish_at_date" }, "Until (optional)")
                     ),
-                    "Schedule"
+                    m("p",
+                        m("input", {
+                            class : css.date,
+                            type  : "date",
+                            id    : "unpublish_at_date",
+                                
+                            // Events
+                            oninput : m.withAttr("value", set.bind(null, ctrl, "end.date"))
+                        })
+                    ),
+                    m("p",
+                        m("input", {
+                            class : css.date,
+                            type  : "time",
+                            id    : "unpublish_at_time",
+                                
+                            // Events
+                            oninput : m.withAttr("value", set.bind(null, ctrl, "end.time"))
+                        })
+                    )
                 )
-            ]
+            ) : null
         );
     }
 };
