@@ -139,13 +139,13 @@ module.exports = {
             ctrl.schedule ? m("div", { class : css.details },
                 m("div", { class : css.start },
                     m("p",
-                        m("label", { for : "publish_at_date" }, "Publish at")
+                        m("label", { for : "published_at_date" }, "Publish at")
                     ),
                     m("p",
                         m("input", {
                             class : css.date,
                             type  : "date",
-                            id    : "publish_at_date",
+                            id    : "published_at_date",
                                 
                             // Events
                             oninput : m.withAttr("value", set.bind(null, ctrl, "start.date"))
@@ -155,7 +155,7 @@ module.exports = {
                         m("input", {
                             class : css.date,
                             type  : "time",
-                            id    : "publish_at_time",
+                            id    : "published_at_time",
                                 
                             // Events
                             oninput : m.withAttr("value", set.bind(null, ctrl, "start.time"))
@@ -164,14 +164,14 @@ module.exports = {
                 ),
                 m("div", { class : css.end },
                     m("p",
-                        m("label", { for : "unpublish_at_date" }, "Until (optional)")
+                        m("label", { for : "unpublished_at_date" }, "Until (optional)")
                     ),
                     m("p",
                         m("input", {
                             class : css.date,
                             type  : "date",
-                            id    : "unpublish_at_date",
-                                
+                            id    : "unpublished_at_date",
+                                                            
                             // Events
                             oninput : m.withAttr("value", set.bind(null, ctrl, "end.date"))
                         })
@@ -180,7 +180,7 @@ module.exports = {
                         m("input", {
                             class : css.date,
                             type  : "time",
-                            id    : "unpublish_at_time",
+                            id    : "unpublished_at_time",
                                 
                             // Events
                             oninput : m.withAttr("value", set.bind(null, ctrl, "end.time"))
