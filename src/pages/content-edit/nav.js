@@ -32,17 +32,20 @@ module.exports = {
         });
 
         // Go get initial data
-        db.child("content/" + ctrl.schema.key).orderByChild("published").on("value", function(snap) {
+        db.child("content/" + ctrl.schema.key).orderByChild("published_at").on("value", function(snap) {
             var content = [];
 
             snap.forEach(function(record) {
                 var data = record.val();
 
-                data.key       = record.key();
-                data.created   = moment.utc(data.created);
-                data.updated   = moment.utc(data.updated_at);
-                data.published = data.published ? moment.utc(data.published) : null;
-                data.search    = slug(data.name, { separator : "" });
+                data.key          = record.key();
+                data.published_at = data.published_at || data.published;
+                data.search       = slug(data.name, { separator : "" });
+                
+                data.moments = {
+                    published : moment(data.published_at),
+                    updated   : moment(data.updated_at)
+                };
 
                 content.push(data);
             });
@@ -104,7 +107,8 @@ module.exports = {
 
     view : function(ctrl) {
         var route   = m.route(),
-            content = ctrl.results || ctrl.content || [];
+            content = ctrl.results || ctrl.content || [],
+            now     = Date.now();
         
         if(!m.route.param("id")) {
             document.title = capitalize(ctrl.schema.name);
@@ -127,15 +131,24 @@ module.exports = {
             m("div", { class : css.body },
                 m("ul", { class : css.list },
                     content.map(function(data) {
-                        var url = "/content/" + ctrl.schema.key + "/" + data.key,
-                            cssClass = css.item;
+                        var url      = "/content/" + ctrl.schema.key + "/" + data.key,
+                            cssClass = css.item,
+                            status;
 
-                        if(data.published && route.indexOf(url) === 0) {
+                        if(data.published_at && route.indexOf(url) === 0) {
                             cssClass = css.activePublished;
                         } else if(route.indexOf(url) === 0) {
                             cssClass = css.active;
-                        } else if(data.published) {
-                            cssClass = css.published;
+                        } else if(data.published_at) {
+                            cssClass = css.published_at;
+                        }
+                        
+                        if(data.published_at > now) {
+                            status = "scheduled: " + data.moments.published.format("L");
+                        } else if(data.published_at < now) {
+                            status = "published: " + data.moments.published.format("L");
+                        } else {
+                            status = "updated: " + data.moments.updated.format("L");
                         }
 
                         return m("li", { class : cssClass },
@@ -146,9 +159,7 @@ module.exports = {
                                 },
                                 m("h3", { class : css.heading }, data.name),
                                 m("p", { class : css.date },
-                                    data.published ?
-                                        "published: " + data.published.format("L") :
-                                        "updated: " + data.updated.format("L")
+                                    status
                                 )
                             ),
                             m("div", { class : css.actions },

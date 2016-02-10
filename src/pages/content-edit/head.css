@@ -6,6 +6,9 @@
     composes: head from layout_css;
     
     align-items: center;
+    
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .main {
@@ -69,6 +72,10 @@
 }
 
 .icon {
+    composes: button from icons_css;
+}
+
+.onlyIcon {
     composes: icon from icons_css;
 }
 
