@@ -13,8 +13,7 @@ var m          = require("mithril"),
 
     layout = require("./layout"),
     nav    = require("./content-edit/nav"),
-
-    publishing = require("./content-edit/publishing"),
+    head   = require("./content-edit/head"),
 
     css = require("./content-edit.css");
 
@@ -62,8 +61,10 @@ module.exports = {
         });
         
         ctrl.save = function() {
-            ref.child("name").set(ctrl.data.name);
-            ref.child("fields").set(ctrl.data.fields);
+            ref.update({
+                name   : ctrl.data.name,
+                fields : ctrl.data.fields
+            });
         };
 
         watch(ref);
@@ -95,40 +96,7 @@ module.exports = {
             content : [
                 m.component(nav),
                 m("div", { class : css.content },
-                    m("div", { class : css.head },
-                        m("div", { class : css.actions },
-                            m.component(publishing, {
-                                ref     : ctrl.ref,
-                                data    : ctrl.data,
-                                class   : css.publishing,
-                                enabled : ctrl.form && ctrl.form.checkValidity()
-                            }),
-                            m("div", { class : css.actions },
-                                m("button", {
-                                        class  : css.preview,
-                                        title  : "Preview",
-                                        href   : ctrl.schema.preview + ctrl.id,
-                                        target : "_blank"
-                                    },
-                                    m("svg", { class : css.icon },
-                                        m("use", { href : "/src/icons.svg#icon-preview" })
-                                    ),
-                                    "Preview"
-                                ),
-                                
-                                m("button", {
-                                        class   : css.save,
-                                        onclick : ctrl.save,
-                                        title   : "Save your changes"
-                                    },
-                                     m("svg", { class : css.icon },
-                                        m("use", { href : "/src/icons.svg#icon-save" })
-                                    ),
-                                    "Save"
-                                )
-                            )
-                        )
-                    ),
+                    m.component(head, ctrl),
                     m("div", { class : css.body },
                         m("h2", { class : css.schema }, "/" + ctrl.schema.name + "/"),
                         m("h1", {

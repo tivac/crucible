@@ -7,3 +7,9 @@
     
     fill: currentColor;
 }
+
+.button {
+    composes: icon;
+    
+    margin-right: 10px;
+}

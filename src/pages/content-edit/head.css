@@ -1,0 +1,109 @@
+@value   icons_css: "../../icons.css";
+@value  layout_css: "../layout/layout.css";
+@value buttons_css: "../../buttons.css";
+
+.head {
+    composes: head from layout_css;
+    
+    align-items: center;
+    
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.main {
+    composes: horizontal from layout_css;
+    
+    flex: 1 0;
+    width: 100%;
+
+    padding-left: 10px;
+    padding-right: 10px; 
+    
+    align-items: center;
+}
+
+.details {
+    composes: horizontal from layout_css;
+    
+    flex: 1 0;
+    
+    position: relative;
+    top: 6px;
+    
+    width: 80%;
+    
+    border: 1px solid #CCC;
+    border-top: 0;
+    background: #FFF;
+    
+    padding: 20px;
+}
+
+.status,
+.actions {
+    flex: 1 1 25%;
+}
+
+.publishing {
+    flex: 2 0 50%;
+}
+
+.status {
+    margin: 0;
+}
+
+.actions,
+.publishing {
+    composes: horizontal from layout_css;
+    
+    align-items: center;
+    justify-content: center;
+}
+
+.save {
+    composes: primary from buttons_css;
+}
+
+.schedule {
+    composes: color from buttons_css;
+    
+    background-color: teal;
+}
+
+.publish {
+    composes: add from buttons_css;
+
+    margin-left: 10px;
+}
+
+.unpublish {
+    composes: remove from buttons_css;
+    
+    margin-left: 10px;
+}
+
+.icon {
+    composes: button from icons_css;
+}
+
+.onlyIcon {
+    composes: icon from icons_css;
+}
+
+.back {
+    composes: remove from buttons_css;
+}
+
+.back svg {
+    transform: rotate(180deg);
+}
+
+.date {
+    
+}
+
+.start,
+.end {
+    flex: 1 0 50%;
+}

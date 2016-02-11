@@ -10,6 +10,6 @@
     composes: publish;
 }
 
-.date {
-    padding: 0.3em 0.6em 0.35em !important; /*lol*/
+.icon {
+    composes: button from "../../icons.css";
 }
