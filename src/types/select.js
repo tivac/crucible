@@ -25,7 +25,10 @@ module.exports = require("./lib/multiple")({
                 }
             }, field.attrs),
             field.children.map(function(option) {
-                return m("option", assign({}, option.attrs, { value : option.value }),
+                return m("option", assign({}, option.attrs, {
+                        value : option.value,
+                        selected : option.selected ? "selected" : null
+                    }),
                     option.name
                 );
             })
