@@ -108,9 +108,20 @@ module.exports = {
                 published_at : null,
                 published_by : null,
 
-                unpublished_at : db.timestamp,
+                unpublished_at : db.TIMESTAMP,
                 unpublished_by : user
             });
+            
+            // TODO: THIS IS SUPER GROSS
+            ctrl.start = {
+                date : "",
+                time : ""
+            };
+            
+            ctrl.end = {
+                date : "",
+                time : ""
+            };
         };
         
         ctrl.save = function() {
@@ -177,7 +188,22 @@ module.exports = {
                             m("use", { href : future ? "/src/icons.svg#schedule" : "/src/icons.svg#publish" })
                         ),
                         future ? "Schedule" : "Publish"
-                    )
+                    ),
+                    status === "draft" ?
+                        null :
+                        m("button", {
+                                // Attrs
+                                class : css.unpublish,
+                                title : "Unpublish immediately",
+                                
+                                // Events
+                                onclick : ctrl.unpublish
+                            },
+                            m("svg", { class : css.icon },
+                                m("use", { href : "/src/icons.svg#remove" })
+                            ),
+                            "Unpublish"
+                        )
                 )
             ),
             ctrl.schedule ? m("div", { class : css.details },

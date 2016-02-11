@@ -1,5 +1,5 @@
-@value icons_css:   "../../icons.css";
-@value layout_css:  "../layout/layout.css";
+@value   icons_css: "../../icons.css";
+@value  layout_css: "../layout/layout.css";
 @value buttons_css: "../../buttons.css";
 
 .head {
@@ -41,9 +41,12 @@
 }
 
 .status,
-.actions,
+.actions {
+    flex: 1 1 25%;
+}
+
 .publishing {
-    flex: 1 0;
+    flex: 2 0 50%;
 }
 
 .status {
@@ -53,6 +56,9 @@
 .actions,
 .publishing {
     composes: horizontal from layout_css;
+    
+    align-items: center;
+    justify-content: center;
 }
 
 .save {
@@ -68,6 +74,12 @@
 .publish {
     composes: add from buttons_css;
 
+    margin-left: 10px;
+}
+
+.unpublish {
+    composes: remove from buttons_css;
+    
     margin-left: 10px;
 }
 
