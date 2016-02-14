@@ -41,7 +41,7 @@ module.exports = {
                 data.key          = record.key();
                 data.published_at = data.published_at || data.published;
                 data.search       = slug(data.name, { separator : "" });
-                
+
                 data.moments = {
                     published : moment(data.published_at),
                     updated   : moment(data.updated_at)
@@ -109,7 +109,7 @@ module.exports = {
         var route   = m.route(),
             content = ctrl.results || ctrl.content || [],
             now     = Date.now();
-        
+
         if(!m.route.param("id")) {
             document.title = capitalize(ctrl.schema.name);
         }
@@ -130,7 +130,14 @@ module.exports = {
             ),
             m("div", { class : css.body },
                 m("ul", { class : css.list },
-                    content.map(function(data) {
+                    content
+                    .sort(function(a, b) {
+                        var aTime = a.published_at || a.publisted || a.updated_at,
+                            bTime = b.published_at || b.publisted || b.updated_at;
+
+                        return bTime - aTime;
+                    })
+                    .map(function(data) {
                         var url      = "/content/" + ctrl.schema.key + "/" + data.key,
                             cssClass = css.item,
                             status;
@@ -142,7 +149,7 @@ module.exports = {
                         } else if(data.published_at) {
                             cssClass = css.published_at;
                         }
-                        
+
                         if(data.published_at > now) {
                             status = "scheduled: " + data.moments.published.format("L");
                         } else if(data.published_at < now) {

@@ -47,7 +47,7 @@ module.exports = {
         // On updates from firebase we need to merge in fields carefully
         ref.on("value", function(snap) {
             var data = snap.val();
-            
+
             // Don't try to grab non-existent data
             if(!snap.exists()) {
                 return m.route("/content/" + m.route.param("schema"));
@@ -59,7 +59,7 @@ module.exports = {
 
             m.redraw();
         });
-        
+
         ctrl.save = function() {
             ref.update({
                 name   : ctrl.data.name,
@@ -72,13 +72,13 @@ module.exports = {
 
     view : function(ctrl) {
         var title;
-        
+
         if(!ctrl.schema) {
             return m.component(layout);
         }
-        
+
         title = capitalize(get(ctrl.data, "name")) + " | " + capitalize(ctrl.schema.name);
-        
+
         if(!ctrl.id) {
             return m.component(layout, {
                 title   : title,
@@ -90,7 +90,7 @@ module.exports = {
                 ]
             });
         }
-        
+
         return m.component(layout, {
             title   : title,
             content : [
@@ -103,7 +103,7 @@ module.exports = {
                                 // Attrs
                                 class           : css.title,
                                 contenteditable : true,
-                                
+
                                 // Events
                                 oninput : m.withAttr("innerText", update(ctrl.data, [ "name" ]))
                             },
