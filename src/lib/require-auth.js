@@ -10,7 +10,7 @@ module.exports = function(component) {
             var auth = db.getAuth();
             
             // Unauthed or expired auth? BOUNCED
-            if(!auth || (auth.expires * 1000) < Date.now()) {
+            if(global.crucible.auth && (!auth || (auth.expires * 1000) < Date.now())) {
                 return m.route("/login");
             }
         },
