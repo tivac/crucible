@@ -1,17 +1,15 @@
 "use strict";
 
 var m  = require("mithril"),
-
-    db = require("./firebase");
+    
+    valid = require("./valid-auth"),
+    route = require("../routes");
 
 module.exports = function(component) {
     return {
         controller : function() {
-            var auth = db.getAuth();
-            
-            // Unauthed or expired auth? BOUNCED
-            if(global.crucible.auth && (!auth || (auth.expires * 1000) < Date.now())) {
-                return m.route("/login");
+            if(global.crucible.auth && !valid()) {
+                return m.route(route.path("/login"));
             }
         },
 

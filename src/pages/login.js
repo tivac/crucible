@@ -1,9 +1,9 @@
-/* global crucible */
 "use strict";
 
 var m = require("mithril"),
     
-    db     = require("../lib/firebase"),
+    db    = require("../lib/firebase"),
+    valid = require("../lib/valid-auth"),
     
     layout = require("./layout"),
     css    = require("./login.css");
@@ -11,6 +11,10 @@ var m = require("mithril"),
 module.exports = {
     controller : function() {
         var ctrl = this;
+        
+        if(!global.crucible.auth || valid()) {
+            return m.route(route.path("/"));
+        }
         
         ctrl.onsubmit = function(e) {
             var form = e.target.elements;
@@ -31,8 +35,8 @@ module.exports = {
             });
         };
         
-        if(crucible.auth && crucible.auth !== "password") {
-            db.authWithOAuthRedirect(crucible.auth);
+        if(global.crucible.auth !== "password") {
+            db.authWithOAuthRedirect(global.crucible.auth);
         }
     },
     

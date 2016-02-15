@@ -9,11 +9,15 @@ require("./global.css");
 // IIFE so I can return w/o complaints from ESLint
 (function() {
     if(!global.crucible) {
-        return routes.setup();
+        global.crucible = {};
     }
-
-    if(global.crucible.auth && !db.getAuth()) {
-        return routes.unauth();
+    
+    if(!global.crucible.root) {
+        global.crucible.root = "";
+    }
+    
+    if(!global.crucible.firebase) {
+        return routes.setup();
     }
 
     routes.default();
