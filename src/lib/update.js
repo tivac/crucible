@@ -1,19 +1,13 @@
 "use strict";
 
-var set   = require("lodash.set"),
-    unset = require("lodash.unset");
+var set   = require("lodash.set");
 
 function update(obj, path, val) {
     if(!obj) {
         return;
     }
 
-    if(val === false || val === "") {
-        unset(obj, path);
-        return;
-    }
-
-    set(obj, path, val === false ? undefined : val);
+    set(obj, path, (val === false || val === "") ? undefined : val);
 }
 
 module.exports = function(obj, path, val) {

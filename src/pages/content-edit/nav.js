@@ -132,8 +132,8 @@ module.exports = {
                 m("ul", { class : css.list },
                     content
                     .sort(function(a, b) {
-                        var aTime = a.published_at || a.publisted || a.updated_at,
-                            bTime = b.published_at || b.publisted || b.updated_at;
+                        var aTime = a.published_at || a.published || a.updated_at,
+                            bTime = b.published_at || b.published || b.updated_at;
 
                         return bTime - aTime;
                     })
