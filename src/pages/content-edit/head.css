@@ -51,6 +51,24 @@
 
 .status {
     margin: 0;
+
+    border-bottom: solid 2px;
+}
+
+.draft {
+    composes : status;
+
+    border-color: #ddd;
+}
+.published {
+    composes : status;
+
+    border-color: green;
+}
+.scheduled {
+    composes : status;
+
+    border-color: orange;
 }
 
 .actions,

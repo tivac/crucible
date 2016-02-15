@@ -7,10 +7,10 @@
 
 .nav {
     composes: section from layout_css;
-    
+
     display: flex;
     flex: 1 0 200px;;
-    
+
     border-right: solid 1px #CCC;
     background: #EEE;
 }
@@ -105,7 +105,7 @@
     transition: background-color 0.2s ease-in;
 }
 
-.published {
+.published_at {
     composes: item;
 
     padding-left: 0;
@@ -118,7 +118,7 @@
 }
 
 .activePublished {
-    composes: published;
+    composes: published_at;
     composes: active;
 }
 

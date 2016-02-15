@@ -1,13 +1,13 @@
 "use strict";
 
-var set = require("lodash.set");
+var set   = require("lodash.set");
 
 function update(obj, path, val) {
     if(!obj) {
         return;
     }
-    
-    set(obj, path, val === false ? undefined : val);
+
+    set(obj, path, (val === false || val === "") ? undefined : val);
 }
 
 module.exports = function(obj, path, val) {
@@ -16,6 +16,6 @@ module.exports = function(obj, path, val) {
     if(arguments.length === 2) {
         return update.bind(null, obj, path);
     }
-    
+
     return update(obj, path, val);
 };

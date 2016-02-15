@@ -4,9 +4,9 @@ var m      = require("mithril"),
     moment = require("moment"),
     set    = require("lodash.set"),
     upper  = require("lodash.capitalize"),
-    
+
     db = require("../../lib/firebase"),
-    
+
     css = require("./head.css");
 
 module.exports = {
@@ -16,13 +16,13 @@ module.exports = {
             user = db.getAuth().uid,
             // TODO: Remove `published` field, it's deprecated
             published = options.data.published_at || options.data.published,
-            
+
             publish   = published ? moment(published) : null,
             unpublish = options.data.unpublished_at ? moment(options.data.unpublished_at) : null;
-        
+
         ctrl.schedule   = false;
         ctrl.unschedule = false;
-        
+
         if(publish) {
             ctrl.start = {
                 date   : publish.format("YYYY-MM-DD"),
@@ -35,7 +35,7 @@ module.exports = {
                 time : ""
             };
         }
-        
+
         if(unpublish) {
             ctrl.end = {
                 date   : unpublish.format("YYYY-MM-DD"),
@@ -48,11 +48,11 @@ module.exports = {
                 time : ""
             };
         }
-        
+
         // Event handlers
         ctrl.update = function(section, field, value) {
             ctrl[section][field] = value;
-            
+
             if(ctrl[section].date) {
                 ctrl[section].moment = moment(
                     ctrl[section].date + " " + (ctrl[section].time || "00:00"),
@@ -62,14 +62,14 @@ module.exports = {
                 ctrl[section].moment = false;
             }
         };
-        
+
         ctrl.toggle = function(force) {
             ctrl.schedule = typeof force !== "undefined" ? Boolean(force) : !ctrl.schedule;
         };
-        
+
         ctrl.publish = function() {
             var start, end;
-            
+
             if(ctrl.schedule && ctrl.start.date) {
                 start = moment(
                     ctrl.start.date + " " + (ctrl.start.time || "00:00"),
@@ -78,19 +78,19 @@ module.exports = {
             } else {
                 start = moment().subtract(10, "seconds");
             }
-            
+
             if(ctrl.schedule && ctrl.end.date) {
                 end = moment(
                     ctrl.end.date + " " + (ctrl.end.time || "00:00"),
                     "YYYY-MM-DD HH:mm"
                 );
-                
+
                 if(end.isSameOrBefore(start)) {
                     // TODO: handle
                     return console.error("Invalid end date");
                 }
             }
-            
+
             ref.update({
                 // TODO: Remove `published` field, it's deprecated
                 published      : start.valueOf(),
@@ -111,41 +111,42 @@ module.exports = {
                 unpublished_at : db.TIMESTAMP,
                 unpublished_by : user
             });
-            
+
             // TODO: THIS IS SUPER GROSS
             ctrl.start = {
                 date : "",
                 time : ""
             };
-            
+
             ctrl.end = {
                 date : "",
                 time : ""
             };
         };
-        
+
         ctrl.save = function() {
             ref.child("fields").set(options.data.fields);
+            ref.child("name").set(options.data.name);
         };
     },
-    
+
     view : function(ctrl, options) {
         var now     = Date.now(),
             status  = "draft",
             publish = options.data.published_at || options.data.published,
             future  = ctrl.start.moment && ctrl.start.moment.valueOf() > now;
-        
+
         if(publish > now) {
             status = "scheduled";
         }
-        
+
         if(publish < now) {
             status = "published";
         }
-        
+
         return m("div", { class : css.head },
             m("div", { class : css.main },
-                m("p", { class : css.status },
+                m("p", { class : css[status] },
                     upper(status)
                 ),
                 m("div", { class : css.actions },
@@ -153,7 +154,7 @@ module.exports = {
                             // Attrs
                             class : css.save,
                             title : "Save your changes",
-                            
+
                             // Events
                             onclick : ctrl.save
                         },
@@ -168,7 +169,7 @@ module.exports = {
                             // Attrs
                             class : css.schedule,
                             title : "Schedule a publish",
-                            
+
                             // Events
                             onclick : ctrl.toggle.bind(null, undefined)
                         },
@@ -180,7 +181,7 @@ module.exports = {
                             // Attrs
                             class : css.publish,
                             title : future ? "Schedule publish" : "Publish now",
-                            
+
                             // Events
                             onclick : ctrl.publish
                         },
@@ -195,7 +196,7 @@ module.exports = {
                                 // Attrs
                                 class : css.unpublish,
                                 title : "Unpublish immediately",
-                                
+
                                 // Events
                                 onclick : ctrl.unpublish
                             },
@@ -217,7 +218,7 @@ module.exports = {
                             type  : "date",
                             id    : "published_at_date",
                             value : ctrl.start.date,
-                                
+
                             // Events
                             oninput : m.withAttr("value", ctrl.update.bind(ctrl, "start", "date"))
                         })
@@ -228,7 +229,7 @@ module.exports = {
                             type  : "time",
                             id    : "published_at_time",
                             value : ctrl.start.time,
-                                
+
                             // Events
                             oninput : m.withAttr("value", ctrl.update.bind(ctrl, "start", "time"))
                         })
@@ -244,7 +245,7 @@ module.exports = {
                             type  : "date",
                             id    : "unpublished_at_date",
                             value : ctrl.end.date,
-                            
+
                             // Events
                             oninput : m.withAttr("value", ctrl.update.bind(ctrl, "end", "date"))
                         })
@@ -255,7 +256,7 @@ module.exports = {
                             type  : "time",
                             id    : "unpublished_at_time",
                             value : ctrl.end.time,
-                                
+
                             // Events
                             oninput : m.withAttr("value", ctrl.update.bind(ctrl, "end", "time"))
                         })
