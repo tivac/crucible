@@ -12,7 +12,7 @@ require("./global.css");
         return routes.setup();
     }
 
-    if(!db.getAuth()) {
+    if(global.crucsaible.auth && !db.getAuth()) {
         return routes.unauth();
     }
 
