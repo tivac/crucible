@@ -2,7 +2,8 @@
 
 var m = require("mithril"),
 
-    db = require("../../lib/firebase"),
+    db    = require("../../lib/firebase"),
+    route = require("../../routes"),
 
     layout   = require("./layout.css"),
     header   = require("./header.css"),
@@ -19,7 +20,7 @@ module.exports = {
         ctrl.auth = db.getAuth();
 
         ctrl.add = function() {
-            m.route("/schema/new");
+            m.route(route.path("/schema/new"));
         };
 
         db.child("schemas").on("value", function(snap) {
@@ -38,7 +39,7 @@ module.exports = {
     },
 
     view : function(ctrl, options) {
-        var route = m.route();
+        var current = m.route();
 
         if(!options) {
             options = false;
@@ -54,7 +55,7 @@ module.exports = {
                 m("div", { class : header.head },
                     m("a", {
                             class  : header.heading,
-                            href   : "/",
+                            href   : route.path("/"),
                             config : m.route
                         },
                         m("h1", "Crucible")
@@ -65,9 +66,9 @@ module.exports = {
                     ctrl.auth ? [
                         m("div", { class : header.schemas },
                             (ctrl.schemas || []).map(function(schema) {
-                                var url = "/content/" + schema.key;
+                                var url = route.path("/content/" + schema.key);
 
-                                return m("div", { class : header[route.indexOf(url) === 0 ? "active" : "schema"] },
+                                return m("div", { class : header[current.indexOf(url) === 0 ? "active" : "schema"] },
                                     m("a", {
                                         class  : header.link,
                                         href   : url,
@@ -79,7 +80,7 @@ module.exports = {
 
                         m("a", {
                             class  : header.add,
-                            href   : "/content/new",
+                            href   : route.path("/content/new"),
                             config : m.route
                         }, "New Schema")
                     ] :
@@ -87,7 +88,7 @@ module.exports = {
 
                     m("a", {
                         class  : header.logout,
-                        href   : "/logout",
+                        href   : route.path("/logout"),
                         config : m.route
                     }, "Logout")
                 )

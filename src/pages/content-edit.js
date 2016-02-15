@@ -10,6 +10,7 @@ var m          = require("mithril"),
     db       = require("../lib/firebase"),
     update   = require("../lib/update"),
     watch    = require("../lib/watch"),
+    route    = require("../routes"),
 
     layout = require("./layout"),
     nav    = require("./content-edit/nav"),
@@ -50,7 +51,7 @@ module.exports = {
 
             // Don't try to grab non-existent data
             if(!snap.exists()) {
-                return m.route("/content/" + m.route.param("schema"));
+                return m.route(route.path("/content/" + m.route.param("schema")));
             }
 
             ctrl.data = assign(data, {

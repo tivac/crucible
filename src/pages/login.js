@@ -4,6 +4,7 @@ var m = require("mithril"),
     
     db    = require("../lib/firebase"),
     valid = require("../lib/valid-auth"),
+    route = require("../routes"),
     
     layout = require("./layout"),
     css    = require("./login.css");
@@ -31,7 +32,7 @@ module.exports = {
                     return m.redraw();
                 }
                 
-                document.location = "/";
+                m.route(route.path("/"));
             });
         };
         

@@ -2,12 +2,13 @@
 
 var m = require("mithril"),
     
-    db = require("../lib/firebase");
+    db    = require("../lib/firebase"),
+    route = require("../routes");
 
 module.exports = {
     controller : function() {
         db.unauth();
         
-        m.route("/login");
+        m.route(route.path("/"));
     }
 };

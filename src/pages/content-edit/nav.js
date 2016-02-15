@@ -7,7 +7,8 @@ var m          = require("mithril"),
     capitalize = require("lodash.capitalize"),
     slug       = require("sluggo"),
 
-    db     = require("../../lib/firebase"),
+    db    = require("../../lib/firebase"),
+    route = require("../../routes"), 
 
     css = require("./nav.css");
 
@@ -65,7 +66,7 @@ module.exports = {
                 created_by : db.getAuth().uid
             });
 
-            m.route("/content/" + ctrl.schema.key + "/" + result.key());
+            m.route(route.path("/content/" + ctrl.schema.key + "/" + result.key()));
         };
 
         ctrl.hide = function() {
@@ -106,7 +107,7 @@ module.exports = {
     },
 
     view : function(ctrl) {
-        var route   = m.route(),
+        var current = m.route(),
             content = ctrl.results || ctrl.content || [],
             now     = Date.now();
 
@@ -142,9 +143,9 @@ module.exports = {
                             cssClass = css.item,
                             status;
 
-                        if(data.published_at && route.indexOf(url) === 0) {
+                        if(data.published_at && current.indexOf(url) === 0) {
                             cssClass = css.activePublished;
-                        } else if(route.indexOf(url) === 0) {
+                        } else if(current.indexOf(url) === 0) {
                             cssClass = css.active;
                         } else if(data.published_at) {
                             cssClass = css.published_at;
@@ -161,7 +162,7 @@ module.exports = {
                         return m("li", { class : cssClass },
                             m("a", {
                                     class  : css.anchor,
-                                    href   : "/content/" + ctrl.schema.key + "/" + data.key,
+                                    href   : route.path("/content/" + ctrl.schema.key + "/" + data.key),
                                     config : m.route
                                 },
                                 m("h3", { class : css.heading }, data.name),
