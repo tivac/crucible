@@ -3,6 +3,7 @@
 var m = require("mithril"),
 
     db    = require("../../lib/firebase"),
+    auth  = require("../../lib/valid-auth"),
     route = require("../../routes"),
 
     layout   = require("./layout.css"),
@@ -17,7 +18,7 @@ module.exports = {
         var ctrl   = this;
 
         ctrl.schemas = null;
-        ctrl.auth = db.getAuth();
+        ctrl.auth = auth();
 
         ctrl.add = function() {
             m.route(route.path("/schema/new"));
@@ -82,15 +83,15 @@ module.exports = {
                             class  : header.add,
                             href   : route.path("/content/new"),
                             config : m.route
-                        }, "New Schema")
+                        }, "New Schema"),
+                        
+                        m("a", {
+                            class  : header.logout,
+                            href   : route.path("/logout"),
+                            config : m.route
+                        }, "Logout")
                     ] :
-                    null,
-
-                    m("a", {
-                        class  : header.logout,
-                        href   : route.path("/logout"),
-                        config : m.route
-                    }, "Logout")
+                    null
                 )
             ),
             options.content ? options.content : null
