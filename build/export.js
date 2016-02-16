@@ -12,6 +12,7 @@ var fs   = require("fs"),
     
     start;
 
+
 builder.plugin("modular-css", {
     css   : "gen/index.css",
     after : [
@@ -21,6 +22,8 @@ builder.plugin("modular-css", {
 });
 
 builder.plugin("bundle-collapser/plugin");
+
+builder.transform("detabbify");
 
 start = Date.now();
 
@@ -38,4 +41,6 @@ builder.bundle(function(err, out) {
     console.log("Output size:", bytes(result.code.length));
     
     fs.writeFileSync("gen/index.js", result.code);
+    
+    return console.log("Done");
 });

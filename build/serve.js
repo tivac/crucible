@@ -59,6 +59,8 @@ builder.plugin("modular-css", {
     ]
 });
 
+builder.transform("detabbify");
+
 // Start up watchify
 builder.on("update", bundle);
 
