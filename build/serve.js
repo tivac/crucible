@@ -3,6 +3,7 @@
 
 var fs   = require("fs"),
     path = require("path"),
+    url  = require("url"),
     
     browserify = require("browserify"),
     duration   = require("humanize-duration"),
@@ -93,7 +94,9 @@ server.use(ecstatic);
 
 // SPA support
 server.use(function(req, res, next) {
-    if(path.extname(req.url)) {
+    var parts = url.parse(req.url);
+    
+    if(path.extname(parts.pathname)) {
         res.code = 404;
 
         return next("Unknown file: " + req.url);
@@ -101,7 +104,7 @@ server.use(function(req, res, next) {
 
     req.url = "/";
 
-    ecstatic(req, res, next);
+    return ecstatic(req, res, next);
 });
 
 server.listen(9966);
