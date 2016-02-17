@@ -10,7 +10,8 @@ var m = require("mithril"),
     css    = require("./login.css");
 
 function loginRedirect() {
-    window.location = global.crucible.loginBaseUrl + window.encodeURIComponent(window.location.origin + "/login");
+    window.location = global.crucible.loginBaseUrl +
+        window.encodeURIComponent(window.location.origin + global.crucible.root + "/login");
 }
 
 module.exports = {

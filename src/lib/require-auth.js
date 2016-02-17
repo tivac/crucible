@@ -9,7 +9,7 @@ module.exports = function(component) {
     return {
         controller : function() {
             if(global.crucible.auth && !valid()) {
-                return m.route(route.path("/login"));
+                return m.route(route.path("/login") + window.location.search);
             }
         },
 
