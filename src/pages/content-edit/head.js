@@ -91,7 +91,7 @@ module.exports = {
                 }
             }
 
-            ref.update({
+            return ref.update({
                 // TODO: Remove `published` field, it's deprecated
                 published      : start.valueOf(),
                 published_at   : start.valueOf(),
@@ -159,7 +159,7 @@ module.exports = {
                             onclick : ctrl.save
                         },
                         m("svg", { class : css.icon },
-                            m("use", { href : "/src/icons.svg#save" })
+                            m("use", { href : "src/icons.svg#save" })
                         ),
                         "Save"
                     )
@@ -174,7 +174,7 @@ module.exports = {
                             onclick : ctrl.toggle.bind(null, undefined)
                         },
                         m("svg", { class : css.onlyIcon },
-                            m("use", { href : "/src/icons.svg#schedule" })
+                            m("use", { href : "src/icons.svg#schedule" })
                         )
                     ),
                     m("button", {
@@ -201,7 +201,7 @@ module.exports = {
                                 onclick : ctrl.unpublish
                             },
                             m("svg", { class : css.icon },
-                                m("use", { href : "/src/icons.svg#remove" })
+                                m("use", { href : "src/icons.svg#remove" })
                             ),
                             "Unpublish"
                         )
