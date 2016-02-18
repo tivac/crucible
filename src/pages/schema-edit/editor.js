@@ -17,7 +17,7 @@ module.exports = {
         var ctrl = this,
             
             // Weird path is because this isn't browserified
-            parse = new Worker("/src/pages/schema-edit/parse.js");
+            parse = new Worker(global.crucible.root + "/src/pages/schema-edit/parse.js");
         
         // Set up codemirror
         ctrl.editorSetup = function(el, init) {
