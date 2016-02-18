@@ -1,9 +1,0 @@
-.schedule {
-    composes: color from "../../buttons.css";
-    
-    background-color: teal;
-}
-
-.icon {
-    composes: button from "../../icons.css";
-}
