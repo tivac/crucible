@@ -24,7 +24,7 @@
     "detabbify": "^0.1.1",
     "ecstatic": "^1.4.0",
     "eslint": "^2.1.0",
-    "eslint-config-arenanet": "^2.0.1",
+    "eslint-config-arenanet": "^2.0.2",
     "faker": "^3.0.1",
     "humanize-duration": "^3.6.0",
     "jscs": "^2.10.1",
