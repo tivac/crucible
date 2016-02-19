@@ -1,3 +1,6 @@
+@value   icons_css: "../icons.css";
+@value buttons_css: "../buttons.css";
+
 .container {
     display: flex;
     flex-direction: column;
@@ -22,10 +25,16 @@
     composes: children;
 }
 
-.counter {
+.meta {
     flex: 0 0 20px;
     
+    padding-top: 8px;
+    margin-right: 10px;
+}
+
+.counter {
     margin: 0;
+    
     text-align: center;
     font-weight: bold;
 }
@@ -34,12 +43,16 @@
     flex: 1;
 }
 
+.icon {
+    composes: icon from icons_css;
+}
+
 .remove {
-    composes: remove from "../buttons.css";
+    composes: plain from buttons_css;
 }
 
 .add {
-    composes: add from "../buttons.css";
+    composes: add from buttons_css;
     
     margin-top: 10px;
 }
