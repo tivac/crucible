@@ -23,7 +23,7 @@ builder.plugin("modular-css", {
 
 builder.plugin("bundle-collapser/plugin");
 
-builder.transform("detabbify");
+builder.transform("detabbify", { global : true });
 
 start = Date.now();
 

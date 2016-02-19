@@ -60,7 +60,7 @@ builder.plugin("modular-css", {
     ]
 });
 
-builder.transform("detabbify");
+builder.transform("detabbify", { global : true });
 
 // Start up watchify
 builder.on("update", bundle);
