@@ -59,7 +59,7 @@ function process(obj) {
         }
         
         if(field.show) {
-            field.show.field = slugger(field.show.field);
+            field.show.field = field.show.field.split(".").map(slugger);
             
             // Regular expressions need to be saved out specially
             if(field.show.value instanceof RegExp) {

@@ -3,13 +3,13 @@
 var m   = require("mithril"),
     get = require("lodash.get"),
     
-    field = [ "details", "show", "field" ],
+    field = [ "show", "field" ],
     
     dom = m("div", "");
 
 module.exports = function(options) {
     /* eslint: eqeqeq:0 */
-    var dep = get(options, field),
+    var dep = get(options.field, field),
         src, tgt;
     
     // No conditional visibility config or missing target field
@@ -17,11 +17,16 @@ module.exports = function(options) {
         return false;
     }
     
-    src = options.details.show.value;
-    tgt = get(options, [ "state", dep ]);
+    src = options.field.show.value;
+    tgt = get(options.state, dep);
+    
+    // No target value, so have to hide it
+    if(typeof tgt === "undefined") {
+        return dom;
+    }
     
     // RegExp matched
-    if(get(options, [ "details", "show", "type" ]) === "regexp") {
+    if(options.field.show.type === "regexp") {
         src = new RegExp(src, "i");
         
         if(src.test(tgt)) {
