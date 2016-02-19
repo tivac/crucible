@@ -3,6 +3,7 @@
 
 var fs   = require("fs"),
     
+    shell      = require("shelljs"),
     browserify = require("browserify"),
     duration   = require("humanize-duration"),
     bytes      = require("pretty-bytes"),
@@ -12,9 +13,17 @@ var fs   = require("fs"),
     
     start;
 
+// Set up export dir
+shell.mkdir("-p", "./export/src");
+shell.mkdir("-p", "./export/gen");
 
+// Copy over static-y things
+shell.cp("./index.html", "./export/index.html");
+shell.cp("./src/icons.svg", "./export/src/icons.svg");
+
+// Generated things
 builder.plugin("modular-css", {
-    css   : "gen/index.css",
+    css   : "./export/gen/index.css",
     after : [
         require("postcss-import"),
         require("cssnano")()
@@ -35,12 +44,15 @@ builder.bundle(function(err, out) {
         return console.error(err.toString());
     }
     
-    result = uglify.minify(out.toString(), { fromString : true });
+    // result = uglify.minify(out.toString(), { fromString : true });
+    result = {
+        code : out.toString()
+    };
     
     console.log("Bundled & compressed in:", duration(Date.now() - start));
     console.log("Output size:", bytes(result.code.length));
     
-    fs.writeFileSync("gen/index.js", result.code);
+    fs.writeFileSync("./export/gen/index.js", result.code);
     
     return console.log("Done");
 });

@@ -36,6 +36,7 @@
     "postcss-nested": "^1.0.0",
     "pretty-bytes": "^3.0.1",
     "randexp": "^0.4.2",
+    "shelljs": "^0.6.0",
     "uglify-js": "^2.6.1",
     "watchify": "^3.7.0"
   },

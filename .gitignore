@@ -3,6 +3,7 @@
 
 config.js
 fake.json
+export
 
 # Logs
 logs
