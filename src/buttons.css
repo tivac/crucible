@@ -1,5 +1,5 @@
 @value colorRemove: rgb(202, 60, 60);
-@value colorAdd: rgb(28, 184, 65);
+@value    colorAdd: rgb(28, 184, 65);
 
 .button {
     composes: global(pure-button);
@@ -26,4 +26,12 @@
     composes: color;
     
     background: colorRemove;
+}
+
+/* Strip <button> styling */
+.plain {
+    background: none;
+    outline: none;
+    border: 0;
+    padding: 0;
 }
