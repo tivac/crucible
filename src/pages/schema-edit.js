@@ -100,7 +100,7 @@ module.exports = {
                             data   : ctrl.data,
                             path   : [],
                             state  : ctrl.data,
-                            update : update.bind(null, false, ctrl.data)
+                            update : update.bind(null, ctrl.data)
                         })
                     )
                 )
