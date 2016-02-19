@@ -47,7 +47,7 @@ module.exports = {
                             return cm.indentSelection("add");
                         }
 
-                        cm.execCommand(cm.options.indentWithTabs ? "insertTab" : "insertSoftTab");
+                        return cm.execCommand(cm.options.indentWithTabs ? "insertTab" : "insertSoftTab");
                     },
 
                     "Shift-Tab" : function(cm) {
