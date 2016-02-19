@@ -7,7 +7,9 @@ var m      = require("mithril"),
 
     db = require("../../lib/firebase"),
 
-    css = require("./head.css");
+    css = require("./head.css"),
+    
+    icons = global.crucible.icons;
 
 module.exports = {
     controller : function(options) {
@@ -159,7 +161,7 @@ module.exports = {
                             onclick : ctrl.save
                         },
                         m("svg", { class : css.icon },
-                            m("use", { href : "src/icons.svg#save" })
+                            m("use", { href : icons + "#save" })
                         ),
                         "Save"
                     )
@@ -174,7 +176,7 @@ module.exports = {
                             onclick : ctrl.toggle.bind(null, undefined)
                         },
                         m("svg", { class : css.onlyIcon },
-                            m("use", { href : "src/icons.svg#schedule" })
+                            m("use", { href : icons + "#schedule" })
                         )
                     ),
                     m("button", {
@@ -186,7 +188,7 @@ module.exports = {
                             onclick : ctrl.publish
                         },
                         m("svg", { class : css.icon },
-                            m("use", { href : future ? "/src/icons.svg#schedule" : "/src/icons.svg#publish" })
+                            m("use", { href : icons + (future ? "#schedule" : "#publish") })
                         ),
                         future ? "Schedule" : "Publish"
                     ),
@@ -201,7 +203,7 @@ module.exports = {
                                 onclick : ctrl.unpublish
                             },
                             m("svg", { class : css.icon },
-                                m("use", { href : "src/icons.svg#remove" })
+                                m("use", { href : icons + "#remove" })
                             ),
                             "Unpublish"
                         )

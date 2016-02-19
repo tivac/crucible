@@ -16,6 +16,7 @@ require("./global.css");
     }
     
     global.crucible.root = parts.path === "/" ? "" : parts.path;
+    global.crucible.icons = document.baseURI + "src/icons.svg";
     
     if(!global.crucible.firebase) {
         return routes.setup();

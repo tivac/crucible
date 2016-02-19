@@ -10,7 +10,9 @@ var m          = require("mithril"),
     db    = require("../../lib/firebase"),
     route = require("../../routes"), 
 
-    css = require("./nav.css");
+    css = require("./nav.css"),
+    
+    icons = global.crucible.icons;
 
 module.exports = {
     controller : function() {
@@ -179,7 +181,7 @@ module.exports = {
                                             target : "_blank"
                                         },
                                         m("svg", { class : css.icon },
-                                            m("use", { href : "src/icons.svg#preview" })
+                                            m("use", { href : icons + "#preview" })
                                         )
                                     ) :
                                     null,
@@ -190,7 +192,7 @@ module.exports = {
                                         onclick : ctrl.remove.bind(ctrl, data)
                                     },
                                     m("svg", { class : css.icon },
-                                        m("use", { href : "src/icons.svg#remove" })
+                                        m("use", { href : icons + "#remove" })
                                     )
                                 )
                             )
