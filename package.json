@@ -60,7 +60,8 @@
     "moment": "^2.11.1",
     "normalize.css": "^3.0.3",
     "purecss": "^0.6.0",
-    "sluggo": "^0.2.0"
+    "sluggo": "^0.2.0",
+    "url-join": "0.0.1"
   },
   "eslintConfig": {
     "extends": "arenanet",

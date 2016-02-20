@@ -9,14 +9,12 @@ require("./global.css");
 
 // IIFE so I can return w/o complaints from ESLint
 (function() {
-    var parts = url.parse(document.baseURI);
-    
     if(!global.crucible) {
         global.crucible = {};
     }
     
-    global.crucible.root = parts.path === "/" ? "" : parts.path;
-    global.crucible.icons = document.baseURI + "/src/icons.svg";
+    global.crucible.root = url.parse(document.baseURI).pathname;
+    global.crucible.icons = document.baseURI + "gen/icons.svg";
     
     if(!global.crucible.firebase) {
         return routes.setup();
