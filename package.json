@@ -38,7 +38,8 @@
     "randexp": "^0.4.2",
     "shelljs": "^0.6.0",
     "uglify-js": "^2.6.1",
-    "watchify": "^3.7.0"
+    "watchify": "^3.7.0",
+    "workerify": "^0.3.0"
   },
   "dependencies": {
     "awesomplete": "github:leaverou/awesomplete#gh-pages",

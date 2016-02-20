@@ -5,6 +5,8 @@ var fs   = require("fs"),
     path = require("path"),
     url  = require("url"),
     
+    shell      = require("shelljs"),
+    chokidar   = require("chokidar"),
     browserify = require("browserify"),
     duration   = require("humanize-duration"),
     jsesc      = require("jsesc"),
@@ -19,6 +21,15 @@ var fs   = require("fs"),
     }),
     
     bundling, bytes, time, done;
+
+// Make sure icons stay up to date
+chokidar.watch("./src/icons.svg").on("all", function(event) {
+    if(event !== "add" && event !== "change") {
+        return;
+    }
+
+    shell.cp("./src/icons.svg", "./gen/icons.svg");
+});
 
 function bundle() {
     bundling = true;
@@ -37,9 +48,9 @@ function bundle() {
             return done && done();
         }
 
-        console.error(bytes.toString(), "bytes written to gen/index.js in", duration(time));
+        console.error(bytes.toString(), "bytes written to ./gen/index.js in", duration(time));
         
-        fs.writeFileSync("gen/index.js", out);
+        fs.writeFileSync("./gen/index.js", out);
         
         if(done) {
             done();
@@ -47,6 +58,7 @@ function bundle() {
     });
 }
 
+// Browserify plugins
 builder.plugin("watchify");
 builder.plugin("modular-css", {
     css : "gen/index.css",
@@ -60,7 +72,9 @@ builder.plugin("modular-css", {
     ]
 });
 
+// Browserify transforms
 builder.transform("detabbify", { global : true });
+builder.transform("workerify");
 
 // Start up watchify
 builder.on("update", bundle);

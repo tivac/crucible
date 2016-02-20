@@ -14,14 +14,15 @@ var fs   = require("fs"),
     start;
 
 // Set up export dir
-shell.mkdir("-p", "./export/src");
 shell.mkdir("-p", "./export/gen");
 
-// Copy over static-y things
+// Copy over static things
 shell.cp("./index.html", "./export/index.html");
-shell.cp("./src/icons.svg", "./export/src/icons.svg");
+shell.cp("./src/icons.svg", "./export/gen/icons.svg");
 
-// Generated things
+// Generate things
+
+// Plugins
 builder.plugin("modular-css", {
     css   : "./export/gen/index.css",
     after : [
@@ -32,7 +33,9 @@ builder.plugin("modular-css", {
 
 builder.plugin("bundle-collapser/plugin");
 
+// Transforms
 builder.transform("detabbify", { global : true });
+builder.transform("workerify");
 
 start = Date.now();
 
@@ -40,19 +43,18 @@ builder.bundle(function(err, out) {
     var result;
     
     if(err) {
-        console.log("Error in:", duration(Date.now() - start));
-        return console.error(err.toString());
+        console.error("Error in:", duration(Date.now() - start));
+        console.error(err.toString());
+        
+        return;
     }
     
-    // result = uglify.minify(out.toString(), { fromString : true });
-    result = {
-        code : out.toString()
-    };
+    result = uglify.minify(out.toString(), { fromString : true });
     
     console.log("Bundled & compressed in:", duration(Date.now() - start));
     console.log("Output size:", bytes(result.code.length));
     
     fs.writeFileSync("./export/gen/index.js", result.code);
     
-    return console.log("Done");
+    return;
 });
