@@ -71,10 +71,12 @@
 .link:visited {
     display: block;
     
-    padding: 1em 24px 1em 16px;
-    
     text-decoration: none;
     color: inherit;
+}
+
+.schema {
+    padding: 1em 24px 1em 16px;
 }
 
 .add,
@@ -83,6 +85,10 @@
     
     margin-bottom: 0.4em;
     padding: 0.4em 16px;
+}
+
+.add {
+    composes: plain from "../../buttons.css";
 }
 
 .schema {

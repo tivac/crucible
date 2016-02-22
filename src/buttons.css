@@ -30,8 +30,15 @@
 
 /* Strip <button> styling */
 .plain {
+    text-align: left;
+    
     background: none;
     outline: none;
     border: 0;
     padding: 0;
+}
+
+/* Act like .pure-button */
+.plain[disabled] {
+    cursor: not-allowed;
 }
