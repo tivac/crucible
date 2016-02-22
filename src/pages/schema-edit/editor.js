@@ -14,10 +14,7 @@ require("codemirror/addon/comment/continuecomment");
 
 module.exports = {
     controller : function(options) {
-        var ctrl = this,
-            
-            // Weird path is because this isn't browserified
-            parse = new Worker("./parse.js");
+        var ctrl = this;
         
         // Set up codemirror
         ctrl.editorSetup = function(el, init) {
@@ -61,14 +58,9 @@ module.exports = {
 
                 options.ref.child("source").set(text);
                 
-                parse.postMessage(text);
+                options.worker.postMessage(text);
             }, 500, { maxWait : 5000 }));
         };
-
-        // Listen for the worker to finish and update firebase
-        parse.addEventListener("message", function(e) {
-            options.ref.child("fields").set(e.data);
-        });
     },
     
     view : function(ctrl, options) {
