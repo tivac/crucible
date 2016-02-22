@@ -111,7 +111,8 @@ module.exports = {
     view : function(ctrl) {
         var current = m.route(),
             content = ctrl.results || ctrl.content || [],
-            now     = Date.now();
+            now     = Date.now(),
+            locked  = global.crucible.locked;
 
         if(!m.route.param("id")) {
             document.title = capitalize(ctrl.schema.name);
@@ -186,9 +187,12 @@ module.exports = {
                                     ) :
                                     null,
                                 m("button", {
-                                        class : css.remove,
-                                        title : "Remove",
-
+                                        // Attrs
+                                        class    : css.remove,
+                                        title    : "Remove",
+                                        disabled : locked || null,
+                                        
+                                        // Events
                                         onclick : ctrl.remove.bind(ctrl, data)
                                     },
                                     m("svg", { class : css.icon },
@@ -202,8 +206,9 @@ module.exports = {
             ),
             m("div", { class : css.metas },
                 m("button", {
-                        onclick : ctrl.add,
-                        class   : css.add
+                        onclick  : ctrl.add,
+                        class    : css.add,
+                        disabled : locked || null
                     },
                     "Add " + ctrl.schema.name
                 )

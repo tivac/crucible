@@ -136,7 +136,8 @@ module.exports = {
         var now     = Date.now(),
             status  = "draft",
             publish = options.data.published_at || options.data.published,
-            future  = ctrl.start.moment && ctrl.start.moment.valueOf() > now;
+            future  = ctrl.start.moment && ctrl.start.moment.valueOf() > now,
+            locked  = global.crucible.locked;
 
         if(publish > now) {
             status = "scheduled";
@@ -154,8 +155,9 @@ module.exports = {
                 m("div", { class : css.actions },
                     m("button", {
                             // Attrs
-                            class : css.save,
-                            title : "Save your changes",
+                            class    : css.save,
+                            title    : "Save your changes",
+                            disabled : locked || null,
 
                             // Events
                             onclick : ctrl.save
@@ -181,9 +183,10 @@ module.exports = {
                     ),
                     m("button", {
                             // Attrs
-                            class : css.publish,
-                            title : future ? "Schedule publish" : "Publish now",
-
+                            class    : css.publish,
+                            title    : future ? "Schedule publish" : "Publish now",
+                            disabled : locked || null,
+                            
                             // Events
                             onclick : ctrl.publish
                         },
@@ -196,8 +199,9 @@ module.exports = {
                         null :
                         m("button", {
                                 // Attrs
-                                class : css.unpublish,
-                                title : "Unpublish immediately",
+                                class    : css.unpublish,
+                                title    : "Unpublish immediately",
+                                disabled : locked || null,
 
                                 // Events
                                 onclick : ctrl.unpublish

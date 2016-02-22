@@ -21,7 +21,7 @@ module.exports = {
         ctrl.auth = auth();
 
         ctrl.add = function() {
-            m.route(route.path("/schema/new"));
+            m.route(route.path("/content/new"));
         };
 
         db.child("schemas").on("value", function(snap) {
@@ -40,7 +40,8 @@ module.exports = {
     },
 
     view : function(ctrl, options) {
-        var current = m.route();
+        var current = m.route(),
+            locked  = global.crucible.locked;
 
         if(!options) {
             options = false;
@@ -79,10 +80,13 @@ module.exports = {
                             })
                         ),
 
-                        m("a", {
-                            class  : header.add,
-                            href   : route.path("/content/new"),
-                            config : m.route
+                        m("button", {
+                            // Attrs
+                            class    : header.add,
+                            disabled : locked || null,
+                            
+                            // Events
+                            onclick : ctrl.add
                         }, "New Schema"),
                         
                         m("a", {
