@@ -42,6 +42,19 @@
     padding: 0 10px 10px 10px;
 }
 
+.error {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    
+    margin: 0;
+    padding: 5px;
+    
+    background: red;
+    color: whitesmoke;
+}
+
 /* Override codemirror styling to make it expannnnd */
 :global(.CodeMirror) {
     height: 100% !important;

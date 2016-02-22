@@ -32,6 +32,8 @@
 
 .content {
     composes: section, padding;
+    
+    position: relative;
 }
 
 .head {

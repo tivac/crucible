@@ -16,24 +16,31 @@ var m          = require("mithril"),
 
 module.exports = {
     controller : function() {
-        var ctrl = this,
-            id   = m.route.param("schema"),
-            ref  = db.child("schemas/" + id);
+        var ctrl   = this,
+            id     = m.route.param("schema"),
+            ref    = db.child("schemas/" + id),
+            worker = new Worker("./schema-edit/parse.js");
 
         ctrl.ref     = ref;
         ctrl.schema  = null;
+        ctrl.worker  = worker;
         ctrl.data    = {};
         ctrl.preview = {
             valid : true,
             value : ""
         };
-
+        
         // Get Firebase data
         ref.on("value", function(snap) {
             ctrl.schema = snap.val();
 
             if(!ctrl.preview.value) {
                 ctrl.preview.value = ctrl.schema.preview || "";
+            }
+            
+            // Ensure that we run it through the worker asap
+            if(ctrl.schema.source) {
+                worker.postMessage(ctrl.schema.source);
             }
 
             m.redraw();
@@ -48,6 +55,19 @@ module.exports = {
 
             ref.child("preview").set(el.value);
         };
+        
+        // Listen for the worker to finish and update firebase
+        worker.addEventListener("message", function(e) {
+            if(typeof e.data === "object") {
+                ref.child("fields").set(e.data);
+                
+                ctrl.error = false;
+            } else {
+                ctrl.error = e.data;
+            }
+            
+            m.redraw();
+        });
 
         watch(ref);
     },
@@ -60,6 +80,10 @@ module.exports = {
         return m.component(layout, {
             title   : "Edit - " + capitalize(ctrl.schema.name),
             content : m("div", { class : layout.css.content },
+                ctrl.error ?
+                    m("p", { class : css.error }, ctrl.error) :
+                    null,
+
                 m("div", { class : css.meta },
                     m("h3", "Metadata"),
                     m("label", { class : css.label, for : "preview" }, "Preview URL Base"),
@@ -89,6 +113,7 @@ module.exports = {
                         m("h3", "Field Definitions"),
                         m.component(editor, {
                             ref    : ctrl.ref,
+                            worker : ctrl.worker,
                             source : ctrl.schema.source || "{\n\n}"
                         })
                     ),

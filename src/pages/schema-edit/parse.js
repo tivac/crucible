@@ -107,12 +107,10 @@ self.onmessage = function(e) {
     try {
         // This is super-gross but in a worker should be (mostly) safe
         eval("config = " + e.data);
-        parsed = process(config)
+        parsed = process(config);
         
-        self.postMessage(parsed);
+        return self.postMessage(parsed);
     } catch(error) {
-        console.error("Invalid config", error);
-        
-        return;
+        return self.postMessage(error.toString());
     }
 };
