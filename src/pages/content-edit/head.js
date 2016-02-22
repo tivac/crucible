@@ -2,7 +2,7 @@
 
 var m      = require("mithril"),
     moment = require("moment"),
-    set    = require("lodash.set"),
+    get    = require("lodash.get"),
     upper  = require("lodash.capitalize"),
 
     db = require("../../lib/firebase"),
@@ -34,10 +34,10 @@ module.exports = {
         } else {
             ctrl.start = {
                 date : "",
-                time : ""
+                time : get(global.crucible, "defaults.publish_start_time") || ""
             };
         }
-
+        
         if(unpublish) {
             ctrl.end = {
                 date   : unpublish.format("YYYY-MM-DD"),
