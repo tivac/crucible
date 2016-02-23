@@ -75,10 +75,6 @@
     color: inherit;
 }
 
-.schema {
-    padding: 1em 24px 1em 16px;
-}
-
 .add,
 .logout {
     composes: link;
@@ -92,6 +88,9 @@
 }
 
 .schema {
+    composes: link;
+    
+    padding: 1em 24px 1em 16px;
     opacity: 0.5;
 }
 

@@ -70,12 +70,12 @@ module.exports = {
                             (ctrl.schemas || []).map(function(schema) {
                                 var url = route.path("/content/" + schema.key);
 
-                                return m("div", { class : header[current.indexOf(url) === 0 ? "active" : "schema"] },
-                                    m("a", {
-                                        class  : header.link,
+                                return m("a", {
+                                        class  : header[current.indexOf(url) === 0 ? "active" : "schema"],
                                         href   : url,
                                         config : m.route
-                                    }, schema.name)
+                                    },
+                                    schema.name
                                 );
                             })
                         ),
