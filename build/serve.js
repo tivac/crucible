@@ -60,7 +60,7 @@ function bundle() {
 
 // Browserify plugins
 builder.plugin("watchify");
-builder.plugin("modular-css", {
+builder.plugin("modular-css/browserify", {
     css : "gen/index.css",
     
     // Plugins

@@ -23,7 +23,7 @@ shell.cp("./src/icons.svg", "./export/gen/icons.svg");
 // Generate things
 
 // Plugins
-builder.plugin("modular-css", {
+builder.plugin("modular-css/browserify", {
     css   : "./export/gen/index.css",
     after : [
         require("postcss-import"),
