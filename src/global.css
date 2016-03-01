@@ -8,5 +8,3 @@
 :global(*:after) {
     box-sizing: inherit;
 }
-
-@import "../node_modules/purecss/build/pure.css";
