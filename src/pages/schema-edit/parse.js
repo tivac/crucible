@@ -109,8 +109,8 @@ self.onmessage = function(e) {
         eval("config = " + e.data);
         parsed = process(config);
         
-        return self.postMessage(parsed);
+        return self.postMessage(JSON.stringify({ config : parsed }));
     } catch(error) {
-        return self.postMessage(error.toString());
+        return self.postMessage(JSON.stringify({ error : error.toString() }));
     }
 };

@@ -58,12 +58,13 @@ module.exports = {
         
         // Listen for the worker to finish and update firebase
         worker.addEventListener("message", function(e) {
-            if(typeof e.data === "object") {
-                ref.child("fields").set(e.data);
-                
-                ctrl.error = false;
+            var data = JSON.parse(e.data);
+            
+            if(data.error) {
+                ctrl.error = true;
             } else {
-                ctrl.error = e.data;
+                ref.child("fields").set(data.config);
+                ctrl.error = false;
             }
             
             m.redraw();
