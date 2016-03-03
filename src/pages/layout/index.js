@@ -2,9 +2,9 @@
 
 var m = require("mithril"),
 
-    db    = require("../../lib/firebase"),
-    auth  = require("../../lib/valid-auth"),
-    route = require("../../routes"),
+    db     = require("../../lib/firebase"),
+    auth   = require("../../lib/valid-auth"),
+    prefix = require("../../lib/prefix"),
 
     layout   = require("./layout.css"),
     header   = require("./header.css"),
@@ -21,7 +21,7 @@ module.exports = {
         ctrl.auth = auth();
 
         ctrl.add = function() {
-            m.route(route.path("/content/new"));
+            m.route(prefix("/content/new"));
         };
 
         db.child("schemas").on("value", function(snap) {
@@ -57,7 +57,7 @@ module.exports = {
                 m("div", { class : header.head },
                     m("a", {
                             class  : header.heading,
-                            href   : route.path("/"),
+                            href   : prefix("/"),
                             config : m.route
                         },
                         m("h1", "Crucible")
@@ -68,7 +68,7 @@ module.exports = {
                     ctrl.auth ? [
                         m("div", { class : header.schemas },
                             (ctrl.schemas || []).map(function(schema) {
-                                var url = route.path("/content/" + schema.key);
+                                var url = prefix("/content/" + schema.key);
 
                                 return m("a", {
                                         class  : header[current.indexOf(url) === 0 ? "active" : "schema"],
@@ -91,7 +91,7 @@ module.exports = {
                         
                         m("a", {
                             class  : header.logout,
-                            href   : route.path("/logout"),
+                            href   : prefix("/logout"),
                             config : m.route
                         }, "Logout")
                     ] :

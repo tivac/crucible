@@ -6,9 +6,9 @@ var m      = require("mithril"),
 
     hide = require("./lib/hide"),
 
-    children     = require("./children"),
+    children = require("./children"),
 
-    css   = require("./repeating.css"),
+    css = require("./repeating.css"),
     
     icons = global.crucible.icons;
 

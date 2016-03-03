@@ -1,24 +1,23 @@
 "use strict";
 
-var url = require("url"),
-    db     = require("./lib/firebase"),
-    routes = require("./routes");
+var m   = require("mithril"),
+    url = require("url");
 
 // Don't actually want the exports, just want it bundled
 require("./global.css");
 
-// IIFE so I can return w/o complaints from ESLint
-(function() {
-    if(!global.crucible) {
-        global.crucible = {};
-    }
-    
-    global.crucible.root = url.parse(document.baseURI).pathname;
-    global.crucible.icons = document.baseURI + "gen/icons.svg";
-    
-    if(!global.crucible.firebase) {
-        return routes.setup();
-    }
+if(!global.crucible) {
+    global.crucible = {};
+}
 
-    routes.default();
-}());
+global.crucible.root = url.parse(document.baseURI).pathname;
+global.crucible.icons = document.baseURI + "gen/icons.svg";
+
+// Always route in pathname mode
+m.route.mode = "pathname";
+
+if(!global.crucible.firebase) {
+    require("./routes/setup");
+} else {
+    require("./routes/default");
+}

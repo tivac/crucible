@@ -7,8 +7,8 @@ var m          = require("mithril"),
     capitalize = require("lodash.capitalize"),
     slug       = require("sluggo"),
 
-    db    = require("../../lib/firebase"),
-    route = require("../../routes"), 
+    db     = require("../../lib/firebase"),
+    prefix = require("../../lib/prefix"), 
 
     css = require("./nav.css"),
     
@@ -68,7 +68,7 @@ module.exports = {
                 created_by : db.getAuth().uid
             });
 
-            m.route(route.path("/content/" + ctrl.schema.key + "/" + result.key()));
+            m.route(prefix("/content/" + ctrl.schema.key + "/" + result.key()));
         };
 
         ctrl.hide = function() {
@@ -96,7 +96,7 @@ module.exports = {
                 return fuzzy(input, content.search);
             });
 
-            m.redraw();
+            return m.redraw();
         }, 100);
 
         ctrl.remove = function(data) {
@@ -165,7 +165,7 @@ module.exports = {
                         return m("li", { class : cssClass },
                             m("a", {
                                     class  : css.anchor,
-                                    href   : route.path("/content/" + ctrl.schema.key + "/" + data.key),
+                                    href   : prefix("/content/" + ctrl.schema.key + "/" + data.key),
                                     config : m.route
                                 },
                                 m("h3", { class : css.heading }, data.name),

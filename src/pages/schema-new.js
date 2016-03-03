@@ -3,8 +3,8 @@
 var m      = require("mithril"),
     sluggo = require("sluggo"),
 
-    db    = require("../lib/firebase"),
-    route = require("../routes"),
+    db     = require("../lib/firebase"),
+    prefix = require("../lib/prefix"),
 
     layout = require("./layout");
 
@@ -29,7 +29,7 @@ module.exports = {
                 updated : db.TIMESTAMP
             });
 
-            m.route(route.path("/content/" + ctrl.slug + "/edit"));
+            m.route(prefix("/content/" + ctrl.slug + "/edit"));
         };
     },
 

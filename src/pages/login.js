@@ -2,9 +2,9 @@
 
 var m = require("mithril"),
     
-    db    = require("../lib/firebase"),
-    valid = require("../lib/valid-auth"),
-    route = require("../routes"),
+    db     = require("../lib/firebase"),
+    valid  = require("../lib/valid-auth"),
+    prefix = require("../lib/prefix"),
     
     layout = require("./layout"),
     css    = require("./login.css");
@@ -33,14 +33,14 @@ module.exports = {
                 }
 
                 m.endComputation();
-                m.route(route.path("/"));
+                m.route(prefix("/"));
             });
 
             return;
         }
         
         if(!global.crucible.auth || valid()) {
-            return m.route(route.path("/"));
+            return m.route(prefix("/"));
         }
         
         ctrl.onsubmit = function(e) {
@@ -58,7 +58,7 @@ module.exports = {
                     return m.redraw();
                 }
                 
-                m.route(route.path("/"));
+                m.route(prefix("/"));
             });
         };
         
