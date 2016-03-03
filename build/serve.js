@@ -66,6 +66,9 @@ builder.plugin("modular-css/browserify", {
     // Plugins
     before : [
         require("postcss-nested")
+    ],
+    after : [
+        require("postcss-import")
     ]
 });
 

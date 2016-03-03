@@ -1,7 +1,7 @@
 "use strict";
 
 var m        = require("mithril"),
-    Editor   = require("codemirror"),
+    editor   = require("codemirror"),
     debounce = require("lodash.debounce");
 
 // Require codemirror extra JS bits and bobs so they're included
@@ -22,7 +22,7 @@ module.exports = {
                 return;
             }
 
-            ctrl.editor = Editor.fromTextArea(el, {
+            ctrl.editor = editor.fromTextArea(el, {
                 mode : "application/javascript",
                 lint : true,
 

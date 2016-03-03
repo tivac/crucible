@@ -32,6 +32,7 @@
     "jsesc": "^1.0.0",
     "modular-css": "^0.12.2",
     "morgan": "^1.6.1",
+    "postcss-import": "^8.0.2",
     "postcss-nested": "^1.0.0",
     "pretty-bytes": "^3.0.1",
     "randexp": "^0.4.2",
