@@ -51,6 +51,7 @@ types = {
     // Custom input types
     relationship : require("./relationship"),
     textarea     : require("./textarea"),
+    upload       : require("./upload"),
     
     // Implementations based on lib/multiple.js
     select   : require("./select"),
