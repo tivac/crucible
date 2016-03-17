@@ -1,6 +1,6 @@
 "use strict";
 
-var set   = require("lodash.set");
+var set = require("lodash.set");
 
 function update(obj, path, val) {
     if(!obj) {
