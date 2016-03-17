@@ -64,6 +64,10 @@ A `<select>` and a number of `<option>` elements contained within
 
 Renders an input that autocompletes entries in the specified schema to set up many-to-many relationships.
 
+#### `upload`
+
+Draws a drop target that will upload files to a defined location. Depends on a web service existing on some other server that can feed it both the upload target location as well as any other form params required to be sent along. Implemented this way so that crucible's uploader can be agnostic and not particularly care about where the file is going. See [#97](https://github.com/tivac/crucible/pull/97) for configuration details.
+
 ### Structural Fields
 
 #### `fieldset`
