@@ -18,7 +18,9 @@ module.exports = function(ref) {
         // Clean up any old updated timestamps floating around
         ref.child("updated").remove();
         
-        ref.child("updated_at").set(db.TIMESTAMP);
-        ref.child("updated_by").set(auth.uid);
+        ref.update({
+            updated_at : db.TIMESTAMP,
+            updated_by : auth.uid
+        });
     });
 };
