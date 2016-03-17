@@ -49,6 +49,7 @@
     "lodash.assign": "^4.0.0",
     "lodash.capitalize": "^4.0.1",
     "lodash.debounce": "^4.0.0",
+    "lodash.filter": "^4.2.1",
     "lodash.get": "^4.0.0",
     "lodash.map": "^4.0.0",
     "lodash.mapkeys": "^4.1.0",
@@ -60,8 +61,11 @@
     "moment": "^2.11.1",
     "normalize.css": "^3.0.3",
     "purecss": "^0.6.0",
+    "run-parallel": "^1.1.4",
     "sluggo": "^0.2.0",
-    "url-join": "0.0.1"
+    "url": "^0.11.0",
+    "url-join": "0.0.1",
+    "whatwg-fetch": "^0.11.0"
   },
   "eslintConfig": {
     "extends": "arenanet",

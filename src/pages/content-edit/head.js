@@ -127,8 +127,18 @@ module.exports = {
         };
 
         ctrl.save = function() {
-            ref.child("fields").set(options.data.fields);
-            ref.child("name").set(options.data.name);
+            ctrl.saving = true;
+            
+            m.redraw();
+            
+            ref.update({
+                fields : options.data.fields,
+                name   : options.data.name
+            }, function() {
+                ctrl.saving = false;
+                
+                m.redraw();
+            });
         };
     },
 
@@ -153,7 +163,8 @@ module.exports = {
                     upper(status)
                 ),
                 m("div", { class : css.actions },
-                    m("button", {
+                    ctrl.saving ?
+                        "SAVING..." : m("button", {
                             // Attrs
                             class    : css.save,
                             title    : "Save your changes",
