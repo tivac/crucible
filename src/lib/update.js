@@ -7,7 +7,7 @@ function update(obj, path, val) {
         return;
     }
 
-    set(obj, path, (val === false || val === "") ? undefined : val);
+    set(obj, path, (val === false || val === "") ? null : val);
 }
 
 module.exports = function(obj, path, val) {
