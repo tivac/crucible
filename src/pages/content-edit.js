@@ -61,13 +61,6 @@ module.exports = {
             m.redraw();
         });
 
-        ctrl.save = function() {
-            ref.update({
-                name   : ctrl.data.name,
-                fields : ctrl.data.fields
-            });
-        };
-
         watch(ref);
     },
 
