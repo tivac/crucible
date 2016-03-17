@@ -2,6 +2,7 @@
 
 var m      = require("mithril"),
     assign = require("lodash.assign"),
+    get    = require("lodash.get"),
 
     hide  = require("./hide"),
     id    = require("./id"),
@@ -12,9 +13,26 @@ var m      = require("mithril"),
 module.exports = function(type) {
     return {
         controller : function(options) {
-            var ctrl = this;
-
+            var ctrl = this,
+                val  = get(options.field, "attrs.value");
+                
             ctrl.id = id(options);
+            
+            // tivac/crucible#96
+            // If this is a new item (never been updated) set the default value
+            // Don't want to use that value on every render because it is bad UX,
+            // the user becomes unable to clear out the field
+            if(val) {
+                options.root.child("updated_at").on("value", function(snap) {
+                    if(snap.exists()) {
+                        return;
+                    }
+                    
+                    options.update(options.path, val);
+                    
+                    m.redraw();
+                });
+            }
         },
 
         view : function(ctrl, options) {
@@ -24,10 +42,10 @@ module.exports = function(type) {
             if(hidden) {
                 return hidden;
             }
-
+            
             return m("div", { class : options.class },
                 label(ctrl, options),
-                m("input", assign({
+                m("input", assign({}, field.attrs || {}, {
                         // attrs
                         id       : ctrl.id,
                         type     : type || "text",
@@ -37,8 +55,7 @@ module.exports = function(type) {
 
                         // events
                         oninput : m.withAttr("value", options.update(options.path))
-                    },
-                    field.attrs || {}
+                    }
                 ))
             );
         }
