@@ -49,7 +49,7 @@ module.exports = {
                     return;
                 }
                 
-                opts.update(opts.path.concat(idx), "placeholder");
+                opts.update(opts.path.concat(idx), {});
             });
         };
 
