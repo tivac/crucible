@@ -204,6 +204,12 @@ module.exports = {
                             data.append(key, val);
                         });
                         
+                        data.append("Content-Type", file.type);
+                        
+                        each(options.field.headers || {}, function(value, key) {
+                            data.append(key, value);
+                        });
+                        
                         data.append(config.filefield, file);
                         
                         return fetch(config.action, {
