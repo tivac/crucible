@@ -4,8 +4,7 @@ var m      = require("mithril"),
     assign = require("lodash.assign"),
     times  = require("lodash.times"),
 
-    hide = require("./lib/hide"),
-
+    hide     = require("./lib/hide"),
     children = require("./children"),
 
     css = require("./repeating.css"),
@@ -37,9 +36,9 @@ function child(ctrl, options, data, idx) {
 module.exports = {
     controller : function(options) {
         var ctrl = this;
-
+        
         ctrl.children = (options.data && options.data.length) || 1;
-
+        
         ctrl.add = function(opts) {
             ctrl.children += 1;
 
@@ -49,7 +48,9 @@ module.exports = {
                     return;
                 }
                 
-                opts.update(opts.path.concat(idx), {});
+                // Need a key here so that firebase will save this object,
+                // otherwise future loads can have weird gaps
+                opts.update(opts.path.concat(idx), { __idx : idx });
             });
         };
 
@@ -69,19 +70,20 @@ module.exports = {
     view : function(ctrl, options) {
         var field   = options.field,
             hidden  = hide(options),
-            content = ctrl.children || options.data;
+            items;
         
         if(hidden) {
             return hidden;
         }
         
+        if(options.data) {
+            items = options.data.map(child.bind(null, ctrl, options));
+        } else {
+            items = times(ctrl.children, child.bind(null, ctrl, options, false));
+        }
+        
         return m("div", { class : options.class + " " + css.container },
-            // TODO: AHHHHHHHHHHHHHH
-            ctrl.children || options.data ?
-                options.data ? 
-                    options.data.map(child.bind(null, ctrl, options)) :
-                    times(ctrl.children, child.bind(null, ctrl, options, false))
-                : "No entries",
+            items,
             m("button", {
                 class   : css.add,
                 onclick : ctrl.add.bind(ctrl, options)
