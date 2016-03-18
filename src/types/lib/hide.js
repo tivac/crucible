@@ -21,7 +21,7 @@ module.exports = function(options) {
     tgt = get(options.state, dep);
     
     // No target value, so have to hide it
-    if(typeof tgt === "undefined") {
+    if(typeof tgt === "undefined" || tgt === null) {
         return dom;
     }
     
