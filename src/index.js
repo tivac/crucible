@@ -3,8 +3,9 @@
 var m   = require("mithril"),
     url = require("url");
 
-// Don't actually want the exports, just want it bundled
-require("./global.css");
+// Don't actually want the exports, just want them bundled
+require("./_global.css");
+require("./_pure.css");
 
 if(!global.crucible) {
     global.crucible = {};
