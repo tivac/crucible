@@ -4,7 +4,9 @@ anthracite
 Fully client-side single-page application talking to FireBase to build a customizable CMS backed by a robust RESTful API. (Because the API is just [FireBase](https://www.firebase.com/docs/rest/api/)!)
 
 <p align="center">
-   [![anthracite](http://i.imgur.com/CUZunGj.jpg)](https://en.wikipedia.org/wiki/Anthracite#/media/File:Ibbenbueren_Anthracite.JPG)
+   <a href="https://en.wikipedia.org/wiki/Anthracite#/media/File:Ibbenbueren_Anthracite.JPG">
+      <img src="http://i.imgur.com/CUZunGj.jpg" width="400" height="300" />
+   </a>
 </p>
 
 ## Installation/Development
