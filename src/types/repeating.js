@@ -3,13 +3,15 @@
 var m      = require("mithril"),
     assign = require("lodash.assign"),
     times  = require("lodash.times"),
-
+    
+    config = require("../config"),
+    
     hide     = require("./lib/hide"),
     children = require("./children"),
 
     css = require("./repeating.css"),
     
-    icons = global.crucible.icons;
+    icons = config.icons;
 
 function child(ctrl, options, data, idx) {
     return m("div", { class : css[idx === 0 ? "first" : "child"] },

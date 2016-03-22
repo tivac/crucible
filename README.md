@@ -1,16 +1,16 @@
-crucible
+anthracite
 ========
 
 Fully client-side single-page application talking to FireBase to build a customizable CMS backed by a robust RESTful API. (Because the API is just [FireBase](https://www.firebase.com/docs/rest/api/)!)
 
-![Crucible](https://cloud.githubusercontent.com/assets/921652/12213718/8ed4ca7a-b632-11e5-8f4e-b166c786de28.png)
+[![anthracite](http://i.imgur.com/D4JSlTt.jpg)](https://en.wikipedia.org/wiki/Anthracite#/media/File:Ibbenbueren_Anthracite.JPG)
 
 ## Installation/Development
 
-1. Clone
-2. `npm i`
-3. `npm start`
-4. [Open browser for instructions](http://localhost:9966)
+1. `npm install anthracite`
+2. Rename `index-example.html` to `index.html`, changing the `<base>` tag if necessary
+3. Rename `config-example.js` to `config.js` and set your firebase endpoint
+4. Open in a browser
 
 ## Usage
 
@@ -66,7 +66,7 @@ Renders an input that autocompletes entries in the specified schema to set up ma
 
 #### `upload`
 
-Draws a drop target that will upload files to a defined location. Depends on a web service existing on some other server that can feed it both the upload target location as well as any other form params required to be sent along. Implemented this way so that crucible's uploader can be agnostic and not particularly care about where the file is going. See [#97](https://github.com/tivac/crucible/pull/97) for configuration details.
+Draws a drop target that will upload files to a defined location. Depends on a web service existing on some other server that can feed it both the upload target location as well as any other form params required to be sent along. Implemented this way so that anthracite's uploader can be agnostic and not particularly care about where the file is going. See [#97](https://github.com/tivac/anthracite/pull/97) for configuration details.
 
 ### Structural Fields
 

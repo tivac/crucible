@@ -14,13 +14,20 @@ var fs   = require("fs"),
     
     start;
 
+// Clear out any previous export
+shell.rm("-rf", "./export");
+
 // Set up export dir
 shell.mkdir("-p", "./export/gen");
+shell.mkdir("-p", "./export/src");
 
 // Copy over static things
-shell.cp("./index.html", "./export/index.html");
-shell.cp("-r", "./favicon", "./export/favicon");
-shell.cp("./src/icons.svg", "./export/gen/icons.svg");
+shell.cp("./package.json", "./export");
+shell.cp("./LICENSE", "./export");
+shell.cp("./README.md", "./export");
+shell.cp("./index-example.html", "./export");
+shell.cp("./config-example.js", "./export");
+shell.cp("./src/icons.svg", "./export/src");
 
 // Generate things
 

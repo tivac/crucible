@@ -2,6 +2,8 @@
 
 var m = require("mithril"),
     
+    config = require("../config"),
+    
     db     = require("../lib/firebase"),
     valid  = require("../lib/valid-auth"),
     prefix = require("../lib/prefix"),
@@ -10,15 +12,15 @@ var m = require("mithril"),
     css    = require("./login.css");
 
 function loginRedirect() {
-    window.location = global.crucible.loginBaseUrl +
-        window.encodeURIComponent(window.location.origin + global.crucible.root + "/login");
+    window.location = config.loginBaseUrl +
+        window.encodeURIComponent(window.location.origin + config.root + "/login");
 }
 
 module.exports = {
     controller : function() {
         var ctrl = this;
 
-        if(global.crucible.auth === "jwt") {
+        if(config.auth === "jwt") {
             m.startComputation();
 
             if(!m.route.param("auth")) {
@@ -27,19 +29,16 @@ module.exports = {
 
             db.authWithCustomToken(m.route.param("auth"), function(error) {
                 if(error) {
-                    loginRedirect();
-
-                    return;
+                    return loginRedirect();
                 }
 
                 m.endComputation();
-                m.route(prefix("/"));
+                
+                return m.route(prefix("/"));
             });
-
-            return;
         }
         
-        if(!global.crucible.auth || valid()) {
+        if(!config.auth || valid()) {
             return m.route(prefix("/"));
         }
         
@@ -58,12 +57,12 @@ module.exports = {
                     return m.redraw();
                 }
                 
-                m.route(prefix("/"));
+                return m.route(prefix("/"));
             });
         };
         
-        if(global.crucible.auth !== "password") {
-            db.authWithOAuthRedirect(global.crucible.auth);
+        if(config.auth !== "password") {
+            db.authWithOAuthRedirect(config.auth);
         }
     },
     

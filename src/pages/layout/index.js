@@ -2,6 +2,8 @@
 
 var m = require("mithril"),
 
+    config = require("../../config"),
+    
     db     = require("../../lib/firebase"),
     auth   = require("../../lib/valid-auth"),
     prefix = require("../../lib/prefix"),
@@ -41,7 +43,7 @@ module.exports = {
 
     view : function(ctrl, options) {
         var current = m.route(),
-            locked  = global.crucible.locked;
+            locked  = config.locked;
 
         if(!options) {
             options = false;
@@ -60,7 +62,7 @@ module.exports = {
                             href   : prefix("/"),
                             config : m.route
                         },
-                        m("h1", "Crucible")
+                        m("h1", "Anthracite")
                     )
                 ),
 

@@ -5,7 +5,7 @@ var m = require("mithril");
 module.exports = {
     view : function() {
         return [
-            m("h1", "CRUCIBLE SETUP"),
+            m("h1", "Anthracite Setup"),
             
             m("ol",
                 m("li", "Copy config-example.js to config.js"),
