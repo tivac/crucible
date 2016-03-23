@@ -22,15 +22,6 @@ var fs   = require("fs"),
     
     bundling, bytes, time, done;
 
-// Make sure icons stay up to date
-chokidar.watch("./src/icons.svg").on("all", function(event) {
-    if(event !== "add" && event !== "change") {
-        return;
-    }
-
-    shell.cp("./src/icons.svg", "./gen/icons.svg");
-});
-
 function bundle() {
     bundling = true;
     
@@ -53,7 +44,7 @@ function bundle() {
         fs.writeFileSync("./gen/index.js", out);
         
         if(done) {
-            done();
+            return done();
         }
     });
 }
@@ -94,6 +85,7 @@ server.use(require("morgan")("dev"));
 
 // Delay responding to generated file requests until it's done
 server.use("/gen/index.js", function(req, res, next) {
+    /* eslint consistent-return: 0 */
     if(!bundling) {
         return next();
     }

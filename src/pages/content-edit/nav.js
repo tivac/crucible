@@ -6,13 +6,15 @@ var m          = require("mithril"),
     debounce   = require("lodash.debounce"),
     capitalize = require("lodash.capitalize"),
     slug       = require("sluggo"),
-
+    
+    config = require("../../config"),
+    
     db     = require("../../lib/firebase"),
     prefix = require("../../lib/prefix"), 
 
     css = require("./nav.css"),
     
-    icons = global.crucible.icons;
+    icons = config.icons;
 
 module.exports = {
     controller : function() {
@@ -112,7 +114,7 @@ module.exports = {
         var current = m.route(),
             content = ctrl.results || ctrl.content || [],
             now     = Date.now(),
-            locked  = global.crucible.locked;
+            locked  = config.locked;
 
         if(!m.route.param("id")) {
             document.title = capitalize(ctrl.schema.name);

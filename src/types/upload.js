@@ -9,13 +9,15 @@ var m        = require("mithril"),
     url      = require("url"),
     path     = require("path"),
     
+    config = require("../config"),
+    
     id    = require("./lib/id"),
     hide  = require("./lib/hide"),
     label = require("./lib/label"),
     
     css = require("./upload.css"),
     
-    icons = global.crucible.icons;
+    icons = config.icons;
 
 // Load fetch polyfill
 require("whatwg-fetch");
@@ -202,6 +204,12 @@ module.exports = {
                         
                         each(config.fields, function(val, key) {
                             data.append(key, val);
+                        });
+                        
+                        data.append("Content-Type", file.type);
+                        
+                        each(options.field.headers || {}, function(value, key) {
+                            data.append(key, value);
                         });
                         
                         data.append(config.filefield, file);

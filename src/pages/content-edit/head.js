@@ -4,12 +4,14 @@ var m      = require("mithril"),
     moment = require("moment"),
     get    = require("lodash.get"),
     upper  = require("lodash.capitalize"),
-
-    db = require("../../lib/firebase"),
+    
+    config = require("../../config"),
+    
+    db     = require("../../lib/firebase"),
 
     css = require("./head.css"),
     
-    icons = global.crucible.icons;
+    icons = config.icons;
 
 module.exports = {
     controller : function(options) {
@@ -34,7 +36,7 @@ module.exports = {
         } else {
             ctrl.start = {
                 date : "",
-                time : get(global.crucible, "defaults.publish_start_time") || ""
+                time : get(config, "defaults.publish_start_time") || ""
             };
         }
         
@@ -147,7 +149,7 @@ module.exports = {
             status  = "draft",
             publish = options.data.published_at || options.data.published,
             future  = ctrl.start.moment && ctrl.start.moment.valueOf() > now,
-            locked  = global.crucible.locked;
+            locked  = config.locked;
 
         if(publish > now) {
             status = "scheduled";

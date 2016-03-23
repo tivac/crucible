@@ -1,7 +1,9 @@
 "use strict";
 
-var join = require("url-join");
+var join = require("url-join"),
+    
+    config = require("../config");
 
 module.exports = function path(str) {
-    return join(global.crucible.root, str);
+    return join(config.root, str);
 };

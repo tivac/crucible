@@ -1,9 +1,10 @@
-/* global crucible */
 "use strict";
 
-var Firebase = require("firebase");
+var Firebase = require("firebase"),
 
-module.exports = new Firebase(crucible.firebase);
+    config = require("../config");
+
+module.exports = new Firebase(config.firebase);
 module.exports.TIMESTAMP = Firebase.ServerValue.TIMESTAMP;
 
 // For debugging
