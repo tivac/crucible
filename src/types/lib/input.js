@@ -22,7 +22,7 @@ module.exports = function(type) {
             // If this is a new item (never been updated) set the default value
             // Don't want to use that value on every render because it is bad UX,
             // the user becomes unable to clear out the field
-            if(val) {
+            if(val && options.root) {
                 options.root.child("updated_at").on("value", function(snap) {
                     if(snap.exists()) {
                         return;
