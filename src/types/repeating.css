@@ -1,28 +1,48 @@
 @value   icons_css: "../icons.css";
 @value buttons_css: "../buttons.css";
 
+@value radius: 2px;
+
 .container {
     display: flex;
     flex-direction: column;
-}
-
-.children {
-    display: flex;
-    flex-direction: row;
     
     border: 1px solid #CCC;
+    border-radius: radius;
     
     padding: 10px;
 }
 
-.child {
-    composes: children;
+.add {
+    composes: add from buttons_css;
     
-    border-top: 0;
+    margin-top: 10px;
+    width: 30%;
+    
+    align-self: center;
+}
+
+.child {
+    display: flex;
+    flex-direction: row;
+    
+    flex: 1;
+    
+    padding: 5px 10px 5px 5px;
+    
+    border-radius: radius;
+}
+
+.child + .child {
+    margin-top: 10px;
+}
+
+.child:nth-child(2n) {
+    background: #BBB;
 }
 
 .first {
-    composes: children;
+    composes: child;
 }
 
 .meta {
@@ -51,8 +71,3 @@
     composes: plain from buttons_css;
 }
 
-.add {
-    composes: add from buttons_css;
-    
-    margin-top: 10px;
-}
