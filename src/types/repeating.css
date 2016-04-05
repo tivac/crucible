@@ -38,7 +38,7 @@
 }
 
 .child:nth-child(2n) {
-    background: #BBB;
+    background: rgba(0, 0, 0, 0.05);
 }
 
 .first {
