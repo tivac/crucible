@@ -1,5 +1,4 @@
-/* export anthracite */
-var anthracite = {
+window.anthracite = {
     // Uncomment and add your firebase URL
     // firebase : "https://<YOUR-APP-HERE>.firebaseio.com/"
     
