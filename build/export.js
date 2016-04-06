@@ -58,7 +58,6 @@ builder.plugin("bundle-collapser/plugin");
 
 // Transforms
 builder.transform("detabbify", { global : true });
-builder.transform("workerify");
 
 start = Date.now();
 

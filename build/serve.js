@@ -65,7 +65,6 @@ builder.plugin("modular-css/browserify", {
 
 // Browserify transforms
 builder.transform("detabbify", { global : true });
-builder.transform("workerify");
 
 // Start up watchify
 builder.on("update", bundle);

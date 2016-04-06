@@ -62,6 +62,8 @@
 
 .title {
     margin: 0;
+    padding: 2px 5px 0 5px;
+    
     border: solid 1px transparent;
     border-bottom: solid 2px #68A;
 }
@@ -83,6 +85,8 @@
 
     width: 100%;
     max-width: 1000px;
+}
 
-    margin: 20px auto;
+.children {
+    margin-top: 20px;
 }
