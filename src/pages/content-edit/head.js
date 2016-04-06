@@ -135,7 +135,8 @@ module.exports = {
             
             ref.update({
                 fields : options.data.fields,
-                name   : options.data.name
+                name   : options.data.name,
+                slug   : options.data.slug || null
             }, function() {
                 ctrl.saving = false;
                 
