@@ -57,6 +57,10 @@ module.exports = {
             ref.child("preview").set(el.value);
         };
         
+        ctrl.slugChanged = function(value) {
+            ref.child("slug").set(value);
+        };
+        
         // Listen for the worker to finish and update firebase
         worker.addEventListener("message", function(e) {
             var data = JSON.parse(e.data);
@@ -78,7 +82,7 @@ module.exports = {
         if(!ctrl.schema) {
             return m.component(layout);
         }
-
+        
         return m.component(layout, {
             title   : "Edit - " + capitalize(ctrl.schema.name),
             content : m("div", { class : layout.css.content },
@@ -88,26 +92,48 @@ module.exports = {
 
                 m("div", { class : css.meta },
                     m("h3", "Metadata"),
-                    m("label", { class : css.label, for : "preview" }, "Preview URL Base"),
-                    m("input", {
-                        id    : "preview",
-                        class : css[ctrl.preview.valid ? "preview" : "previewError"],
-                        type  : "url",
-                        value : ctrl.preview.value || "",
+                    m("div", { class : css.sections },
+                        m("div", { class : css.section },
+                            m("label", { class : css.label, for : "preview" }, "Preview URL Base"),
+                            m("input", {
+                                // Attrs
+                                id    : "preview",
+                                class : css[ctrl.preview.valid ? "preview" : "previewError"],
+                                type  : "url",
+                                value : ctrl.preview.value || "",
+                                
+                                // Events
+                                oninput : ctrl.previewChanged,
+                                
+                                // Config Fn
+                                config : function(el, init) {
+                                    if(init) {
+                                        return;
+                                    }
 
-                        oninput : ctrl.previewChanged,
-                        config  : function(el, init) {
-                            if(init) {
-                                return;
-                            }
-
-                            ctrl.preview.valid = el.validity.valid;
-                        }
-                    }),
-                    m("p", { class : css.note },
-                        ctrl.preview.value ?
-                            ctrl.preview.value + "-0IhUBgUFfhyLQ2m6s5x" :
-                            null
+                                    ctrl.preview.valid = el.validity.valid;
+                                }
+                            }),
+                            m("p", { class : css.note },
+                                ctrl.preview.value ?
+                                    ctrl.preview.value + "-0IhUBgUFfhyLQ2m6s5x" :
+                                    null
+                            )
+                        ),
+                        m("div", { class : css.section },
+                            m("label", { class : css.label },
+                                m("input", {
+                                    // Attrs
+                                    css     : css.slug,
+                                    type    : "checkbox",
+                                    checked : ctrl.schema.slug,
+                                    
+                                    // Events
+                                    onchange : m.withAttr("checked", ctrl.slugChanged)
+                                }),
+                                " Generate slugs for entries?"
+                            )
+                        )
                     )
                 ),
                 m("div", { class : css.contents },
