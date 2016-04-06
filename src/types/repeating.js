@@ -19,7 +19,7 @@ function child(ctrl, options, data, idx) {
             m("p", { class : css.counter }, idx + 1),
             m("button", {
                     class   : css.remove,
-                    onclick : ctrl.remove.bind(ctrl, options, data, idx)
+                    onclick : ctrl.remove.bind(null, options, data, idx)
                 },
                 m("svg", { class : css.icon },
                     m("use", { href : icons + "#remove" })
@@ -41,7 +41,9 @@ module.exports = {
         
         ctrl.children = (options.data && options.data.length) || 1;
         
-        ctrl.add = function(opts) {
+        ctrl.add = function(opts, e) {
+            e.preventDefault();
+            
             ctrl.children += 1;
 
             // Ensure that we have data placeholders for all the possible entries
@@ -56,7 +58,9 @@ module.exports = {
             });
         };
 
-        ctrl.remove = function(opts, data, idx) {
+        ctrl.remove = function(opts, data, idx, e) {
+            e.preventDefault();
+            
             if(Array.isArray(opts.data)) {
                 opts.data.splice(idx, 1);
                 
@@ -88,7 +92,7 @@ module.exports = {
             items,
             m("button", {
                 class   : css.add,
-                onclick : ctrl.add.bind(ctrl, options)
+                onclick : ctrl.add.bind(null, options)
             }, field.button || "Add")
         );
     }
