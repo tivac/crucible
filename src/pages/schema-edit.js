@@ -2,6 +2,7 @@
 
 var m          = require("mithril"),
     capitalize = require("lodash.capitalize"),
+    workerify  = require("webworkify"),
 
     children = require("../types/children"),
 
@@ -19,7 +20,7 @@ module.exports = {
         var ctrl   = this,
             id     = m.route.param("schema"),
             ref    = db.child("schemas/" + id),
-            worker = new Worker("./schema-edit/parse.js");
+            worker = workerify(require("./schema-edit/parse.js"));
 
         ctrl.ref     = ref;
         ctrl.schema  = null;
