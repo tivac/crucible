@@ -1,10 +1,29 @@
 @import "../../node_modules/codemirror/lib/codemirror.css";
 
+@value flexCss: "../flex.css";
+
 .body {
     composes: body from "./layout/layout.css";
 }
+
 .meta {
+    /* ??? */
+}
+
+.sections {
+    composes: hbox from flexCss;
+}
+
+.section {
     composes: global(pure-form), global(pure-form-stacked);
+    
+    flex: 1;
+    
+    padding-right: 10px;
+}
+
+.section + .section {
+    padding-left: 10px;
 }
 
 .label {
@@ -57,5 +76,7 @@
 
 /* Override codemirror styling to make it expannnnd */
 :global(.CodeMirror) {
+    composes: input from "../form.css";
+    
     height: 100% !important;
 }

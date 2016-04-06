@@ -1,6 +1,7 @@
 "use strict";
 
 var m          = require("mithril"),
+    sluggo     = require("sluggo"),
     get        = require("lodash.get"),
     merge      = require("lodash.merge"),
     assign     = require("lodash.assign"),
@@ -57,11 +58,22 @@ module.exports = {
             ctrl.data = assign(data, {
                 fields : merge(data.fields, ctrl.data.fields)
             });
+            
+            // Create slug value if it doesnt exist already
+            if(!ctrl.data.slug) {
+                ctrl.data.slug = sluggo(ctrl.data.name);
+            }
 
             m.redraw();
         });
 
         watch(ref);
+        
+        // Event Handlers
+        ctrl.titleChange = function(title) {
+            update(ctrl.data, [ "name" ], title);
+            update(ctrl.data, [ "slug" ], sluggo(title));
+        };
     },
 
     view : function(ctrl) {
@@ -92,17 +104,6 @@ module.exports = {
                 m("div", { class : css.content },
                     m.component(head, ctrl),
                     m("div", { class : css.body },
-                        m("h2", { class : css.schema }, "/" + ctrl.schema.name + "/"),
-                        m("h1", {
-                                // Attrs
-                                class           : css.title,
-                                contenteditable : true,
-
-                                // Events
-                                oninput : m.withAttr("innerText", update(ctrl.data, [ "name" ]))
-                            },
-                            ctrl.data.name || ""
-                        ),
                         m("form", {
                                 class  : css.form,
                                 config : function(el, init) {
@@ -117,7 +118,23 @@ module.exports = {
                                     m.redraw();
                                 }
                             },
+                            m("h2", { class : css.schema },
+                                "/" + ctrl.schema.name + "/",
+                                ctrl.schema.slug ?
+                                    (ctrl.data.slug || "???") + "/" : null
+                            ),
+                            m("h1", {
+                                    // Attrs
+                                    class           : css.title,
+                                    contenteditable : true,
+
+                                    // Events
+                                    oninput : m.withAttr("innerText", ctrl.titleChange)
+                                },
+                                ctrl.data.name || ""
+                            ),
                             m.component(children, {
+                                class  : css.children,
                                 data   : ctrl.data.fields || {},
                                 fields : ctrl.schema.fields,
                                 path   : [ "fields" ],
