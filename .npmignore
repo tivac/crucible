@@ -1,0 +1,6 @@
+config.js
+index.html
+build/
+gen/
+src/
+.*
