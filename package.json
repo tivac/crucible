@@ -8,7 +8,7 @@
     "fake": "node build/faker.js",
     "lint": "eslint . && jscs .",
     "start": "node build/serve.js",
-    "release": "standard-version"
+    "prepublish": "in-publish && npm run export"
   },
   "keywords": [
     "cms",
@@ -32,6 +32,7 @@
     "firebase": "^2.4.1",
     "fuzzysearch": "^1.0.3",
     "humanize-duration": "^3.6.0",
+    "in-publish": "^2.0.0",
     "jscs": "^2.11.0",
     "jscs-preset-arenanet": "^1.0.3",
     "jsesc": "^1.0.0",
