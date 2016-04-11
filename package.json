@@ -7,7 +7,8 @@
     "export": "node build/export.js",
     "fake": "node build/faker.js",
     "lint": "eslint . && jscs .",
-    "start": "node build/serve.js"
+    "start": "node build/serve.js",
+    "release": "standard-version"
   },
   "keywords": [
     "cms",
@@ -57,6 +58,7 @@
     "run-parallel": "^1.1.4",
     "shelljs": "^0.6.0",
     "sluggo": "^0.2.0",
+    "standard-version": "^2.1.2",
     "uglify-js": "^2.6.1",
     "unique-slug": "^2.0.0",
     "url": "^0.11.0",
