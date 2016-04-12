@@ -14,26 +14,14 @@ var fs   = require("fs"),
     
     start;
 
-// Clear out any previous export
-shell.rm("-rf", "./export");
-
-// Set up export dir
-shell.mkdir("-p", "./export/gen");
-shell.mkdir("-p", "./export/src");
-
-// Copy over static things
-shell.cp("./package.json", "./export");
-shell.cp("./LICENSE", "./export");
-shell.cp("./README.md", "./export");
-shell.cp("./index-example.html", "./export");
-shell.cp("./config-example.js", "./export");
-shell.cp("./src/icons.svg", "./export/src");
+// Set up gen dir
+shell.mkdir("-p", "./gen");
 
 // Generate things
 
 // Plugins
 builder.plugin("modular-css/browserify", {
-    css : "./export/gen/index.css",
+    css : "./gen/index.css",
     
     // Tiny exported selectors
     namer : function(file, selector) {
@@ -78,7 +66,7 @@ builder.bundle(function(err, out) {
     console.log("Bundled & compressed in:", duration(Date.now() - start));
     console.log("Output size:", bytes(code.length));
     
-    fs.writeFileSync("./export/gen/index.js", code);
+    fs.writeFileSync("./gen/index.js", code);
     
     return;
 });

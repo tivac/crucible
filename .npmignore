@@ -1,6 +1,10 @@
+# Ignore install-specific files
 config.js
 index.html
-build/
-gen/
-src/
-.*
+
+# Ignore directories
+/build
+/src
+
+# Ignore dot-files
+/.*
