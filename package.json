@@ -56,6 +56,7 @@
     "pretty-bytes": "^3.0.1",
     "purecss": "^0.6.0",
     "randexp": "^0.4.2",
+    "remarkable": "^1.6.2",
     "run-parallel": "^1.1.4",
     "shelljs": "^0.6.0",
     "sluggo": "^0.2.0",

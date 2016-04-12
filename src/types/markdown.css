@@ -1,0 +1,15 @@
+@value form_css: "../form.css";
+
+.input {
+    composes: input from form_css;
+    max-height: 600px;
+    overflow: auto;
+}
+
+.inputHidden {
+    composes: input, global(hidden);
+}
+
+.button {
+    margin-top: 5px;
+}
