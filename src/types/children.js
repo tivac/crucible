@@ -50,6 +50,7 @@ types = {
     
     // Custom input types
     relationship : require("./relationship"),
+    markdown     : require("./markdown"),
     textarea     : require("./textarea"),
     upload       : require("./upload"),
     

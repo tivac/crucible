@@ -1,0 +1,9 @@
+@value form_css: "../form.css";
+
+.input {
+    composes: input from form_css;
+}
+
+.button {
+    margin-top: 5px;
+}
