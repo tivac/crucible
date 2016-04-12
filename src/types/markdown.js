@@ -1,14 +1,15 @@
 "use strict";
 
-var m      = require("mithril"),
-    editor = require("codemirror"),
+var m          = require("mithril"),
+    editor     = require("codemirror"),
     Remarkable = require("remarkable"),
-    md = new Remarkable(),
 
     hide  = require("./lib/hide"),
     label = require("./lib/label"),
     
-    css = require("./markdown.css");
+    css = require("./markdown.css"),
+
+    md = new Remarkable();
 
 require("codemirror/mode/markdown/markdown");
 
@@ -17,14 +18,20 @@ module.exports = {
         var ctrl = this;
 
         ctrl.markdown = options.data || "";
-        ctrl.previewing = m.prop(false);
-        ctrl.previewHTML = m.prop(null);
+        ctrl.previewing = false;
+        ctrl.previewHTML = null;
 
         ctrl.togglePreview = function(e) {
             e.preventDefault();
 
-            ctrl.previewHTML(md.render(ctrl.markdown));
-            ctrl.previewing(!ctrl.previewing());
+            ctrl.previewHTML = md.render(ctrl.markdown);
+            ctrl.previewing = !ctrl.previewing;
+        };
+
+        ctrl.editorChanged = function() {
+            ctrl.markdown = ctrl.editor.doc.getValue();
+
+            options.update(options.path, ctrl.markdown);
         };
 
         ctrl.editorSetup = function(el, init) {
@@ -34,7 +41,6 @@ module.exports = {
 
             ctrl.editor = editor.fromTextArea(el, {
                 mode : "text/x-markdown",
-                lint : true,
 
                 indentUnit   : 4,
                 smartIndent  : false,
@@ -42,8 +48,7 @@ module.exports = {
                 lineWrapping : true,
 
                 // Plugin options
-                styleActiveLine  : true,
-                continueComments : true,
+                styleActiveLine : true,
 
                 autoCloseBrackets : true,
                 matchBrackets     : true,
@@ -63,11 +68,7 @@ module.exports = {
                 }
             });
 
-            ctrl.editor.on("changes", function() {
-                ctrl.markdown = ctrl.editor.doc.getValue();
-
-                options.update(options.path, ctrl.markdown);
-            });
+            ctrl.editor.on("changes", ctrl.editorChanged);
         };
     },
 
@@ -78,21 +79,21 @@ module.exports = {
             return hidden;
         }
 
-        return m("",
+        return m("div",
             label(ctrl, options),
-            m("", { class : css.input + (ctrl.previewing() ? " hidden" : "") },
+            m("div", { class : ctrl.previewing ? css.inputHidden : css.input },
                 m("textarea", { config : ctrl.editorSetup },
                     ctrl.markdown
                 )
             ),
-            m("div", { class : css.input + (ctrl.previewing() ? "" : " hidden") },
-                m.trust(ctrl.previewHTML())
+            m("div", { class : ctrl.previewing ? css.input : css.inputHidden },
+                m.trust(ctrl.previewHTML)
             ),
             m("button.pure-button", {
                     onclick : ctrl.togglePreview,
                     class   : css.button
                 },
-                ctrl.previewing() ? "Edit" : "Preview"
+                ctrl.previewing ? "Edit" : "Preview"
             )
         );
     }
