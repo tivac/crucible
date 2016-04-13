@@ -17,7 +17,8 @@ var fs   = require("fs"),
 // Set up gen dir
 shell.mkdir("-p", "./gen");
 
-// Generate things
+// Copy static files
+shell.cp("./src/icons/svg", "./gen/icons.svg");
 
 // Plugins
 builder.plugin("modular-css/browserify", {
