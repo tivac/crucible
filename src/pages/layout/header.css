@@ -1,6 +1,8 @@
 @value icons_css: "../../icons.css";
 @value layout_css: "./layout.css";
 
+@value hover: #346;
+
 .container {
     composes: section from layout_css;
     
@@ -24,6 +26,10 @@
     padding: 0;
 }
 
+.top:hover {
+    background: hover;
+}
+
 .heading {
     display: flex;
     align-items: center;
@@ -37,16 +43,13 @@
     color: inherit;
 }
 
-.heading:hover {
-    background: #346;
-}
-
 .heading .title {
     flex: 1;
     text-align: center;
     
     font-size: 1.4em;
     margin: 0;
+    padding: 0 16px;
 }
 
 .body {
@@ -86,6 +89,11 @@
     padding: 0.4em 16px;
 }
 
+.add:hover,
+.logout:hover {
+    background: hover;
+}
+
 .add {
     composes: plain from "../../buttons.css";
 }
@@ -98,9 +106,9 @@
 }
 
 .schema:hover {
-    opacity: 0.8;
+    opacity: 1;
 
-    background: rgba(0, 0, 0, 0.2);
+    background: hover;
 }
 
 .active,
