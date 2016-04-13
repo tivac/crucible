@@ -17,7 +17,7 @@
     box-shadow: 0 1px 0 #545454;
 }
 
-.head {
+.top {
     composes: head from layout_css;
     composes: sep;
 
@@ -30,7 +30,7 @@
     flex: 1 0 auto;
 
     margin: 0;
-    padding: 0 16px;
+    /*padding: 0 16px;*/
     font-size: 1.8em;
 
     text-decoration: none;
@@ -41,7 +41,10 @@
     background: #346;
 }
 
-.heading h1 {
+.heading .title {
+    flex: 1;
+    text-align: center;
+    
     font-size: 1.4em;
     margin: 0;
 }

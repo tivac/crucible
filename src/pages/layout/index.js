@@ -8,8 +8,8 @@ var m = require("mithril"),
     auth   = require("../../lib/valid-auth"),
     prefix = require("../../lib/prefix"),
 
-    layout   = require("./layout.css"),
     header   = require("./header.css"),
+    layout   = require("./layout.css"),
     progress = require("./progress.css");
 
 module.exports = {
@@ -48,21 +48,21 @@ module.exports = {
         if(!options) {
             options = false;
         }
-
-        document.title = options.title || "Loading...";
+        
+        document.title = (options.title || "Loading...") + " | " + config.title;
 
         return m("div", { class : layout.container },
             options.content ? null : m("div", { class : progress.bar }),
 
             m("div", { class : header.container },
 
-                m("div", { class : header.head },
+                m("div", { class : header.top },
                     m("a", {
                             class  : header.heading,
                             href   : prefix("/"),
                             config : m.route
                         },
-                        m("h1", "Anthracite")
+                        m("h1", { class : header.title }, config.title)
                     )
                 ),
 

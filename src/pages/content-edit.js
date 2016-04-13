@@ -83,7 +83,7 @@ module.exports = {
             return m.component(layout);
         }
 
-        title = capitalize(get(ctrl.data, "name")) + " | " + capitalize(ctrl.schema.name);
+        title = [ get(ctrl.data, "name"), ctrl.schema.name ].filter(Boolean).map(capitalize).join(" | ");
 
         if(!ctrl.id) {
             return m.component(layout, {
