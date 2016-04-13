@@ -14,9 +14,9 @@ m.route(document.body, prefix("/"), keys({
 
     "/content/new" : auth(require("../pages/schema-new")),
 
-    "/content/:schema"      : auth(require("../pages/content-edit")),
-    "/content/:schema/edit" : auth(require("../pages/schema-edit")),
-    "/content/:schema/:id"  : auth(require("../pages/content-edit")),
+    "/content/:schema"      : auth(require("../pages/content-edit/")),
+    "/content/:schema/edit" : auth(require("../pages/schema-edit/")),
+    "/content/:schema/:id"  : auth(require("../pages/content-edit/")),
     
     "/..." : {
         view : function() {

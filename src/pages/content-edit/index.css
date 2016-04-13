@@ -1,8 +1,9 @@
-@value layout_css:  "./layout/layout.css";
-@value icons_css:   "../icons.css";
-@value buttons_css: "../buttons.css";
+@value layout_css:  "../layout/layout.css";
+@value icons_css:   "../../icons.css";
+@value buttons_css: "../../buttons.css";
 
-.content {
+.form {
+    composes: global(pure-form), global(pure-form-stacked);
     composes: section from layout_css;
 
     flex: 2 0 400px;
@@ -26,7 +27,7 @@
 
 /* No item selected */
 .empty {
-    composes: content;
+    composes: form;
     
     text-align: center;
     justify-content: center;
@@ -53,18 +54,11 @@
 }
 
 /* Title */
-.schema {
-    margin: 0;
-    color: #CCC;
-    font-size: 1em;
-    font-weight: normal;
-}
-
 .title {
     margin: 0;
     padding: 2px 5px 0 5px;
     
-    border: solid 1px transparent;
+    border: 1px solid transparent;
     border-bottom: solid 2px #68A;
 }
 
@@ -75,18 +69,25 @@
 
 .title:focus {
     outline: none;
+    
     border-color: #BBB;
     border-bottom-color: #68A;
 }
 
-/* Form contents */
-.form {
-    composes: global(pure-form), global(pure-form-stacked);
-
-    width: 100%;
-    max-width: 1000px;
+.slug {
+    opacity: 0.5;
+    
+    transition: opacity 0.2s ease-in;
 }
 
+.slug:hover,
+.slug:focus {
+    opacity: 1;
+    
+    transition: opacity 0.2s ease-out;
+}
+
+/* Form contents */
 .children {
-    margin-top: 20px;
+    margin-top: 15px;
 }

@@ -2,17 +2,17 @@
 
 var m          = require("mithril"),
     capitalize = require("lodash.capitalize"),
-    workify  = require("webworkify"),
+    workify    = require("webworkify"),
 
-    children = require("../types/children"),
+    children = require("../../types/children"),
 
-    watch  = require("../lib/watch"),
-    db     = require("../lib/firebase"),
-    update = require("../lib/update"),
+    watch  = require("../../lib/watch"),
+    db     = require("../../lib/firebase"),
+    update = require("../../lib/update"),
 
-    editor = require("./schema-edit/editor"),
+    editor = require("./editor"),
 
-    layout = require("./layout"),
+    layout = require("../layout"),
     css    = require("./schema-edit.css");
 
 module.exports = {
@@ -20,7 +20,7 @@ module.exports = {
         var ctrl   = this,
             id     = m.route.param("schema"),
             ref    = db.child("schemas/" + id),
-            worker = workify(require("./schema-edit/parse.js"));
+            worker = workify(require("./parse.js"));
 
         ctrl.ref     = ref;
         ctrl.schema  = null;

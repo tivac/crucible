@@ -4,7 +4,6 @@ var m          = require("mithril"),
     moment     = require("moment"),
     fuzzy      = require("fuzzysearch"),
     debounce   = require("lodash.debounce"),
-    capitalize = require("lodash.capitalize"),
     slug       = require("sluggo"),
     
     config = require("../../config"),
@@ -17,23 +16,14 @@ var m          = require("mithril"),
     icons = config.icons;
 
 module.exports = {
-    controller : function() {
-        var ctrl = this,
-
-            schema = db.child("schemas/" + m.route.param("schema"));
+    controller : function(schema) {
+        var ctrl = this;
 
         ctrl.page = 0;
 
-        ctrl.schema  = null;
+        ctrl.schema  = schema;
         ctrl.content = null;
         ctrl.results = null;
-
-        schema.on("value", function(snap) {
-            ctrl.schema = snap.val();
-            ctrl.schema.key = snap.key();
-
-            m.redraw();
-        });
 
         // Go get initial data
         db.child("content/" + ctrl.schema.key).orderByChild("published_at").on("value", function(snap) {

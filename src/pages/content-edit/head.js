@@ -26,7 +26,7 @@ module.exports = {
 
         ctrl.schedule   = false;
         ctrl.unschedule = false;
-
+    
         if(publish) {
             ctrl.start = {
                 date   : publish.format("YYYY-MM-DD"),
@@ -150,8 +150,8 @@ module.exports = {
             status  = "draft",
             publish = options.data.published_at || options.data.published,
             future  = ctrl.start.moment && ctrl.start.moment.valueOf() > now,
-            locked  = config.locked;
-
+            locked  = config.locked; // || (options.form && !options.form.checkValidity());
+        
         if(publish > now) {
             status = "scheduled";
         }
@@ -169,6 +169,7 @@ module.exports = {
                     ctrl.saving ?
                         "SAVING..." : m("button", {
                             // Attrs
+                            type     : "submit",
                             class    : css.save,
                             title    : "Save your changes",
                             disabled : locked || null,
