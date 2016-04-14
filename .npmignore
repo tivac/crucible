@@ -6,5 +6,6 @@ index.html
 /build
 /src
 
-# Ignore dot-files
+# Ignore config files
 /.*
+/jsconfig.json
