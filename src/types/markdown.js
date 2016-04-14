@@ -43,29 +43,7 @@ module.exports = {
                 mode : "text/x-markdown",
 
                 indentUnit   : 4,
-                smartIndent  : false,
-                lineNumbers  : false,
-                lineWrapping : true,
-
-                // Plugin options
-                styleActiveLine : true,
-
-                autoCloseBrackets : true,
-                matchBrackets     : true,
-
-                extraKeys : {
-                    Tab : function(cm) {
-                        if(cm.somethingSelected()) {
-                            return cm.indentSelection("add");
-                        }
-
-                        return cm.execCommand(cm.options.indentWithTabs ? "insertTab" : "insertSoftTab");
-                    },
-
-                    "Shift-Tab" : function(cm) {
-                        cm.indentSelection("subtract");
-                    }
-                }
+                lineWrapping : true
             });
 
             ctrl.editor.on("changes", ctrl.editorChanged);

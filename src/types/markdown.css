@@ -2,8 +2,13 @@
 
 .input {
     composes: input from form_css;
+    
+    min-height: 50px;
     max-height: 600px;
+    
     overflow: auto;
+    
+    background: #FFF;
 }
 
 .inputHidden {
