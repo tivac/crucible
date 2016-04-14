@@ -1,7 +1,7 @@
 /* technique from http://alistapart.com/article/expanding-text-areas-made-elegant */
 .expander {
     position: relative;
-    max-height: 600px;
+    max-height: 400px;
     min-height: 50px;
 }
 
