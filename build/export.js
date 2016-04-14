@@ -18,7 +18,7 @@ var fs   = require("fs"),
 shell.mkdir("-p", "./gen");
 
 // Copy static files
-shell.cp("./src/icons/svg", "./gen/icons.svg");
+shell.cp("./src/icons.svg", "./gen/icons.svg");
 
 // Plugins
 builder.plugin("modular-css/browserify", {
