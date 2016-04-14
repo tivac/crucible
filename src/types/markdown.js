@@ -3,7 +3,8 @@
 var m          = require("mithril"),
     editor     = require("codemirror"),
     Remarkable = require("remarkable"),
-
+    
+    id    = require("./lib/id"),
     hide  = require("./lib/hide"),
     label = require("./lib/label"),
     
@@ -16,7 +17,8 @@ require("codemirror/mode/markdown/markdown");
 module.exports = {
     controller : function(options) {
         var ctrl = this;
-
+        
+        ctrl.id       = id(options);
         ctrl.markdown = options.data || "";
         ctrl.previewing = false;
         ctrl.previewHTML = null;
