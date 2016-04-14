@@ -41,14 +41,14 @@
 }
 
 .contents {
-    composes: global(pure-g);
-
+    composes: hbox from flexCss;
+    
     flex: 4;
     overflow-y: auto;
 }
 
 .panes {
-    composes: global(pure-u-1-2);
+    flex: 1;
 }
 
 .editor {
