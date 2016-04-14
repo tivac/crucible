@@ -75,7 +75,7 @@
 }
 
 /* Override codemirror styling to make it expannnnd */
-:global(.CodeMirror) {
+.editor :global(.CodeMirror) {
     composes: input from "../form.css";
     
     height: 100% !important;
