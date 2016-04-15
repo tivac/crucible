@@ -8,9 +8,10 @@ var fs   = require("fs"),
     duration   = require("humanize-duration"),
     bytes      = require("pretty-bytes"),
     uglify     = require("uglify-js"),
-    slug       = require("unique-slug"),
 
     builder  = browserify("src/index.js", { debug : false }),
+    
+    files = {},
     
     start;
 
@@ -26,7 +27,20 @@ builder.plugin("modular-css/browserify", {
     
     // Tiny exported selectors
     namer : function(file, selector) {
-        var hash = slug(file + selector);
+        var hash;
+        
+        if(!files[file]) {
+            files[file] = {
+                id        : Object.keys(files).length,
+                selectors : {}
+            };
+        }
+        
+        if(!(selector in files[file].selectors)) {
+            files[file].selectors[selector] = Object.keys(files[file].selectors).length;
+        }
+        
+        hash = files[file].id.toString(32) + files[file].selectors[selector].toString(32);
         
         return hash.search(/^[a-z]/i) === 0 ? hash : "a" + hash;
     },
