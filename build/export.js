@@ -3,8 +3,6 @@
 
 var shell    = require("shelljs"),
     duration = require("humanize-duration"),
-    bytes    = require("pretty-bytes"),
-    slug     = require("unique-slug"),
     rollup   = require("rollup"),
 
     start = Date.now(),
@@ -20,10 +18,11 @@ shell.cp("./src/icons.svg", "./gen/icons.svg");
 rollup.rollup({
     entry   : "./src/index.js",
     plugins : [
-        require("rollup-plugin-commonjs")({ sourceMap : true }),
+        require("rollup-plugin-node-builtins")(),
         require("rollup-plugin-node-resolve")({
-            preferBuiltins : false
+            browser : true
         }),
+        require("rollup-plugin-commonjs")({ sourceMap : true }),
         require("modular-css/rollup")({
             css : "./gen/index.css",
     
@@ -55,6 +54,7 @@ rollup.rollup({
                 require("postcss-import")()
             ],
             done : [
+            
                 // require("cssnano")()
             ]
         }),
