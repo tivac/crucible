@@ -1,5 +1,5 @@
 import m from "mithril";
-// import config from "./config";
+import config from "./config";
 
 import setup from "./routes/setup";
 import normal from "./routes/default";

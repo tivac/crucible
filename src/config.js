@@ -1,9 +1,8 @@
 import url from "url";
 
-var config = global.anthracite || {};
+export default global.anthracite || {};
 
-config.root = url.parse(document.baseURI).pathname;
-config.icons = document.baseURI + "gen/icons.svg";
-config.title = document.title;
+export var root = url.parse(document.baseURI).pathname;
+export var icons = document.baseURI + "gen/icons.svg";
+export var title = document.title;
 
-export default config;
