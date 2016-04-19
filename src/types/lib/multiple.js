@@ -10,7 +10,7 @@ var m      = require("mithril"),
 
 module.exports = function(args, view) {
     return {
-        controller : function(options) {
+        exports.controller = function(options) {
             var ctrl = this;
 
             ctrl.id = id(options);
@@ -52,7 +52,7 @@ module.exports = function(args, view) {
             };
         },
 
-        view : function(ctrl, options) {
+        exports.view = function(ctrl, options) {
             var hidden  = hide(options);
             
             if(hidden) {

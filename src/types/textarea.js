@@ -10,7 +10,7 @@ var m      = require("mithril"),
     css = require("./textarea.css");
 
 module.exports = {
-    controller : function(options) {
+    exports.controller = function(options) {
         var ctrl = this;
 
         ctrl.id   = id(options);
@@ -23,7 +23,7 @@ module.exports = {
         };
     },
 
-    view : function(ctrl, options) {
+    exports.view = function(ctrl, options) {
         var field = options.field,
             hidden  = hide(options);
 

@@ -1,5 +1,3 @@
-"use strict";
-
 var required = /\*$/;
 
 function slugger(name) {
@@ -98,7 +96,7 @@ function process(obj) {
     return out;
 }
 
-module.exports = function(self) {
+export default function(self) {
     // This worker takes the nice, human-friendly config format and turns it into
     // ugly arrays of objects for firebase
     self.onmessage = function(e) {

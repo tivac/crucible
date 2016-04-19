@@ -1,11 +1,9 @@
-"use strict";
+import url from "url";
 
-var url = require("url"),
-    
-    config = global.anthracite || {};
+var config = global.anthracite || {};
 
 config.root = url.parse(document.baseURI).pathname;
 config.icons = document.baseURI + "gen/icons.svg";
 config.title = document.title;
 
-module.exports = config;
+export default config;

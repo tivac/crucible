@@ -1,16 +1,13 @@
-"use strict";
+import m from "mithril";
+import {auth} from "../config";
+import valid from "./valid-auth";
+import prefix from "./prefix";
 
-var m  = require("mithril"),
-    
-    config = require("../config"),
-    valid  = require("./valid-auth"),
-    prefix = require("./prefix");
-
-module.exports = function(component) {
+export default function(component) {
     return {
         controller : function() {
             /* eslint consistent-return: 0 */
-            if(config.auth && !valid()) {
+            if(auth && !valid()) {
                 return m.route(prefix("/login") + window.location.search);
             }
         },

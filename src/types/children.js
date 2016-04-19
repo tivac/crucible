@@ -12,7 +12,7 @@ var m      = require("mithril"),
     types;
 
 module.exports = {
-    view : function(ctrl, options) {
+    exports.view = function(ctrl, options) {
         var fields = options.fields || [];
 
         return m("div", options.class ? { class : options.class } : null,

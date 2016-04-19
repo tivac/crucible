@@ -15,7 +15,7 @@ var m          = require("mithril"),
 require("codemirror/mode/markdown/markdown");
 
 module.exports = {
-    controller : function(options) {
+    exports.controller = function(options) {
         var ctrl = this;
         
         ctrl.id       = id(options);
@@ -23,7 +23,7 @@ module.exports = {
         ctrl.previewing = false;
         ctrl.previewHTML = null;
 
-        ctrl.togglePreview = function(e) {
+        ctrl.togglePreexports.view = function(e) {
             e.preventDefault();
 
             ctrl.previewHTML = md.render(ctrl.markdown);
@@ -52,7 +52,7 @@ module.exports = {
         };
     },
 
-    view : function(ctrl, options) {
+    exports.view = function(ctrl, options) {
         var hidden  = hide(options);
 
         if(hidden) {

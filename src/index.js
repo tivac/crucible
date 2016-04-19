@@ -1,18 +1,20 @@
-"use strict";
+import m from "mithril";
+// import config from "./config";
 
-var m = require("mithril"),
-    
-    config = require("./config");
+import setup from "./routes/setup";
+import normal from "./routes/default";
 
 // Don't actually want the exports, just want them bundled
-require("./_global.css");
-require("./_pure.css");
+import "./_global.css";
+import "./_pure.css";
 
 // Always route in pathname mode
 m.route.mode = "pathname";
 
-if(!config.firebase) {
-    require("./routes/setup");
-} else {
-    require("./routes/default");
-}
+(function() {
+    if(!config.firebase) {
+        return setup();
+    }
+
+    return normal();
+}());

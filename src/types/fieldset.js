@@ -9,7 +9,7 @@ var m      = require("mithril"),
     css      = require("./fieldset.css");
 
 module.exports = {
-    view : function(ctrl, options) {
+    exports.view = function(ctrl, options) {
         var hidden  = hide(options);
         
         if(hidden) {

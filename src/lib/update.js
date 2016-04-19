@@ -1,6 +1,4 @@
-"use strict";
-
-var set = require("lodash.set");
+import set from "lodash.set";
 
 function update(obj, path, val) {
     if(!obj) {
@@ -10,7 +8,7 @@ function update(obj, path, val) {
     set(obj, path, (val === undefined || val === false || val === "") ? null : val);
 }
 
-module.exports = function(obj, path, val) {
+export default function(obj, path, val) {
     // Allow for easier usage by returning a function w/ bound params
     // Mostly useful in event handlers
     if(arguments.length === 2) {

@@ -1,24 +1,21 @@
-"use strict";
+import m from "mithril";
 
-var m  = require("mithril"),
+import layout from "./layout";
 
-    layout = require("./layout"),
-    css    = require("./layout/layout.css");
+import css from "./layout/layout.css";
 
-module.exports = {
-    view : function() {
-        return m.component(layout, {
-            title   : "Home",
-            content : m(".body", { class : css.body },
-                m("ul",
-                    m("li",
-                        m("a", { href : "/schemas", config : m.route }, "Schemas")
-                    ),
-                    m("li",
-                        m("a", { href : "/content", config : m.route }, "Content")
-                    )
+export function view() {
+    return m.component(layout, {
+        title   : "Home",
+        content : m(".body", { class : css.body },
+            m("ul",
+                m("li",
+                    m("a", { href : "/schemas", config : m.route }, "Schemas")
+                ),
+                m("li",
+                    m("a", { href : "/content", config : m.route }, "Content")
                 )
             )
-        });
-    }
-};
+        )
+    });
+}

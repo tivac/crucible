@@ -9,7 +9,7 @@ var m      = require("mithril"),
     css      = require("./tabs.css");
 
 module.exports = {
-    controller : function() {
+    exports.controller = function() {
         var ctrl = this;
 
         ctrl.tab = 0;
@@ -21,7 +21,7 @@ module.exports = {
         };
     },
     
-    view : function(ctrl, options) {
+    exports.view = function(ctrl, options) {
         var tabs   = options.field.children || [],
             hidden = hide(options);
             

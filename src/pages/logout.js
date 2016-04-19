@@ -1,14 +1,10 @@
-"use strict";
+import m from "mithril";
+import db from "../lib/firebase";
 
-var m = require("mithril"),
+import prefix from "../lib/prefix";
+
+export function controller() {
+    db.unauth();
     
-    db     = require("../lib/firebase"),
-    prefix = require("../lib/prefix");
-
-module.exports = {
-    controller : function() {
-        db.unauth();
-        
-        m.route(prefix("/"));
-    }
-};
+    m.route(prefix("/"));
+}

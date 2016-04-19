@@ -36,7 +36,7 @@ function child(ctrl, options, data, idx) {
 }
 
 module.exports = {
-    controller : function(options) {
+    exports.controller = function(options) {
         var ctrl = this;
         
         ctrl.children = (options.data && options.data.length) || 1;
@@ -73,7 +73,7 @@ module.exports = {
         };
     },
 
-    view : function(ctrl, options) {
+    exports.view = function(ctrl, options) {
         var field   = options.field,
             hidden  = hide(options),
             items;

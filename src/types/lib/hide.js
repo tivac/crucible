@@ -1,4 +1,4 @@
-"use strict";
+
 
 var m   = require("mithril"),
     get = require("lodash.get"),
@@ -7,7 +7,7 @@ var m   = require("mithril"),
     
     dom = m("div", "");
 
-module.exports = function(options) {
+export default function(options) {
     /* eslint: eqeqeq:0 */
     var dep = get(options.field, field),
         src, tgt;

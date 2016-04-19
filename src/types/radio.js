@@ -1,11 +1,10 @@
-"use strict";
 
-var m      = require("mithril"),
-    assign = require("lodash.assign"),
 
-    css = require("./radio.css");
+import m from "mithril";
+import assign from "lodash.assign";
+import css from "./radio.css";
 
-module.exports = require("./lib/multiple")({
+export default require("./lib/multiple")({
         multiple : false
     },
         

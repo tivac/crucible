@@ -12,7 +12,7 @@ var m      = require("mithril"),
 
 module.exports = function(type) {
     return {
-        controller : function(options) {
+        exports.controller = function(options) {
             var ctrl = this,
                 val  = get(options.field, "attrs.value");
                 
@@ -35,7 +35,7 @@ module.exports = function(type) {
             }
         },
 
-        view : function(ctrl, options) {
+        exports.view = function(ctrl, options) {
             var field  = options.field,
                 hidden = hide(options);
 

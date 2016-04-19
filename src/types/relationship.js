@@ -15,7 +15,7 @@ var m      = require("mithril"),
     css   = require("./relationship.css");
 
 module.exports = {
-    controller : function(options) {
+    exports.controller = function(options) {
         var ctrl    = this,
             schema  = options.field.schema,
             content = db.child("content/" + schema);
@@ -108,7 +108,7 @@ module.exports = {
         }
     },
 
-    view : function(ctrl, options) {
+    exports.view = function(ctrl, options) {
         var field  = options.field,
             hidden = hide(options);
             
