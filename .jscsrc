@@ -1,6 +1,0 @@
-{
-    "preset" : "preset-arenanet",
-    "excludeFiles" : [
-        "gen/**"
-    ]
-}
