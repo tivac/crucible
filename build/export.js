@@ -63,7 +63,9 @@ rollup.rollup({
 })
 .then(function(bundle) {
     return bundle.write({
-        dest : "./gen/index.js"
+        format     : "iife",
+        dest       : "./gen/index.js",
+        moduleName : "anthracite"
     });
 })
 .then(function() {
