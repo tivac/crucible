@@ -1,16 +1,14 @@
-"use strict";
-
 var m      = require("mithril"),
-    assign = require("lodash.assign"),
+    assign = require("lodash.assign");
 
-    hide = require("./lib/hide"),
+import hide from "./lib/hide";
 
-    children     = require("./children"),
-    instructions = require("./instructions"),
-    css          = require("./split.css");
+import children     from "./children";
+import instructions from "./instructions";
+import css          from "./split.css";
 
 module.exports = {
-    exports.view = function(ctrl, options) {
+    view : function(ctrl, options) {
         var field  = options.field,
             hidden = hide(options);
             

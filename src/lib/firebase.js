@@ -1,4 +1,5 @@
-import Firebase from "firebase";
+var Firebase = require("firebase");
+
 import config from "../config";
 
 var firebase = new Firebase(config.firebase);

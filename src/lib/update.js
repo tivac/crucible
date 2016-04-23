@@ -1,4 +1,4 @@
-import set from "lodash.set";
+var set = require("lodash.set");
 
 function update(obj, path, val) {
     if(!obj) {

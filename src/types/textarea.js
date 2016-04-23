@@ -1,16 +1,14 @@
-"use strict";
-
 var m      = require("mithril"),
-    assign = require("lodash.assign"),
+    assign = require("lodash.assign");
 
-    id    = require("./lib/id"),
-    hide  = require("./lib/hide"),
-    label = require("./lib/label"),
-    
-    css = require("./textarea.css");
+import id    from "./lib/id";
+import hide  from "./lib/hide";
+import label from "./lib/label";
+
+import css from "./textarea.css";
 
 module.exports = {
-    exports.controller = function(options) {
+    controller : function(options) {
         var ctrl = this;
 
         ctrl.id   = id(options);
@@ -23,7 +21,7 @@ module.exports = {
         };
     },
 
-    exports.view = function(ctrl, options) {
+    view : function(ctrl, options) {
         var field = options.field,
             hidden  = hide(options);
 

@@ -1,15 +1,13 @@
-"use strict";
-
 var m      = require("mithril"),
-    assign = require("lodash.assign"),
+    assign = require("lodash.assign");
     
-    hide = require("./lib/hide"),
-    
-    children = require("./children"),
-    css      = require("./fieldset.css");
+import hide from "./lib/hide";
+
+import children from "./children";
+import css      from "./fieldset.css";
 
 module.exports = {
-    exports.view = function(ctrl, options) {
+    view : function(ctrl, options) {
         var hidden  = hide(options);
         
         if(hidden) {

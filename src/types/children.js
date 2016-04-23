@@ -1,18 +1,16 @@
-"use strict";
-
 var m      = require("mithril"),
     get    = require("lodash.get"),
-    assign = require("lodash.assign"),
+    assign = require("lodash.assign");
 
-    input = require("./lib/input"),
+import input from "./lib/input";
 
-    css = require("./lib/types.css"),
+import css from "./lib/types.css";
 
-    // Bound below
-    types;
+// Bound below
+var types;
 
 module.exports = {
-    exports.view = function(ctrl, options) {
+    view : function(ctrl, options) {
         var fields = options.fields || [];
 
         return m("div", options.class ? { class : options.class } : null,

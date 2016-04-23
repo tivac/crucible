@@ -1,5 +1,3 @@
-
-
 var m   = require("mithril"),
     get = require("lodash.get"),
     

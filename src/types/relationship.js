@@ -1,21 +1,19 @@
-"use strict";
-
 var m      = require("mithril"),
     assign = require("lodash.assign"),
 
-    Awesomeplete = require("awesomplete"),
+    Awesomeplete = require("awesomplete");
 
-    db = require("../lib/firebase"),
+import db from "../lib/firebase";
 
-    id    = require("./lib/id"),
-    hide  = require("./lib/hide"),
-    label = require("./lib/label"),
-    types = require("./lib/types.css"),
+import id    from "./lib/id";
+import hide  from "./lib/hide";
+import label from "./lib/label";
+import types from "./lib/types.css";
 
-    css   = require("./relationship.css");
+import css   from "./relationship.css";
 
 module.exports = {
-    exports.controller = function(options) {
+    controller : function(options) {
         var ctrl    = this,
             schema  = options.field.schema,
             content = db.child("content/" + schema);
@@ -108,7 +106,7 @@ module.exports = {
         }
     },
 
-    exports.view = function(ctrl, options) {
+    view = function(ctrl, options) {
         var field  = options.field,
             hidden = hide(options);
             

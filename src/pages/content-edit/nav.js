@@ -1,9 +1,9 @@
-import m          from "mithril";
-import moment     from "moment";
-import fuzzy      from "fuzzysearch";
-import debounce   from "lodash.debounce";
-import capitalize from "lodash.capitalize";
-import slug       from "sluggo";
+var m          = require("mithril"),
+    moment     = require("moment"),
+    fuzzy      = require("fuzzysearch"),
+    debounce   = require("lodash.debounce"),
+    capitalize = require("lodash.capitalize"),
+    slug       = require("sluggo");
 
 import config from "../../config";
     

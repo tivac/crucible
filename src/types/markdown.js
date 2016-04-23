@@ -1,21 +1,19 @@
-"use strict";
-
 var m          = require("mithril"),
     editor     = require("codemirror"),
-    Remarkable = require("remarkable"),
+    Remarkable = require("remarkable");
     
-    id    = require("./lib/id"),
-    hide  = require("./lib/hide"),
-    label = require("./lib/label"),
-    
-    css = require("./markdown.css"),
+import id    from "./lib/id";
+import hide  from "./lib/hide";
+import label from "./lib/label";
 
-    md = new Remarkable();
+import css from "./markdown.css";
+
+var md = new Remarkable();
 
 require("codemirror/mode/markdown/markdown");
 
 module.exports = {
-    exports.controller = function(options) {
+    controller : function(options) {
         var ctrl = this;
         
         ctrl.id       = id(options);
@@ -23,7 +21,7 @@ module.exports = {
         ctrl.previewing = false;
         ctrl.previewHTML = null;
 
-        ctrl.togglePreexports.view = function(e) {
+        ctrl.togglePreview = function(e) {
             e.preventDefault();
 
             ctrl.previewHTML = md.render(ctrl.markdown);
@@ -52,7 +50,7 @@ module.exports = {
         };
     },
 
-    exports.view = function(ctrl, options) {
+    view : function(ctrl, options) {
         var hidden  = hide(options);
 
         if(hidden) {

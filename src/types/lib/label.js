@@ -16,4 +16,4 @@ export default function(ctrl, options) {
         for   : ctrl.id,
         class : style
     }, name);
-};
+}

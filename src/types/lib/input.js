@@ -1,14 +1,12 @@
-"use strict";
-
 var m      = require("mithril"),
     assign = require("lodash.assign"),
-    get    = require("lodash.get"),
+    get    = require("lodash.get");
 
-    hide  = require("./hide"),
-    id    = require("./id"),
-    label = require("./label"),
-    
-    css = require("./types.css");
+import hide  from "./hide";
+import id    from "./id";
+import label from "./label";
+
+import css from "./types.css";
 
 module.exports = function(type) {
     return {

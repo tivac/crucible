@@ -1,23 +1,21 @@
 /* global Promise, fetch */
-"use strict";
-
 var m        = require("mithril"),
     filter   = require("lodash.filter"),
     each     = require("lodash.foreach"),
     parallel = require("run-parallel"),
     join     = require("url-join"),
     url      = require("url"),
-    path     = require("path"),
+    path     = require("path");
     
-    config = require("../config"),
+import config from "../config";
+
+import id    from "./lib/id";
+import hide  from "./lib/hide";
+import label from "./lib/label";
+
+import css from "./upload.css";
     
-    id    = require("./lib/id"),
-    hide  = require("./lib/hide"),
-    label = require("./lib/label"),
-    
-    css = require("./upload.css"),
-    
-    icons = config.icons;
+var icons = config.icons;
 
 // Load fetch polyfill
 require("whatwg-fetch");
@@ -46,7 +44,7 @@ function name(remote) {
 }
 
 module.exports = {
-exports.controller = function(options) {
+controller : function(options) {
     var ctrl = this;
     
     if(!options.field.ws) {
@@ -223,7 +221,7 @@ exports.controller = function(options) {
                         if(status(response)) {
                             file.uploaded  = true;
                             file.uploading = false;
-                            file.remote    = join(config.actexports.on, config.fields.key.replace("${filename}", file.name));
+                            file.remote    = join(config.action, config.fields.key.replace("${filename}", file.name));
                         }
                         
                         // queue a redraw as each file completes/fails
@@ -242,7 +240,7 @@ exports.controller = function(options) {
     };
 },
 
-exports.view = function(ctrl, options) {
+view : function(ctrl, options) {
     var field  = options.field,
         hidden = hide(options);
     

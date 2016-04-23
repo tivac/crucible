@@ -1,13 +1,11 @@
-"use strict";
+var m = require("mithril");
 
-var m = require("mithril"),
+import hide from "./lib/hide";
 
-    hide = require("./lib/hide"),
-
-    css = require("./instructions.css");
+import css from "./instructions.css";
 
 module.exports = {
-    exports.view = function(ctrl, options) {
+    view : function(ctrl, options) {
         var field  = options.field,
             hidden = hide(options);
         

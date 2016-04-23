@@ -1,15 +1,13 @@
-"use strict";
-
 var m      = require("mithril"),
     assign = require("lodash.assign"),
-    times  = require("lodash.times"),
+    times  = require("lodash.times");
     
-    config = require("../config"),
-    
-    hide     = require("./lib/hide"),
-    children = require("./children"),
+import config from "../config";
 
-    css = require("./repeating.css"),
+import hide     from "./lib/hide";
+import children from "./children";
+
+import css from "./repeating.css";
     
     icons = config.icons;
 
