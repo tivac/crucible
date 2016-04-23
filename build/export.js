@@ -20,9 +20,11 @@ rollup.rollup({
     plugins : [
         require("rollup-plugin-node-builtins")(),
         require("rollup-plugin-node-resolve")({
-            browser : true
+            // browser : true
         }),
-        require("rollup-plugin-commonjs")({ sourceMap : true }),
+        require("rollup-plugin-commonjs")({
+            // sourceMap : true
+        }),
         require("modular-css/rollup")({
             css : "./gen/index.css",
     
@@ -58,7 +60,7 @@ rollup.rollup({
                 // require("cssnano")()
             ]
         }),
-        require("rollup-plugin-uglify")()
+        // require("rollup-plugin-uglify")()
     ]
 })
 .then(function(bundle) {

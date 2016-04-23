@@ -1,5 +1,5 @@
-import m from "mithril";
-import sluggo from "sluggo";
+var m      = require("mithril"),
+    sluggo = require("sluggo");
 
 import db from "../lib/firebase";
 import prefix from "../lib/prefix";

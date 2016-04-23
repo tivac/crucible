@@ -1,8 +1,6 @@
+var m = require("mithril");
 
- 
-import m from "mithril";
 import css from "./types.css";
-
  
 export default function(ctrl, options) {
     var field = options.field,

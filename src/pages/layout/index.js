@@ -1,4 +1,4 @@
-import m from "mithril";
+var m = require("mithril");
 
 import config from "../../config";
 import db from "../../lib/firebase";

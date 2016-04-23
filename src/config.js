@@ -1,5 +1,5 @@
-import url from "url";
-import assign from "lodash.assign";
+var url    = require("url"),
+    assign = require("lodash.assign");
 
 var config = assign({}, window.anthracite || {});
 

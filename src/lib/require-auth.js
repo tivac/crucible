@@ -1,5 +1,6 @@
-import m from "mithril";
-import {auth} from "../config";
+var m = require("mithril");
+
+import { auth } from "../config";
 import valid from "./valid-auth";
 import prefix from "./prefix";
 

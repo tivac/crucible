@@ -1,4 +1,5 @@
-import m from "mithril";
+var m = require("mithril");
+
 import config from "./config";
 
 import setup from "./routes/setup";

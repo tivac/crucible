@@ -1,6 +1,6 @@
-import m from "mithril";
-import capitalize from "lodash.capitalize";
-import workify from "webworkify";
+var m          = require("mithril"),
+    capitalize = require("lodash.capitalize"),
+    workify    = require("webworkify");
 
 import children from "../types/children";
 import watch from "../lib/watch";

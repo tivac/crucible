@@ -7,4 +7,4 @@ export default firebase;
 export let TIMESTAMP = Firebase.ServerValue.TIMESTAMP;
 
 // For debugging
-global.firebase = firebase;
+window.firebase = firebase;

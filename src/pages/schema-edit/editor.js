@@ -1,6 +1,6 @@
-import m from "mithril";
-import editor from "codemirror";
-import debounce from "lodash.debounce";
+var m        = require("mithril"),
+    editor   = require("codemirror"),
+    debounce = require("lodash.debounce");
 
 // Require codemirror extra JS bits and bobs so they're included
 // since codemirror isn't commonjs :(

@@ -1,7 +1,7 @@
-import m from "mithril";
-import moment from "moment";
-import get from "lodash.get";
-import upper from "lodash.capitalize";
+var m = require("mithril"),
+    moment = require("moment"),
+    get = require("lodash.get"),
+    upper = require("lodash.capitalize");
 
 import config from "../../config";
 import db from "../../lib/firebase";
