@@ -43,8 +43,7 @@ function name(remote) {
     return path.basename(url.parse(remote).path);
 }
 
-module.exports = {
-controller : function(options) {
+export function controller(options) {
     var ctrl = this;
     
     if(!options.field.ws) {
@@ -238,9 +237,9 @@ controller : function(options) {
             console.error(error);
         });
     };
-},
+}
 
-view : function(ctrl, options) {
+export function view(ctrl, options) {
     var field  = options.field,
         hidden = hide(options);
     
@@ -308,4 +307,4 @@ view : function(ctrl, options) {
                 )
         )
     );
-};
+}

@@ -1,6 +1,6 @@
 var m = require("mithril");
 
-import { auth } from "../config";
+import config from "../config";
 import valid from "./valid-auth";
 import prefix from "./prefix";
 
@@ -8,7 +8,7 @@ export default function(component) {
     return {
         controller : function() {
             /* eslint consistent-return: 0 */
-            if(auth && !valid()) {
+            if(config.auth && !valid()) {
                 return m.route(prefix("/login") + window.location.search);
             }
         },
@@ -17,4 +17,4 @@ export default function(component) {
             return m.component(component);
         }
     };
-};
+}

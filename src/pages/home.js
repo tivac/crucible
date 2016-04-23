@@ -1,6 +1,6 @@
 var m = require("mithril");
 
-import layout from "./layout";
+import * as layout from "./layout/index";
 
 import css from "./layout/layout.css";
 

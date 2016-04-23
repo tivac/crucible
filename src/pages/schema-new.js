@@ -4,7 +4,7 @@ var m      = require("mithril"),
 import db from "../lib/firebase";
 import prefix from "../lib/prefix";
 
-import layout from "./layout";
+import * as layout from "./layout/index";
 
 export function controller() {
     var ctrl  = this;

@@ -6,7 +6,7 @@ import db from "../lib/firebase";
 import valid from "../lib/valid-auth";
 import prefix from "../lib/prefix";
 
-import layout from "./layout";
+import * as layout from "./layout/index";
 
 import css from "./login.css";
 

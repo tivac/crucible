@@ -1,12 +1,12 @@
 var m = require("mithril");
 
-import id    from "./id";
-import hide  from "./hide";
+import id from "./id";
+import hide from "./hide";
 import label from "./label";
 
 import css from "./types.css";
 
-module.exports = function(args, view) {
+export default function(args, view) {
     return {
         controller : function(options) {
             var ctrl = this;

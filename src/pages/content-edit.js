@@ -5,14 +5,15 @@ var m          = require("mithril"),
     assign     = require("lodash.assign"),
     capitalize = require("lodash.capitalize");
 
-import children from "../types/children";
 import db from "../lib/firebase";
 import update from "../lib/update";
 import watch from "../lib/watch";
 import prefix from "../lib/prefix";
-import layout from "./layout";
-import nav from "./content-edit/nav";
-import head from "./content-edit/head";
+
+import * as children from "../types/children";
+import * as layout from "./layout/index";
+import * as nav from "./content-edit/nav";
+import * as head from "./content-edit/head";
 
 import css from "./content-edit.css";
 

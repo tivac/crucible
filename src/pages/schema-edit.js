@@ -2,12 +2,13 @@ var m          = require("mithril"),
     capitalize = require("lodash.capitalize"),
     workify    = require("webworkify");
 
-import children from "../types/children";
-import watch from "../lib/watch";
-import db from "../lib/firebase";
-import update from "../lib/update";
-import editor from "./schema-edit/editor";
-import layout from "./layout";
+import watch from "../lib/watch.js";
+import db from "../lib/firebase.js";
+import update from "../lib/update.js";
+
+import * as editor from "./schema-edit/editor";
+import * as children from "../types/children";
+import * as layout from "./layout/index";
 
 import css from "./schema-edit.css";
 
@@ -15,7 +16,7 @@ export function controller() {
     var ctrl   = this,
         id     = m.route.param("schema"),
         ref    = db.child("schemas/" + id),
-        worker = workify(require("./schema-edit/parse.js"));
+        worker = {}; // workify(require("./schema-edit/parse.js"));
 
     ctrl.ref     = ref;
     ctrl.schema  = null;

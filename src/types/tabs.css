@@ -51,7 +51,7 @@
     display: none;
 }
 
-.contents-active {
+.contentsActive {
     composes: contents;
 
     display: block;

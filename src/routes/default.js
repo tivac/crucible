@@ -1,21 +1,28 @@
 var m    = require("mithril"),
     keys = require("lodash.mapkeys");
 
-import prefix from "../lib/prefix";
-import auth from "../lib/require-auth";
+import prefix from "../lib/prefix.js";
+import auth from "../lib/require-auth.js";
+
+import * as home from "../pages/home.js";
+import * as login from "../pages/login.js";
+import * as logout from "../pages/logout.js";
+import * as schemaNew from "../pages/schema-new.js";
+import * as schemaEdit from "../pages/schema-edit.js";
+import * as edit from "../pages/content-edit.js";
 
 export default function() {
     m.route(document.body, prefix("/"), keys({
-        "/" : auth(require("../pages/home")),
+        "/" : auth(home),
 
-        "/login"  : require("../pages/login"),
-        "/logout" : require("../pages/logout"),
+        "/login"  : login,
+        "/logout" : logout,
 
-        "/content/new" : auth(require("../pages/schema-new")),
+        "/content/new" : auth(schemaNew),
 
-        "/content/:schema"      : auth(require("../pages/content-edit")),
-        "/content/:schema/edit" : auth(require("../pages/schema-edit")),
-        "/content/:schema/:id"  : auth(require("../pages/content-edit")),
+        "/content/:schema"      : auth(edit),
+        "/content/:schema/edit" : auth(schemaEdit),
+        "/content/:schema/:id"  : auth(edit),
         
         "/..." : {
             view : function() {

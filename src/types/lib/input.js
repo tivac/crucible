@@ -8,9 +8,9 @@ import label from "./label";
 
 import css from "./types.css";
 
-module.exports = function(type) {
+export default function(type) {
     return {
-        exports.controller = function(options) {
+        controller : function(options) {
             var ctrl = this,
                 val  = get(options.field, "attrs.value");
                 
@@ -33,7 +33,7 @@ module.exports = function(type) {
             }
         },
 
-        exports.view = function(ctrl, options) {
+        view : function(ctrl, options) {
             var field  = options.field,
                 hidden = hide(options);
 
