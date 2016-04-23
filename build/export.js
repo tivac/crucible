@@ -1,12 +1,19 @@
 /* eslint no-console:0 */
 "use strict";
 
-var shell    = require("shelljs"),
-    duration = require("humanize-duration"),
-    rollup   = require("rollup"),
+var fs   = require("fs"),
+    
+    shell      = require("shelljs"),
+    browserify = require("browserify"),
+    duration   = require("humanize-duration"),
+    bytes      = require("pretty-bytes"),
+    uglify     = require("uglify-js"),
 
-    start = Date.now(),
-    files = {};
+    builder  = browserify("src/index.js", { debug : false }),
+    
+    files = {},
+    
+    start;
 
 // Set up gen dir
 shell.mkdir("-p", "./gen");
@@ -14,117 +21,34 @@ shell.mkdir("-p", "./gen");
 // Copy static files
 shell.cp("./src/icons.svg", "./gen/icons.svg");
 
-// Generate things
-rollup.rollup({
-    entry   : "./src/index.js",
-    plugins : [
-        require("rollup-plugin-node-builtins")(),
-        require("rollup-plugin-node-resolve")({
-            // browser : true
-        }),
-        require("rollup-plugin-commonjs")({
-            // sourceMap : true
-        }),
-        require("modular-css/rollup")({
-            css : "./gen/index.css",
-    
-            // Tiny exported selectors
-            namer : function(file, selector) {
-                var hash;
-                
-                if(!files[file]) {
-                    files[file] = {
-                        id        : Object.keys(files).length,
-                        selectors : {}
-                    };
-                }
-                
-                if(!(selector in files[file].selectors)) {
-                    files[file].selectors[selector] = Object.keys(files[file].selectors).length;
-                }
-                
-                hash = files[file].id.toString(32) + files[file].selectors[selector].toString(32);
-                
-                return hash.search(/^[a-z]/i) === 0 ? hash : "a" + hash;
-            },
-            
-            // lifecycle hooks
-            before : [
-                require("postcss-nested")
-            ],
-            after : [
-                require("postcss-import")()
-            ],
-            done : [
-            
-                // require("cssnano")()
-            ]
-        }),
-        // require("rollup-plugin-uglify")()
-    ]
-})
-.then(function(bundle) {
-    return bundle.write({
-        format     : "iife",
-        dest       : "./gen/index.js",
-        moduleName : "anthracite"
-    });
-})
-.then(function() {
-    console.log("Bundled & compressed in:", duration(Date.now() - start));
-})
-.catch(function(error) {
-    console.error("Error in:", duration(Date.now() - start));
-    console.error(error.toString());
-});
-
 // Plugins
-// builder.plugin("modular-css/browserify", {
-//     css : "./gen/index.css",
-//     // Tiny exported selectors
-//     namer : function(file, selector) {
-//         var hash = slug(file + selector);
+builder.plugin("bundle-collapser/plugin");
+
+// Transforms
+builder.transform("detabbify", { global : true });
+builder.transform("rollupify", { config : "./rollup.config.js" });
+
+start = Date.now();
+
+builder.bundle(function(err, out) {
+    var result,
+        code;
+    
+    if(err) {
+        console.error("Error in:", duration(Date.now() - start));
+        console.error(err.toString());
         
-//         return hash.search(/^[a-z]/i) === 0 ? hash : "a" + hash;
-//     },
+        return;
+    }
     
-//     // lifecycle hooks
-//     before : [
-//         require("postcss-nested")
-//     ],
-//     after : [
-//         require("postcss-import")()
-//     ],
-//     done : [
-//         require("cssnano")()
-//     ]
-// });
-
-// builder.plugin("bundle-collapser/plugin");
-
-// // Transforms
-// builder.transform("detabbify", { global : true });
-
-// start = Date.now();
-
-// builder.bundle(function(err, out) {
-//     var result,
-//         code;
+    result = uglify.minify(out.toString(), { fromString : true });
+    code   = result.code;
+    // code = out.toString();
     
-//     if(err) {
-//         console.error("Error in:", duration(Date.now() - start));
-//         console.error(err.toString());
-        
-//         return;
-//     }
+    console.log("Bundled & compressed in:", duration(Date.now() - start));
+    console.log("Output size:", bytes(code.length));
     
-//     result = uglify.minify(out.toString(), { fromString : true });
-//     code   = result.code;
+    fs.writeFileSync("./gen/index.js", code);
     
-//     console.log("Bundled & compressed in:", duration(Date.now() - start));
-//     console.log("Output size:", bytes(code.length));
-    
-//     fs.writeFileSync("./gen/index.js", code);
-    
-//     return;
-// });
+    return;
+});
