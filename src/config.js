@@ -1,10 +1,9 @@
 var url    = require("url"),
-    assign = require("lodash.assign");
-
-var config = assign({}, window.anthracite || {});
+    assign = require("lodash.assign"),
+    join   = require("url-join");
 
 export var root = url.parse(document.baseURI).pathname;
-export var icons = document.baseURI + "gen/icons.svg";
+export var icons = join(document.baseURI, "/gen/icons.svg");
 export var title = document.title;
 
-export default config;
+export default assign({}, window.anthracite || {});

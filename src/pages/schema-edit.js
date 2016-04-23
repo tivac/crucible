@@ -2,9 +2,10 @@ var m          = require("mithril"),
     capitalize = require("lodash.capitalize"),
     webworkify = require("webworkify");
 
-import watch from "../lib/watch.js";
-import db from "../lib/firebase.js";
-import update from "../lib/update.js";
+import watch from "../lib/watch";
+import db from "../lib/firebase";
+import update from "../lib/update";
+import prefix from "../lib/prefix";
 
 import * as editor from "./schema-edit/editor";
 import * as children from "../types/children";
@@ -16,7 +17,7 @@ export function controller() {
     var ctrl   = this,
         id     = m.route.param("schema"),
         ref    = db.child("schemas/" + id),
-        worker = webworkify(require("./schema-edit/parse.js"));
+        worker = new Worker(prefix("/gen/parse-shema.js"));
 
     ctrl.ref     = ref;
     ctrl.schema  = null;

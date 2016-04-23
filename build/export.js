@@ -18,6 +18,7 @@ shell.mkdir("-p", "./gen");
 
 // Copy static files
 shell.cp("./src/icons.svg", "./gen/icons.svg");
+shell.cp("./src/pages/schema-edit/parse-schema.js", "./gen/parse-schema.js");
 
 // Rollupify goes first
 builder.transform("rollupify", { config : "./rollup.config.js" });
