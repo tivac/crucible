@@ -11,8 +11,6 @@ var fs   = require("fs"),
 
     builder  = browserify("src/index.js", { debug : false }),
     
-    files = {},
-    
     start;
 
 // Set up gen dir
@@ -21,12 +19,11 @@ shell.mkdir("-p", "./gen");
 // Copy static files
 shell.cp("./src/icons.svg", "./gen/icons.svg");
 
+// Rollupify goes first
+builder.transform("rollupify", { config : "./rollup.config.js" });
+
 // Plugins
 builder.plugin("bundle-collapser/plugin");
-
-// Transforms
-builder.transform("detabbify", { global : true });
-builder.transform("rollupify", { config : "./rollup.config.js" });
 
 start = Date.now();
 
@@ -41,9 +38,9 @@ builder.bundle(function(err, out) {
         return;
     }
     
-    result = uglify.minify(out.toString(), { fromString : true });
-    code   = result.code;
-    // code = out.toString();
+    // result = uglify.minify(out.toString(), { fromString : true });
+    // code   = result.code;
+    code = out.toString();
     
     console.log("Bundled & compressed in:", duration(Date.now() - start));
     console.log("Output size:", bytes(code.length));

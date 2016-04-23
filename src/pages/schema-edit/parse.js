@@ -96,7 +96,8 @@ function process(obj) {
     return out;
 }
 
-export default function(self) {
+// Handled by browserify
+module.exports = function(self) {
     // This worker takes the nice, human-friendly config format and turns it into
     // ugly arrays of objects for firebase
     self.onmessage = function(e) {
