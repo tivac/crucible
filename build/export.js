@@ -9,16 +9,20 @@ var fs   = require("fs"),
     bytes      = require("pretty-bytes"),
     uglify     = require("uglify-js"),
 
+    files = require("./files"),
+
     builder  = browserify("src/index.js", { debug : false }),
     
     start;
+
+// So modular-css as part of rollup knows to compress things
+global.compress = true;
 
 // Set up gen dir
 shell.mkdir("-p", "./gen");
 
 // Copy static files
-shell.cp("./src/icons.svg", "./gen/icons.svg");
-shell.cp("./src/pages/schema-edit/parse-schema.js", "./gen/parse-schema.js");
+files.copy();
 
 // Rollupify goes first
 builder.transform("rollupify", { config : "./rollup.config.js" });
@@ -39,9 +43,8 @@ builder.bundle(function(err, out) {
         return;
     }
     
-    // result = uglify.minify(out.toString(), { fromString : true });
-    // code   = result.code;
-    code = out.toString();
+    result = uglify.minify(out.toString(), { fromString : true });
+    code   = result.code;
     
     console.log("Bundled & compressed in:", duration(Date.now() - start));
     console.log("Output size:", bytes(code.length));

@@ -11,11 +11,15 @@ var fs   = require("fs"),
     duration   = require("humanize-duration"),
     jsesc      = require("jsesc"),
     
+    files = require("./files"),
+    
     server   = require("connect")(),
+    
     ecstatic = require("ecstatic")(process.cwd(), {
         cache       : 0,
         handleError : false
     }),
+    
     builder  = browserify("src/index.js", {
         debug : true
     }),
@@ -49,28 +53,14 @@ function bundle() {
     });
 }
 
-// Make sure icons stay up to date
-chokidar.watch("./src/icons.svg").on("all", function(event) {
-    if(event !== "add" && event !== "change") {
-        return;
-    }
+// Watch for changes to static files
+files.watch();
 
-    shell.cp("./src/icons.svg", "./gen/icons.svg");
-});
+// Rollupify goes first
+builder.transform("rollupify", { config : "./rollup.config.js" });
 
 // Browserify plugins
 builder.plugin("watchify");
-builder.plugin("modular-css/browserify", {
-    css : "gen/index.css",
-    
-    // Plugins
-    before : [
-        require("postcss-nested")
-    ],
-    after : [
-        require("postcss-import")
-    ]
-});
 
 // Browserify transforms
 builder.transform("detabbify", { global : true });
