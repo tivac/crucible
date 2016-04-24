@@ -7,15 +7,13 @@ var m        = require("mithril"),
     url      = require("url"),
     path     = require("path");
     
-import config from "../config";
+import { icons } from "../config";
 
-import id    from "./lib/id";
-import hide  from "./lib/hide";
+import id from "./lib/id";
+import hide from "./lib/hide";
 import label from "./lib/label";
 
 import css from "./upload.css";
-    
-var icons = config.icons;
 
 // Load fetch polyfill
 require("whatwg-fetch");

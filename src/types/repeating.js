@@ -2,9 +2,9 @@ var m      = require("mithril"),
     assign = require("lodash.assign"),
     times  = require("lodash.times");
     
-import config from "../config";
+import { icons } from "../config";
 
-import hide     from "./lib/hide";
+import hide from "./lib/hide";
 
 import * as children from "./children";
 
@@ -19,7 +19,7 @@ function child(ctrl, options, data, idx) {
                     onclick : ctrl.remove.bind(null, options, data, idx)
                 },
                 m("svg", { class : css.icon },
-                    m("use", { href : config.icons + "#remove" })
+                    m("use", { href : icons + "#remove" })
                 )
             )
         ),

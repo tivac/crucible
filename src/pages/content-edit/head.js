@@ -3,12 +3,10 @@ var m      = require("mithril"),
     get    = require("lodash.get"),
     upper  = require("lodash.capitalize");
 
-import config from "../../config";
+import config, { icons } from "../../config";
 import db from "../../lib/firebase";
 
 import css from "./head.css";
-
-var icons = config.icons;
 
 export function controller(options) {
     var ctrl = this,

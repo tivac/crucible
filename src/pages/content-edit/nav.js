@@ -2,18 +2,15 @@ var m          = require("mithril"),
     moment     = require("moment"),
     fuzzy      = require("fuzzysearch"),
     debounce   = require("lodash.debounce"),
-    capitalize = require("lodash.capitalize"),
     slug       = require("sluggo");
 
-import config from "../../config";
+import config, { icons } from "../../config";
     
-import db     from "../../lib/firebase";
+import db from "../../lib/firebase";
 import prefix from "../../lib/prefix";
 
 import css from "./nav.css";
     
-var icons = config.icons;
-
 export function controller() {
     var ctrl = this,
 
