@@ -1,6 +1,6 @@
 var m = require("mithril");
 
-import config from "../../config";
+import config, { title } from "../../config";
 import db from "../../lib/firebase";
 import auth from "../../lib/valid-auth";
 import prefix from "../../lib/prefix";
@@ -45,7 +45,7 @@ export function view(ctrl, options) {
         options = false;
     }
     
-    document.title = (options.title || "Loading...") + " | " + config.title;
+    document.title = (options.title || "Loading...") + " | " + title;
 
     return m("div", { class : layout.container },
         options.content ? null : m("div", { class : progress.bar }),
@@ -58,7 +58,7 @@ export function view(ctrl, options) {
                         href   : prefix("/"),
                         config : m.route
                     },
-                    m("h1", { class : header.title }, config.title)
+                    m("h1", { class : header.title }, title)
                 )
             ),
 
