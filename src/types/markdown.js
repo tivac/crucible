@@ -1,16 +1,16 @@
 import m from "mithril";
 import Remarkable from "remarkable";
+import editor from "codemirror";
 
-var editor = require("codemirror"),
-    md     = new Remarkable();
-    
-import id    from "./lib/id";
-import hide  from "./lib/hide";
+import id from "./lib/id";
+import hide from "./lib/hide";
 import label from "./lib/label";
 
 import css from "./markdown.css";
 
-require("codemirror/mode/markdown/markdown");
+var md = new Remarkable();
+
+import "codemirror/mode/markdown/markdown";
 
 export function controller(options) {
     var ctrl = this;
