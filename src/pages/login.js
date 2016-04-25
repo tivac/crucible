@@ -1,5 +1,5 @@
-var m    = require("mithril"),
-    join = require("url-join");
+import m from "mithril";
+import join from "url-join";
 
 import config from "../config";
 import db from "../lib/firebase";

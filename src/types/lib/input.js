@@ -1,9 +1,9 @@
-var m      = require("mithril"),
-    assign = require("lodash.assign"),
-    get    = require("lodash.get");
+import m from "mithril";
+import assign from "lodash.assign";
+import get from "lodash.get";
 
-import hide  from "./hide";
-import id    from "./id";
+import hide from "./hide";
+import id from "./id";
 import label from "./label";
 
 import css from "./types.css";
@@ -58,4 +58,4 @@ export default function(type) {
             );
         }
     };
-};
+}

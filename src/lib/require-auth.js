@@ -1,4 +1,4 @@
-var m = require("mithril");
+import m from "mithril";
 
 import config from "../config";
 import valid from "./valid-auth";

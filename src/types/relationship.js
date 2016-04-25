@@ -1,16 +1,15 @@
-var m      = require("mithril"),
-    assign = require("lodash.assign"),
-
-    Awesomeplete = require("awesomplete");
+import m from "mithril";
+import assign from "lodash.assign";
+import Awesomeplete from "awesomplete";
 
 import db from "../lib/firebase";
 
-import id    from "./lib/id";
-import hide  from "./lib/hide";
+import id from "./lib/id";
+import hide from "./lib/hide";
 import label from "./lib/label";
 import types from "./lib/types.css";
 
-import css   from "./relationship.css";
+import css from "./relationship.css";
 
 export function controller(options) {
     var ctrl    = this,

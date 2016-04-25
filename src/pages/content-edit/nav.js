@@ -1,8 +1,8 @@
-var m          = require("mithril"),
-    moment     = require("moment"),
-    fuzzy      = require("fuzzysearch"),
-    debounce   = require("lodash.debounce"),
-    slug       = require("sluggo");
+import m from "mithril";
+import moment from "moment";
+import fuzzy from "fuzzysearch";
+import debounce from "lodash.debounce";
+import slug from "sluggo";
 
 import config, { icons } from "../../config";
     

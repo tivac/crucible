@@ -1,7 +1,6 @@
-var m = require("mithril");
+import m from "mithril";
 
 import db from "../lib/firebase";
-
 import prefix from "../lib/prefix";
 
 export function controller() {

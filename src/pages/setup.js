@@ -1,4 +1,4 @@
-var m = require("mithril");
+import m from "mithril";
 
 export function view() {
     return [

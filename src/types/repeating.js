@@ -1,6 +1,6 @@
-var m      = require("mithril"),
-    assign = require("lodash.assign"),
-    times  = require("lodash.times");
+import m from "mithril";
+import assign from "lodash.assign";
+import times from "lodash.times";
     
 import { icons } from "../config";
 

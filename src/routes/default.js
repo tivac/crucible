@@ -1,5 +1,5 @@
-var m    = require("mithril"),
-    keys = require("lodash.mapkeys");
+import m from "mithril";
+import keys from "lodash.mapkeys";
 
 import prefix from "../lib/prefix.js";
 import auth from "../lib/require-auth.js";

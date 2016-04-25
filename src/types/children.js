@@ -1,6 +1,6 @@
-var m      = require("mithril"),
-    get    = require("lodash.get"),
-    assign = require("lodash.assign");
+import m from "mithril";
+import get from "lodash.get";
+import assign from "lodash.assign";
 
 import input from "./lib/input.js";
 
@@ -49,8 +49,8 @@ import * as textarea from "./textarea.js";
 import * as upload from "./upload.js";
 
 // Implementations based on lib/multiple.js
-import select   from "./select.js";
-import radio    from "./radio.js";
+import select from "./select.js";
+import radio from "./radio.js";
 import checkbox from "./checkbox.js";
 
 // Have to bind these down here to avoid circular binding issues

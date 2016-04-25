@@ -1,9 +1,10 @@
-var m          = require("mithril"),
-    sluggo     = require("sluggo"),
-    get        = require("lodash.get"),
-    merge      = require("lodash.merge"),
-    assign     = require("lodash.assign"),
-    capitalize = require("lodash.capitalize");
+import m from "mithril";
+
+import sluggo from "sluggo";
+import get from "lodash.get";
+import merge from "lodash.merge";
+import assign from "lodash.assign";
+import capitalize from "lodash.capitalize";
 
 import db from "../lib/firebase";
 import update from "../lib/update";

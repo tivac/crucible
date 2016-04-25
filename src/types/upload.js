@@ -1,11 +1,13 @@
 /* global Promise, fetch */
-var m        = require("mithril"),
-    filter   = require("lodash.filter"),
-    each     = require("lodash.foreach"),
-    parallel = require("run-parallel"),
-    join     = require("url-join"),
-    url      = require("url"),
-    path     = require("path");
+import m from "mithril";
+import filter from "lodash.filter";
+import each from "lodash.foreach";
+import parallel from "run-parallel";
+
+import url from "url";
+import path from "path";
+
+import join from "url-join";
     
 import { icons } from "../config";
 
@@ -16,7 +18,7 @@ import label from "./lib/label";
 import css from "./upload.css";
 
 // Load fetch polyfill
-require("whatwg-fetch");
+import "whatwg-fetch";
 
 function status(response) {
     // Assume opaque responses are cool, because who knows?
@@ -172,7 +174,7 @@ export function controller(options) {
     
     // Upload any files that haven't been uploaded yet
     ctrl._upload = function() {
-        var files = files = ctrl.files.filter(function(file) {
+        var files = ctrl.files.filter(function(file) {
                 return !file.uploaded && !file.uploading;
             });
         

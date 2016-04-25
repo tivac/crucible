@@ -96,22 +96,19 @@ function process(obj) {
     return out;
 }
 
-// Handled by browserify
-module.exports = function(self) {
-    // This worker takes the nice, human-friendly config format and turns it into
-    // ugly arrays of objects for firebase
-    self.onmessage = function(e) {
-        /* eslint no-eval:0, no-console:0 */
-        var config, parsed;
+// This worker takes the nice, human-friendly config format and turns it into
+// ugly arrays of objects for firebase
+self.onmessage = function(e) {
+    /* eslint no-eval:0, no-console:0 */
+    var config, parsed;
 
-        try {
-            // This is super-gross but in a worker should be (mostly) safe
-            eval("config = " + e.data);
-            parsed = process(config);
-            
-            return self.postMessage(JSON.stringify({ config : parsed }));
-        } catch(error) {
-            return self.postMessage(JSON.stringify({ error : error.toString() }));
-        }
-    };
+    try {
+        // This is super-gross but in a worker should be (mostly) safe
+        eval("config = " + e.data);
+        parsed = process(config);
+        
+        return self.postMessage(JSON.stringify({ config : parsed }));
+    } catch(error) {
+        return self.postMessage(JSON.stringify({ error : error.toString() }));
+    }
 };

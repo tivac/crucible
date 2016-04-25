@@ -1,8 +1,8 @@
-var m      = require("mithril"),
-    assign = require("lodash.assign");
+import m from "mithril";
+import assign from "lodash.assign";
 
-import id    from "./lib/id";
-import hide  from "./lib/hide";
+import id from "./lib/id";
+import hide from "./lib/hide";
 import label from "./lib/label";
 
 import css from "./textarea.css";

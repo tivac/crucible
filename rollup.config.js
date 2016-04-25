@@ -5,6 +5,15 @@ var files = {},
 
 module.exports = {
     plugins : [
+        require("rollup-plugin-node-builtins")(),
+        require("rollup-plugin-node-resolve")({
+            // Bundling for the browser
+            browser : true
+        }),
+        require("rollup-plugin-commonjs")({
+            include : "node_modules/**",
+            exclude : "node_modules/rollup-plugin-node-globals/**"
+        }),
         require("modular-css/rollup")({
             css : "./gen/index.css",
             

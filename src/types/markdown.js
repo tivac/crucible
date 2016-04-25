@@ -1,14 +1,14 @@
-var m          = require("mithril"),
-    editor     = require("codemirror"),
-    Remarkable = require("remarkable");
+import m from "mithril";
+import Remarkable from "remarkable";
+
+var editor = require("codemirror"),
+    md     = new Remarkable();
     
 import id    from "./lib/id";
 import hide  from "./lib/hide";
 import label from "./lib/label";
 
 import css from "./markdown.css";
-
-var md = new Remarkable();
 
 require("codemirror/mode/markdown/markdown");
 
@@ -56,7 +56,7 @@ export function view(ctrl, options) {
         return hidden;
     }
 
-    return m("div",
+    return m("div", { class : options.class },
         label(ctrl, options),
         m("div", { class : ctrl.previewing ? css.inputHidden : css.input },
             m("textarea", { config : ctrl.editorSetup },

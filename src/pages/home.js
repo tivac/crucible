@@ -1,4 +1,4 @@
-var m = require("mithril");
+import m from "mithril";
 
 import * as layout from "./layout/index";
 

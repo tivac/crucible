@@ -1,4 +1,4 @@
-var join = require("url-join");
+import join from "url-join";
 
 import { root } from "../config";
 

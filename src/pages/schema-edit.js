@@ -1,6 +1,5 @@
-var m          = require("mithril"),
-    capitalize = require("lodash.capitalize"),
-    webworkify = require("webworkify");
+import m from "mithril";
+import capitalize from "lodash.capitalize";
 
 import watch from "../lib/watch";
 import db from "../lib/firebase";
@@ -17,7 +16,7 @@ export function controller() {
     var ctrl   = this,
         id     = m.route.param("schema"),
         ref    = db.child("schemas/" + id),
-        worker = new Worker(prefix("/gen/parse-shema.js"));
+        worker = new Worker(prefix("/gen/parse-schema.js"));
 
     ctrl.ref     = ref;
     ctrl.schema  = null;

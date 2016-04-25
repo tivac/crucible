@@ -1,10 +1,8 @@
-var m = require("mithril");
+import m from "mithril";
 
 import id from "./id";
 import hide from "./hide";
 import label from "./label";
-
-import css from "./types.css";
 
 export default function(args, view) {
     return {
@@ -65,4 +63,4 @@ export default function(args, view) {
             );
         }
     };
-};
+}

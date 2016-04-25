@@ -1,7 +1,7 @@
-var m   = require("mithril"),
-    get = require("lodash.get"),
+import m from "mithril";
+import get from "lodash.get";
     
-    field = [ "show", "field" ],
+var field = [ "show", "field" ],
     
     dom = m("div", "");
 
@@ -39,4 +39,4 @@ export default function(options) {
     
     // Otherwise this field should hide
     return dom;
-};
+}

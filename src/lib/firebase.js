@@ -1,11 +1,13 @@
-var Firebase = require("firebase");
+var Firebase = require("firebase"),
+    firebase;
 
 import config from "../config";
 
-var firebase = new Firebase(config.firebase);
+firebase = new Firebase(config.firebase);
 
-export default firebase;
-export let TIMESTAMP = Firebase.ServerValue.TIMESTAMP;
+firebase.TIMESTAMP = Firebase.ServerValue.TIMESTAMP;
 
 // For debugging
 window.firebase = firebase;
+
+export default firebase;

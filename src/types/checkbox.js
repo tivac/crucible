@@ -1,4 +1,4 @@
-var m = require("mithril");
+import m from "mithril";
 
 import css from "./checkbox.css";
 import multiple from "./lib/multiple";

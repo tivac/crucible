@@ -1,5 +1,5 @@
-var m      = require("mithril"),
-    assign = require("lodash.assign");
+import m from "mithril";
+import assign from "lodash.assign";
 
 import css from "./radio.css";
 import multiple from "./lib/multiple";
