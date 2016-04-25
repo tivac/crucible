@@ -21,7 +21,7 @@ exports.watch = function() {
     });
 };
 
-files.copy = function() {
+exports.copy = function() {
     Object.keys(files).forEach(function(file) {
         shell.cp(file, files[file]);
     });
