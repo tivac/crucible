@@ -41,14 +41,14 @@
 }
 
 .contents {
-    composes: global(pure-g);
-
+    composes: hbox from flexCss;
+    
     flex: 4;
     overflow-y: auto;
 }
 
 .panes {
-    composes: global(pure-u-1-2);
+    flex: 1;
 }
 
 .editor {
@@ -75,7 +75,11 @@
 }
 
 /* Override codemirror styling to make it expannnnd */
+<<<<<<< HEAD
 :global(.CodeMirror) {
+=======
+.editor :global(.CodeMirror) {
+>>>>>>> ab196f9dc2e5045ec938eb8731811341f436c36d
     composes: input from "../form.css";
     
     height: 100% !important;

@@ -9,6 +9,7 @@ var m  = require("mithril"),
 module.exports = function(component) {
     return {
         controller : function() {
+            /* eslint consistent-return: 0 */
             if(config.auth && !valid()) {
                 return m.route(prefix("/login") + window.location.search);
             }

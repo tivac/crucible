@@ -1,0 +1,11 @@
+# Ignore install-specific files
+config.js
+index.html
+
+# Ignore directories
+/build
+/src
+
+# Ignore config files
+/.*
+/jsconfig.json

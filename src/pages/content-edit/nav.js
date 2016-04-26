@@ -27,7 +27,6 @@ module.exports = {
         ctrl.schema  = null;
         ctrl.content = null;
         ctrl.results = null;
-        ctrl.hide    = false;
 
         schema.on("value", function(snap) {
             ctrl.schema = snap.val();
@@ -73,10 +72,6 @@ module.exports = {
             m.route(prefix("/content/" + ctrl.schema.key + "/" + result.key()));
         };
 
-        ctrl.hide = function() {
-            ctrl.hidden = !ctrl.hidden;
-        };
-
         ctrl.change = function(page, e) {
             e.preventDefault();
 
@@ -116,23 +111,13 @@ module.exports = {
             now     = Date.now(),
             locked  = config.locked;
 
-        if(!m.route.param("id")) {
-            document.title = capitalize(ctrl.schema.name);
-        }
-
-        return m("div", { class : css[ctrl.hidden ? "hide" : "nav"] },
+        return m("div", { class : css.nav },
             m(".head", { class : css.filter },
                 m("input", {
                     class       : css.text,
                     placeholder : "Search...",
                     oninput     : m.withAttr("value", ctrl.filter)
-                }),
-                m("div", {
-                        class   : ctrl.hidden ? css.show : css.hide,
-                        onclick : ctrl.hide
-                    },
-                    m("span", ctrl.hidden ? "show" : "hide")
-                )
+                })
             ),
             m("div", { class : css.body },
                 m("ul", { class : css.list },

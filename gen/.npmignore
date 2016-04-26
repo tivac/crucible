@@ -1,0 +1,6 @@
+# This file only exists to keep the .gitignore
+# next to it from being read and thus preventing all
+# the files in this folder from being published.
+
+# Oh, and to make sure that dot-files in this folder are ignored...
+/.*

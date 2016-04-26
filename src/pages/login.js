@@ -1,6 +1,7 @@
 "use strict";
 
-var m = require("mithril"),
+var m    = require("mithril"),
+    join = require("url-join"),
     
     config = require("../config"),
     
@@ -13,26 +14,24 @@ var m = require("mithril"),
 
 function loginRedirect() {
     window.location = config.loginBaseUrl +
-        window.encodeURIComponent(window.location.origin + config.root + "/login");
+        window.encodeURIComponent(join(window.location.origin, config.root, "/login"));
 }
 
 module.exports = {
     controller : function() {
         var ctrl = this;
-
+        
         if(config.auth === "jwt") {
-            m.startComputation();
-
             if(!m.route.param("auth")) {
                 return loginRedirect();
             }
 
-            db.authWithCustomToken(m.route.param("auth"), function(error) {
+            return db.authWithCustomToken(m.route.param("auth"), function(error) {
                 if(error) {
+                    console.log(error);
+                    
                     return loginRedirect();
                 }
-
-                m.endComputation();
                 
                 return m.route(prefix("/"));
             });
@@ -67,6 +66,22 @@ module.exports = {
     },
     
     view : function(ctrl) {
+        if(config.auth === "jwt") {
+            if(m.route.param("auth")) {
+                return m.component(layout, {
+                    content : m("div", { class : layout.css.content },
+                        m("p", "Validating credentials...")
+                    )
+                });
+            }
+            
+            return m.component(layout, {
+                content : m("div", { class : layout.css.content },
+                    m("p", "Redirecting to login...")
+                )
+            });
+        }
+        
         return m.component(layout, {
             title   : "Login",
             content : m("div", { class : layout.css.content },

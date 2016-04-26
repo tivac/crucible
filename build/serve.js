@@ -5,8 +5,8 @@ var fs   = require("fs"),
     path = require("path"),
     url  = require("url"),
     
-    shell      = require("shelljs"),
     chokidar   = require("chokidar"),
+    shell      = require("shelljs"),
     browserify = require("browserify"),
     duration   = require("humanize-duration"),
     jsesc      = require("jsesc"),
@@ -48,6 +48,15 @@ function bundle() {
         }
     });
 }
+
+// Make sure icons stay up to date
+chokidar.watch("./src/icons.svg").on("all", function(event) {
+    if(event !== "add" && event !== "change") {
+        return;
+    }
+
+    shell.cp("./src/icons.svg", "./gen/icons.svg");
+});
 
 // Browserify plugins
 builder.plugin("watchify");

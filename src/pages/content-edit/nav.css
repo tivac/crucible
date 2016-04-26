@@ -27,59 +27,6 @@
     width: 100%;
 }
 
-.hide {
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
-
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 100%;
-
-    padding: 0 8px;
-
-    cursor: pointer;
-    background: #2F343C;
-    color: white;
-}
-
-.hide:hover {
-    left: auto;
-    right: 0;
-}
-
-.hide::before {
-    content: "";
-    position: absolute;
-    height: 0;
-    width: 0;
-
-    right: 100%;
-
-    border: solid 23.5px transparent;
-    border-right: solid 12px #2F343C;
-}
-
-.show {
-    composes: hide;
-    left: auto;
-    right: 0;
-}
-
-.show:hover {
-    right: auto;
-    left: 0;
-}
-
-.show::before {
-    right: auto;
-    left: 100%;
-
-    border: solid 23.5px transparent;
-    border-left: solid 12px #2F343C;
-}
-
 .body {
     composes: body from layout_css;
 }

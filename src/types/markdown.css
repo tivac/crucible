@@ -1,0 +1,24 @@
+@value form_css: "../form.css";
+
+.input {
+    composes: input from form_css;
+    
+    min-height: 50px;
+    max-height: 400px;
+    
+    overflow: auto;
+    
+    background: #FFF;
+}
+
+.inputHidden {
+    composes: input, global(hidden);
+}
+
+.button {
+    margin-top: 5px;
+}
+
+.input :global(.CodeMirror) {
+    height: 100% !important;
+}

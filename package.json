@@ -1,13 +1,14 @@
 {
   "name": "anthracite",
-  "version": "0.1.0",
+  "version": "0.2.5",
   "description": "Serverless CMS backed by Firebase",
   "main": "index.js",
   "scripts": {
     "export": "node build/export.js",
     "fake": "node build/faker.js",
     "lint": "eslint . && jscs .",
-    "start": "node build/serve.js"
+    "start": "node build/serve.js",
+    "prepublish": "in-publish && npm run export || not-in-publish"
   },
   "keywords": [
     "cms",
@@ -31,6 +32,7 @@
     "firebase": "^2.4.1",
     "fuzzysearch": "^1.0.3",
     "humanize-duration": "^3.6.0",
+    "in-publish": "^2.0.0",
     "jscs": "^2.11.0",
     "jscs-preset-arenanet": "^1.0.3",
     "jsesc": "^1.0.0",
@@ -46,7 +48,7 @@
     "lodash.set": "^4.0.0",
     "lodash.times": "^4.0.0",
     "mithril": "^0.2.0",
-    "modular-css": "^0.15.0",
+    "modular-css": "^0.16.0",
     "moment": "^2.11.1",
     "morgan": "^1.6.1",
     "postcss-import": "^8.0.2",
@@ -54,9 +56,11 @@
     "pretty-bytes": "^3.0.1",
     "purecss": "^0.6.0",
     "randexp": "^0.4.2",
+    "remarkable": "^1.6.2",
     "run-parallel": "^1.1.4",
     "shelljs": "^0.6.0",
     "sluggo": "^0.2.0",
+    "standard-version": "^2.1.2",
     "uglify-js": "^2.6.1",
     "unique-slug": "^2.0.0",
     "url": "^0.11.0",

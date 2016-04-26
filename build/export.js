@@ -8,36 +8,39 @@ var fs   = require("fs"),
     duration   = require("humanize-duration"),
     bytes      = require("pretty-bytes"),
     uglify     = require("uglify-js"),
-    slug       = require("unique-slug"),
 
     builder  = browserify("src/index.js", { debug : false }),
     
+    files = {},
+    
     start;
 
-// Clear out any previous export
-shell.rm("-rf", "./export");
+// Set up gen dir
+shell.mkdir("-p", "./gen");
 
-// Set up export dir
-shell.mkdir("-p", "./export/gen");
-shell.mkdir("-p", "./export/src");
-
-// Copy over static things
-shell.cp("./package.json", "./export");
-shell.cp("./LICENSE", "./export");
-shell.cp("./README.md", "./export");
-shell.cp("./index-example.html", "./export");
-shell.cp("./config-example.js", "./export");
-shell.cp("./src/icons.svg", "./export/src");
-
-// Generate things
+// Copy static files
+shell.cp("./src/icons.svg", "./gen/icons.svg");
 
 // Plugins
 builder.plugin("modular-css/browserify", {
-    css : "./export/gen/index.css",
+    css : "./gen/index.css",
     
     // Tiny exported selectors
     namer : function(file, selector) {
-        var hash = slug(file + selector);
+        var hash;
+        
+        if(!files[file]) {
+            files[file] = {
+                id        : Object.keys(files).length,
+                selectors : {}
+            };
+        }
+        
+        if(!(selector in files[file].selectors)) {
+            files[file].selectors[selector] = Object.keys(files[file].selectors).length;
+        }
+        
+        hash = files[file].id.toString(32) + files[file].selectors[selector].toString(32);
         
         return hash.search(/^[a-z]/i) === 0 ? hash : "a" + hash;
     },
@@ -78,7 +81,7 @@ builder.bundle(function(err, out) {
     console.log("Bundled & compressed in:", duration(Date.now() - start));
     console.log("Output size:", bytes(code.length));
     
-    fs.writeFileSync("./export/gen/index.js", code);
+    fs.writeFileSync("./gen/index.js", code);
     
     return;
 });
