@@ -1,11 +1,9 @@
-"use strict";
+import url from "url";
+import assign from "lodash.assign";
+import join from "url-join";
 
-var url = require("url"),
-    
-    config = global.anthracite || {};
+export var root = url.parse(document.baseURI).pathname;
+export var icons = join(document.baseURI, "/gen/icons.svg");
+export var title = document.title;
 
-config.root = url.parse(document.baseURI).pathname;
-config.icons = document.baseURI + "gen/icons.svg";
-config.title = document.title;
-
-module.exports = config;
+export default assign({}, window.anthracite || {});

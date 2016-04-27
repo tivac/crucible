@@ -1,106 +1,101 @@
-"use strict";
+import m from "mithril";
 
-var m = require("mithril"),
+import config, { title } from "../../config";
+import db from "../../lib/firebase";
+import auth from "../../lib/valid-auth";
+import prefix from "../../lib/prefix";
 
-    config = require("../../config"),
+import header from "./header.css";
+import layout from "./layout.css";
+import progress from "./progress.css";
+
+// exporting so others can use it more easily
+export { layout as css };
     
-    db     = require("../../lib/firebase"),
-    auth   = require("../../lib/valid-auth"),
-    prefix = require("../../lib/prefix"),
+export function controller() {
+    var ctrl   = this;
 
-    header   = require("./header.css"),
-    layout   = require("./layout.css"),
-    progress = require("./progress.css");
+    ctrl.schemas = null;
+    ctrl.auth = auth();
 
-module.exports = {
-    // exporting so others can use it more easily
-    css : layout,
-    
-    controller : function() {
-        var ctrl   = this;
+    ctrl.add = function() {
+        m.route(prefix("/content/new"));
+    };
 
-        ctrl.schemas = null;
-        ctrl.auth = auth();
+    db.child("schemas").on("value", function(snap) {
+        ctrl.schemas = [];
 
-        ctrl.add = function() {
-            m.route(prefix("/content/new"));
-        };
+        snap.forEach(function(schema) {
+            var val = schema.val();
 
-        db.child("schemas").on("value", function(snap) {
-            ctrl.schemas = [];
+            val.key = schema.key();
 
-            snap.forEach(function(schema) {
-                var val = schema.val();
-
-                val.key = schema.key();
-
-                ctrl.schemas.push(val);
-            });
-
-            m.redraw();
+            ctrl.schemas.push(val);
         });
-    },
 
-    view : function(ctrl, options) {
-        var current = m.route(),
-            locked  = config.locked;
+        m.redraw();
+    });
+}
 
-        if(!options) {
-            options = false;
-        }
-        
-        document.title = (options.title || "Loading...") + " | " + config.title;
+export function view(ctrl, options) {
+    var current = m.route(),
+        locked  = config.locked;
 
-        return m("div", { class : layout.container },
-            options.content ? null : m("div", { class : progress.bar }),
+    if(!options) {
+        options = false;
+    }
+    
+    document.title = (options.title || "Loading...") + " | " + title;
 
-            m("div", { class : header.container },
+    return m("div", { class : layout.container },
+        options.content ? null : m("div", { class : progress.bar }),
 
-                m("div", { class : header.top },
-                    m("a", {
-                            class  : header.heading,
-                            href   : prefix("/"),
-                            config : m.route
-                        },
-                        m("h1", { class : header.title }, config.title)
-                    )
-                ),
+        m("div", { class : header.container },
 
-                m("div", { class : header.body },
-                    ctrl.auth ? [
-                        m("div", { class : header.schemas },
-                            (ctrl.schemas || []).map(function(schema) {
-                                var url = prefix("/content/" + schema.key);
-
-                                return m("a", {
-                                        class  : header[current.indexOf(url) === 0 ? "active" : "schema"],
-                                        href   : url,
-                                        config : m.route
-                                    },
-                                    schema.name
-                                );
-                            })
-                        ),
-
-                        m("button", {
-                            // Attrs
-                            class    : header.add,
-                            disabled : locked || null,
-                            
-                            // Events
-                            onclick : ctrl.add
-                        }, "New Schema"),
-                        
-                        m("a", {
-                            class  : header.logout,
-                            href   : prefix("/logout"),
-                            config : m.route
-                        }, "Logout")
-                    ] :
-                    null
+            m("div", { class : header.top },
+                m("a", {
+                        class  : header.heading,
+                        href   : prefix("/"),
+                        config : m.route
+                    },
+                    m("h1", { class : header.title }, title)
                 )
             ),
-            options.content ? options.content : null
-        );
-    }
-};
+
+            m("div", { class : header.body },
+                ctrl.auth ? [
+                    m("div", { class : header.schemas },
+                        (ctrl.schemas || []).map(function(schema) {
+                            var url = prefix("/content/" + schema.key);
+
+                            return m("a", {
+                                    class  : header[current.indexOf(url) === 0 ? "active" : "schema"],
+                                    href   : url,
+                                    config : m.route
+                                },
+                                schema.name
+                            );
+                        })
+                    ),
+
+                    m("button", {
+                        // Attrs
+                        class    : header.add,
+                        disabled : locked || null,
+                        
+                        // Events
+                        onclick : ctrl.add
+                    }, "New Schema"),
+                    
+                    m("a", {
+                        class  : header.logout,
+                        href   : prefix("/logout"),
+                        config : m.route
+                    }, "Logout")
+                ] :
+                null
+            )
+        ),
+        options.content ? options.content : null
+    );
+}

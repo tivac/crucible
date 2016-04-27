@@ -1,11 +1,13 @@
-"use strict";
-
 var Firebase = require("firebase"),
+    firebase;
 
-    config = require("../config");
+import config from "../config";
 
-module.exports = new Firebase(config.firebase);
-module.exports.TIMESTAMP = Firebase.ServerValue.TIMESTAMP;
+firebase = new Firebase(config.firebase);
+
+firebase.TIMESTAMP = Firebase.ServerValue.TIMESTAMP;
 
 // For debugging
-global.firebase = module.exports;
+window.firebase = firebase;
+
+export default firebase;

@@ -1,12 +1,10 @@
-"use strict";
+import m from "mithril";
 
-var m  = require("mithril"),
-    
-    config = require("../config"),
-    valid  = require("./valid-auth"),
-    prefix = require("./prefix");
+import config from "../config";
+import valid from "./valid-auth";
+import prefix from "./prefix";
 
-module.exports = function(component) {
+export default function(component) {
     return {
         controller : function() {
             /* eslint consistent-return: 0 */
@@ -19,4 +17,4 @@ module.exports = function(component) {
             return m.component(component);
         }
     };
-};
+}

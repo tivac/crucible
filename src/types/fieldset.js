@@ -1,26 +1,23 @@
-"use strict";
-
-var m      = require("mithril"),
-    assign = require("lodash.assign"),
+import m from "mithril";
+import assign from "lodash.assign";
     
-    hide = require("./lib/hide"),
-    
-    children = require("./children"),
-    css      = require("./fieldset.css");
+import hide from "./lib/hide.js";
 
-module.exports = {
-    view : function(ctrl, options) {
-        var hidden  = hide(options);
-        
-        if(hidden) {
-            return hidden;
-        }
-        
-        return m("fieldset", { class : options.class },
-            options.field.name ? m("legend", { class : css.legend }, options.field.name) : null,
-            m.component(children, assign({}, options, {
-                fields : options.field.children
-            }))
-        );
+import * as children from "./children.js";
+
+import css from "./fieldset.css";
+
+export function view(ctrl, options) {
+    var hidden  = hide(options);
+    
+    if(hidden) {
+        return hidden;
     }
-};
+    
+    return m("fieldset", { class : options.class },
+        options.field.name ? m("legend", { class : css.legend }, options.field.name) : null,
+        m.component(children, assign({}, options, {
+            fields : options.field.children
+        }))
+    );
+}
