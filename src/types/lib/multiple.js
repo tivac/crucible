@@ -1,14 +1,10 @@
-"use strict";
+import m from "mithril";
 
-var m      = require("mithril"),
+import id from "./id";
+import hide from "./hide";
+import label from "./label";
 
-    id    = require("./id"),
-    hide  = require("./hide"),
-    label = require("./label"),
-    
-    css = require("./types.css");
-
-module.exports = function(args, view) {
+export default function(args, view) {
     return {
         controller : function(options) {
             var ctrl = this;
@@ -67,4 +63,4 @@ module.exports = function(args, view) {
             );
         }
     };
-};
+}

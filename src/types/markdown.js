@@ -1,80 +1,76 @@
-"use strict";
+import m from "mithril";
+import Remarkable from "remarkable";
+import editor from "codemirror";
 
-var m          = require("mithril"),
-    editor     = require("codemirror"),
-    Remarkable = require("remarkable"),
+import id from "./lib/id";
+import hide from "./lib/hide";
+import label from "./lib/label";
+
+import css from "./markdown.css";
+
+var md = new Remarkable();
+
+import "codemirror/mode/markdown/markdown";
+
+export function controller(options) {
+    var ctrl = this;
     
-    id    = require("./lib/id"),
-    hide  = require("./lib/hide"),
-    label = require("./lib/label"),
-    
-    css = require("./markdown.css"),
+    ctrl.id       = id(options);
+    ctrl.markdown = options.data || "";
+    ctrl.previewing = false;
+    ctrl.previewHTML = null;
 
-    md = new Remarkable();
+    ctrl.togglePreview = function(e) {
+        e.preventDefault();
 
-require("codemirror/mode/markdown/markdown");
+        ctrl.previewHTML = md.render(ctrl.markdown);
+        ctrl.previewing = !ctrl.previewing;
+    };
 
-module.exports = {
-    controller : function(options) {
-        var ctrl = this;
-        
-        ctrl.id       = id(options);
-        ctrl.markdown = options.data || "";
-        ctrl.previewing = false;
-        ctrl.previewHTML = null;
+    ctrl.editorChanged = function() {
+        ctrl.markdown = ctrl.editor.doc.getValue();
 
-        ctrl.togglePreview = function(e) {
-            e.preventDefault();
+        options.update(options.path, ctrl.markdown);
+    };
 
-            ctrl.previewHTML = md.render(ctrl.markdown);
-            ctrl.previewing = !ctrl.previewing;
-        };
-
-        ctrl.editorChanged = function() {
-            ctrl.markdown = ctrl.editor.doc.getValue();
-
-            options.update(options.path, ctrl.markdown);
-        };
-
-        ctrl.editorSetup = function(el, init) {
-            if(init) {
-                return;
-            }
-
-            ctrl.editor = editor.fromTextArea(el, {
-                mode : "text/x-markdown",
-
-                indentUnit   : 4,
-                lineWrapping : true
-            });
-
-            ctrl.editor.on("changes", ctrl.editorChanged);
-        };
-    },
-
-    view : function(ctrl, options) {
-        var hidden  = hide(options);
-
-        if(hidden) {
-            return hidden;
+    ctrl.editorSetup = function(el, init) {
+        if(init) {
+            return;
         }
 
-        return m("div",
-            label(ctrl, options),
-            m("div", { class : ctrl.previewing ? css.inputHidden : css.input },
-                m("textarea", { config : ctrl.editorSetup },
-                    ctrl.markdown
-                )
-            ),
-            m("div", { class : ctrl.previewing ? css.input : css.inputHidden },
-                m.trust(ctrl.previewHTML)
-            ),
-            m("button.pure-button", {
-                    onclick : ctrl.togglePreview,
-                    class   : css.button
-                },
-                ctrl.previewing ? "Edit" : "Preview"
-            )
-        );
+        ctrl.editor = editor.fromTextArea(el, {
+            mode : "text/x-markdown",
+
+            indentUnit   : 4,
+            lineWrapping : true
+        });
+
+        ctrl.editor.on("changes", ctrl.editorChanged);
+    };
+}
+
+export function view(ctrl, options) {
+    var hidden  = hide(options);
+
+    if(hidden) {
+        return hidden;
     }
-};
+
+    return m("div", { class : options.class },
+        label(ctrl, options),
+        m("div", { class : ctrl.previewing ? css.inputHidden : css.input },
+            m("textarea", { config : ctrl.editorSetup },
+                ctrl.markdown
+            )
+        ),
+        m("div", { class : ctrl.previewing ? css.input : css.inputHidden },
+            m.trust(ctrl.previewHTML)
+        ),
+        m("button.pure-button", {
+                onclick : ctrl.togglePreview,
+                class   : css.button
+            },
+            ctrl.previewing ? "Edit" : "Preview"
+        )
+    );
+}

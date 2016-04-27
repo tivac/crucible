@@ -9,58 +9,26 @@ var fs   = require("fs"),
     bytes      = require("pretty-bytes"),
     uglify     = require("uglify-js"),
 
+    files = require("./files"),
+
     builder  = browserify("src/index.js", { debug : false }),
     
-    files = {},
-    
     start;
+
+// So modular-css as part of rollup knows to compress things
+global.compress = true;
 
 // Set up gen dir
 shell.mkdir("-p", "./gen");
 
 // Copy static files
-shell.cp("./src/icons.svg", "./gen/icons.svg");
+files.copy();
+
+// Rollupify goes first
+builder.transform("rollupify", { config : "./rollup.config.js" });
 
 // Plugins
-builder.plugin("modular-css/browserify", {
-    css : "./gen/index.css",
-    
-    // Tiny exported selectors
-    namer : function(file, selector) {
-        var hash;
-        
-        if(!files[file]) {
-            files[file] = {
-                id        : Object.keys(files).length,
-                selectors : {}
-            };
-        }
-        
-        if(!(selector in files[file].selectors)) {
-            files[file].selectors[selector] = Object.keys(files[file].selectors).length;
-        }
-        
-        hash = files[file].id.toString(32) + files[file].selectors[selector].toString(32);
-        
-        return hash.search(/^[a-z]/i) === 0 ? hash : "a" + hash;
-    },
-    
-    // lifecycle hooks
-    before : [
-        require("postcss-nested")
-    ],
-    after : [
-        require("postcss-import")()
-    ],
-    done : [
-        require("cssnano")()
-    ]
-});
-
 builder.plugin("bundle-collapser/plugin");
-
-// Transforms
-builder.transform("detabbify", { global : true });
 
 start = Date.now();
 

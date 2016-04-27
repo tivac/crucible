@@ -1,5 +1,3 @@
-"use strict";
-
-module.exports = function(options) {
+export default function(options) {
     return options.path.length ? options.path.join("-") : options.details.key;
-};
+}

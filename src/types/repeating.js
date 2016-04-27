@@ -1,17 +1,14 @@
-"use strict";
+import m from "mithril";
+import assign from "lodash.assign";
+import times from "lodash.times";
+    
+import { icons } from "../config";
 
-var m      = require("mithril"),
-    assign = require("lodash.assign"),
-    times  = require("lodash.times"),
-    
-    config = require("../config"),
-    
-    hide     = require("./lib/hide"),
-    children = require("./children"),
+import hide from "./lib/hide";
 
-    css = require("./repeating.css"),
-    
-    icons = config.icons;
+import * as children from "./children";
+
+import css from "./repeating.css";
 
 function child(ctrl, options, data, idx) {
     return m("div", { class : css[idx === 0 ? "first" : "child"] },
@@ -35,65 +32,63 @@ function child(ctrl, options, data, idx) {
     );
 }
 
-module.exports = {
-    controller : function(options) {
-        var ctrl = this;
+export function controller(options) {
+    var ctrl = this;
+    
+    ctrl.children = (options.data && options.data.length) || 1;
+    
+    ctrl.add = function(opts, e) {
+        e.preventDefault();
         
-        ctrl.children = (options.data && options.data.length) || 1;
-        
-        ctrl.add = function(opts, e) {
-            e.preventDefault();
-            
-            ctrl.children += 1;
+        ctrl.children += 1;
 
-            // Ensure that we have data placeholders for all the possible entries
-            times(ctrl.children, function(idx) {
-                if(opts.data && opts.data[idx]) {
-                    return;
-                }
-                
-                // Need a key here so that firebase will save this object,
-                // otherwise future loads can have weird gaps
-                opts.update(opts.path.concat(idx), { __idx : idx });
-            });
-        };
-
-        ctrl.remove = function(opts, data, idx, e) {
-            e.preventDefault();
-            
-            if(Array.isArray(opts.data)) {
-                opts.data.splice(idx, 1);
-                
-                ctrl.children = opts.data.length;
-            } else {
-                --ctrl.children;
+        // Ensure that we have data placeholders for all the possible entries
+        times(ctrl.children, function(idx) {
+            if(opts.data && opts.data[idx]) {
+                return;
             }
             
-            opts.update(opts.path, opts.data);
-        };
-    },
+            // Need a key here so that firebase will save this object,
+            // otherwise future loads can have weird gaps
+            opts.update(opts.path.concat(idx), { __idx : idx });
+        });
+    };
 
-    view : function(ctrl, options) {
-        var field   = options.field,
-            hidden  = hide(options),
-            items;
+    ctrl.remove = function(opts, data, idx, e) {
+        e.preventDefault();
         
-        if(hidden) {
-            return hidden;
-        }
-        
-        if(options.data) {
-            items = options.data.map(child.bind(null, ctrl, options));
+        if(Array.isArray(opts.data)) {
+            opts.data.splice(idx, 1);
+            
+            ctrl.children = opts.data.length;
         } else {
-            items = times(ctrl.children, child.bind(null, ctrl, options, false));
+            --ctrl.children;
         }
         
-        return m("div", { class : options.class + " " + css.container },
-            items,
-            m("button", {
-                class   : css.add,
-                onclick : ctrl.add.bind(null, options)
-            }, field.button || "Add")
-        );
+        opts.update(opts.path, opts.data);
+    };
+}
+
+export function view(ctrl, options) {
+    var field   = options.field,
+        hidden  = hide(options),
+        items;
+    
+    if(hidden) {
+        return hidden;
     }
-};
+    
+    if(options.data) {
+        items = options.data.map(child.bind(null, ctrl, options));
+    } else {
+        items = times(ctrl.children, child.bind(null, ctrl, options, false));
+    }
+    
+    return m("div", { class : options.class + " " + css.container },
+        items,
+        m("button", {
+            class   : css.add,
+            onclick : ctrl.add.bind(null, options)
+        }, field.button || "Add")
+    );
+}

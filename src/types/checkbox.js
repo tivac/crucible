@@ -1,10 +1,9 @@
-"use strict";
+import m from "mithril";
 
-var m = require("mithril"),
+import css from "./checkbox.css";
+import multiple from "./lib/multiple";
 
-    css = require("./checkbox.css");
-
-module.exports = require("./lib/multiple")({
+export default multiple({
         multiple : true
     },
     

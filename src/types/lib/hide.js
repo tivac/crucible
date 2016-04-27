@@ -1,13 +1,11 @@
-"use strict";
-
-var m   = require("mithril"),
-    get = require("lodash.get"),
+import m from "mithril";
+import get from "lodash.get";
     
-    field = [ "show", "field" ],
+var field = [ "show", "field" ],
     
     dom = m("div", "");
 
-module.exports = function(options) {
+export default function(options) {
     /* eslint: eqeqeq:0 */
     var dep = get(options.field, field),
         src, tgt;
@@ -41,4 +39,4 @@ module.exports = function(options) {
     
     // Otherwise this field should hide
     return dom;
-};
+}

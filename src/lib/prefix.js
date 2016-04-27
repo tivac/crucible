@@ -1,9 +1,7 @@
-"use strict";
+import join from "url-join";
 
-var join = require("url-join"),
-    
-    config = require("../config");
+import { root } from "../config";
 
-module.exports = function path(str) {
-    return join(config.root, str);
-};
+export default function path(str) {
+    return join(root, str);
+}

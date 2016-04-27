@@ -1,11 +1,8 @@
-"use strict";
- 
-var m = require("mithril"),
-    
-    css = require("./types.css");
+import m from "mithril";
 
+import css from "./types.css";
  
-module.exports = function(ctrl, options) {
+export default function(ctrl, options) {
     var field = options.field,
         name  = field.name,
         style = css.label;
@@ -19,4 +16,4 @@ module.exports = function(ctrl, options) {
         for   : ctrl.id,
         class : style
     }, name);
-};
+}

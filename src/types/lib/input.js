@@ -1,16 +1,14 @@
-"use strict";
+import m from "mithril";
+import assign from "lodash.assign";
+import get from "lodash.get";
 
-var m      = require("mithril"),
-    assign = require("lodash.assign"),
-    get    = require("lodash.get"),
+import hide from "./hide";
+import id from "./id";
+import label from "./label";
 
-    hide  = require("./hide"),
-    id    = require("./id"),
-    label = require("./label"),
-    
-    css = require("./types.css");
+import css from "./types.css";
 
-module.exports = function(type) {
+export default function(type) {
     return {
         controller : function(options) {
             var ctrl = this,
@@ -60,4 +58,4 @@ module.exports = function(type) {
             );
         }
     };
-};
+}

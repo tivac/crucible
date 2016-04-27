@@ -1,9 +1,7 @@
-"use strict";
+import db from "./firebase";
 
-var db = require("./firebase");
-
-module.exports = function() {
+export default function() {
     var auth = db.getAuth();
     
     return auth && ((auth.expires * 1000) > Date.now());
-};
+}

@@ -1,9 +1,7 @@
-"use strict";
-
-var db = require("./firebase");
+import db from "./firebase";
 
 // Ensure the updated timestamp is always accurate-ish
-module.exports = function(ref) {
+export default function(ref) {
     ref.on("child_changed", function(snap) {
         var key = snap.key(),
             auth;
