@@ -27,6 +27,8 @@ files.copy();
 // Rollupify goes first
 builder.transform("rollupify", { config : "./rollup.config.js" });
 
+builder.transform("mithril-objectify/browserify");
+
 // Plugins
 builder.plugin("bundle-collapser/plugin");
 
