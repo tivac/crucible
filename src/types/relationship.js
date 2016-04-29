@@ -21,6 +21,8 @@ export function controller(options) {
     ctrl.handle  = null;
     ctrl.related = null;
     ctrl.names   = [];
+    
+    ctrl.options = options;
 
     ctrl.config = function(el, init) {
         if(init) {
@@ -81,14 +83,15 @@ export function controller(options) {
 
         e.target.value = "";
 
-        options.update(options.path.concat(key), true);
+        ctrl.options.update(ctrl.options.path.concat(key), true);
 
-        if(options.root) {
-            content.child(key + "/relationships/" + options.root.key()).set(true);
+        if(ctrl.options.root) {
+            content.child(key + "/relationships/" + ctrl.options.root.key()).set(true);
         }
     };
 
     // BREAK THE RELATIONSHIP
+    // TODO: BROKEN
     ctrl.remove = function(id, e) {
         e.preventDefault();
         
@@ -111,6 +114,8 @@ export function view(ctrl, options) {
     if(hidden) {
         return hidden;
     }
+    
+    ctrl.options = options;
 
     return m("div", { class : options.class },
         label(ctrl, options),

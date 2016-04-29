@@ -54,11 +54,11 @@ export function controller(options) {
 export function view(ctrl, options) {
     var hidden  = hide(options);
 
-    ctrl.options = options;
-
     if(hidden) {
         return hidden;
     }
+    
+    ctrl.options = options;
 
     return m("div", { class : options.class },
         label(ctrl, options),

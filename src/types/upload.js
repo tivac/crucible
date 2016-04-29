@@ -57,6 +57,9 @@ export function controller(options) {
     ctrl.dragging  = false;
     ctrl.uploading = false;
     
+    // Options caching
+    ctrl.options = options;
+    
     if(options.data) {
         if(typeof options.data === "string") {
             options.data = [ options.data ];
@@ -92,7 +95,7 @@ export function controller(options) {
         
         // Don't show this as a drag target if there's already something there
         // and it's not a multiple field
-        if(ctrl.files.length && !options.field.multiple) {
+        if(ctrl.files.length && !ctrl.options.field.multiple) {
             m.redraw.strategy("none");
             return;
         }
@@ -111,7 +114,7 @@ export function controller(options) {
         e.preventDefault();
         
         // Must delete existing file before dragging on more
-        if(ctrl.files.length && !options.field.multiple) {
+        if(ctrl.files.length && !ctrl.options.field.multiple) {
             return;
         }
         
@@ -120,7 +123,7 @@ export function controller(options) {
             return file.type.indexOf("image/") === 0;
         });
         
-        if(options.field.multiple) {
+        if(ctrl.options.field.multiple) {
             ctrl.files = ctrl.files.concat(dropped);
         } else {
             ctrl.files = dropped.slice(-1);
@@ -166,9 +169,9 @@ export function controller(options) {
                 return file.remote;
             });
         
-        options.update(
-            options.path,
-            options.field.multiple ? files : files[0]
+        ctrl.options.update(
+            ctrl.options.path,
+            ctrl.options.field.multiple ? files : files[0]
         );
     };
     
@@ -182,7 +185,7 @@ export function controller(options) {
             return;
         }
         
-        fetch(options.field.ws)
+        fetch(ctrl.options.field.ws)
         .then(checkStatus)
         .then(function(response) {
             return response.json();
@@ -205,7 +208,7 @@ export function controller(options) {
                     
                     data.append("Content-Type", file.type);
                     
-                    each(options.field.headers || {}, function(value, key) {
+                    each(ctrl.options.field.headers || {}, function(value, key) {
                         data.append(key, value);
                     });
                     
@@ -246,6 +249,8 @@ export function view(ctrl, options) {
     if(hidden) {
         return hidden;
     }
+    
+    ctrl.options = options;
 
     return m("div", { class : options.class },
         label(ctrl, options),
