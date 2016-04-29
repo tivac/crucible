@@ -46,6 +46,7 @@
     "lodash.set": "^4.0.0",
     "lodash.times": "^4.0.0",
     "mithril": "^0.2.0",
+    "mithril-objectify": "^2.0.1",
     "modular-css": "^0.19.0",
     "moment": "^2.11.1",
     "morgan": "^1.6.1",

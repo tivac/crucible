@@ -45,6 +45,7 @@ module.exports = {
                 require("postcss-import")()
             ],
             done : done
-        })
+        }),
+        require("mithril-objectify/rollup")()
     ]
 };
