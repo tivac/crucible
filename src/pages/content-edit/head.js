@@ -122,15 +122,15 @@ export function controller(options) {
         };
     };
 
-    ctrl.save = function() {
+    ctrl.save = function(opts) {
         ctrl.saving = true;
         
         m.redraw();
         
         ref.update({
-            fields : options.data.fields,
-            name   : options.data.name,
-            slug   : options.data.slug || null
+            fields : opts.data.fields,
+            name   : opts.data.name,
+            slug   : opts.data.slug || null
         }, function() {
             ctrl.saving = false;
             
@@ -168,7 +168,7 @@ export function view(ctrl, options) {
                         disabled : locked || null,
 
                         // Events
-                        onclick : ctrl.save
+                        onclick : ctrl.save.bind(null, options)
                     },
                     m("svg", { class : css.icon },
                         m("use", { href : icons + "#save" })
