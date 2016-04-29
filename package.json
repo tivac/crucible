@@ -1,6 +1,6 @@
 {
   "name": "anthracite",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Serverless CMS backed by Firebase",
   "main": "index.js",
   "scripts": {
