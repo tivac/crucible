@@ -19,6 +19,8 @@ export function controller(options) {
     ctrl.markdown = options.data || "";
     ctrl.previewing = false;
     ctrl.previewHTML = null;
+    
+    ctrl.options = options;
 
     ctrl.togglePreview = function(e) {
         e.preventDefault();
@@ -30,7 +32,7 @@ export function controller(options) {
     ctrl.editorChanged = function() {
         ctrl.markdown = ctrl.editor.doc.getValue();
 
-        options.update(options.path, ctrl.markdown);
+        ctrl.options.update(ctrl.options.path, ctrl.markdown);
     };
 
     ctrl.editorSetup = function(el, init) {
@@ -51,6 +53,8 @@ export function controller(options) {
 
 export function view(ctrl, options) {
     var hidden  = hide(options);
+
+    ctrl.options = options;
 
     if(hidden) {
         return hidden;
