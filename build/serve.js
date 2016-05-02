@@ -57,7 +57,7 @@ function bundle() {
 files.watch();
 
 // Rollupify goes first
-builder.transform("rollupify", { config : "./rollup.config.js" });
+builder.transform("rollupify", { config : require("./_rollup") });
 
 // Browserify plugins
 builder.plugin("watchify");

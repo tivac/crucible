@@ -61,7 +61,7 @@
     "rollup-plugin-node-builtins": "^1.0.4",
     "rollup-plugin-node-resolve": "^1.5.0",
     "rollup-plugin-uglify": "^0.3.1",
-    "rollupify": "^0.2.0",
+    "rollupify": "^0.3.0",
     "run-parallel": "^1.1.4",
     "shelljs": "^0.6.0",
     "sluggo": "^0.2.0",

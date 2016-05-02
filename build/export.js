@@ -25,7 +25,7 @@ shell.mkdir("-p", "./gen");
 files.copy();
 
 // Rollupify goes first
-builder.transform("rollupify", { config : "./rollup.config.js" });
+builder.transform("rollupify", { config : require("./_rollup") });
 
 builder.transform("mithril-objectify/browserify");
 
