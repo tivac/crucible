@@ -5,8 +5,6 @@ var fs   = require("fs"),
     path = require("path"),
     url  = require("url"),
     
-    chokidar   = require("chokidar"),
-    shell      = require("shelljs"),
     browserify = require("browserify"),
     duration   = require("humanize-duration"),
     jsesc      = require("jsesc"),
