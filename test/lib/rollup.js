@@ -15,8 +15,6 @@ module.exports = function(entry, tgt) {
     .then((bundle) => {
         var result = bundle.generate({ format : "cjs" });
         
-        require("fs").writeFileSync(`./output-${require("path").basename(entry)}`, result.code);
-        
         vm.runInThisContext(`(function(module, exports) { ${result.code} })`)(tgt, tgt.exports);
     });
 };
