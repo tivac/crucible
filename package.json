@@ -48,7 +48,7 @@
     "lodash.set": "^4.0.0",
     "lodash.times": "^4.0.0",
     "mithril": "^0.2.0",
-    "mithril-objectify": "^2.2.3",
+    "mithril-objectify": "2.2.3",
     "mithril-query": "^1.0.0",
     "modular-css": "^0.19.0",
     "moment": "^2.11.1",
