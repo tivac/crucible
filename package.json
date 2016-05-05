@@ -4,11 +4,11 @@
   "description": "Serverless CMS backed by Firebase",
   "main": "index.js",
   "scripts": {
-    "cover": "npm run test -- --cov --coverage-report=lcov",
     "export": "node build/export.js",
     "fake": "node build/faker.js",
     "lint": "eslint .",
     "prepublish": "in-publish && npm run export || not-in-publish",
+    "preversion": "npm test",
     "start": "node build/serve.js",
     "test": "tap test/*.js"
   },
