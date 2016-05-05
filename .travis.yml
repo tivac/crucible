@@ -5,3 +5,13 @@ node_js:
 cache:
   directories:
   - node_modules
+deploy:
+  provider: npm
+  email: npm@patcavit.com
+  api_key:
+    secure: BcqJ3VhCVZXB01vFp/W9EM5nMhpViidzzKm3F8BHSKCel+n5CAGKjcCKeeSol6aXRZxdrih81m50T2BX5sJrgGGOtI1f4xnPYwXcg6hSDEBo4kvUR7otBOrcWsZUe90IiLVXMv+96W7s5Jp21PTj1rTiMm6OEUqrhDEm3BvvOylNPhy9XjJQC7f+yHO7TN8y6+h2/G6nPtsZ6dSvI9swo1hW61EXJiLV/FG2mLdURWB9qOFJWZlBqwAV60u1xE/3pzZduBKcoTCjqy5EyaO0COelh+1EBsqpeZBppGH8u/H7nrDip+JpF/d4pLGELpyqnxFzCiP4cYoy0GvSGqoP4VhxcTe69g4iCtcvJBoshPW35sj9Nt3odz2mHRJdYme1PcgqutzAH2PyPH4hF65/RFWMw8JZcD3s7wJFxP2Q5iDi+r6ReaKhrjVPiHTCkqn2Kvn3h6O7BJk4vEtviIbwV273qW45Kx89U4EJStDG9Anfrmycf3gLkKugJmpQqp4fr/uPYQFAV5+N32oFIsvS5+1E7p+RvWYsLcoXbqfpu7K2bMy59CWnFt/XOc0j67Z5OD+Dif64mdnmfmSDENx5Qf3dwEr2DXSXGYgaeXHhoVRQyu+sy3/KDsKJccjLc95Gy/qxvXDbHjko1V4VnYENEHYENuvQDdDo1UFLZOItqUY=
+  on:
+    tags: true
+    repo: tivac/anthracite
+    branch: master
+    node: 'node'
