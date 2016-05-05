@@ -1,6 +1,6 @@
-@value layout_css:  "./layout/layout.css";
-@value icons_css:   "../icons.css";
-@value buttons_css: "../buttons.css";
+@value layout_css:  "../layout/layout.css";
+@value icons_css:   "../../icons.css";
+@value buttons_css: "../../buttons.css";
 
 .content {
     composes: section from layout_css;
@@ -14,7 +14,7 @@
     flex-direction: row;
     
     padding-left: 10px;
-    padding-right: 10px; 
+    padding-right: 10px;
     
     align-items: center;
 }
@@ -30,7 +30,7 @@
     
     text-align: center;
     justify-content: center;
-    align-content: center;    
+    align-content: center;
 }
 
 .empty p {
