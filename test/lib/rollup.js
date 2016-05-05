@@ -8,7 +8,7 @@ module.exports = function(entry, tgt) {
     return rollup(
         Object.assign(
             {},
-            require("../../build/_rollup"),
+            require("../../build/lib/rollup")(),
             { entry : entry }
         )
     )

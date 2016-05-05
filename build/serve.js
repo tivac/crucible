@@ -5,11 +5,11 @@ var fs   = require("fs"),
     path = require("path"),
     url  = require("url"),
     
-    browserify = require("browserify"),
     duration   = require("humanize-duration"),
     jsesc      = require("jsesc"),
     
-    files = require("./files"),
+    files   = require("./lib/files"),
+    builder = require("./lib/browserify")({ debug : true }),
     
     server   = require("connect")(),
     
@@ -18,11 +18,10 @@ var fs   = require("fs"),
         handleError : false
     }),
     
-    builder  = browserify("src/index.js", {
-        debug : true
-    }),
-    
     bundling, bytes, time, done;
+
+// Set up gen dir
+require("shelljs").mkdir("-p", "./gen");
 
 function bundle() {
     bundling = true;
@@ -54,14 +53,8 @@ function bundle() {
 // Watch for changes to static files
 files.watch();
 
-// Rollupify goes first
-builder.transform("rollupify", { config : require("./_rollup") });
-
 // Browserify plugins
 builder.plugin("watchify");
-
-// Browserify transforms
-builder.transform("detabbify", { global : true });
 
 // Start up watchify
 builder.on("update", bundle);

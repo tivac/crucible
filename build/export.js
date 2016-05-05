@@ -3,33 +3,25 @@
 
 var fs   = require("fs"),
     
-    shell      = require("shelljs"),
-    browserify = require("browserify"),
     duration   = require("humanize-duration"),
     bytes      = require("pretty-bytes"),
     uglify     = require("uglify-js"),
 
-    files = require("./files"),
-
-    builder  = browserify("src/index.js", { debug : false }),
+    files   = require("./lib/files"),
+    builder = require("./lib/browserify")({ compress : true }),
     
     start;
 
-// So modular-css as part of rollup knows to compress things
-global.compress = true;
-
 // Set up gen dir
-shell.mkdir("-p", "./gen");
+require("shelljs").mkdir("-p", "./gen");
 
 // Copy static files
 files.copy();
 
-// Rollupify goes first
-builder.transform("rollupify", { config : require("./_rollup") });
-
+// Pre-compile m() calls where possible
 builder.transform("mithril-objectify/browserify");
 
-// Plugins
+// Flatten bundles out as much as possible
 builder.plugin("bundle-collapser/plugin");
 
 start = Date.now();

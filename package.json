@@ -4,6 +4,7 @@
   "description": "Serverless CMS backed by Firebase",
   "main": "index.js",
   "scripts": {
+    "build": "node build/build.js",
     "export": "node build/export.js",
     "fake": "node build/faker.js",
     "lint": "eslint .",
@@ -26,7 +27,6 @@
     "codemirror": "^5.11.0",
     "connect": "^3.4.1",
     "cssnano": "^3.5.2",
-    "detabbify": "^0.1.1",
     "ecstatic": "^1.4.0",
     "eslint": "^2.4.0",
     "eslint-config-arenanet": "^2.0.3",
