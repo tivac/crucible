@@ -16,4 +16,4 @@ deploy:
     tags: true
     repo: tivac/anthracite
     branch: master
-    node: 'node'
+    node: 5
