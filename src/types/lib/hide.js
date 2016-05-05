@@ -3,7 +3,7 @@ import get from "lodash.get";
     
 var field = [ "show", "field" ],
     
-    dom = m("div", "");
+    dom = m("div", { class : "hidden" });
 
 export default function(options) {
     /* eslint: eqeqeq:0 */
