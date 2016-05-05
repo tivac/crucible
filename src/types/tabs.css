@@ -24,18 +24,18 @@
     background: #EEE;
 }
 
-.inactive {
+.tab {
     composes: item;
 
     border-bottom: 0;
     border-right: 0;
 }
 
-.inactive:last-child {
+.tab:last-child {
     border-right: 1px solid #CCC;
 }
 
-.active {
+.activetab {
     composes: item;
 
     border-color: #777;
@@ -44,15 +44,15 @@
     font-weight: bold;
 }
 
-.contents {
+.body {
     border: 1px solid #CCC;
     padding: 20px;
 
     display: none;
 }
 
-.contentsActive {
-    composes: contents;
+.activebody {
+    composes: body;
 
     display: block;
 }

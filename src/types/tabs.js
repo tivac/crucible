@@ -30,7 +30,7 @@ export function view(ctrl, options) {
         m("div", { class : css.nav },
             tabs.map(function(tab, idx) {
                 return m("a", {
-                        class   : css[idx === ctrl.tab ? "active" : "inactive"],
+                        class   : css[idx === ctrl.tab ? "activetab" : "tab"],
                         href    : "#" + idx,
                         onclick : ctrl.switchtab.bind(ctrl, idx)
                     }, tab.name
@@ -38,7 +38,7 @@ export function view(ctrl, options) {
             })
         ),
         tabs.map(function(tab, idx) {
-            return m("div", { class : css[idx === ctrl.tab ? "contents-active" : "contents"] },
+            return m("div", { class : css[idx === ctrl.tab ? "activebody" : "body"] },
                 m.component(children, assign({}, options, {
                     class  : false,
                     fields : tab.children,
