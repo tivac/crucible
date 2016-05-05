@@ -1,7 +1,5 @@
 "use strict";
 
-var namer = require("./namer");
-
 module.exports = function(options) {
     var opts = options || {};
     
@@ -22,7 +20,7 @@ module.exports = function(options) {
                 css : "./gen/index.css",
                 
                 // Optional tiny exported selectors
-                namer : opts.compress ? namer() : undefined,
+                namer : opts.compress ? require("modular-css-namer")() : undefined,
                 
                 // lifecycle hooks
                 before : [
