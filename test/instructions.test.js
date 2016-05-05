@@ -10,14 +10,16 @@ var t = require("tap"),
 t.beforeEach(() => require("./lib/rollup")("./src/types/instructions.js", instructions));
 
 t.test("instructions", (t) => {
+    var view = instructions.exports.view;
+    
     t.test("view exists", (t) => {
-        t.equal(typeof instructions.view, "function");
+        t.equal(typeof view, "function");
         
         t.end();
     });
         
     t.test("view renders", (t) => {
-        var out = instructions.view(null, {
+        var out = view(null, {
                 field : {}
             });
         
@@ -33,7 +35,7 @@ t.test("instructions", (t) => {
     });
     
     t.test("view renders hidden", (t) => {
-        var out = mq(instructions.view(null, {
+        var out = mq(view(null, {
                 state : {},
                 field : {
                     show : {
@@ -48,7 +50,7 @@ t.test("instructions", (t) => {
     });
     
     t.test("view respects options.class", (t) => {
-        var out = mq(instructions.view(null, {
+        var out = mq(view(null, {
                 field : {},
                 class : "fooga"
             }));
@@ -59,7 +61,7 @@ t.test("instructions", (t) => {
     });
     
     t.test("view renders head", (t) => {
-        var out = mq(instructions.view(null, {
+        var out = mq(view(null, {
                 field : {
                     head : "head"
                 }
@@ -72,7 +74,7 @@ t.test("instructions", (t) => {
     });
     
     t.test("view renders body", (t) => {
-        var out = mq(instructions.view(null, {
+        var out = mq(view(null, {
                 field : {
                     body : "body"
                 }
