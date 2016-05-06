@@ -2,8 +2,7 @@
 "use strict";
 
 var assert = require("better-assert"),
-    
-    mq = require("mithril-query"),
+    query  = require("mithril-query"),
     
     instructions = {};
 
@@ -22,7 +21,7 @@ describe("Anthracite", () => {
         });
             
         it("should render", () => {
-            var out = mq(view(null, {
+            var out = query(view(null, {
                     field : {}
                 }));
             
@@ -30,7 +29,7 @@ describe("Anthracite", () => {
         });
         
         it("should render hidden", () => {
-            var out = mq(view(null, {
+            var out = query(view(null, {
                     state : {},
                     field : {
                         show : {
@@ -43,7 +42,7 @@ describe("Anthracite", () => {
         });
         
         it("should respect options.class", () => {
-            var out = mq(view(null, {
+            var out = query(view(null, {
                     field : {},
                     class : "fooga"
                 }));
@@ -52,7 +51,7 @@ describe("Anthracite", () => {
         });
         
         it("should render head", () => {
-            var out = mq(view(null, {
+            var out = query(view(null, {
                     field : {
                         head : "head"
                     }
@@ -63,7 +62,7 @@ describe("Anthracite", () => {
         });
         
         it("should render body", () => {
-            var out = mq(view(null, {
+            var out = query(view(null, {
                     field : {
                         body : "body"
                     }

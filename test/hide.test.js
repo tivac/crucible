@@ -2,8 +2,7 @@
 "use strict";
 
 var assert = require("better-assert"),
-    
-    mq = require("mithril-query"),
+    query  = require("mithril-query"),
     
     out = {};
 
@@ -57,7 +56,7 @@ describe("Anthracite", () => {
         });
         
         it("should return an empty div if values don't match (value)", () => {
-            var out = mq(hide({
+            var out = query(hide({
                     state : {
                         fooga : true
                     },
@@ -74,7 +73,7 @@ describe("Anthracite", () => {
         });
         
         it("should return an empty div if values don't match (regexp)", () => {
-            var out = mq(hide({
+            var out = query(hide({
                     state : {
                         fooga : "wooga"
                     },
