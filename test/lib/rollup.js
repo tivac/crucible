@@ -16,5 +16,7 @@ module.exports = function(entry, tgt) {
         var result = bundle.generate({ format : "cjs" });
         
         vm.runInThisContext(`(function(module, exports) { ${result.code} })`)(tgt, tgt.exports);
+        
+        return tgt;
     });
 };

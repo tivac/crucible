@@ -1,89 +1,75 @@
 /* eslint no-shadow:0 */
 "use strict";
 
-var t = require("tap"),
-    mq  = require("mithril-query"),
+var assert = require("better-assert"),
+    
+    mq = require("mithril-query"),
     
     instructions = {};
 
-// Compile code w/ rollup
-t.beforeEach(() => require("./lib/rollup")("./src/types/instructions.js", instructions));
-
-t.test("instructions", (t) => {
-    var view = instructions.exports.view;
+describe("Anthracite", () => {
+    before(() => require("./lib/rollup")("./src/types/instructions.js", instructions));
     
-    t.test("view exists", (t) => {
-        t.equal(typeof view, "function");
+    describe("/types/instructions", function() {
+        var view;
         
-        t.end();
-    });
-        
-    t.test("view renders", (t) => {
-        var out = view(null, {
-                field : {}
-            });
-        
-        t.same(out, {
-            tag   : "div",
-            attrs : {
-                class : null
-            },
-            children : [ null, null ]
+        before(() => {
+            view = instructions.exports.view;
         });
         
-        t.end();
-    });
-    
-    t.test("view renders hidden", (t) => {
-        var out = mq(view(null, {
-                state : {},
-                field : {
-                    show : {
-                        field : "fooga"
+        it("should exist", () => {
+            assert(typeof view === "function");
+        });
+            
+        it("should render", () => {
+            var out = mq(view(null, {
+                    field : {}
+                }));
+            
+            assert(out.has("div"));
+        });
+        
+        it("should render hidden", () => {
+            var out = mq(view(null, {
+                    state : {},
+                    field : {
+                        show : {
+                            field : "fooga"
+                        }
                     }
-                }
-            }));
+                }));
+            
+            assert(out.has(".hidden"));
+        });
         
-        t.ok(out.has(".hidden"));
+        it("should respect options.class", () => {
+            var out = mq(view(null, {
+                    field : {},
+                    class : "fooga"
+                }));
+            
+            assert(out.has(".fooga"));
+        });
         
-        t.end();
+        it("should render head", () => {
+            var out = mq(view(null, {
+                    field : {
+                        head : "head"
+                    }
+                }));
+            
+            assert(out.has("div > p[class$=head]"));
+            assert(out.contains("head"));
+        });
+        
+        it("should render body", () => {
+            var out = mq(view(null, {
+                    field : {
+                        body : "body"
+                    }
+                }));
+            
+            assert(out.contains("body"));
+        });
     });
-    
-    t.test("view respects options.class", (t) => {
-        var out = mq(view(null, {
-                field : {},
-                class : "fooga"
-            }));
-        
-        t.ok(out.has(".fooga"));
-        
-        t.end();
-    });
-    
-    t.test("view renders head", (t) => {
-        var out = mq(view(null, {
-                field : {
-                    head : "head"
-                }
-            }));
-        
-        t.ok(out.has("div > p[class$=head]"));
-        t.ok(out.contains("head"));
-        
-        t.end();
-    });
-    
-    t.test("view renders body", (t) => {
-        var out = mq(view(null, {
-                field : {
-                    body : "body"
-                }
-            }));
-        
-        t.ok(out.contains("body"));
-        
-        t.end();
-    });
-    
-    t.end();
 });

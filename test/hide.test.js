@@ -1,22 +1,94 @@
 /* eslint no-shadow:0 */
 "use strict";
 
-var t = require("tap"),
-    mq  = require("mithril-query"),
+var assert = require("better-assert"),
+    
+    mq = require("mithril-query"),
     
     out = {};
 
-// Compile code w/ rollup
-t.beforeEach(() => require("./lib/rollup")("./src/types/lib/hide.js", out));
+describe("Anthracite", () => {
+    before(() => require("./lib/rollup")("./src/types/lib/hide.js", out));
 
-t.test("hide", (t) => {
-    var hide = out.exports;
-    
-    t.test("returns false if not configured to hide", (t) => {
-        t.notOk(hide({}));
+    describe("/types/lib/hide", () => {
+        var hide;
         
-        t.end();
+        before(() => {
+            hide = out.exports;
+        });
+        
+        it("should return false if not configured to hide", () => {
+            assert(hide({}) === false);
+        });
+        
+        it("should return false if values match (value)", () => {
+            var out = hide({
+                    state : {
+                        fooga : true
+                    },
+                    
+                    field : {
+                        show : {
+                            field : "fooga",
+                            value : true
+                        }
+                    }
+                });
+            
+            assert(!out);
+        });
+        
+        it("should return false if values match (regexp)", () => {
+            var out = hide({
+                    state : {
+                        fooga : "wooga"
+                    },
+                    
+                    field : {
+                        show : {
+                            field : "fooga",
+                            type  : "regexp",
+                            value : ".ooga"
+                        }
+                    }
+                });
+            
+            assert(!out);
+        });
+        
+        it("should return an empty div if values don't match (value)", () => {
+            var out = mq(hide({
+                    state : {
+                        fooga : true
+                    },
+                    
+                    field : {
+                        show : {
+                            field : "fooga",
+                            value : false
+                        }
+                    }
+                }));
+            
+            assert(out.has(".hidden"));
+        });
+        
+        it("should return an empty div if values don't match (regexp)", () => {
+            var out = mq(hide({
+                    state : {
+                        fooga : "wooga"
+                    },
+                    
+                    field : {
+                        show : {
+                            field : "fooga",
+                            type  : "regexp",
+                            value : "fooga"
+                        }
+                    }
+                }));
+            
+            assert(out.has(".hidden"));
+        });
     });
-        
-    t.end();
 });

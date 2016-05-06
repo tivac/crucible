@@ -11,7 +11,7 @@
     "prepublish": "in-publish && npm run export || not-in-publish",
     "preversion": "npm test",
     "start": "node build/serve.js",
-    "test": "tap test/*.js"
+    "test": "mocha"
   },
   "keywords": [
     "cms",
@@ -22,6 +22,7 @@
   "license": "MIT",
   "devDependencies": {
     "awesomplete": "^1.1.0",
+    "better-assert": "^1.0.2",
     "browserify": "^13.0.0",
     "bundle-collapser": "^1.2.1",
     "codemirror": "^5.11.0",
@@ -29,7 +30,7 @@
     "cssnano": "^3.5.2",
     "ecstatic": "^1.4.0",
     "eslint": "^2.4.0",
-    "eslint-config-arenanet": "^2.0.3",
+    "eslint-config-arenanet": "^2.0.4",
     "faker": "^3.0.1",
     "firebase": "^2.4.1",
     "fuzzysearch": "^1.0.3",
@@ -50,6 +51,7 @@
     "mithril": "^0.2.0",
     "mithril-objectify": "2.2.3",
     "mithril-query": "^1.0.0",
+    "mocha": "^2.4.5",
     "modular-css": "^0.19.0",
     "modular-css-namer": "^1.0.1",
     "moment": "^2.11.1",
@@ -70,7 +72,6 @@
     "shelljs": "^0.6.0",
     "sluggo": "^0.2.0",
     "standard-version": "^2.1.2",
-    "tap": "^5.7.1",
     "uglify-js": "^2.6.1",
     "unique-slug": "^2.0.0",
     "url": "^0.11.0",
@@ -82,7 +83,8 @@
   "eslintConfig": {
     "extends": "arenanet",
     "env": {
-      "node": true
+      "node": true,
+      "mocha": true
     },
     "parserOptions": {
       "ecmaVersion": 6,
