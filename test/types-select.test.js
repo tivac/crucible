@@ -3,6 +3,8 @@
 var assert = require("better-assert"),
     query  = require("mithril-query"),
     
+    state = require("./lib/state"),
+    
     select = {};
 
 describe("Anthracite", () => {
@@ -24,6 +26,21 @@ describe("Anthracite", () => {
             field : {
                 children : []
             }
+        });
+        
+        it("should render children as <option>s", function() {
+            var options = state({
+                    field : {
+                        children : [ {
+                            key   : "option",
+                            value : "option"
+                        } ]
+                    }
+                }),
+                instance = new this.controller(options),
+                out  = query(this.view(instance, options));
+            
+            assert(out.has("option[value='option']"));
         });
     });
 });
