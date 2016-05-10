@@ -1,26 +1,27 @@
 var assert = require("better-assert"),
-    query  = require("mithril-query");
+    query  = require("mithril-query"),
+    merge  = require("lodash.merge");
     
 module.exports = function(options) {
-    var opts = options || {
+    var opts = merge({}, {
             path    : [],
             details : {
                 key : "name"
             }
-        };
+        }, options || {});
     
     it("should render", function() {
-        var ctrl = new this.controller(opts),
-            out  = query(this.view(ctrl, Object.assign({}, {
+        var instance = new this.controller(opts),
+            out  = query(this.view(instance, merge({}, {
                 field : {}
             }, opts)));
-        
+            
         assert(out.has("div"));
     });
     
     it("should render hidden", function() {
-        var ctrl = new this.controller(opts),
-            out  = query(this.view(ctrl, Object.assign({}, {
+        var instance = new this.controller(opts),
+            out  = query(this.view(instance, merge({}, {
                 state : {},
                 field : {
                     show : {
@@ -28,24 +29,13 @@ module.exports = function(options) {
                     }
                 }
             }, opts)));
-        
-        console.log(Object.assign({}, {
-                state : {},
-                field : {
-                    show : {
-                        field : "fooga"
-                    }
-                }
-            }, opts));
-        
-        out.log("*");
-        
+            
         assert(out.has(".hidden"));
     });
     
     it("should respect options.class", function() {
-        var ctrl = new this.controller(opts),
-            out  = query(this.view(ctrl, Object.assign({}, {
+        var instance = new this.controller(opts),
+            out  = query(this.view(instance, merge({}, {
                 field : {},
                 class : "fooga"
             }, opts)));

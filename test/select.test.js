@@ -6,10 +6,9 @@ var assert = require("better-assert"),
     select = {};
 
 describe("Anthracite", () => {
-    before(() => require("./lib/rollup")("./src/types/select.js", select));
+    before(() => require("./lib/rollup")("src/types/select.js", select));
     
-    describe.only("/types/select", function() {
-        
+    describe("/types/select", function() {
         before(function() {
             this.controller = select.exports.controller || function() { };
             this.view       = select.exports.view;
@@ -22,13 +21,8 @@ describe("Anthracite", () => {
             
         // Basic type tests
         require("./lib/type-basics")({
-            path  : [],
             field : {
                 children : []
-            },
-            
-            details : {
-                key : "name"
             }
         });
     });
