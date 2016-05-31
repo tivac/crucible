@@ -9,14 +9,24 @@ Fully client-side single-page application talking to FireBase to build a customi
    </a>
 </p>
 
-## Installation/Development
+## Installation
 
 1. `npm install anthracite`
 2. Rename `index-example.html` to `index.html`, changing the `<base>` tag if necessary
 3. Rename `config-example.js` to `config.js` and set your firebase endpoint
-4. `npm run build`
-5. `npm start`
-6. Open `http://localhost:9966` in a browser
+4. Open `index.html` in a browser
+
+## Development
+
+1. Create a fork of `https://github.com/tivac/anthracite`
+2. `git clone https://github.com/<username>/anthracite.git`
+3. `cd anthracite`
+4. `npm install`
+5. Rename `index-example.html` to `index.html`, changing the `<base>` tag if necessary
+6. Rename `config-example.js` to `config.js` and set your firebase endpoint
+7. `npm run build`
+8. `npm start`
+9. Open `http://localhost:9966` in a browser
 
 ## Usage
 
