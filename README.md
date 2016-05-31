@@ -14,7 +14,9 @@ Fully client-side single-page application talking to FireBase to build a customi
 1. `npm install anthracite`
 2. Rename `index-example.html` to `index.html`, changing the `<base>` tag if necessary
 3. Rename `config-example.js` to `config.js` and set your firebase endpoint
-4. Open in a browser
+4. `npm run build`
+5. `npm start`
+6. Open `http://localhost:9966` in a browser
 
 ## Usage
 
