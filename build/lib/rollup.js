@@ -22,6 +22,9 @@ module.exports = function(options) {
                 // Optional tiny exported selectors
                 namer : opts.compress ? require("modular-css-namer")() : undefined,
                 
+                // Output sourcemap if not compressing
+                map : !opts.compress,
+                
                 // lifecycle hooks
                 before : [
                     require("postcss-nested")
