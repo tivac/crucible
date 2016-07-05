@@ -26,3 +26,7 @@ exports.copy = function() {
         shell.cp(file, files[file]);
     });
 };
+
+exports.dir = function() {
+    require("shelljs").mkdir("-p", "./gen");
+};

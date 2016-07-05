@@ -5,69 +5,28 @@ var fs   = require("fs"),
     path = require("path"),
     url  = require("url"),
     
-    duration   = require("humanize-duration"),
-    jsesc      = require("jsesc"),
+    duration = require("humanize-duration"),
+    jsesc    = require("jsesc"),
+    rollup   = require("rollup"),
+    watch    = require("rollup-watch"),
     
-    files   = require("./lib/files"),
-    builder = require("./lib/browserify")({ debug : true }),
+    files  = require("./lib/files"),
+    config = require("./lib/rollup"),
     
-    server   = require("connect")(),
+    server = require("connect")(),
     
     ecstatic = require("ecstatic")(process.cwd(), {
         cache       : 0,
         handleError : false
     }),
-    
-    bundling, bytes, time, done;
+
+    watcher, bundling, done;
 
 // Set up gen dir
-require("shelljs").mkdir("-p", "./gen");
-
-function bundle() {
-    bundling = true;
-    
-    builder.bundle(function(err, out) {
-        bundling = false;
-        
-        if(err) {
-            console.error(err.toString());
-            
-            fs.writeFileSync(
-                "gen/index.js",
-                "document.body.innerHTML = \"<pre style='color: red;'>" + jsesc(err.toString()) + "</pre>\";"
-            );
-            
-            return done && done();
-        }
-
-        console.error(bytes.toString(), "bytes written to ./gen/index.js in", duration(time));
-        
-        fs.writeFileSync("./gen/index.js", out);
-        
-        if(done) {
-            return done();
-        }
-    });
-}
+files.dir();
 
 // Watch for changes to static files
 files.watch();
-
-// Browserify plugins
-builder.plugin("watchify");
-
-// Start up watchify
-builder.on("update", bundle);
-
-builder.on("bytes", function(b) {
-    bytes = b;
-});
-
-builder.on("time", function(t) {
-    time = t;
-});
-
-bundle();
 
 // Log HTTP requests
 server.use(require("morgan")("dev"));
@@ -105,3 +64,34 @@ server.use(function(req, res, next) {
 server.listen(9966);
 
 console.log("Server listening at http://localhost:9966");
+
+watcher = watch(rollup, config());
+
+watcher.on("event", function(details) {
+    if(details.code === "BUILD_START") {
+        bundling = true;
+
+        console.log("Bundling...");
+
+        return;
+    }
+    
+    bundling = false;
+
+    if(details.code === "BUILD_END") {
+        console.log("Bundle written to ./gen/index.js in", duration(details.duration));
+
+        return done && done();
+    }
+
+    if(details.code === "ERROR") {
+        console.error(details.error.stack);
+
+        fs.writeFileSync(
+            "gen/index.js",
+            "document.body.innerHTML = \"<pre style='color: red;'>" + jsesc(details.error.stack) + "</pre>\";"
+        );
+
+        return done && done();
+    }
+});

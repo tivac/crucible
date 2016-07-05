@@ -1,21 +1,15 @@
 "use strict";
 
-var fs = require("fs"),
-    
-    files = require("./lib/files"),
-    b     = require("./lib/browserify")({ debug : true });
+var rollup = require("rollup").rollup,
 
-// Set up gen dir
-require("shelljs").mkdir("-p", "./gen");
+    config = require("./lib/rollup")();
 
-files.copy();
+require("./lib/files").dir();
+require("./lib/files").copy();
 
-b.bundle(function(err, out) {
-    if(err) {
-        console.error(err.toString());
-        
-        return;
-    }
-    
-    fs.writeFileSync("./gen/index.js", out.toString());
+rollup(config).then(function(bundle) {
+    return bundle.write(config);
+})
+.catch(function(error) {
+    console.error(error.stack);
 });
