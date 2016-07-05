@@ -15,7 +15,7 @@ import css from "./head.css";
 export function controller(options) {
     var ctrl = this,
         ref  = options.ref,
-        user = db.getAuth().uid,
+        user = firebase.auth().currentUser.uid,
 
         publish   = options.data.published_at ? options.data.published_at : null,
         unpublish = options.data.unpublished_at ? options.data.unpublished_at : null;

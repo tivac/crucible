@@ -7,9 +7,9 @@ firebase.initializeApp(config.firebase);
 
 ref = firebase.database().ref();
 
-ref.TIMESTAMP = firebase.ServerValue.TIMESTAMP;
+ref.TIMESTAMP = firebase.database.ServerValue.TIMESTAMP;
 
 // For debugging
-window.firebase = ref;
+window.db = ref;
 
 export default ref;

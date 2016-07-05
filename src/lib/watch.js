@@ -3,7 +3,7 @@ import db from "./firebase";
 // Ensure the updated timestamp is always accurate-ish
 export default function(ref) {
     ref.on("child_changed", function(snap) {
-        var key = snap.key(),
+        var key = snap.key,
             auth;
         
         // Avoid looping forever

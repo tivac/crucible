@@ -59,7 +59,7 @@ export function controller(options) {
 
                 ctrl.names.push(val.name);
 
-                ctrl.lookup[val.name] = details.key();
+                ctrl.lookup[val.name] = details.key;
             });
 
             if(ctrl.autocomplete) {
@@ -86,7 +86,7 @@ export function controller(options) {
         ctrl.options.update(ctrl.options.path.concat(key), true);
 
         if(ctrl.options.root) {
-            content.child(key + "/relationships/" + ctrl.options.root.key()).set(true);
+            content.child(key + "/relationships/" + ctrl.options.root.key).set(true);
         }
     };
 
@@ -98,7 +98,7 @@ export function controller(options) {
         options.update(options.path.concat(id), false);
         
         if(options.root) {
-            content.child(key + "/relationships/" + options.root.key()).remove();
+            content.child(key + "/relationships/" + options.root.key).remove();
         }
     };
 

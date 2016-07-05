@@ -43,17 +43,17 @@ export function controller() {
         
         e.preventDefault();
         
-        db.authWithPassword({
-            email    : form.email.value,
-            password : form.password.value
-        }, function(error) {
-            if(error) {
-                ctrl.error = error.message;
-                
-                return m.redraw();
-            }
-            
+        firebase.auth().signInWithEmailAndPassword(
+            form.email.value,
+            form.password.value
+        )
+        .then(function() {
             return m.route(prefix("/"));
+        })
+        .catch(function(error) {
+            ctrl.error = error.message;
+            
+            return m.redraw();
         });
     };
     

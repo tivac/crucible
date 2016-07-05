@@ -28,7 +28,7 @@ export function controller() {
         snap.forEach(function(schema) {
             var val = schema.val();
 
-            val.key = schema.key();
+            val.key = schema.key;
 
             ctrl.schemas.push(val);
         });

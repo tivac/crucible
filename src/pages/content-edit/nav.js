@@ -29,7 +29,7 @@ export function controller() {
 
     schema.on("value", function(snap) {
         ctrl.schema = snap.val();
-        ctrl.schema.key = snap.key();
+        ctrl.schema.key = snap.key;
 
         m.redraw();
     });
@@ -41,7 +41,7 @@ export function controller() {
         snap.forEach(function(record) {
             var data = record.val();
 
-            data.key          = record.key();
+            data.key          = record.key;
             data.published_at = data.published_at || data.published;
             data.search       = slug(data.name, { separator : "" });
 
@@ -59,10 +59,10 @@ export function controller() {
 
         result = db.child("content/" + ctrl.schema.key).push({
             created_at : db.TIMESTAMP,
-            created_by : db.getAuth().uid
+            created_by : firebase.auth().currentUser.uid
         });
 
-        m.route(prefix("/content/" + ctrl.schema.key + "/" + result.key()));
+        m.route(prefix("/content/" + ctrl.schema.key + "/" + result.key));
     };
 
     ctrl.change = function(page, e) {

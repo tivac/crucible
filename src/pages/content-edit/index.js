@@ -35,7 +35,7 @@ export function controller() {
 
     schema.on("value", function(snap) {
         ctrl.schema = snap.val();
-        ctrl.schema.key = snap.key();
+        ctrl.schema.key = snap.key;
 
         m.redraw();
     });
