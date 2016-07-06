@@ -5,6 +5,8 @@
 .head {
     composes: head from layout_css;
     
+    position: relative;
+
     align-items: center;
     
     padding-left: 0;
@@ -18,7 +20,7 @@
     width: 100%;
 
     padding-left: 10px;
-    padding-right: 10px; 
+    padding-right: 10px;
     
     align-items: center;
 }
@@ -28,10 +30,10 @@
     
     flex: 1 0;
     
-    position: relative;
-    top: 6px;
+    position: absolute;
+    top: 47px;
     
-    width: 80%;
+    width: 81%;
     
     border: 1px solid #CCC;
     border-top: 0;
