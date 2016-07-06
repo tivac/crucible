@@ -1,9 +1,8 @@
-import db from "./firebase";
+import db from "./firebase.js";
+import config from "../config.js";
 
 // Ensure the updated timestamp is always accurate-ish
 export default function(ref) {
-    var uid = firebase.auth().currentUser.uid;
-
     ref.on("child_changed", function(snap) {
         var key = snap.key;
         
@@ -17,7 +16,7 @@ export default function(ref) {
         
         ref.update({
             updated_at : db.TIMESTAMP,
-            updated_by : uid
+            updated_by : config.user.uid
         });
     });
 }

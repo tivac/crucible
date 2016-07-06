@@ -59,7 +59,7 @@ export function controller() {
 
         result = db.child("content/" + ctrl.schema.key).push({
             created_at : db.TIMESTAMP,
-            created_by : firebase.auth().currentUser.uid
+            created_by : config.user.uid
         });
 
         m.route(prefix("/content/" + ctrl.schema.key + "/" + result.key));

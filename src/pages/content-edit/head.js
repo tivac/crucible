@@ -15,8 +15,8 @@ import css from "./head.css";
 export function controller(options) {
     var ctrl = this,
         ref  = options.ref,
-        user = firebase.auth().currentUser.uid,
-
+        uid  = config.user.uid,
+        
         publish   = options.data.published_at ? options.data.published_at : null,
         unpublish = options.data.unpublished_at ? options.data.unpublished_at : null;
 
@@ -76,11 +76,19 @@ export function controller(options) {
 
         return ref.update({
             // TODO: Remove `published` field, it's deprecated
+<<<<<<< c0cd8dfac35a8119eaebecbc0625c8cdca8300ef
             published      : parseInt(format(start, "x"), 10),
             published_at   : parseInt(format(start, "x"), 10),
             published_by   : user,
             unpublished_at : end ? parseInt(format(end, "x"), 10) : null,
             unpublished_by : end ? user : null
+=======
+            published      : start.valueOf(),
+            published_at   : start.valueOf(),
+            published_by   : uid,
+            unpublished_at : end ? end.valueOf() : null,
+            unpublished_by : end ? uid : null
+>>>>>>> Standardize uid access
         });
     };
 
@@ -92,7 +100,7 @@ export function controller(options) {
             published_by : null,
 
             unpublished_at : db.TIMESTAMP,
-            unpublished_by : user
+            unpublished_by : uid
         });
 
         // TODO: THIS IS SUPER GROSS
