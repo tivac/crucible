@@ -1,16 +1,20 @@
 import m from "mithril";
-import moment from "moment";
+import format from "date-fns/format";
+import isFuture from "date-fns/is_future";
+import isPast from "date-fns/is_past";
 import fuzzy from "fuzzysearch";
 import debounce from "lodash.debounce";
 import slug from "sluggo";
 
 import config, { icons } from "../../config";
-    
+
 import db from "../../lib/firebase";
 import prefix from "../../lib/prefix";
 
 import css from "./nav.css";
-    
+
+var dateFormat = "MM/DD/YYYY";
+
 export function controller() {
     var ctrl = this,
 
@@ -39,11 +43,6 @@ export function controller() {
             data.key          = record.key();
             data.published_at = data.published_at || data.published;
             data.search       = slug(data.name, { separator : "" });
-
-            data.moments = {
-                published : moment(data.published_at),
-                updated   : moment(data.updated_at)
-            };
 
             content.push(data);
         });
@@ -102,7 +101,6 @@ export function controller() {
 export function view(ctrl) {
     var current = m.route(),
         content = ctrl.results || ctrl.content || [],
-        now     = Date.now(),
         locked  = config.locked;
 
     return m("div", { class : css.nav },
@@ -135,12 +133,15 @@ export function view(ctrl) {
                         cssClass = css.published_at;
                     }
 
-                    if(data.published_at > now) {
-                        status = "scheduled: " + data.moments.published.format("L");
-                    } else if(data.published_at < now) {
-                        status = "published: " + data.moments.published.format("L");
+                    if(isFuture(data.published_at)) {
+                        status = "scheduled: " + format(data.published_at, dateFormat);
+                    } else if(isPast(data.published_at)) {
+                        status = "published: " + format(data.published_at, dateFormat);
+                    } else if(data.updated_at) {
+                        status = "updated: " + format(data.updated_at, dateFormat);
                     } else {
-                        status = "updated: " + data.moments.updated.format("L");
+                        // Prevents a flash of NaN/NaN/NaN on new creation
+                        status = "updated:";
                     }
 
                     return m("li", { class : cssClass },
@@ -172,7 +173,7 @@ export function view(ctrl) {
                                     class    : css.remove,
                                     title    : "Remove",
                                     disabled : locked || null,
-                                    
+
                                     // Events
                                     onclick : ctrl.remove.bind(ctrl, data)
                                 },
