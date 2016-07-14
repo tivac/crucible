@@ -1,5 +1,9 @@
 import m from "mithril";
-import moment from "moment";
+import format from "date-fns/format";
+import isFuture from "date-fns/is_future";
+import isPast from "date-fns/is_past";
+import subSeconds from "date-fns/sub_seconds";
+import compareDesc from "date-fns/compare_desc";
 import get from "lodash.get";
 import upper from "lodash.capitalize";
 
@@ -15,17 +19,16 @@ export function controller(options) {
         // TODO: Remove `published` field, it's deprecated
         published = options.data.published_at || options.data.published,
 
-        publish   = published ? moment(published) : null,
-        unpublish = options.data.unpublished_at ? moment(options.data.unpublished_at) : null;
+        publish   = published ? published : null,
+        unpublish = options.data.unpublished_at ? options.data.unpublished_at : null;
 
     ctrl.schedule   = false;
     ctrl.unschedule = false;
 
     if(publish) {
         ctrl.start = {
-            date   : publish.format("YYYY-MM-DD"),
-            time   : publish.format("HH:mm"),
-            moment : publish
+            date : format(publish, "YYYY-MM-DD"),
+            time : format(publish, "HH:mm")
         };
     } else {
         ctrl.start = {
@@ -33,12 +36,11 @@ export function controller(options) {
             time : get(config, "defaults.publish_start_time") || ""
         };
     }
-    
+
     if(unpublish) {
         ctrl.end = {
-            date   : unpublish.format("YYYY-MM-DD"),
-            time   : unpublish.format("HH:mm"),
-            moment : unpublish
+            date : format(unpublish, "YYYY-MM-DD"),
+            time : format(unpublish, "HH:mm")
         };
     } else {
         ctrl.end = {
@@ -50,15 +52,6 @@ export function controller(options) {
     // Event handlers
     ctrl.update = function(section, field, value) {
         ctrl[section][field] = value;
-
-        if(ctrl[section].date) {
-            ctrl[section].moment = moment(
-                ctrl[section].date + " " + (ctrl[section].time || "00:00"),
-                "YYYY-MM-DD HH:mm"
-            );
-        } else {
-            ctrl[section].moment = false;
-        }
     };
 
     ctrl.toggle = function(force) {
@@ -69,21 +62,15 @@ export function controller(options) {
         var start, end;
 
         if(ctrl.schedule && ctrl.start.date) {
-            start = moment(
-                ctrl.start.date + " " + (ctrl.start.time || "00:00"),
-                "YYYY-MM-DD HH:mm"
-            );
+            start = ctrl.start.date + " " + (ctrl.start.time || "00:00");
         } else {
-            start = moment().subtract(10, "seconds");
+            start = subSeconds(Date.now(), 10);
         }
 
         if(ctrl.schedule && ctrl.end.date) {
-            end = moment(
-                ctrl.end.date + " " + (ctrl.end.time || "00:00"),
-                "YYYY-MM-DD HH:mm"
-            );
+            end = ctrl.end.date + " " + (ctrl.end.time || "00:00");
 
-            if(end.isSameOrBefore(start)) {
+            if(compareDesc(end, start) !== -1) {
                 // TODO: handle
                 return console.error("Invalid end date");
             }
@@ -91,10 +78,10 @@ export function controller(options) {
 
         return ref.update({
             // TODO: Remove `published` field, it's deprecated
-            published      : start.valueOf(),
-            published_at   : start.valueOf(),
+            published      : parseInt(format(start, "x"), 10),
+            published_at   : parseInt(format(start, "x"), 10),
             published_by   : user,
-            unpublished_at : end ? end.valueOf() : null,
+            unpublished_at : end ? parseInt(format(end, "x"), 10) : null,
             unpublished_by : end ? user : null
         });
     };
@@ -124,33 +111,30 @@ export function controller(options) {
 
     ctrl.save = function(opts) {
         ctrl.saving = true;
-        
+
         m.redraw();
-        
+
         ref.update({
             fields : opts.data.fields,
             name   : opts.data.name,
             slug   : opts.data.slug || null
         }, function() {
             ctrl.saving = false;
-            
+
             m.redraw();
         });
     };
 }
 
 export function view(ctrl, options) {
-    var now     = Date.now(),
-        status  = "draft",
+    var status  = "draft",
         publish = options.data.published_at || options.data.published,
-        future  = ctrl.start.moment && ctrl.start.moment.valueOf() > now,
+        future  = isFuture(ctrl.start.date + " " + ctrl.start.time),
         locked  = config.locked;
 
-    if(publish > now) {
+    if(isFuture(publish)) {
         status = "scheduled";
-    }
-
-    if(publish < now) {
+    } else if(isPast(publish)) {
         status = "published";
     }
 
@@ -194,7 +178,7 @@ export function view(ctrl, options) {
                         class    : css.publish,
                         title    : future ? "Schedule publish" : "Publish now",
                         disabled : locked || null,
-                        
+
                         // Events
                         onclick : ctrl.publish
                     },
