@@ -16,10 +16,8 @@ export function controller(options) {
     var ctrl = this,
         ref  = options.ref,
         user = db.getAuth().uid,
-        // TODO: Remove `published` field, it's deprecated
-        published = options.data.published_at || options.data.published,
 
-        publish   = published ? published : null,
+        publish   = options.data.published_at ? options.data.published_at : null,
         unpublish = options.data.unpublished_at ? options.data.unpublished_at : null;
 
     ctrl.schedule   = false;
