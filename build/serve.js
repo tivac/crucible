@@ -9,6 +9,7 @@ var fs   = require("fs"),
     jsesc    = require("jsesc"),
     rollup   = require("rollup"),
     watch    = require("rollup-watch"),
+    size     = require("filesize"),
     
     files  = require("./lib/files"),
     config = require("./lib/rollup"),
@@ -79,7 +80,8 @@ watcher.on("event", function(details) {
     bundling = false;
 
     if(details.code === "BUILD_END") {
-        console.log("Bundle written to ./gen/index.js in", duration(details.duration));
+        console.log("Bundle written to ./gen/index.js in %s", duration(details.duration));
+        console.log("Bundle size: %s", size(fs.lstatSync(config.dest).size));
 
         return done && done();
     }
