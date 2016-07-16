@@ -1,9 +1,33 @@
 "use strict";
 
+var path = require("path"),
+
+    dest  = path.resolve("./gen/index.js"),
+    entry = path.resolve("./src/index.js"),
+
+    // Firebase included as a banner to avoid all sorts of weird bundling issues :mad:
+    firebase = require("fs").readFileSync("./node_modules/firebase/firebase.js", "utf8");
+
 module.exports = function(options) {
     var opts = options || {};
     
     return {
+        entry : entry,
+        dest  : dest,
+        
+        format    : "iife",
+        sourceMap : true,
+
+        banner : firebase,
+
+        external : [
+            "firebase"
+        ],
+
+        globals : {
+            firebase : "firebase"
+        },
+
         plugins : [
             require("rollup-plugin-node-builtins")(),
             
@@ -40,3 +64,6 @@ module.exports = function(options) {
         ]
     };
 };
+
+module.exports.entry = entry;
+module.exports.dest  = dest;
