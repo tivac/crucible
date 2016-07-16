@@ -28,12 +28,11 @@
 .details {
     composes: horizontal from layout_css;
     
-    flex: 1 0;
-    
     position: absolute;
     top: 47px;
-    
-    width: 81%;
+    left: 10%;
+
+    width: 80%;
     
     border: 1px solid #CCC;
     border-top: 0;
