@@ -75,20 +75,10 @@ export function controller(options) {
         }
 
         return ref.update({
-            // TODO: Remove `published` field, it's deprecated
-<<<<<<< c0cd8dfac35a8119eaebecbc0625c8cdca8300ef
-            published      : parseInt(format(start, "x"), 10),
             published_at   : parseInt(format(start, "x"), 10),
-            published_by   : user,
-            unpublished_at : end ? parseInt(format(end, "x"), 10) : null,
-            unpublished_by : end ? user : null
-=======
-            published      : start.valueOf(),
-            published_at   : start.valueOf(),
             published_by   : uid,
-            unpublished_at : end ? end.valueOf() : null,
+            unpublished_at : end ? parseInt(format(end, "x"), 10) : null,
             unpublished_by : end ? uid : null
->>>>>>> Standardize uid access
         });
     };
 
