@@ -1,6 +1,11 @@
 window.anthracite = {
     // Uncomment and add your firebase URL
-    // firebase : "https://<YOUR-APP-HERE>.firebaseio.com/"
+    // firebase : {
+    //     apiKey        : "something-something-something",
+    //     authDomain    : "some-domain-1234.firebaseapp.com",
+    //     databaseURL   : "https://some-domain-1234.firebaseio.com",
+    //     storageBucket : "some-domain-1234.appspot.com"
+    // },
     
     // Other config params
     
