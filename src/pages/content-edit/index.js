@@ -9,8 +9,8 @@ import capitalize from "lodash.capitalize";
 import db from "../../lib/firebase.js";
 import update from "../../lib/update.js";
 import watch from "../../lib/watch.js";
-import prefix from "../../lib/prefix.js";
 import name from "./name.js";
+import { prefix } from "../../lib/routes.js";
 
 import * as children from "../../types/children.js";
 import * as layout from "../layout/index.js";

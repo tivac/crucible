@@ -1,25 +1,15 @@
 import firebase from "firebase";
-import config from "../config";
 
-var ref;
+var app, ref;
 
-firebase.initializeApp(config.firebase);
+export function connect(config) {
+    app = firebase.initializeApp(config);
+    ref = app.database().ref();
+    ref.TIMESTAMP = firebase.database.ServerValue.TIMESTAMP;
 
-ref = firebase.database().ref();
+    // For debugging
+    window.app = app;
+    window.db = ref;
+}
 
-ref.TIMESTAMP = firebase.database.ServerValue.TIMESTAMP;
-
-// For debugging
-window.db = ref;
-
-// Can't set this up until firebase is initialized, so here seems as good as anything
-firebase.auth().onAuthStateChanged(
-    function(user) {
-        config.user = user;
-    },
-    function() {
-        delete config.user;
-    }
-);
-
-export default ref;
+export default { app, ref };

@@ -2,7 +2,7 @@ import m from "mithril";
 
 import config from "../config";
 import valid from "./valid-auth";
-import prefix from "./prefix";
+import { prefix } from "./routes";
 
 export default function(component) {
     return {

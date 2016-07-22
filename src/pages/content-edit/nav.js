@@ -9,8 +9,8 @@ import slug from "sluggo";
 import config, { icons } from "../../config.js";
 
 import db from "../../lib/firebase.js";
-import prefix from "../../lib/prefix.js";
 import name from "./name.js";
+import { prefix } from "../../lib/routes.js";
 
 import css from "./nav.css";
 

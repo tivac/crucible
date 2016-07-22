@@ -32,6 +32,39 @@ files.watch();
 // Log HTTP requests
 server.use(require("morgan")("dev"));
 
+// Start watching files
+watcher = watch(rollup, config());
+
+watcher.on("event", function(details) {
+    if(details.code === "BUILD_START") {
+        bundling = true;
+
+        console.log("Bundling...");
+
+        return;
+    }
+    
+    bundling = false;
+
+    if(details.code === "BUILD_END") {
+        console.log("Bundle written to ./gen/index.js in %s", duration(details.duration));
+        console.log("Bundle size: %s", size(fs.lstatSync(config.dest).size));
+
+        return done && done();
+    }
+
+    if(details.code === "ERROR") {
+        console.error(details.error.stack);
+
+        fs.writeFileSync(
+            "gen/index.js",
+            "document.body.innerHTML = \"<pre style='color: red;'>" + jsesc(details.error.stack) + "</pre>\";"
+        );
+
+        return done && done();
+    }
+});
+
 // Delay responding to generated file requests until it's done
 server.use("/gen/index.js", function(req, res, next) {
     /* eslint consistent-return: 0 */
@@ -65,35 +98,3 @@ server.use(function(req, res, next) {
 server.listen(9966);
 
 console.log("Server listening at http://localhost:9966");
-
-watcher = watch(rollup, config());
-
-watcher.on("event", function(details) {
-    if(details.code === "BUILD_START") {
-        bundling = true;
-
-        console.log("Bundling...");
-
-        return;
-    }
-    
-    bundling = false;
-
-    if(details.code === "BUILD_END") {
-        console.log("Bundle written to ./gen/index.js in %s", duration(details.duration));
-        console.log("Bundle size: %s", size(fs.lstatSync(config.dest).size));
-
-        return done && done();
-    }
-
-    if(details.code === "ERROR") {
-        console.error(details.error.stack);
-
-        fs.writeFileSync(
-            "gen/index.js",
-            "document.body.innerHTML = \"<pre style='color: red;'>" + jsesc(details.error.stack) + "</pre>\";"
-        );
-
-        return done && done();
-    }
-});

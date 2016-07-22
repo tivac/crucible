@@ -1,14 +1,14 @@
 import m from "mithril";
 import capitalize from "lodash.capitalize";
 
-import watch from "../../lib/watch";
-import db from "../../lib/firebase";
-import update from "../../lib/update";
-import prefix from "../../lib/prefix";
+import watch from "../../lib/watch.js";
+import db from "../../lib/firebase.js";
+import update from "../../lib/update.js";
+import { prefix } from "../../lib/routes.js";
 
-import * as editor from "./editor";
-import * as children from "../../types/children";
-import * as layout from "../layout/index";
+import * as editor from "./editor.js";
+import * as children from "../../types/children.js";
+import * as layout from "../layout/index.js";
 
 import css from "./schema-edit.css";
 

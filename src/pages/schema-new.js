@@ -1,10 +1,10 @@
 import m from "mithril";
 import sluggo from "sluggo";
 
-import db from "../lib/firebase";
-import prefix from "../lib/prefix";
+import db from "../lib/firebase.js";
+import { prefix } from "../lib/routes.js";
 
-import * as layout from "./layout/index";
+import * as layout from "./layout/index.js";
 
 export function controller() {
     var ctrl  = this;

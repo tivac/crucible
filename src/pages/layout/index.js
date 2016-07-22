@@ -3,7 +3,7 @@ import m from "mithril";
 import config, { title } from "../../config";
 import db from "../../lib/firebase";
 import auth from "../../lib/valid-auth";
-import prefix from "../../lib/prefix";
+import { prefix } from "../../lib/routes";
 
 import header from "./header.css";
 import layout from "./layout.css";

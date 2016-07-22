@@ -1,12 +1,12 @@
 import m from "mithril";
 import join from "url-join";
 
-import config, { root } from "../config";
-import db from "../lib/firebase";
-import valid from "../lib/valid-auth";
-import prefix from "../lib/prefix";
+import config, { root } from "../config.js";
+import db from "../lib/firebase.js";
+import valid from "../lib/valid-auth.js";
+import { prefix } from "../lib/routes.js";
 
-import * as layout from "./layout/index";
+import * as layout from "./layout/index.js";
 
 import css from "./login.css";
 
