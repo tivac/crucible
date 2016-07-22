@@ -56,7 +56,7 @@ export function controller() {
         ctrl.data = assign(data, {
             fields : merge(data.fields, ctrl.data.fields)
         });
-        
+
         // Create slug value if it doesnt exist already
         if(!ctrl.data.slug) {
             ctrl.data.slug = sluggo(ctrl.data.name);
@@ -66,7 +66,7 @@ export function controller() {
     });
 
     watch(ref);
-    
+
     // Event Handlers
     ctrl.titleChange = function(title) {
         update(ctrl.data, [ "name" ], title);
@@ -123,13 +123,28 @@ export function view(ctrl) {
                         ),
                         m("h1", {
                                 // Attrs
-                                class           : css.title,
+                                class  : css.title,
+                                config : function(el, init) {
+                                    var range, selection;
+
+                                    if(init || ctrl.data.name) {
+                                        return;
+                                    }
+
+                                    // Select the text contents
+                                    range = document.createRange();
+                                    range.selectNodeContents(el);
+                                    selection = window.getSelection();
+                                    selection.removeAllRanges();
+                                    selection.addRange(range);
+                                },
+
                                 contenteditable : true,
 
                                 // Events
                                 oninput : m.withAttr("innerText", ctrl.titleChange)
                             },
-                            ctrl.data.name || ""
+                            ctrl.data.name || "Untitled " + ctrl.schema.name
                         ),
                         m.component(children, {
                             class  : css.children,
