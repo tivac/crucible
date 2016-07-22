@@ -6,10 +6,11 @@ import fuzzy from "fuzzysearch";
 import debounce from "lodash.debounce";
 import slug from "sluggo";
 
-import config, { icons } from "../../config";
+import config, { icons } from "../../config.js";
 
-import db from "../../lib/firebase";
-import prefix from "../../lib/prefix";
+import db from "../../lib/firebase.js";
+import prefix from "../../lib/prefix.js";
+import name from "./name.js";
 
 import css from "./nav.css";
 
@@ -57,7 +58,6 @@ export function controller() {
         var result;
 
         result = db.child("content/" + ctrl.schema.key).push({
-            name       : "New " + ctrl.schema.name,
             created_at : db.TIMESTAMP,
             created_by : db.getAuth().uid
         });
@@ -150,7 +150,7 @@ export function view(ctrl) {
                                 href   : prefix("/content/" + ctrl.schema.key + "/" + data.key),
                                 config : m.route
                             },
-                            m("h3", { class : css.heading }, data.name),
+                            m("h3", { class : css.heading }, name(ctrl.schema, data)),
                             m("p", { class : css.date },
                                 status
                             )

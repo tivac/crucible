@@ -6,15 +6,16 @@ import merge from "lodash.merge";
 import assign from "lodash.assign";
 import capitalize from "lodash.capitalize";
 
-import db from "../../lib/firebase";
-import update from "../../lib/update";
-import watch from "../../lib/watch";
-import prefix from "../../lib/prefix";
+import db from "../../lib/firebase.js";
+import update from "../../lib/update.js";
+import watch from "../../lib/watch.js";
+import prefix from "../../lib/prefix.js";
+import name from "./name.js";
 
-import * as children from "../../types/children";
-import * as layout from "../layout/index";
-import * as nav from "./nav";
-import * as head from "./head";
+import * as children from "../../types/children.js";
+import * as layout from "../layout/index.js";
+import * as nav from "./nav.js";
+import * as head from "./head.js";
 
 import css from "./content-edit.css";
 
@@ -56,7 +57,7 @@ export function controller() {
         ctrl.data = assign(data, {
             fields : merge(data.fields, ctrl.data.fields)
         });
-        
+
         // Create slug value if it doesnt exist already
         if(!ctrl.data.slug) {
             ctrl.data.slug = sluggo(ctrl.data.name);
@@ -66,7 +67,7 @@ export function controller() {
     });
 
     watch(ref);
-    
+
     // Event Handlers
     ctrl.titleChange = function(title) {
         update(ctrl.data, [ "name" ], title);
@@ -123,13 +124,28 @@ export function view(ctrl) {
                         ),
                         m("h1", {
                                 // Attrs
-                                class           : css.title,
+                                class  : css.title,
+                                config : function(el, init) {
+                                    var range, selection;
+
+                                    if(init || ctrl.data.name) {
+                                        return;
+                                    }
+
+                                    // Select the text contents
+                                    range = document.createRange();
+                                    range.selectNodeContents(el);
+                                    selection = window.getSelection();
+                                    selection.removeAllRanges();
+                                    selection.addRange(range);
+                                },
+
                                 contenteditable : true,
 
                                 // Events
                                 oninput : m.withAttr("innerText", ctrl.titleChange)
                             },
-                            ctrl.data.name || ""
+                            name(ctrl.schema, ctrl.data)
                         ),
                         m.component(children, {
                             class  : css.children,
