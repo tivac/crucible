@@ -127,7 +127,7 @@ export function view(ctrl) {
                                 config : function(el, init) {
                                     var range, selection;
 
-                                    if(init || ctrl.data.name !== "New " + ctrl.schema.name) {
+                                    if(init || ctrl.data.name) {
                                         return;
                                     }
 
@@ -144,7 +144,7 @@ export function view(ctrl) {
                                 // Events
                                 oninput : m.withAttr("innerText", ctrl.titleChange)
                             },
-                            ctrl.data.name || ""
+                            ctrl.data.name || "Untitled " + ctrl.schema.name
                         ),
                         m.component(children, {
                             class  : css.children,

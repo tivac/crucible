@@ -57,7 +57,6 @@ export function controller() {
         var result;
 
         result = db.child("content/" + ctrl.schema.key).push({
-            name       : "New " + ctrl.schema.name,
             created_at : db.TIMESTAMP,
             created_by : db.getAuth().uid
         });
@@ -122,6 +121,7 @@ export function view(ctrl) {
                 })
                 .map(function(data) {
                     var url      = "/content/" + ctrl.schema.key + "/" + data.key,
+                        name     = data.name || "Untitled " + ctrl.schema.name,
                         cssClass = css.item,
                         status;
 
@@ -150,7 +150,7 @@ export function view(ctrl) {
                                 href   : prefix("/content/" + ctrl.schema.key + "/" + data.key),
                                 config : m.route
                             },
-                            m("h3", { class : css.heading }, data.name),
+                            m("h3", { class : css.heading }, name),
                             m("p", { class : css.date },
                                 status
                             )
