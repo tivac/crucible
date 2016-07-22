@@ -2,20 +2,25 @@
 
 var fs = require("fs"),
     
-    files = require("./lib/files"),
-    b     = require("./lib/browserify")({ debug : true });
+    rollup   = require("rollup").rollup,
+    duration = require("humanize-duration"),
+    size     = require("filesize"),
 
-// Set up gen dir
-require("shelljs").mkdir("-p", "./gen");
+    config = require("./lib/rollup")(),
+    
+    start;
 
 files.copy();
 
-b.bundle(function(err, out) {
-    if(err) {
-        console.error(err.toString());
-        
-        return;
-    }
-    
-    fs.writeFileSync("./gen/index.js", out.toString());
+start = Date.now();
+
+rollup(config).then(function(bundle) {
+    return bundle.write(config);
+})
+.then(function() {
+    console.log("Bundle written to ./gen/index.js in %s", duration(Date.now() - start));
+    console.log("Bundle size: %s", size(fs.lstatSync(config.dest).size));
+})
+.catch(function(error) {
+    console.error(error.stack);
 });
