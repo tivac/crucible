@@ -69,6 +69,7 @@
     "rollup-plugin-json": "^2.0.1",
     "rollup-plugin-node-builtins": "^1.0.4",
     "rollup-plugin-node-resolve": "^1.7.1",
+    "rollup-plugin-strip": "^1.1.1",
     "rollup-plugin-uglify": "^1.0.1",
     "rollup-watch": "^2.4.0",
     "run-parallel": "^1.1.4",

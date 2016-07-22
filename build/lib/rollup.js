@@ -41,7 +41,7 @@ module.exports = function(options) {
             }),
             
             require("rollup-plugin-commonjs")(),
-            
+
             require("modular-css/rollup")({
                 css : "gen/index.css",
                 
@@ -63,6 +63,12 @@ module.exports = function(options) {
                 // Optionally compress output
                 done : opts.compress ? [ require("cssnano")() ] : [ ]
             }),
+
+            opts.compress ?
+                require("rollup-plugin-strip")({
+                    sourceMap : false
+                }) :
+                {},
 
             opts.compress ?
                 require("rollup-plugin-babel")({
