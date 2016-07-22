@@ -3,6 +3,7 @@
   "version": "0.2.14",
   "description": "Serverless CMS backed by Firebase",
   "main": "index.js",
+  "repository": "tivac/anthracite",
   "scripts": {
     "build": "node build/build.js",
     "export": "node build/export.js",
