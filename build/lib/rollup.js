@@ -35,11 +35,8 @@ module.exports = function(options) {
                 browser : true
             }),
             
-            require("rollup-plugin-commonjs")({
-                include : "node_modules/**",
-                exclude : "node_modules/rollup-plugin-node-globals/**"
-            }),
-            
+            require("rollup-plugin-commonjs")(),
+
             require("modular-css/rollup")({
                 css : "./gen/index.css",
                 
@@ -60,7 +57,24 @@ module.exports = function(options) {
                 
                 // Optionally compress output
                 done : opts.compress ? [ require("cssnano")() ] : [ ]
-            })
+            }),
+
+            opts.compress ?
+                require("rollup-plugin-strip")({
+                    sourceMap : false
+                }) :
+                {},
+
+            opts.compress ?
+                require("rollup-plugin-babel")({
+                    exclude : "node_modules/**",
+                    plugins : [
+                        require("mithril-objectify")
+                    ]
+                }) :
+                {},
+            
+            opts.compress ? require("rollup-plugin-uglify")() : {}
         ]
     };
 };
