@@ -10,7 +10,7 @@ export default multiple({
         
     function(ctrl, options) {
         var field = options.field;
-        
+
         return (field.children || []).map(function(opt) {
             return m("label", { class : css.choice },
                 m("input", assign({}, opt.attrs, {
@@ -18,7 +18,7 @@ export default multiple({
                     type    : "radio",
                     name    : field.name,
                     value   : opt.value,
-                    checked : opt.checked,
+                    checked : opt.selected,
 
                     // events
                     onchange : function() {

@@ -223,7 +223,7 @@ You can attach dom-specific attributes to most types by specifying an `attrs` ke
             one : "foo",
             two : {
                 value : "bar",
-                checked : true
+                selected : true
             }
         }
     }
