@@ -1,7 +1,7 @@
 import m from "mithril";
 
 import config from "./config";
-import { connect } from "./lib/firebase.js";
+import { wait } from "./lib/user.js";
 
 import { routes } from "./lib/routes.js";
 import auth from "./lib/require-auth.js";
@@ -24,16 +24,8 @@ import "./_pure.css";
 // Always route in pathname mode
 m.route.mode = "pathname";
 
-(function() {
-    if(!config.firebase) {
-        return routes(document.body, "/setup", {
-            "/setup" : setup
-        });
-    }
-
-    connect(config.firebase);
-
-    return routes(document.body, "/", {
+function normal() {
+    routes(document.body, "/", {
         "/" : auth(home),
 
         "/login"  : login,
@@ -51,4 +43,14 @@ m.route.mode = "pathname";
             }
         }
     });
+}
+
+(function() {
+    if(!config.firebase) {
+        return routes(document.body, "/setup", {
+            "/setup" : setup
+        });
+    }
+
+    return wait().then(normal).catch(normal);
 }());

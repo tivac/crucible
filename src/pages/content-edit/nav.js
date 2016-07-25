@@ -6,9 +6,9 @@ import fuzzy from "fuzzysearch";
 import debounce from "lodash.debounce";
 import slug from "sluggo";
 
-import config, { icons } from "../../config.js";
+import config from "../../config.js";
 
-import db from "../../lib/firebase.js";
+import { ref } from "../../lib/firebase.js";
 import name from "./name.js";
 import { prefix } from "../../lib/routes.js";
 
@@ -19,7 +19,7 @@ var dateFormat = "MM/DD/YYYY";
 export function controller() {
     var ctrl = this,
 
-        schema = db.child("schemas/" + m.route.param("schema"));
+        schema = ref.child("schemas/" + m.route.param("schema"));
 
     ctrl.page = 0;
 
@@ -35,7 +35,7 @@ export function controller() {
     });
 
     // Go get initial data
-    db.child("content/" + ctrl.schema.key).orderByChild("published_at").on("value", function(snap) {
+    ref.child("content/" + ctrl.schema.key).orderByChild("published_at").on("value", function(snap) {
         var content = [];
 
         snap.forEach(function(record) {
@@ -57,8 +57,8 @@ export function controller() {
     ctrl.add = function() {
         var result;
 
-        result = db.child("content/" + ctrl.schema.key).push({
-            created_at : db.TIMESTAMP,
+        result = ref.child("content/" + ctrl.schema.key).push({
+            created_at : ref.TIMESTAMP,
             created_by : config.user.uid
         });
 
@@ -90,7 +90,7 @@ export function controller() {
     }, 100);
 
     ctrl.remove = function(data) {
-        var ref = db.child("content").child(ctrl.schema.key).child(data.key);
+        var ref = ref.child("content").child(ctrl.schema.key).child(data.key);
 
         if(window.confirm("Remove " + data.name + "?")) {
             ref.remove().catch(console.error.bind(console));
@@ -164,7 +164,7 @@ export function view(ctrl) {
                                         target : "_blank"
                                     },
                                     m("svg", { class : css.icon },
-                                        m("use", { href : icons + "#preview" })
+                                        m("use", { href : config.icons + "#preview" })
                                     )
                                 ) :
                                 null,
@@ -178,7 +178,7 @@ export function view(ctrl) {
                                     onclick : ctrl.remove.bind(ctrl, data)
                                 },
                                 m("svg", { class : css.icon },
-                                    m("use", { href : icons + "#remove" })
+                                    m("use", { href : config.icons + "#remove" })
                                 )
                             )
                         )

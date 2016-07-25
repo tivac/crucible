@@ -1,7 +1,7 @@
 import m from "mithril";
 import sluggo from "sluggo";
 
-import db from "../lib/firebase.js";
+import { ref } from "../lib/firebase.js";
 import { prefix } from "../lib/routes.js";
 
 import * as layout from "./layout/index.js";

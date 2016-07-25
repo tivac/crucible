@@ -2,7 +2,7 @@ import m from "mithril";
 import assign from "lodash.assign";
 import times from "lodash.times";
     
-import { icons } from "../config";
+import config from "../config";
 
 import hide from "./lib/hide";
 
@@ -19,7 +19,7 @@ function child(ctrl, options, data, idx) {
                     onclick : ctrl.remove.bind(null, options, data, idx)
                 },
                 m("svg", { class : css.icon },
-                    m("use", { href : icons + "#remove" })
+                    m("use", { href : config.icons + "#remove" })
                 )
             )
         ),

@@ -1,15 +1,13 @@
 import firebase from "firebase";
 
-var app, ref;
+import config from "../config";
 
-export function connect(config) {
-    app = firebase.initializeApp(config);
-    ref = app.database().ref();
-    ref.TIMESTAMP = firebase.database.ServerValue.TIMESTAMP;
+export let app = firebase.initializeApp(config.firebase);
+export let ref = app.database().ref();
+export let timestamp = firebase.database.ServerValue.TIMESTAMP;
 
-    // For debugging
-    window.app = app;
-    window.db = ref;
-}
-
-export default { app, ref };
+// For debugging
+window.fb = {
+    app : app,
+    ref : ref
+};

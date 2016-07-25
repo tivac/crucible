@@ -1,10 +1,21 @@
 import m from "mithril";
 
-import db from "../lib/firebase.js";
+import { app } from "../lib/firebase.js";
 import { prefix } from "../lib/routes.js";
 
+import * as layout from "./layout/index.js";
+
 export function controller() {
-    db.unauth();
-    
-    m.route(prefix("/"));
+    app.auth().signOut().then(function() {
+        m.route(prefix("/"));
+    });
+}
+
+export function view() {
+    return m.component(layout, {
+        title   : "Logging out...",
+        content : m("div", { class : layout.css.content },
+            m("h1", "Logging you out...")
+        )
+    });
 }

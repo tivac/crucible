@@ -9,7 +9,7 @@ import path from "path";
 
 import join from "url-join";
     
-import { icons } from "../config";
+import config from "../config";
 
 import id from "./lib/id";
 import hide from "./lib/hide";
@@ -298,7 +298,7 @@ export function view(ctrl, options) {
                                         onclick : ctrl.remove.bind(ctrl, idx)
                                     },
                                     m("svg", { class : css.icon },
-                                        m("use", { href : icons + "#remove" })
+                                        m("use", { href : config.icons + "#remove" })
                                     )
                                 )
                             )

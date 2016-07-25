@@ -2,7 +2,7 @@ import m from "mithril";
 import capitalize from "lodash.capitalize";
 
 import watch from "../../lib/watch.js";
-import db from "../../lib/firebase.js";
+import { ref } from "../../lib/firebase.js";
 import update from "../../lib/update.js";
 import { prefix } from "../../lib/routes.js";
 

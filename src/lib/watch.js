@@ -1,4 +1,4 @@
-import db from "./firebase.js";
+import { ref } from "./firebase.js";
 import config from "../config.js";
 
 // Ensure the updated timestamp is always accurate-ish

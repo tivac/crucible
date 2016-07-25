@@ -6,7 +6,7 @@ import merge from "lodash.merge";
 import assign from "lodash.assign";
 import capitalize from "lodash.capitalize";
 
-import db from "../../lib/firebase.js";
+import { ref } from "../../lib/firebase.js";
 import update from "../../lib/update.js";
 import watch from "../../lib/watch.js";
 import name from "./name.js";
@@ -23,11 +23,11 @@ export function controller() {
     var ctrl = this,
 
         id     = m.route.param("id"),
-        schema = db.child("schemas/" + m.route.param("schema")),
-        ref    = db.child("content/" + m.route.param("schema") + "/" + id);
+        schema = ref.child("schemas/" + m.route.param("schema")),
+        entry  = ref.child("content/" + m.route.param("schema") + "/" + id);
 
     ctrl.id     = id;
-    ctrl.ref    = ref;
+    ctrl.entry    = entry;
     ctrl.data   = null;
     ctrl.schema = null;
     ctrl.form   = null;
@@ -46,7 +46,7 @@ export function controller() {
     }
 
     // On updates from firebase we need to merge in fields carefully
-    ref.on("value", function(snap) {
+    entry.on("value", function(snap) {
         var data = snap.val();
 
         // Don't try to grab non-existent data
@@ -66,7 +66,7 @@ export function controller() {
         m.redraw();
     });
 
-    watch(ref);
+    watch(entry);
 
     // Event Handlers
     ctrl.titleChange = function(title) {
@@ -152,7 +152,7 @@ export function view(ctrl) {
                             data   : ctrl.data.fields || {},
                             fields : ctrl.schema.fields,
                             path   : [ "fields" ],
-                            root   : ctrl.ref,
+                            root   : ctrl.entry,
                             state  : ctrl.data.fields,
                             update : update.bind(null, ctrl.data)
                         })

@@ -1,5 +1,5 @@
-import config from "../config.js";
+import { user } from "./user.js";
 
 export default function() {
-    return config.user;
+    return user();
 }

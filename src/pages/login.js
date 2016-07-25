@@ -1,8 +1,8 @@
 import m from "mithril";
 import join from "url-join";
 
-import config, { root } from "../config.js";
-import db from "../lib/firebase.js";
+import config from "../config.js";
+import { app, ref } from "../lib/firebase.js";
 import valid from "../lib/valid-auth.js";
 import { prefix } from "../lib/routes.js";
 
@@ -12,7 +12,7 @@ import css from "./login.css";
 
 function loginRedirect() {
     window.location = config.loginBaseUrl +
-        window.encodeURIComponent(join(window.location.origin, root, "/login"));
+        window.encodeURIComponent(join(window.location.origin, config.root, "/login"));
 }
 
 export function controller() {
@@ -23,14 +23,18 @@ export function controller() {
             return loginRedirect();
         }
 
-        return db.authWithCustomToken(m.route.param("auth"), function(error) {
-            if(error) {
-                console.log(error);
-                
-                return loginRedirect();
-            }
-            
+        return app.auth().signInWithCustomToken(
+            m.route.param("auth")
+        )
+        .then(function() {
             return m.route(prefix("/"));
+        })
+        .catch(function(error) {
+            console.log(error);
+            
+            debugger;
+
+            return loginRedirect();
         });
     }
     
@@ -58,7 +62,7 @@ export function controller() {
     };
     
     if(config.auth !== "password") {
-        db.authWithOAuthRedirect(config.auth);
+        app.authWithOAuthRedirect(config.auth);
     }
 }
 

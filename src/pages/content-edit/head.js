@@ -7,16 +7,16 @@ import compareDesc from "date-fns/compare_desc";
 import get from "lodash.get";
 import upper from "lodash.capitalize";
 
-import config, { icons } from "../../config";
-import db from "../../lib/firebase";
+import config from "../../config.js";
+import { timestamp } from "../../lib/firebase.js";
+import { user } from "../../lib/user.js";
 
 import css from "./head.css";
 
 export function controller(options) {
-    var ctrl = this,
-        ref  = options.ref,
-        uid  = config.user.uid,
-        
+    var ctrl  = this,
+        entry = options.entry,
+
         publish   = options.data.published_at ? options.data.published_at : null,
         unpublish = options.data.unpublished_at ? options.data.unpublished_at : null;
 
@@ -74,23 +74,23 @@ export function controller(options) {
             }
         }
 
-        return ref.update({
+        return entry.update({
             published_at   : parseInt(format(start, "x"), 10),
-            published_by   : uid,
+            published_by   : user().uid,
             unpublished_at : end ? parseInt(format(end, "x"), 10) : null,
-            unpublished_by : end ? uid : null
+            unpublished_by : end ? user().uid : null
         });
     };
 
     ctrl.unpublish = function() {
-        ref.update({
+        entry.update({
             // TODO: Remove `published` field, it's deprecated
             published    : null,
             published_at : null,
             published_by : null,
 
-            unpublished_at : db.TIMESTAMP,
-            unpublished_by : uid
+            unpublished_at : timestamp,
+            unpublished_by : user().uid
         });
 
         // TODO: THIS IS SUPER GROSS
@@ -110,7 +110,7 @@ export function controller(options) {
 
         m.redraw();
 
-        ref.update({
+        entry.update({
             fields : opts.data.fields,
             name   : opts.data.name,
             slug   : opts.data.slug || null
@@ -151,7 +151,7 @@ export function view(ctrl, options) {
                         onclick : ctrl.save.bind(null, options)
                     },
                     m("svg", { class : css.icon },
-                        m("use", { href : icons + "#save" })
+                        m("use", { href : config.icons + "#save" })
                     ),
                     "Save"
                 )
@@ -166,7 +166,7 @@ export function view(ctrl, options) {
                         onclick : ctrl.toggle.bind(null, undefined)
                     },
                     m("svg", { class : css.onlyIcon },
-                        m("use", { href : icons + "#schedule" })
+                        m("use", { href : config.icons + "#schedule" })
                     )
                 ),
                 m("button", {
@@ -179,7 +179,7 @@ export function view(ctrl, options) {
                         onclick : ctrl.publish
                     },
                     m("svg", { class : css.icon },
-                        m("use", { href : icons + (future ? "#schedule" : "#publish") })
+                        m("use", { href : config.icons + (future ? "#schedule" : "#publish") })
                     ),
                     future ? "Schedule" : "Publish"
                 ),
@@ -195,7 +195,7 @@ export function view(ctrl, options) {
                             onclick : ctrl.unpublish
                         },
                         m("svg", { class : css.icon },
-                            m("use", { href : icons + "#remove" })
+                            m("use", { href : config.icons + "#remove" })
                         ),
                         "Unpublish"
                     )

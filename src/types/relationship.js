@@ -2,7 +2,7 @@ import m from "mithril";
 import assign from "lodash.assign";
 import Awesomeplete from "awesomplete";
 
-import db from "../lib/firebase";
+import { ref } from "../lib/firebase";
 
 import id from "./lib/id";
 import hide from "./lib/hide";
@@ -14,7 +14,7 @@ import css from "./relationship.css";
 export function controller(options) {
     var ctrl    = this,
         schema  = options.field.schema,
-        content = db.child("content/" + schema);
+        content = ref.child("content/" + schema);
 
     ctrl.id      = id(options);
     ctrl.lookup  = null;
