@@ -6,6 +6,7 @@ index.html
 /build
 /src
 /test
+/coverage
 
 # Ignore config files
 /.*
