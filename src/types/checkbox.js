@@ -8,10 +8,10 @@ export default multiple({
     },
     
     // View function
-    function(ctrl, options) {
+    function(ctrl, options, children) {
         var field = options.field;
         
-        return (field.children || []).map(function(opt) {
+        return (children || []).map(function(opt) {
             return m("label", { class : css.checkbox },
                 m("input", {
                     // attrs

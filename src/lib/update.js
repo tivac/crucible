@@ -16,4 +16,4 @@ export default function(obj, path, val) {
     }
 
     return update(obj, path, val);
-};
+}
