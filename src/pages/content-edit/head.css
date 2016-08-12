@@ -127,3 +127,13 @@
 .end {
     flex: 1 0 50%;
 }
+
+.invalidDate {
+    border: thin solid #e61010;
+    color: #e61010;
+}
+
+.disabledBtn {
+    cursor: default;
+    opacity: 0.5;
+}

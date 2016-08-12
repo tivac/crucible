@@ -41,6 +41,7 @@
     "jsesc": "^1.0.0",
     "lodash.assign": "^4.0.0",
     "lodash.capitalize": "^4.0.1",
+    "lodash.clone": "^4.4.1",
     "lodash.debounce": "^4.0.0",
     "lodash.filter": "^4.2.1",
     "lodash.foreach": "^4.3.0",
