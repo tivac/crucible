@@ -29,23 +29,15 @@ export function controller(options) {
         ctrl.schedule   = false;
 
         if(publishTs) {
-            ctrl.start = {
-                date : format(publishTs, DATE_FORMAT),
-                time : format(publishTs, TIME_FORMAT),
-                ts   : publishTs
-            };
+            ctrl.start = ctrl.makeScheduleObj(publishTs);
         } else {
-            ctrl.start = ctrl.nulledStart();
+            ctrl.start = ctrl.nulledScheduleStart();
         }
 
         if(unpublishTs) {
-            ctrl.end = {
-                date : format(unpublishTs, DATE_FORMAT),
-                time : format(unpublishTs, TIME_FORMAT),
-                ts   : unpublishTs
-            };
+            ctrl.end = ctrl.makeScheduleObj(unpublishTs);
         } else {
-            ctrl.end = ctrl.nulledEnd();
+            ctrl.end = ctrl.nulledScheduleEnd();
         }
 
         ctrl.recalculateTimestamps();
@@ -77,19 +69,15 @@ export function controller(options) {
         unpubDateIsFuture = hasUnpubDate && isFuture(ctrl.end.ts);
 
         if(pubDateIsPast && (unpubDateIsFuture || !hasUnpubDate)) {
-            // Already currently published. No need to do anything.
+            // Already currently published.
             return;
         }
 
         ctrl.saving = true;
-
         m.redraw();
 
-        if(ctrl.start.ts) {
-            startTs = ctrl.start.ts;
-        } else {
-            startTs = subSeconds(Date.now(), 10);
-        }
+        startTs = subSeconds(Date.now(), 10);
+        ctrl.start = ctrl.makeScheduleObj(startTs);
 
         updated = {
             // TODO: Remove `published` field, it's deprecated
@@ -98,28 +86,23 @@ export function controller(options) {
             published_by : user
         };
 
-        debugger;
+        if(ctrl.end.ts && (ctrl.start.ts > ctrl.end.ts)) {
+            ctrl.end = ctrl.nulledScheduleEnd();
 
-        if(ctrl.end.ts) {
-            if(ctrl.start.ts > ctrl.end.ts) {
-                ctrl.end = ctrl.nulledEnd();
+            updated.unpublished_at = null;
+            updated.unpublished_by = null;
 
-                updated.unpublished_at = null;
-                updated.unpublished_by = null;
-
-                console.warn("Invalid end date. Resetting end date.");
-            }
+            console.warn("Invalid end date. Resetting end date.");
         }
 
         ref.update(updated, function() {
             ctrl.saving = false;
-
             m.redraw();
         });
     };
 
     ctrl.unpublish = function() {
-        var nowTs = Date.now(),
+        var nowTs,
             updated;
 
         if(ctrl.end.ts && isPast(ctrl.end.ts)) {
@@ -128,31 +111,47 @@ export function controller(options) {
         }
 
         ctrl.saving = true;
-
         m.redraw();
+
+        nowTs = Date.now();
+        ctrl.end = ctrl.makeScheduleObj(nowTs);
 
         updated = {
             unpublished_at : nowTs,
             unpublished_by : user
         };
 
-        ctrl.end = {
-            date : format(nowTs, DATE_FORMAT),
-            time : format(nowTs, TIME_FORMAT),
-            ts   : nowTs
-        };
-
-        if(ctrl.start.ts) {
-            let startIsInvalid = ctrl.start.ts > nowTs;
-
-            if(startIsInvalid) {
-                ctrl.start = ctrl.nulledStart();
-            }
+        if(ctrl.start.ts &&  ctrl.start.ts > ctrl.end.ts) {
+            // Invalid start.
+            ctrl.start = ctrl.nulledScheduleStart();
         }
 
         ref.update(updated, function() {
             ctrl.saving = false;
+            m.redraw();
+        });
+    };
 
+    ctrl.clearSchedule = function() {
+        var updated;
+
+        ctrl.saving = true;
+        m.redraw();
+
+        ctrl.start = ctrl.nulledScheduleStart();
+        ctrl.end   = ctrl.nulledScheduleEnd();
+        ctrl.invalidDates = false;
+
+        updated = {
+            published      : null,
+            published_at   : null,
+            published_by   : null,
+            unpublished_at : null,
+            unpublished_by : null
+        };
+
+        ref.update(updated, function() {
+            ctrl.saving = false;
             m.redraw();
         });
     };
@@ -161,7 +160,6 @@ export function controller(options) {
         var updated = {};
 
         ctrl.saving = true;
-
         m.redraw();
 
         updated = {
@@ -174,7 +172,6 @@ export function controller(options) {
 
         ref.update(updated, function() {
             ctrl.saving = false;
-
             m.redraw();
         });
     };
@@ -195,19 +192,23 @@ export function controller(options) {
 
             updated.published_at = startTs;
             updated.unpublished_at = endTs;
-        }
 
-        if(options.data.published_at && !updated.published_at) {
-            // Publish date was removed. Save it.
-            updated.published    = null;
-            updated.published_at = null;
-            updated.published_by = null;
-        }
+            if(options.data.published_at && !updated.published_at) {
+                // Publish date was removed. Null it out.
+                updated.published    = null;
+                updated.published_at = null;
+                updated.published_by = null;
 
-        if(options.data.unpublished_at && !updated.unpublished_at) {
-            // Unpublish date was removed. Save it.
-            updated.unpublished_at = null;
-            updated.unpublished_by = null;
+                ctrl.start = ctrl.nulledScheduleStart();
+            }
+
+            if(options.data.unpublished_at && !updated.unpublished_at) {
+                // Unpublish date was removed. Null it out.
+                updated.unpublished_at = null;
+                updated.unpublished_by = null;
+
+                ctrl.end = ctrl.nulledScheduleEnd();
+            }
         }
 
         return updated;
@@ -230,15 +231,23 @@ export function controller(options) {
         }
     };
 
+    ctrl.makeScheduleObj = function(ts) {
+         return {
+            date : format(ts, DATE_FORMAT),
+            time : format(ts, TIME_FORMAT),
+            ts   : ts
+        };
+    };
+
     ctrl.getTimestampFromStr = function(str) {
         return parseInt(format(str, "x"), 10);
     };
 
-    ctrl.nulledStart = function() {
+    ctrl.nulledScheduleStart = function() {
         return ctrl.nulledDate(DEFAULT_START_TIME);
     };
 
-    ctrl.nulledEnd = function() {
+    ctrl.nulledScheduleEnd = function() {
         return ctrl.nulledDate(DEFAULT_END_TIME);
     };
 
@@ -306,21 +315,18 @@ export function view(ctrl, options) {
     }
 
     function mPublishButton() {
-        var disabledClass = "";
+        var isDisabled = false;
 
         // TODO Better implementation.
         // if(ctrl.start.ts && isPast(ctrl.start.ts)) {
-        //     disabledClass = css.disabledBtn;
+        //     isDisabled = true;
         // }
 
         return m("button", {
                 // Attrs
-                class : [
-                    css.publish,
-                    disabledClass
-                ].join(" "),
+                class    : css.publish,
                 title    : future ? "Schedule publish" : "Already published",
-                disabled : locked || null,
+                disabled : locked || isDisabled || null,
 
                 // Events
                 onclick : ctrl.publish
@@ -333,7 +339,7 @@ export function view(ctrl, options) {
     }
 
     function mUnpublishButton() {
-        var disabledClass = "";
+        var isDisabled = false;
 
         if(status === "draft") {
             return null;
@@ -341,17 +347,14 @@ export function view(ctrl, options) {
 
         // TODO Better implementation.
         // if(ctrl.end.ts && isPast(ctrl.end.ts)) {
-        //     disabledClass = css.disabledBtn;
+        //     isDisabled = true;
         // }
 
         return m("button", {
                 // Attrs
-                class : [
-                    css.unpublish,
-                    disabledClass
-                ].join(" "),
+                class    : css.unpublish,
                 title    : wasUnpublished ? "Already unpublished" : "Unpublish immediately",
-                disabled : locked || null,
+                disabled : locked || isDisabled || null,
 
                 // Events
                 onclick : ctrl.unpublish
@@ -363,7 +366,7 @@ export function view(ctrl, options) {
         );
     }
 
-    function chronoInput(id, type, section, field) {
+    function scheduleInput(id, type, section, field) {
         return m("input", {
             class : css.date + ( ctrl.invalidDates ? " " + css.invalidDate : ""),
             type  : type,
@@ -373,6 +376,21 @@ export function view(ctrl, options) {
             // Events
             oninput : m.withAttr("value", ctrl.update.bind(ctrl, section, field))
         });
+    }
+
+    function clearScheduleButton() {
+        var isDisabled = !ctrl.start.ts && !ctrl.end.ts;
+
+        return m("button", {
+                class    : css.clearSchedule,
+                title    : "Clear schedule dates",
+                disabled : isDisabled,
+
+                // Events
+                onclick : ctrl.clearSchedule
+            },
+            "clear schedule"
+        );
     }
 
     function mDateScheduler() {
@@ -387,10 +405,10 @@ export function view(ctrl, options) {
                     m("label", { for : "published_at_date" }, "Publish at")
                 ),
                 m("p",
-                    chronoInput("published_at_date", "date", "start", "date")
+                    scheduleInput("published_at_date", "date", "start", "date")
                 ),
                 m("p",
-                    chronoInput("published_at_time", "time", "start", "time")
+                    scheduleInput("published_at_time", "time", "start", "time")
                 )
             ),
             m("div", { class : css.end },
@@ -398,10 +416,13 @@ export function view(ctrl, options) {
                     m("label", { for : "unpublished_at_date" }, "Until (optional)")
                 ),
                 m("p",
-                    chronoInput("unpublished_at_date", "date", "end", "date")
+                    scheduleInput("unpublished_at_date", "date", "end", "date")
                 ),
                 m("p",
-                    chronoInput("unpublished_at_time", "time", "end", "time")
+                    scheduleInput("unpublished_at_time", "time", "end", "time")
+                ),
+                m("p",
+                    clearScheduleButton()
                 )
             )
         );

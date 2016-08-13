@@ -133,7 +133,15 @@
     color: #e61010;
 }
 
-.disabledBtn {
-    cursor: default;
-    opacity: 0.5;
+.clearSchedule {
+    background: transparent;
+    border: none;
+    color: grey;
+    font-style: italic;
+}
+.clearSchedule:hover {
+    text-decoration: underline;
+}
+.clearSchedule:disabled {
+    display: none;
 }
