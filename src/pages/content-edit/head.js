@@ -133,27 +133,9 @@ export function controller(options) {
     };
 
     ctrl.clearSchedule = function() {
-        var updated;
-
-        ctrl.saving = true;
-        m.redraw();
-
         ctrl.start = ctrl.nulledScheduleStart();
         ctrl.end   = ctrl.nulledScheduleEnd();
         ctrl.invalidDates = false;
-
-        updated = {
-            published      : null,
-            published_at   : null,
-            published_by   : null,
-            unpublished_at : null,
-            unpublished_by : null
-        };
-
-        ref.update(updated, function() {
-            ctrl.saving = false;
-            m.redraw();
-        });
     };
 
     ctrl.save = function(opts) {
