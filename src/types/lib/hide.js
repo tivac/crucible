@@ -33,6 +33,7 @@ export default function(options) {
     }
     
     // Values match-ish
+    // eslint-disable-next-line eqeqeq
     if(src == tgt) {
         return false;
     }
