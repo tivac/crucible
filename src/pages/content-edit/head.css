@@ -127,3 +127,28 @@
 .end {
     flex: 1 0 50%;
 }
+
+.invalidDate {
+    composes: date;
+    border: thin solid #e61010;
+    color: #e61010;
+}
+
+.clearSchedule {
+    composes: button from buttons_css;
+
+    background: #afafaf;
+    border: none;
+    color: #fff;
+    text-transform: capitalize;
+    text-decoration: none;
+}
+
+.clearSchedule:hover {
+    background: #8f8f8f;
+    text-decoration: none;
+}
+
+.clearSchedule:disabled {
+    display: none;
+}
