@@ -129,6 +129,7 @@
 }
 
 .invalidDate {
+    composes: date;
     border: thin solid #e61010;
     color: #e61010;
 }
@@ -139,9 +140,11 @@
     color: grey;
     font-style: italic;
 }
+
 .clearSchedule:hover {
     text-decoration: underline;
 }
+
 .clearSchedule:disabled {
     display: none;
 }

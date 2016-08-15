@@ -3,7 +3,6 @@ import format from "date-fns/format";
 import isFuture from "date-fns/is_future";
 import isPast from "date-fns/is_past";
 import subSeconds from "date-fns/sub_seconds";
-import clone from "lodash.clone";
 import upper from "lodash.capitalize";
 import get from "lodash.get";
 
@@ -16,6 +15,27 @@ var DEFAULT_START_TIME = "00:00",
     DEFAULT_END_TIME   = "23:59",
     DATE_FORMAT = "YYYY-MM-DD",
     TIME_FORMAT = "HH:mm";
+
+
+function makeScheduleObj(ts) {
+     return {
+        date : format(ts, DATE_FORMAT),
+        time : format(ts, TIME_FORMAT),
+        ts   : ts
+    };
+}
+
+function getTimestampFromStr(str) {
+    return parseInt(format(str, "x"), 10);
+}
+
+function nulledDate(time) {
+    return {
+        date : "",
+        time : time,
+        ts   : null
+    };
+}
 
 export function controller(options) {
     var ctrl = this,
@@ -31,17 +51,8 @@ export function controller(options) {
     ctrl.init = function() {
         ctrl.schedule   = false;
 
-        if(publishTs) {
-            ctrl.start = ctrl.makeScheduleObj(publishTs);
-        } else {
-            ctrl.start = ctrl.nulledScheduleStart();
-        }
-
-        if(unpublishTs) {
-            ctrl.end = ctrl.makeScheduleObj(unpublishTs);
-        } else {
-            ctrl.end = ctrl.nulledScheduleEnd();
-        }
+        ctrl.start = (publishTs) ? makeScheduleObj(publishTs) : nulledDate(defaultStartTime);
+        ctrl.end   = (unpublishTs) ? makeScheduleObj(unpublishTs) : nulledDate(defaultEndTime);
 
         ctrl.recalculateTimestamps();
     };
@@ -80,17 +91,15 @@ export function controller(options) {
         m.redraw();
 
         startTs = subSeconds(Date.now(), 10);
-        ctrl.start = ctrl.makeScheduleObj(startTs);
+        ctrl.start = makeScheduleObj(startTs);
 
         updated = {
-            // TODO: Remove `published` field, it's deprecated
-            published    : startTs,
             published_at : startTs,
             published_by : user
         };
 
         if(ctrl.end.ts && (ctrl.start.ts > ctrl.end.ts)) {
-            ctrl.end = ctrl.nulledScheduleEnd();
+            ctrl.end = nulledDate(defaultEndTime);
 
             updated.unpublished_at = null;
             updated.unpublished_by = null;
@@ -117,7 +126,7 @@ export function controller(options) {
         m.redraw();
 
         nowTs = Date.now();
-        ctrl.end = ctrl.makeScheduleObj(nowTs);
+        ctrl.end = makeScheduleObj(nowTs);
 
         updated = {
             unpublished_at : nowTs,
@@ -126,7 +135,7 @@ export function controller(options) {
 
         if(ctrl.start.ts &&  ctrl.start.ts > ctrl.end.ts) {
             // Invalid start.
-            ctrl.start = ctrl.nulledScheduleStart();
+            ctrl.start = nulledDate(defaultStartTime);
         }
 
         ref.update(updated, function() {
@@ -136,8 +145,8 @@ export function controller(options) {
     };
 
     ctrl.clearSchedule = function() {
-        ctrl.start = ctrl.nulledScheduleStart();
-        ctrl.end   = ctrl.nulledScheduleEnd();
+        ctrl.start = nulledDate(defaultStartTime);
+        ctrl.end   = nulledDate(defaultEndTime);
         ctrl.invalidDates = false;
     };
 
@@ -162,38 +171,40 @@ export function controller(options) {
     };
 
     ctrl.addScheduleData = function(updated) {
-        if(!ctrl.invalidDates) {
-            let startTs = null,
-                endTs = null,
-                startTime = ctrl.start.time || DEFAULT_START_TIME,
-                endTime = ctrl.end.time || DEFAULT_END_TIME;
+        var startTs = null,
+            endTs = null,
+            startTime = ctrl.start.time || DEFAULT_START_TIME,
+            endTime = ctrl.end.time || DEFAULT_END_TIME;
 
-            if(ctrl.start.date) {
-                startTs = ctrl.getTimestampFromStr(ctrl.start.date + " " + startTime);
-            }
-            if(ctrl.end.date) {
-                endTs = ctrl.getTimestampFromStr(ctrl.end.date + " " + endTime);
-            }
+        if(ctrl.invalidDates) {
+            return updated;
+        }
 
-            updated.published_at = startTs;
-            updated.unpublished_at = endTs;
+        if(ctrl.start.date) {
+            startTs = getTimestampFromStr(ctrl.start.date + " " + startTime);
+        }
 
-            if(options.data.published_at && !updated.published_at) {
-                // Publish date was removed. Null it out.
-                updated.published    = null;
-                updated.published_at = null;
-                updated.published_by = null;
+        if(ctrl.end.date) {
+            endTs = getTimestampFromStr(ctrl.end.date + " " + endTime);
+        }
 
-                ctrl.start = ctrl.nulledScheduleStart();
-            }
+        updated.published_at = startTs;
+        updated.unpublished_at = endTs;
 
-            if(options.data.unpublished_at && !updated.unpublished_at) {
-                // Unpublish date was removed. Null it out.
-                updated.unpublished_at = null;
-                updated.unpublished_by = null;
+        if(options.data.published_at && !updated.published_at) {
+            // Publish date was removed. Null it out.
+            updated.published_at = null;
+            updated.published_by = null;
 
-                ctrl.end = ctrl.nulledScheduleEnd();
-            }
+            ctrl.start = nulledDate(defaultStartTime);
+        }
+
+        if(options.data.unpublished_at && !updated.unpublished_at) {
+            // Unpublish date was removed. Null it out.
+            updated.unpublished_at = null;
+            updated.unpublished_by = null;
+
+            ctrl.end = nulledDate(defaultEndTime);
         }
 
         return updated;
@@ -205,54 +216,25 @@ export function controller(options) {
             end = ctrl.end;
 
         if(start.date) {
-            start.ts = ctrl.getTimestampFromStr(start.date + " " + start.time);
+            start.ts = getTimestampFromStr(start.date + " " + start.time);
         }
         if(end.date) {
-            end.ts = ctrl.getTimestampFromStr(end.date + " " + end.time);
+            end.ts = getTimestampFromStr(end.date + " " + end.time);
         }
 
         if(start.date && end.date) {
             ctrl.invalidDates = (start.ts > end.ts);
         }
-    };
-
-    ctrl.makeScheduleObj = function(ts) {
-         return {
-            date : format(ts, DATE_FORMAT),
-            time : format(ts, TIME_FORMAT),
-            ts   : ts
-        };
-    };
-
-    ctrl.getTimestampFromStr = function(str) {
-        return parseInt(format(str, "x"), 10);
-    };
-
-    ctrl.nulledScheduleStart = function() {
-        return ctrl.nulledDate(defaultStartTime);
-    };
-
-    ctrl.nulledScheduleEnd = function() {
-        return ctrl.nulledDate(defaultEndTime);
-    };
-
-    ctrl.nulledDate = function(time) {
-        return clone({
-            date : "",
-            time : time,
-            ts   : null
-        });
-    };    
+    };  
 
     ctrl.init();
 }
 
 export function view(ctrl, options) {
     var status  = "draft",
-        publishTs = options.data.published_at || options.data.published,
-        unpublishTs = options.data.unpublished_at || options.data.unpublished,
+        publishTs = options.data.published_at,
+        unpublishTs = options.data.unpublished_at,
         future  = isFuture(ctrl.start.date + " " + ctrl.start.time),
-        wasUnpublished = unpublishTs < Date.now(),
         locked  = config.locked;
 
     if(isFuture(publishTs)) {
@@ -338,7 +320,7 @@ export function view(ctrl, options) {
         return m("button", {
                 // Attrs
                 class    : css.unpublish,
-                title    : wasUnpublished ? "Already unpublished" : "Unpublish immediately",
+                title    : isPast(unpublishTs) ? "Already unpublished" : "Unpublish immediately",
                 disabled : locked || isDisabled || null,
 
                 // Events
@@ -353,7 +335,7 @@ export function view(ctrl, options) {
 
     function scheduleInput(id, type, section, field) {
         return m("input", {
-            class : css.date + ( ctrl.invalidDates ? " " + css.invalidDate : ""),
+            class : ctrl.invalidDates ? css.invalidDate : css.date,
             type  : type,
             id    : id,
             value : ctrl[section][field],
@@ -361,21 +343,6 @@ export function view(ctrl, options) {
             // Events
             oninput : m.withAttr("value", ctrl.update.bind(ctrl, section, field))
         });
-    }
-
-    function clearScheduleButton() {
-        var isDisabled = !ctrl.start.ts && !ctrl.end.ts;
-
-        return m("button", {
-                class    : css.clearSchedule,
-                title    : "Clear schedule dates",
-                disabled : isDisabled,
-
-                // Events
-                onclick : ctrl.clearSchedule
-            },
-            "clear schedule"
-        );
     }
 
     function mDateScheduler() {
@@ -407,7 +374,16 @@ export function view(ctrl, options) {
                     scheduleInput("unpublished_at_time", "time", "end", "time")
                 ),
                 m("p",
-                    clearScheduleButton()
+                    m("button", {
+                        class    : css.clearSchedule,
+                        title    : "Clear schedule dates",
+                        disabled : (!ctrl.start.ts && !ctrl.end.ts),
+
+                        // Events
+                        onclick : ctrl.clearSchedule
+                    },
+                    "clear schedule"
+                    )
                 )
             )
         );
