@@ -135,14 +135,18 @@
 }
 
 .clearSchedule {
-    background: transparent;
+    composes: button from buttons_css;
+
+    background: #afafaf;
     border: none;
-    color: grey;
-    font-style: italic;
+    color: #fff;
+    text-transform: capitalize;
+    text-decoration: none;
 }
 
 .clearSchedule:hover {
-    text-decoration: underline;
+    background: #8f8f8f;
+    text-decoration: none;
 }
 
 .clearSchedule:disabled {
