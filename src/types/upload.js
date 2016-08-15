@@ -90,6 +90,7 @@ export function controller(options) {
 
         if(ctrl.dragging) {
             m.redraw.strategy("none");
+
             return;
         }
         
@@ -97,6 +98,7 @@ export function controller(options) {
         // and it's not a multiple field
         if(ctrl.files.length && !ctrl.options.field.multiple) {
             m.redraw.strategy("none");
+            
             return;
         }
         

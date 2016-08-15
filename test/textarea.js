@@ -72,6 +72,5 @@ describe("Anthracite", () => {
             
             assert(out.has(".fooga"));
         });
-        
     });
 });

@@ -13,7 +13,7 @@ import progress from "./progress.css";
 export { layout as css };
     
 export function controller() {
-    var ctrl   = this;
+    var ctrl = this;
 
     ctrl.schemas = null;
     ctrl.auth = auth();
