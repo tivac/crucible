@@ -91,8 +91,10 @@ export function controller(options) {
     };
 
     // BREAK THE RELATIONSHIP
-    // TODO: BROKEN
+    // TODO: Maybe broken?
     ctrl.remove = function(id, e) {
+        var key = ctrl.lookup[e.target.value];
+
         e.preventDefault();
         
         options.update(options.path.concat(id), false);
