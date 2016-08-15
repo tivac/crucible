@@ -92,12 +92,12 @@ export function controller(options) {
 
     // BREAK THE RELATIONSHIP
     // TODO: Maybe broken?
-    ctrl.remove = function(id, e) {
+    ctrl.remove = function(tgt, e) {
         var key = ctrl.lookup[e.target.value];
 
         e.preventDefault();
         
-        options.update(options.path.concat(id), false);
+        options.update(options.path.concat(tgt), false);
         
         if(options.root) {
             content.child(key + "/relationships/" + options.root.key()).remove();

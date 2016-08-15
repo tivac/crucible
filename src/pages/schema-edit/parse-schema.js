@@ -1,3 +1,4 @@
+/* eslint no-use-before-define: off */
 var required = /\*$/;
 
 function slugger(name) {
@@ -30,12 +31,11 @@ function processSections(sections) {
     });
 }
 
-// eslint-disable-next-line no-use-before-define
 function process(obj) {
     var out = [];
 
     Object.keys(obj).forEach(function(name) {
-        /* eslint complexity:[2, 13] */
+        /* eslint complexity: ["error", 13], max-statements: ["error", 27] */
         var field = obj[name];
 
         if(typeof field !== "object") {

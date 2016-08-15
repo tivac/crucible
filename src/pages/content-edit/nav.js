@@ -35,6 +35,7 @@ export function controller() {
     });
 
     // Go get initial data
+    // eslint-disable-next-line newline-per-chained-call
     db.child("content/" + ctrl.schema.key).orderByChild("published_at").on("value", function(snap) {
         var content = [];
 
@@ -90,7 +91,7 @@ export function controller() {
     }, 100);
 
     ctrl.remove = function(data) {
-        var ref = db.child("content").child(ctrl.schema.key).child(data.key);
+        var ref = db.child("content").child(ctrl.schema.key, data.key);
 
         if(window.confirm("Remove " + data.name + "?")) {
             ref.remove().catch(console.error.bind(console));

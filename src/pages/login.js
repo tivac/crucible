@@ -16,6 +16,7 @@ function loginRedirect() {
 }
 
 export function controller() {
+    /* eslint consistent-return: off */
     var ctrl = this;
     
     if(config.auth === "jwt") {

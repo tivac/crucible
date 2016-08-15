@@ -63,7 +63,7 @@ export function controller() {
             ctrl.data.slug = sluggo(ctrl.data.name);
         }
 
-        m.redraw();
+        return m.redraw();
     });
 
     watch(ref);
@@ -82,7 +82,10 @@ export function view(ctrl) {
         return m.component(layout);
     }
 
-    title = [ get(ctrl.data, "name"), ctrl.schema.name ].filter(Boolean).map(capitalize).join(" | ");
+    title = [ get(ctrl.data, "name"), ctrl.schema.name ]
+        .filter(Boolean)
+        .map(capitalize)
+        .join(" | ");
 
     if(!ctrl.id) {
         return m.component(layout, {
