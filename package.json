@@ -10,7 +10,7 @@
     "prepublish": "in-publish && npm run export || not-in-publish",
     "preversion": "npm test",
     "start": "node build/serve.js",
-    "test": "mocha"
+    "test": "npm run lint && mocha"
   },
   "keywords": [
     "cms",
