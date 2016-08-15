@@ -30,6 +30,7 @@ function processSections(sections) {
     });
 }
 
+// eslint-disable-next-line no-use-before-define
 function process(obj) {
     var out = [];
 
