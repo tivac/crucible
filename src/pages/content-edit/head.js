@@ -23,7 +23,10 @@ export function controller(options) {
         user = db.getAuth().uid,
 
         publishTs   = options.data.published_at ? options.data.published_at : null,
-        unpublishTs = options.data.unpublished_at ? options.data.unpublished_at : null;
+        unpublishTs = options.data.unpublished_at ? options.data.unpublished_at : null,
+
+        defaultStartTime = get(config, "defaults.publish_start_time") || DEFAULT_START_TIME,
+        defaultEndTime   = get(config, "defaults.publish_end_time")   || DEFAULT_END_TIME;
 
     ctrl.init = function() {
         ctrl.schedule   = false;
@@ -226,11 +229,11 @@ export function controller(options) {
     };
 
     ctrl.nulledScheduleStart = function() {
-        return ctrl.nulledDate(DEFAULT_START_TIME);
+        return ctrl.nulledDate(defaultStartTime);
     };
 
     ctrl.nulledScheduleEnd = function() {
-        return ctrl.nulledDate(DEFAULT_END_TIME);
+        return ctrl.nulledDate(defaultEndTime);
     };
 
     ctrl.nulledDate = function(time) {
