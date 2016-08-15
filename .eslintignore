@@ -1,1 +1,4 @@
 gen
+coverage
+build
+.vscode
