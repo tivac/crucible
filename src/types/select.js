@@ -28,14 +28,16 @@ export default multiple({
             optionObjs;
 
         if(hasSelected) {
-            // If the schema defines a selected option, don't
-            // add a "please select" but do set the value immediately.
-            optionObjs = children;
+            // If the schema defines a selected option, set the value immediately.
             ctrl.value(options, hasSelected.key, hasSelected.value);
+            optionObjs = children;
         } else {
-            // If we prepend a "please select" el, we need to
-            // adjust the index lookup in `onchange` via indexOffset
+            // If there is no selected option defined by the schema,
+            // then prepend a default "Please select..." option.
             optionObjs = [ pleaseSelect() ].concat(children);
+
+            // Which means we need to add an offset (via indexOffset)
+            // to the lookup-by-index that occurs in the `onchange` handler
             indexOffset = -1;
         }
 
