@@ -153,6 +153,16 @@ You can display or not display fields based on the current value of another fiel
 }
 ```
 
+### Required Inputs
+
+Append a field's name with an asterisk `*` to mark the field `required`, the field label will also turn red.
+
+```js
+    { 
+        "Favorite Word?*": "text"
+    }
+```
+
 ### Example schema
 
 ```js
