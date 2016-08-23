@@ -125,6 +125,34 @@ You can attach dom-specific attributes to most types by specifying an `attrs` ke
 }
 ```
 
+### Conditional Show / Hide
+
+You can display or not display fields based on the current value of another field.
+
+`value` can be either RegExp or a primitive -- please note, primitive `value`s are tested with loose equality.
+
+```js
+{
+    "Favorite dessert?" :{
+        type: "select",
+        options : {
+            "Pie" : "pie",
+            "Ice Cream" : "icecream"
+        }
+    },
+
+    "And what is your favorite flavor of ice cream?": {
+        type : "text",
+        show : {
+            field : "Favorite dessert?",
+            value : /icecream/
+        }
+    },
+
+    /* ... */
+}
+```
+
 ### Example schema
 
 ```js
