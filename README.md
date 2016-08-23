@@ -127,7 +127,7 @@ You can attach dom-specific attributes to most types by specifying an `attrs` ke
 
 ### Required Inputs
 
-Simply append the field's name with an asterisk `*` to mark the field `required`, the field label will also turn red.
+Append a field's name with an asterisk `*` to mark the field `required`, the field label will also turn red.
 
 ```js
     { 

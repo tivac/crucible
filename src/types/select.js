@@ -5,7 +5,7 @@ import css from "./select.css";
 import multiple from "./lib/multiple.js";
 
 function findSelected(children) {
-    return children.find((option) => Boolean(option.selected));
+    return children.find((option) => option.selected);
 }
 
 function pleaseSelect() {
