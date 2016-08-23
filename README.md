@@ -125,7 +125,7 @@ You can attach dom-specific attributes to most types by specifying an `attrs` ke
 }
 ```
 
-### Conditional Show / Hide
+### Conditionally Hidden / Shown Fields
 
 You can display or not display fields based on the current value of another field.
 

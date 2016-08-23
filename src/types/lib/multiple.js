@@ -5,6 +5,12 @@ import id from "./id";
 import hide from "./hide";
 import label from "./label";
 
+/**
+ * Examples of `multiple` types include `checkbox.js` and `radio.js`,
+ * in both cases you're very likely or certain to have multiple inputs 
+ * defined in a single field definition. (See README for examples.)
+ */
+
 export default function(args, view) {
     return {
         controller : function(options) {
