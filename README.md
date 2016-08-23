@@ -125,6 +125,16 @@ You can attach dom-specific attributes to most types by specifying an `attrs` ke
 }
 ```
 
+### Required Inputs
+
+Append a field's name with an asterisk `*` to mark the field `required`, the field label will also turn red.
+
+```js
+    { 
+        "Favorite Word?*": "text"
+    }
+```
+
 ### Example schema
 
 ```js
