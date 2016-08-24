@@ -6,7 +6,7 @@ var fs   = require("fs"),
     duration   = require("humanize-duration"),
     bytes      = require("pretty-bytes"),
     uglify     = require("uglify-js"),
-    // compile    = require("google-closure-compiler-js"),
+    compile    = require("google-closure-compiler-js").compile,
 
     files   = require("./lib/files"),
     builder = require("./lib/browserify")({ compress : true }),
@@ -33,13 +33,21 @@ builder.bundle(function(err, out) {
     
     if(err) {
         console.error("Error in:", duration(Date.now() - start));
-        console.error(err.toString());
+        console.error(err.stack);
         
         return;
     }
     
     result = uglify.minify(out.toString(), { fromString : true });
     code   = result.code;
+
+    // result = compile({
+    //     jsCode : [ { src : out.toString() } ],
+    //     compilationLevel : "SIMPLE",
+    //     warningLevel : "VERBOSE"
+    // });
+
+    // code = result.compiledCode;
     
     console.log("Bundled & compressed in:", duration(Date.now() - start));
     console.log("Output size:", bytes(code.length));
