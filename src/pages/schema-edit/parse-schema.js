@@ -31,6 +31,26 @@ function processSections(sections) {
     });
 }
 
+function processSelected(children) {
+    var i; 
+
+    // No `.find()` due to backwards compatibility.
+    for(i = 0; i < children.length; i++) {
+        if(children[i].selected) {
+            // If there's already a selected
+            // value by default, no need to modify
+            return children;
+        }
+    }
+
+    return [ {
+        attrs    : {},
+        name     : "Please select an option...",
+        value    : "",
+        selected : true
+    } ].concat(children);
+}
+
 function process(obj) {
     var out = [];
 
@@ -89,6 +109,10 @@ function process(obj) {
             field.children = processChildren(field.options);
 
             delete field.options;
+        }
+
+        if(field.type === "select") {
+            field.children = processSelected(field.children);
         }
 
         out.push(field);
