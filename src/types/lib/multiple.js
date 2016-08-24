@@ -62,9 +62,9 @@ export default function(args, view) {
             var hidden = hide(options),
                 children;
             
-            if(hidden) {
-                return hidden;
-            }
+            // if(hidden) {
+            //     return hidden;
+            // }
 
             children = ctrl.selected(options);
             

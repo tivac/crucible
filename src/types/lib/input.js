@@ -37,9 +37,9 @@ export default function(type) {
             var field  = options.field,
                 hidden = hide(options);
 
-            if(hidden) {
-                return hidden;
-            }
+            // if(hidden) {
+            //     return hidden;
+            // }
             
             return m("div", { class : options.class },
                 label(ctrl, options),

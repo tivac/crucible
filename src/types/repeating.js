@@ -74,9 +74,9 @@ export function view(ctrl, options) {
         hidden  = hide(options),
         items;
     
-    if(hidden) {
-        return hidden;
-    }
+    // if(hidden) {
+    //     return hidden;
+    // }
     
     if(options.data) {
         items = options.data.map(child.bind(null, ctrl, options));

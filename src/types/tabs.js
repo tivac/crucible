@@ -22,9 +22,9 @@ export function view(ctrl, options) {
     var tabs   = options.field.children || [],
         hidden = hide(options);
         
-    if(hidden) {
-        return hidden;
-    }
+    // if(hidden) {
+    //     return hidden;
+    // }
     
     return m("div", { class : options.class },
         m("div", { class : css.nav },

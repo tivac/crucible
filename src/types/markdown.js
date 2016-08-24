@@ -54,9 +54,9 @@ export function controller(options) {
 export function view(ctrl, options) {
     var hidden  = hide(options);
 
-    if(hidden) {
-        return hidden;
-    }
+    // if(hidden) {
+    //     return hidden;
+    // }
     
     ctrl.options = options;
 

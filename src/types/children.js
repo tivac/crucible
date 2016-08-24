@@ -3,6 +3,7 @@ import get from "lodash.get";
 import assign from "lodash.assign";
 
 import input from "./lib/input.js";
+import checkIsHidden from "./lib/hide.js";
 
 import css from "./lib/types.css";
 
@@ -10,26 +11,45 @@ import css from "./lib/types.css";
 var types;
 
 export function view(ctrl, options) {
-    var fields = options.fields || [];
+    var fields = options.fields || [],
+        mFields;
+
+    mFields = fields.map(function(field, index) {
+        var component = types[field.type || field],
+            hidden,
+            config;
+
+        hidden = checkIsHidden(options.state, field);
+
+        if(!component) {
+            return m("div",
+                m("p", "Unknown component"),
+                m("pre", JSON.stringify(field, null, 4))
+            );
+        }
+
+        config = {
+            field : field,
+            class : css[index ? "field" : "first"],
+            data  : get(options.data, field.key),
+            path  : options.path.concat(field.key)
+        };
+
+        // eslint-disable-next-line eqeqeq
+        if(field.show && field.show.prevHidden != null) {
+            config["data-prev-hidden"] = field.show.prevHidden;
+        }
+
+        if(hidden) {
+            config.class += " " + hidden;
+            config["data-hidden"] = hidden;
+        }
+
+        return m.component(component, assign({}, options, config));
+    });
 
     return m("div", options.class ? { class : options.class } : null,
-        fields.map(function(field, index) {
-            var component = types[field.type || field];
-
-            if(!component) {
-                return m("div",
-                    m("p", "Unknown component"),
-                    m("pre", JSON.stringify(field, null, 4))
-                );
-            }
-
-            return m.component(component, assign({}, options, {
-                field : field,
-                class : css[index ? "field" : "first"],
-                data  : get(options.data, field.key),
-                path  : options.path.concat(field.key)
-            }));
-        })
+        mFields
     );
 }
 

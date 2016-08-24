@@ -8,9 +8,9 @@ export function view(ctrl, options) {
     var field  = options.field,
         hidden = hide(options);
     
-    if(hidden) {
-        return hidden;
-    }
+    // if(hidden) {
+    //     return hidden;
+    // }
     
     return m("div", { class : options.class },
         field.head ? m("p", { class : css.head }, field.head) : null,

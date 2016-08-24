@@ -39,6 +39,10 @@
     composes: text;
 }
 
+.hidden {
+    display: none;
+}
+
 /* Types needing some special love */
 .number {
     width: 30%;

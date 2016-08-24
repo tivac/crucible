@@ -41,7 +41,7 @@ export default multiple({
             indexOffset = -1;
         }
 
-        return m("select", assign({
+        var result = m("select", assign({
                 // attrs
                 class : css.select,
 
@@ -63,5 +63,9 @@ export default multiple({
                 );
             })
         );
+
+        // debugger; 
+
+        return result;
     }
 );

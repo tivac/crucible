@@ -248,9 +248,9 @@ export function view(ctrl, options) {
     var field  = options.field,
         hidden = hide(options);
     
-    if(hidden) {
-        return hidden;
-    }
+    // if(hidden) {
+    //     return hidden;
+    // }
     
     ctrl.options = options;
 

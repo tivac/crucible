@@ -10,9 +10,9 @@ import css from "./fieldset.css";
 export function view(ctrl, options) {
     var hidden  = hide(options);
     
-    if(hidden) {
-        return hidden;
-    }
+    // if(hidden) {
+    //     return hidden;
+    // }
     
     return m("fieldset", { class : options.class },
         options.field.name ? m("legend", { class : css.legend }, options.field.name) : null,
