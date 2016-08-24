@@ -6,6 +6,7 @@ var fs   = require("fs"),
     duration   = require("humanize-duration"),
     bytes      = require("pretty-bytes"),
     uglify     = require("uglify-js"),
+    // compile    = require("google-closure-compiler-js"),
 
     files   = require("./lib/files"),
     builder = require("./lib/browserify")({ compress : true }),
