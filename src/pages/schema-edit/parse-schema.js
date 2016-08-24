@@ -32,7 +32,7 @@ function processSections(sections) {
 }
 
 function processSelected(children) {
-    var i; 
+    var i;
 
     // No `.find()` due to backwards compatibility.
     for(i = 0; i < children.length; i++) {
@@ -43,19 +43,19 @@ function processSelected(children) {
         }
     }
 
-    return [ {
+    return [{
         attrs    : {},
         name     : "Please select an option...",
         value    : "",
         selected : true
-    } ].concat(children);
+    }].concat(children);
 }
 
 function process(obj) {
+    /* eslint-disable complexity, max-statements */
     var out = [];
 
     Object.keys(obj).forEach(function(name) {
-        /* eslint complexity: ["error", 13], max-statements: ["error", 27] */
         var field = obj[name];
 
         if(typeof field !== "object") {
