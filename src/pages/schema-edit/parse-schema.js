@@ -31,6 +31,21 @@ function processSections(sections) {
     });
 }
 
+function processSelected(children) {
+    var hasSelected = children.find((option) => option.selected);
+
+    if(hasSelected) {
+        return children;
+    }
+
+    return [ {
+        attrs    : {},
+        name     : "Please select an option...",
+        value    : "",
+        selected : true
+    } ].concat(children);
+}
+
 function process(obj) {
     var out = [];
 
@@ -89,6 +104,11 @@ function process(obj) {
             field.children = processChildren(field.options);
 
             delete field.options;
+        }
+
+        if(field.type === "select") {
+            console.log("select!");
+            field.children = processSelected(field.children);
         }
 
         out.push(field);
