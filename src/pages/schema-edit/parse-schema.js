@@ -32,10 +32,15 @@ function processSections(sections) {
 }
 
 function processSelected(children) {
-    var hasSelected = children.find((option) => option.selected);
+    var i; 
 
-    if(hasSelected) {
-        return children;
+    // No `.find()` due to backwards compatibility.
+    for(i = 0; i < children.length; i++) {
+        if(children[i].selected) {
+            // If there's already a selected
+            // value by default, no need to modify
+            return children;
+        }
     }
 
     return [ {
