@@ -6,7 +6,7 @@ export default function addClasses(field, cssClasses) {
 	
 	currClasses = Array.isArray(cssClasses) ? cssClasses : [ cssClasses ];
 
-	console.log("field.show", field.show);
+	// console.log("field.show", field.show);
 	if(field.show && field.show.hidden) {
 		currClasses.push("hidden");
 	}

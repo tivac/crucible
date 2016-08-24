@@ -1,6 +1,7 @@
 import m from "mithril";
 import get from "lodash.get";
 import assign from "lodash.assign";
+import isUndefined from "lodash.isundefined";
 
 import input from "./lib/input.js";
 import checkIsHidden from "./lib/hide.js";
@@ -16,16 +17,35 @@ import css from "./lib/types.css";
 // Bound below
 var types;
 
+function becameHidden(field) {
+    var show = field.show;
+
+    return show &&
+        !isUndefined(show.prevHidden) &&
+        !isUndefined(show.hidden) &&
+        !show.prevHidden &&
+        show.hidden;
+}
+
 export function view(ctrl, options) {
     var fields = options.fields || [],
         mFields = [],
+        component,
+        field,
+        i,
+        hidden,
         result;
 
-    mFields = fields.map((field, index) => {
-        var component = types[field.type || field],
-            hidden;
-        
+    // mFields = fields.map((field, index) => {
+    for(i = 0; i < fields.length; i++) {
+        field = fields[i];
+        component = types[field.type || field];
+
         field = checkIsHidden(options.state, field);
+
+        if(becameHidden(field)) {
+            console.log("Child became hidden, TODO unset ctrl value.");
+        }
 
         if(!component) {
             return m("div",
@@ -40,11 +60,11 @@ export function view(ctrl, options) {
             path  : options.path.concat(field.key),
 
             hidden : hidden,
-            class  : addClasses(field, css[index ? "field" : "first"] )
+            class  : addClasses(field, css[i ? "field" : "first"] )
         }));
 
-        return result;
-    });
+        mFields.push(result);
+    }
 
     return m("div", options.class ? { class : options.class } : null,
         mFields

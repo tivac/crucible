@@ -37,6 +37,11 @@ function nulledDate(time) {
     };
 }
 
+function filterHidden(fields) {
+    debugger;
+    return fields;
+}
+
 export function controller(options) {
     var ctrl = this,
         ref  = options.ref,
@@ -154,12 +159,13 @@ export function controller(options) {
 
     ctrl.save = function(opts) {
         var updated = {};
+        debugger;
 
         ctrl.saving = true;
         m.redraw();
 
         updated = {
-            fields : opts.data.fields,
+            fields : filterHidden( opts.data.fields ),
             name   : opts.data.name,
             slug   : opts.data.slug || null
         };
