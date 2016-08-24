@@ -28,10 +28,10 @@ export function controller() {
 
     ctrl.id     = id;
     ctrl.ref    = ref;
-    ctrl.data   = null;
     ctrl.schema = null;
     ctrl.form   = null;
     ctrl.data   = {};
+    ctrl.hidden = {};
 
     schema.on("value", function(snap) {
         ctrl.schema = snap.val();

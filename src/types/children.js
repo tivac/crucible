@@ -8,16 +8,16 @@ import checkIsHidden from "./lib/hide.js";
 import css from "./lib/types.css";
 
 // Bound below
-var types;
+var types,
+    hiddenEl = m("div", { class : "hidden", "data-hidden": "true" });
 
 export function view(ctrl, options) {
     var fields = options.fields || [],
         mFields;
 
-    mFields = fields.map(function(field, index) {
+    mFields = fields.map((field, index) => {
         var component = types[field.type || field],
-            hidden,
-            config;
+            hidden;
 
         hidden = checkIsHidden(options.state, field);
 
@@ -28,24 +28,18 @@ export function view(ctrl, options) {
             );
         }
 
-        config = {
+        // if(hidden) {
+        //     return hiddenEl;
+        // }
+
+        return m.component(component, assign({}, options, {
             field : field,
             class : css[index ? "field" : "first"],
             data  : get(options.data, field.key),
-            path  : options.path.concat(field.key)
-        };
+            path  : options.path.concat(field.key),
 
-        // eslint-disable-next-line eqeqeq
-        if(field.show && field.show.prevHidden != null) {
-            config["data-prev-hidden"] = field.show.prevHidden;
-        }
-
-        if(hidden) {
-            config.class += " " + hidden;
-            config["data-hidden"] = hidden;
-        }
-
-        return m.component(component, assign({}, options, config));
+            "data-hidden" : "true"
+        }));
     });
 
     return m("div", options.class ? { class : options.class } : null,

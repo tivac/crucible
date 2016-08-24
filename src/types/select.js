@@ -27,6 +27,8 @@ export default multiple({
             indexOffset = 0,
             optionObjs;
 
+        console.log("options.hidden", options.hidden);
+
         if(hasSelected) {
             // If the schema defines a selected option, set the value immediately.
             ctrl.value(options, hasSelected.key, hasSelected.value);

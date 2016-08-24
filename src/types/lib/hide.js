@@ -5,7 +5,8 @@ import css from "./types.css";
     
 var dependentField = [ "show", "field" ],
 
-    hiddenClass = css.hidden
+    hiddenClass = "hidden"
+    // hiddenClass = css.hidden
     ;
     
     // hiddenEl = m("div", { class : "hidden" });
@@ -15,6 +16,7 @@ var dependentField = [ "show", "field" ],
  */
 
  function isHidden(field) {
+    console.log("isHidden");
     field.show.prevHidden = true;
     return hiddenClass;
  }
