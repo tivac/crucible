@@ -107,7 +107,6 @@ function process(obj) {
         }
 
         if(field.type === "select") {
-            console.log("select!");
             field.children = processSelected(field.children);
         }
 
