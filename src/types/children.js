@@ -4,22 +4,28 @@ import assign from "lodash.assign";
 
 import input from "./lib/input.js";
 import checkIsHidden from "./lib/hide.js";
+import addClasses from "./lib/classer.js";
 
 import css from "./lib/types.css";
 
+
+/**
+ *
+ */
+
 // Bound below
-var types,
-    hiddenEl = m("div", { class : "hidden", "data-hidden": "true" });
+var types;
 
 export function view(ctrl, options) {
     var fields = options.fields || [],
-        mFields;
+        mFields = [],
+        result;
 
     mFields = fields.map((field, index) => {
         var component = types[field.type || field],
             hidden;
-
-        hidden = checkIsHidden(options.state, field);
+        
+        field = checkIsHidden(options.state, field);
 
         if(!component) {
             return m("div",
@@ -28,18 +34,16 @@ export function view(ctrl, options) {
             );
         }
 
-        // if(hidden) {
-        //     return hiddenEl;
-        // }
-
-        return m.component(component, assign({}, options, {
+        result = m.component(component, assign({}, options, {
             field : field,
-            class : css[index ? "field" : "first"],
             data  : get(options.data, field.key),
             path  : options.path.concat(field.key),
 
-            "data-hidden" : "true"
+            hidden : hidden,
+            class  : addClasses(field, css[index ? "field" : "first"] )
         }));
+
+        return result;
     });
 
     return m("div", options.class ? { class : options.class } : null,

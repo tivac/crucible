@@ -24,6 +24,9 @@ export function view(ctrl, options) {
     var field  = options.field,
         hidden = hide(options);
 
+
+    debugger;
+                
     // if(hidden) {
     //     return hidden;
     // }

@@ -37,6 +37,8 @@ export default function(type) {
             var field  = options.field,
                 hidden = hide(options);
 
+            // debugger;
+
             // if(hidden) {
             //     return hidden;
             // }
@@ -54,6 +56,10 @@ export default function(type) {
                         // events
                         oninput : m.withAttr("value", options.update(options.path))
                     }
+                    // ,
+                    // options.hidden ?
+                    //     (function() { console.log("data-hidden"); return { "data-hidden" : true }; }()) :
+                    //     {}
                 ))
             );
         }

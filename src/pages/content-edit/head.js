@@ -49,6 +49,8 @@ export function controller(options) {
         defaultEndTime   = get(config, "defaults.publish_end_time")   || DEFAULT_END_TIME;
 
     ctrl.init = function() {
+        ctrl.hidden = {};
+
         ctrl.schedule   = false;
 
         ctrl.start = (publishTs) ? makeScheduleObj(publishTs) : nulledDate(defaultStartTime);
@@ -210,6 +212,17 @@ export function controller(options) {
         return updated;
     };
 
+    ctrl.setHidden = function(field, isHidden) {
+        var wasHidden = ctrl.hidden[field.key];
+
+        if(wasHidden === isHidden) {
+            return; // No change.
+        }
+
+        if(isHidden) {
+            ctrl.hidden[field.key] = true;
+        }
+    };
 
     ctrl.recalculateTimestamps = function() {
         var start = ctrl.start,

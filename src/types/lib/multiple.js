@@ -20,27 +20,23 @@ export default function(args, view) {
 
             // Update data object w/ default status of the field (if set)
 
-
             // Figure out selected status for children
             ctrl.selected = function(opts) {
                 var field  = opts.field,
                     values = opts.data,
-                    matches;
+                    matches,
+                    match;
 
                 if(!values) {
                     return field.children;
                 }
 
-                matches = field.children.filter(function(opt) {
-                    if(!args.multiple) {
-                        return opt.value === values;
-                    }
-
-                    return values[opt.key] === opt.value;
-                });
-
-                if(!args.multiple && matches.length) {
-                    matches.length = 1;
+                if(args.multiple) {
+                    matches = field.children.filter((child) => values[child.key] === child.value);
+                } else {
+                    // Limit matches to one if only one can be selected (e.g. <select>, <radio>)
+                    match = field.children.find((child) => child.value === values);
+                    matches = [ match ];
                 }
 
                 return field.children.map(function(opt) {
