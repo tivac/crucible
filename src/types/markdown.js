@@ -3,7 +3,6 @@ import Remarkable from "remarkable";
 import editor from "codemirror";
 
 import id from "./lib/id";
-import hide from "./lib/hide";
 import label from "./lib/label";
 
 import css from "./markdown.css";
@@ -52,12 +51,6 @@ export function controller(options) {
 }
 
 export function view(ctrl, options) {
-    var hidden  = hide(options);
-
-    // if(hidden) {
-    //     return hidden;
-    // }
-    
     ctrl.options = options;
 
     return m("div", { class : options.class },

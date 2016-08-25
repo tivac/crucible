@@ -1,15 +1,10 @@
 
 export default function addClasses(field, cssClasses) {
-	var
-		currClasses
-	;
-	
-	currClasses = Array.isArray(cssClasses) ? cssClasses : [ cssClasses ];
+    var currClasses = Array.isArray(cssClasses) ? cssClasses : [ cssClasses ];
+    
+    if(field.show && field.show.hidden) {
+        currClasses.push("hidden");
+    }
 
-	// console.log("field.show", field.show);
-	if(field.show && field.show.hidden) {
-		currClasses.push("hidden");
-	}
-
-	return currClasses.join(" ");
+    return currClasses.join(" ");
 }

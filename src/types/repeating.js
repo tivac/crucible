@@ -71,12 +71,7 @@ export function controller(options) {
 
 export function view(ctrl, options) {
     var field   = options.field,
-        hidden  = hide(options),
         items;
-    
-    // if(hidden) {
-    //     return hidden;
-    // }
     
     if(options.data) {
         items = options.data.map(child.bind(null, ctrl, options));

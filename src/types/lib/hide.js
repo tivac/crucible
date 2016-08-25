@@ -4,26 +4,18 @@ import get from "lodash.get";
  * See README for example schema with a hidden/dependent field.
  */
 
-function rxTest(str, rx) {
-    try {
-        return rx.test(str);
-    } catch(e) {
-        return false;
-    }
-}
-
  function rxFindMatch(src, target) {
-    var rxSrc = new RegExp(src, "i"),
+    var rx = new RegExp(src, "i"),
         vals;
     
-    if(rxTest(target, rxSrc)) {
+    if(rx.test(target)) {
         return true;
     }
 
     vals = Array.isArray(target) ? target :
         Object.keys(target).map((key) => target[key]); // Make array of values.
 
-    if(vals.find((str) => rxTest(str, rxSrc))) {
+    if(vals.find((str) => rx.test(str))) {
         return true;
     }
 
@@ -35,7 +27,7 @@ export default function checkHidden(state, field) {
         src,
         target;
 
-    // No conditional visibility config or missing target field
+    // No conditional show config, or missing target field
     if(!dependsOn) {
         return false;
     }
