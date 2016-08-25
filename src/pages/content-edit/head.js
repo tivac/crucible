@@ -39,18 +39,21 @@ function nulledDate(time) {
 }
 
 function filterHidden(fields, hidden) {
-    // Need to clone here. We're modifying the values attached  
-    // to hidden fields, and must not overwrite that data
-    // so people can un-hide a field without losing their work.
-    var result = clone(fields);
+    // People can hide/unhide a field without losing work.
+    // But we don't want to persist data from hidden fields,
+    // so overwrite the data to be saved, but clone the 
+    // source data so we do not modify the form's data.
+    var filtered = clone(fields);
+    console.log("filterHidden ", hidden);
 
-    Object.keys(result).forEach((key) => {
+    Object.keys(filtered).forEach((key) => {
         if(hidden.indexOf(key) > -1) {
-            result[key] = null;
+            console.log(`Set <${key}> to null`);
+            filtered[key] = null;
         }
     });
 
-    return result;
+    return filtered;
 }
 
 export function controller(options) {
@@ -65,8 +68,6 @@ export function controller(options) {
         defaultEndTime   = get(config, "defaults.publish_end_time")   || DEFAULT_END_TIME;
 
     ctrl.init = function() {
-        // ctrl.hidden = {};
-
         ctrl.schedule   = false;
 
         ctrl.start = (publishTs) ? makeScheduleObj(publishTs) : nulledDate(defaultStartTime);
@@ -180,8 +181,6 @@ export function controller(options) {
             slug   : opts.data.slug || null
         };
 
-        console.log("updated.fields ", updated.fields );
-
         updated = ctrl.addScheduleData(updated);
 
         ref.update(updated, function() {
@@ -229,18 +228,6 @@ export function controller(options) {
 
         return updated;
     };
-
-    // ctrl.setHidden = function(field, isHidden) {
-    //     var wasHidden = ctrl.hidden[field.key];
-
-    //     if(wasHidden === isHidden) {
-    //         return; // No change.
-    //     }
-
-    //     if(isHidden) {
-    //         ctrl.hidden[field.key] = true;
-    //     }
-    // };
 
     ctrl.recalculateTimestamps = function() {
         var start = ctrl.start,

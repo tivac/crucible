@@ -69,15 +69,13 @@ export function controller() {
     watch(ref);
 
 
-    ctrl.setHidden = function(key, isHidden) {
+    ctrl.registerHidden = function(key, isHidden) {
         var index = ctrl.hidden.indexOf(key);
 
         if(isHidden) {
             ctrl.hidden.push(key);
-            console.log("HIDE :: ", key);
         } else if(index > -1) {
             ctrl.hidden.splice(index, 1);
-            console.log("SHOW :: ", key);
         }
     };
 
@@ -172,7 +170,7 @@ export function view(ctrl) {
                             state  : ctrl.data.fields,
                             update : update.bind(null, ctrl.data),
 
-                            setHidden : ctrl.setHidden
+                            registerHidden : ctrl.registerHidden
                         })
                     )
                 )

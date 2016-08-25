@@ -1,71 +1,65 @@
-// import m from "mithril";
 import get from "lodash.get";
-    
-var dependentField = [ "show", "field" ];
 
 /**
  * See README for example schema with a hidden/dependent field.
  */
 
-function rxStringTest(str, rx) {
-    return typeof str === "string" && rx.test(str);
+function rxTest(str, rx) {
+    try {
+        return rx.test(str);
+    } catch(e) {
+        return false;
+    }
 }
 
- function rxFindMatch(src, tgt) {
+ function rxFindMatch(src, target) {
     var rxSrc = new RegExp(src, "i"),
         vals;
     
-    if(rxStringTest(tgt, rxSrc)) {
+    if(rxTest(target, rxSrc)) {
         return true;
     }
 
-    vals = Array.isArray(tgt) ?
-        tgt :
-        Object.keys(tgt).map((key) => tgt[key]);
+    vals = Array.isArray(target) ? target :
+        Object.keys(target).map((key) => target[key]); // Make array of values.
 
-    if(vals.find((str) => rxStringTest(str, rxSrc))) {
+    if(vals.find((str) => rxTest(str, rxSrc))) {
         return true;
     }
 
     return false;
  }
 
-export default function checkIsHidden(state, field) {
-    var dependsOn = get(field, dependentField),
+export default function checkHidden(state, field) {
+    var dependsOn = get(field, [ "show", "field" ]),
         src,
-        tgt;
+        target;
 
     // No conditional visibility config or missing target field
     if(!dependsOn) {
-        return field;
+        return false;
     }
 
     src = field.show.value;
-    tgt = get(state, dependsOn);
-
-    field.show.prevHidden = Boolean(field.show.hidden);
+    target = get(state, dependsOn);
 
     // No target value, so have to hide it
-    if(typeof tgt === "undefined" || tgt === null) {
-        field.show.hidden = true;
-        return field;
+    if(typeof target === "undefined" || target === null) {
+        return true;
     }
     
     // RegExp matched
     // * If appropriate, `field.show.type` will be set to "regexp" by `parse-schema.js`
-    if(field.show.type === "regexp" && rxFindMatch(src, tgt)) {
-        field.show.hidden = false;
-        return field;
+    if(field.show.type === "regexp" && rxFindMatch(src, target)) {
+        return false;
     }
     
     // Values match-ish
     // eslint-disable-next-line eqeqeq
-    if(src == tgt) {
-        field.show.hidden = false;
-        return field;
+    if(src == target) {
+        return false;
     }
     
     // Otherwise this field should hide
-    field.show.hidden = true;
-    return field;
+    return true;
 }
