@@ -45,7 +45,7 @@ function filterHidden(fields, hidden) {
     // source data so we do not modify the form's data.
     var filtered = clone(fields);
 
-    Object.keys(filtered).forEach((key) => {
+    Object.keys(filtered).forEach(function(key) {
         if(hidden.indexOf(key) > -1) {
             filtered[key] = null;
         }

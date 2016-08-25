@@ -16,7 +16,7 @@ export function view(ctrl, options) {
         registerHidden = options.registerHidden,
         mFields = [];
 
-    mFields = fields.map((field, index) => {
+    mFields = fields.map(function(field, index) {
         var component,
             wasHidden,
             result;

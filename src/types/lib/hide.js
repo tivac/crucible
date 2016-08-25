@@ -6,20 +6,26 @@ import get from "lodash.get";
 
  function rxFindMatch(src, target) {
     var rx = new RegExp(src, "i"),
-        vals;
+        vals,
+        found;
     
     if(rx.test(target)) {
         return true;
     }
 
-    vals = Array.isArray(target) ? target :
-        Object.keys(target).map((key) => target[key]); // Make array of values.
-
-    if(vals.find((str) => rx.test(str))) {
-        return true;
+    if(Array.isArray(target)) {
+        vals = target;
+    } else {
+        vals = Object.keys(target).map(function(key) {
+            return target[key];
+        });
     }
 
-    return false;
+    found = vals.find(function(str) {
+        return rx.test(str);
+    });
+
+    return found;
  }
 
 export default function checkHidden(state, field) {
