@@ -2,7 +2,6 @@ import m from "mithril";
 import assign from "lodash.assign";
 
 import id from "./id";
-import hide from "./hide";
 import label from "./label";
 
 /**
@@ -21,7 +20,7 @@ export default function(args, view) {
             // Update data object w/ default status of the field (if set)
 
             // Figure out selected status for children
-            ctrl.selected = function(opts) {
+            ctrl.checkSelected = function(opts) {
                 var field  = opts.field,
                     values = opts.data,
                     matches,
@@ -55,14 +54,7 @@ export default function(args, view) {
         },
 
         view : function(ctrl, options) {
-            var hidden = hide(options),
-                children;
-            
-            // if(hidden) {
-            //     return hidden;
-            // }
-
-            children = ctrl.selected(options);
+            var children = ctrl.checkSelected(options);
             
             return m("div", { class : options.class },
                 label(ctrl, options, children),

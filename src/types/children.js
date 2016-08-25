@@ -17,15 +17,28 @@ import css from "./lib/types.css";
 // Bound below
 var types;
 
-function becameHidden(field) {
-    var show = field.show;
 
-    return show &&
-        !isUndefined(show.prevHidden) &&
-        !isUndefined(show.hidden) &&
-        !show.prevHidden &&
-        show.hidden;
+function became(field, is) {
+    var show = field.show,
+        valid = show && !isUndefined(show.prevHidden) && !isUndefined(show.hidden);
+
+    if(!valid) {
+        return false;
+    }
+
+    return (is === "hidden") ?
+        !show.prevHidden && show.hidden :
+        show.prevHidden && !show.hidden;
 }
+
+function becameHidden(field) {
+    return became(field, "hidden");
+}
+
+function becameShown(field) {
+    return became(field, "shown");
+}
+
 
 export function view(ctrl, options) {
     var fields = options.fields || [],
@@ -34,7 +47,10 @@ export function view(ctrl, options) {
         field,
         i,
         hidden,
-        result;
+        result,
+        hidIndex;
+
+   // options.hidden = [];
 
     // mFields = fields.map((field, index) => {
     for(i = 0; i < fields.length; i++) {
@@ -44,8 +60,12 @@ export function view(ctrl, options) {
         field = checkIsHidden(options.state, field);
 
         if(becameHidden(field)) {
-            console.log("Child became hidden, TODO unset ctrl value.");
+            options.setHidden(field.key, true);
+        } else if(becameShown(field)) {
+            options.setHidden(field.key, false);
         }
+        
+        // debugger;
 
         if(!component) {
             return m("div",

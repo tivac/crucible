@@ -34,14 +34,7 @@ export default function(type) {
         },
 
         view : function(ctrl, options) {
-            var field  = options.field,
-                hidden = hide(options);
-
-            // debugger;
-
-            // if(hidden) {
-            //     return hidden;
-            // }
+            var field  = options.field;
             
             return m("div", { class : options.class },
                 label(ctrl, options),
@@ -56,10 +49,6 @@ export default function(type) {
                         // events
                         oninput : m.withAttr("value", options.update(options.path))
                     }
-                    // ,
-                    // options.hidden ?
-                    //     (function() { console.log("data-hidden"); return { "data-hidden" : true }; }()) :
-                    //     {}
                 ))
             );
         }

@@ -5,6 +5,7 @@ import isPast from "date-fns/is_past";
 import subSeconds from "date-fns/sub_seconds";
 import upper from "lodash.capitalize";
 import get from "lodash.get";
+import clone from "lodash.clone";
 
 import config, { icons } from "../../config";
 import db from "../../lib/firebase";
@@ -37,9 +38,19 @@ function nulledDate(time) {
     };
 }
 
-function filterHidden(fields) {
-    debugger;
-    return fields;
+function filterHidden(fields, hidden) {
+    // Need to clone here. We're modifying the values attached  
+    // to hidden fields, and must not overwrite that data
+    // so people can un-hide a field without losing their work.
+    var result = clone(fields);
+
+    Object.keys(result).forEach((key) => {
+        if(hidden.indexOf(key) > -1) {
+            result[key] = null;
+        }
+    });
+
+    return result;
 }
 
 export function controller(options) {
@@ -54,7 +65,7 @@ export function controller(options) {
         defaultEndTime   = get(config, "defaults.publish_end_time")   || DEFAULT_END_TIME;
 
     ctrl.init = function() {
-        ctrl.hidden = {};
+        // ctrl.hidden = {};
 
         ctrl.schedule   = false;
 
@@ -159,16 +170,17 @@ export function controller(options) {
 
     ctrl.save = function(opts) {
         var updated = {};
-        debugger;
 
         ctrl.saving = true;
         m.redraw();
 
         updated = {
-            fields : filterHidden( opts.data.fields ),
+            fields : filterHidden( opts.data.fields, opts.hidden ),
             name   : opts.data.name,
             slug   : opts.data.slug || null
         };
+
+        console.log("updated.fields ", updated.fields );
 
         updated = ctrl.addScheduleData(updated);
 
@@ -218,17 +230,17 @@ export function controller(options) {
         return updated;
     };
 
-    ctrl.setHidden = function(field, isHidden) {
-        var wasHidden = ctrl.hidden[field.key];
+    // ctrl.setHidden = function(field, isHidden) {
+    //     var wasHidden = ctrl.hidden[field.key];
 
-        if(wasHidden === isHidden) {
-            return; // No change.
-        }
+    //     if(wasHidden === isHidden) {
+    //         return; // No change.
+    //     }
 
-        if(isHidden) {
-            ctrl.hidden[field.key] = true;
-        }
-    };
+    //     if(isHidden) {
+    //         ctrl.hidden[field.key] = true;
+    //     }
+    // };
 
     ctrl.recalculateTimestamps = function() {
         var start = ctrl.start,

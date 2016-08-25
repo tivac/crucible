@@ -31,7 +31,7 @@ export function controller() {
     ctrl.schema = null;
     ctrl.form   = null;
     ctrl.data   = {};
-    ctrl.hidden = {};
+    ctrl.hidden = [];
 
     schema.on("value", function(snap) {
         ctrl.schema = snap.val();
@@ -67,6 +67,19 @@ export function controller() {
     });
 
     watch(ref);
+
+
+    ctrl.setHidden = function(key, isHidden) {
+        var index = ctrl.hidden.indexOf(key);
+
+        if(isHidden) {
+            ctrl.hidden.push(key);
+            console.log("HIDE :: ", key);
+        } else if(index > -1) {
+            ctrl.hidden.splice(index, 1);
+            console.log("SHOW :: ", key);
+        }
+    };
 
     // Event Handlers
     ctrl.titleChange = function(title) {
@@ -157,7 +170,9 @@ export function view(ctrl) {
                             path   : [ "fields" ],
                             root   : ctrl.ref,
                             state  : ctrl.data.fields,
-                            update : update.bind(null, ctrl.data)
+                            update : update.bind(null, ctrl.data),
+
+                            setHidden : ctrl.setHidden
                         })
                     )
                 )
