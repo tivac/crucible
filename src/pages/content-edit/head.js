@@ -44,11 +44,9 @@ function filterHidden(fields, hidden) {
     // so overwrite the data to be saved, but clone the 
     // source data so we do not modify the form's data.
     var filtered = clone(fields);
-    console.log("filterHidden ", hidden);
 
     Object.keys(filtered).forEach((key) => {
         if(hidden.indexOf(key) > -1) {
-            console.log(`Set <${key}> to null`);
             filtered[key] = null;
         }
     });
@@ -228,6 +226,7 @@ export function controller(options) {
 
         return updated;
     };
+
 
     ctrl.recalculateTimestamps = function() {
         var start = ctrl.start,
