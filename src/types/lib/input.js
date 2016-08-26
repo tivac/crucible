@@ -2,7 +2,6 @@ import m from "mithril";
 import assign from "lodash.assign";
 import get from "lodash.get";
 
-import hide from "./hide";
 import id from "./id";
 import label from "./label";
 
