@@ -3,6 +3,7 @@ import format from "date-fns/format";
 import isFuture from "date-fns/is_future";
 import isPast from "date-fns/is_past";
 import fuzzy from "fuzzysearch";
+import clamp from "lodash.clamp";
 import debounce from "lodash.debounce";
 import slug from "sluggo";
 
@@ -14,18 +15,54 @@ import name from "./name.js";
 
 import css from "./nav.css";
 
-var dateFormat = "MM/DD/YYYY";
+var dateFormat = "MM/DD/YYYY",
+    pg;
+
+
+var PageState = function() {    
+    var MIN_PAGE = 1;
+
+    this.page     = 1;
+    this.itemsPer = 5;
+
+    this.limits = [
+        NaN, // Pad with a NaN so our indexes match page number
+        Date.now()
+    ];
+
+    this.numPages = function() {
+        return this.limits.length - 1;
+    };
+
+
+    this.next = function() {
+        this.page = this.clampPage(++this.page);
+    };
+
+    this.prev = function() {
+        this.page = this.clampPage(--this.page);
+    };
+    this.clampPage = function(pgNum) {
+        console.log("pg.page", clamp(pgNum, MIN_PAGE, this.numPages() ));
+        return clamp(pgNum, MIN_PAGE, this.numPages());
+    };
+};
+
+pg = new PageState();
+
+// temp debug
+window.pg = pg;
 
 export function controller() {
     var ctrl = this,
-
         schema = db.child("schemas/" + m.route.param("schema"));
-
-    ctrl.page = 0;
 
     ctrl.schema  = null;
     ctrl.content = null;
     ctrl.results = null;
+
+    // test
+    pg.someInt = 42;
 
     schema.on("value", function(snap) {
         ctrl.schema = snap.val();
@@ -36,23 +73,61 @@ export function controller() {
 
     // Go get initial data
     // eslint-disable-next-line newline-per-chained-call
-    db.child("content/" + ctrl.schema.key).orderByChild("published_at").on("value", function(snap) {
-        var content = [];
+    // debugger;
+
+    function onValue(snap) {
+        var content = [],
+            oldestTs = Number.MAX_SAFE_INTEGER;
 
         snap.forEach(function(record) {
             var data = record.val();
 
             data.key          = record.key();
-            data.published_at = data.published_at || data.published;
+            data.published_at = data.published_at;
+            data.sort_by      = data.published_at || data.updated_at;
             data.search       = slug(data.name, { separator : "" });
+
+            if(data.sort_by < oldestTs) {
+                oldestTs = data.sort_by;
+            }
 
             content.push(data);
         });
 
+        if(snap.numChildren() === pg.itemsPer) {
+            pg.limits.push(oldestTs);
+        } else {
+            // Fewer results than `itemsPer`, this is definitely the last page.
+            // pg.limits.push(NaN);
+            // TODO do we just do nothing?
+        }
         ctrl.content = content;
 
         m.redraw();
-    });
+    }
+
+
+    // TODO BOOKEND AT MAX
+    ctrl.nextPage = function() {
+        pg.next();
+        ctrl.showPage();
+    };
+    // TODO 0 bookend
+    ctrl.prevPage = function() {
+        pg.prev();
+        ctrl.showPage();
+    };
+
+    ctrl.showPage = function() {
+        // console.log("try get next page with ", pageEndTs);
+        db.child("content/" + ctrl.schema.key)
+            .orderByChild("updated_at")
+            .endAt(pg.limits[pg.page])
+            .limitToLast(pg.itemsPer)
+            .on("value", onValue);
+    };
+
+    ctrl.showPage();
 
     // Event handlers
     ctrl.add = function() {
@@ -116,8 +191,8 @@ export function view(ctrl) {
             m("ul", { class : css.list },
                 content
                 .sort(function(a, b) {
-                    var aTime = a.published_at || a.published || a.updated_at,
-                        bTime = b.published_at || b.published || b.updated_at;
+                    var aTime = a.sort_by,
+                        bTime = b.sort_by;
 
                     return bTime - aTime;
                 })
@@ -194,6 +269,24 @@ export function view(ctrl) {
                     disabled : locked || null
                 },
                 "Add " + ctrl.schema.name
+            )
+        ),
+        m("div", { class : css.metas },
+            m("button", {
+                    onclick  : ctrl.nextPage.bind(ctrl),
+                    class    : css.add,
+                    disabled : locked || pg.page === pg.numPages() || null
+                },
+                "Next Page \>"
+            )
+        ),
+        m("div", { class : css.metas },
+            m("button", {
+                    onclick  : ctrl.prevPage.bind(ctrl),
+                    class    : css.add,
+                    disabled : locked || pg.page === 1 || null
+                },
+                "\< Prev Page"
             )
         )
     );
