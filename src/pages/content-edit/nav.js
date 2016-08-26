@@ -52,6 +52,17 @@ pg = new PageState();
 
 // temp debug
 window.pg = pg;
+window.snapToData = function(snapshot) {
+    var result = {};
+
+    Object.keys(snapshot).forEach((key) => {
+        var item = snapshot[key];
+
+        result[item.slug] = item;
+    });
+
+    return result;
+};
 
 export function controller() {
     var ctrl = this,
@@ -84,7 +95,7 @@ export function controller() {
 
             data.key          = record.key();
             data.published_at = data.published_at;
-            data.sort_by      = data.published_at || data.updated_at;
+            data.sort_by      = data.updated_at;
             data.search       = slug(data.name, { separator : "" });
 
             if(data.sort_by < oldestTs) {
@@ -97,6 +108,12 @@ export function controller() {
         if(snap.numChildren() === pg.itemsPer) {
             pg.limits.push(oldestTs);
         } else {
+            db.child("content/" + ctrl.schema.key)
+                .endAt(oldestTs)
+                .limitToLast(1)
+                .once("value", function(quicksnap) {
+                    debugger;
+                });
             // Fewer results than `itemsPer`, this is definitely the last page.
             // pg.limits.push(NaN);
             // TODO do we just do nothing?
@@ -124,7 +141,7 @@ export function controller() {
             .orderByChild("updated_at")
             .endAt(pg.limits[pg.page])
             .limitToLast(pg.itemsPer)
-            .on("value", onValue);
+            .once("value", onValue);
     };
 
     ctrl.showPage();
@@ -273,20 +290,18 @@ export function view(ctrl) {
         ),
         m("div", { class : css.metas },
             m("button", {
-                    onclick  : ctrl.nextPage.bind(ctrl),
-                    class    : css.add,
-                    disabled : locked || pg.page === pg.numPages() || null
-                },
-                "Next Page \>"
-            )
-        ),
-        m("div", { class : css.metas },
-            m("button", {
                     onclick  : ctrl.prevPage.bind(ctrl),
                     class    : css.add,
                     disabled : locked || pg.page === 1 || null
                 },
                 "\< Prev Page"
+            ),
+            m("button", {
+                    onclick  : ctrl.nextPage.bind(ctrl),
+                    class    : css.add,
+                    disabled : locked || pg.page === pg.numPages() || null
+                },
+                "Next Page \>"
             )
         )
     );
