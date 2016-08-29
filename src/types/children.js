@@ -23,6 +23,13 @@ export function view(ctrl, options) {
 
         component = types[field.type || field];
 
+        if(!component) {
+            return m("div",
+                m("p", "Unknown component"),
+                m("pre", JSON.stringify(field, null, 4))
+            );
+        }
+        
         if(field.show) {
             wasHidden = field.show.hidden;
             field.show.hidden = checkHidden(options.state, field);
@@ -31,13 +38,6 @@ export function view(ctrl, options) {
                 // hidden status changed, notify the controller.
                 registerHidden(field.key, field.show.hidden);
             }
-        }
-
-        if(!component) {
-            return m("div",
-                m("p", "Unknown component"),
-                m("pre", JSON.stringify(field, null, 4))
-            );
         }
 
         result = m.component(component, assign({}, options, {
