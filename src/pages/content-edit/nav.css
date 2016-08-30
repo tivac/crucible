@@ -9,10 +9,19 @@
     composes: section from layout_css;
 
     display: flex;
-    flex: 1 0 200px;;
+    flex: 1 0 200px;
+    max-width: 450px;
 
     border-right: solid 1px #CCC;
     background: #EEE;
+
+    opacity: 1;
+    animation: fadeIn 0.3s linear;
+}
+
+@keyframes fadeIn {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
 }
 
 .filter {
@@ -37,6 +46,7 @@
     padding: 0;
 }
 
+
 .item {
     position: relative;
 
@@ -50,6 +60,12 @@
     background: #DFDFDF;
 
     transition: background-color 0.2s ease-in;
+}
+
+.item .heading {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .published_at {
