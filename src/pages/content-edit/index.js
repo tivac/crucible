@@ -37,6 +37,7 @@ export function controller() {
         ctrl.schema = snap.val();
         ctrl.schema.key = snap.key();
 
+        debugger;
         m.redraw();
     });
 
@@ -63,6 +64,7 @@ export function controller() {
             ctrl.data.slug = sluggo(ctrl.data.name);
         }
 
+        debugger;
         return m.redraw();
     });
 
@@ -81,6 +83,16 @@ export function view(ctrl) {
     if(!ctrl.schema) {
         return m.component(layout);
     }
+
+    console.log("----------------------");
+    console.log("ctrl.data.name", ctrl.data.name);
+
+    if(!ctrl.data.name) {
+        var e = new Error();
+        
+        throw e;
+    }
+    // console.log("new Error().stack", new Error().stack);
 
     title = [ get(ctrl.data, "name"), ctrl.schema.name ]
         .filter(Boolean)
@@ -117,6 +129,7 @@ export function view(ctrl) {
 
                                 // force a redraw so publishing component can get
                                 // new args w/ actual validity
+                                debugger;
                                 m.redraw();
                             }
                         },
@@ -148,6 +161,13 @@ export function view(ctrl) {
                                 // Events
                                 oninput : m.withAttr("innerText", ctrl.titleChange)
                             },
+                            // (function() {
+                            //     if(!this.schema || !this.data.name) {
+                            //         debugger;
+                            //     }
+
+                            //     return null;
+                            // }).call(ctrl),
                             name(ctrl.schema, ctrl.data)
                         ),
                         m.component(children, {

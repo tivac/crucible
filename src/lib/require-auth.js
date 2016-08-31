@@ -4,7 +4,8 @@ import config from "../config";
 import valid from "./valid-auth";
 import prefix from "./prefix";
 
-export default function(component) {
+export default function(component, r) {
+    console.log("r", r);
     return {
         controller : function() {
             /* eslint consistent-return: 0 */
@@ -14,7 +15,8 @@ export default function(component) {
         },
 
         view : function() {
-            return m.component(component);
+            // return m.component(component);
+            return component;
         }
     };
 }

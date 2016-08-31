@@ -3,7 +3,6 @@ import format from "date-fns/format";
 import isFuture from "date-fns/is_future";
 import isPast from "date-fns/is_past";
 import fuzzy from "fuzzysearch";
-import clamp from "lodash.clamp";
 import debounce from "lodash.debounce";
 import slug from "sluggo";
 
@@ -11,58 +10,19 @@ import config, { icons } from "../../config.js";
 
 import db from "../../lib/firebase.js";
 import prefix from "../../lib/prefix.js";
+import PageState from "../../lib/nav-page-state.js";
+
 import name from "./name.js";
 
 import css from "./nav.css";
 
-var dateFormat = "MM/DD/YYYY",
-    pg;
+var DB_ORDER_BY = "updated_at",
+    dateFormat = "MM/DD/YYYY",
+    pg = new PageState();
 
 
-var PageState = function() {    
-    var MIN_PAGE = 1;
-
-    this.page     = 1;
-    this.itemsPer = 5;
-
-    this.limits = [
-        NaN, // Pad with a NaN so our indexes match page number
-        Date.now()
-    ];
-
-    this.numPages = function() {
-        return this.limits.length - 1;
-    };
-
-
-    this.next = function() {
-        this.page = this.clampPage(++this.page);
-    };
-
-    this.prev = function() {
-        this.page = this.clampPage(--this.page);
-    };
-    this.clampPage = function(pgNum) {
-        console.log("pg.page", clamp(pgNum, MIN_PAGE, this.numPages() ));
-        return clamp(pgNum, MIN_PAGE, this.numPages());
-    };
-};
-
-pg = new PageState();
-
-// temp debug
+console.log("undo global, temp");
 window.pg = pg;
-window.snapToData = function(snapshot) {
-    var result = {};
-
-    Object.keys(snapshot).forEach((key) => {
-        var item = snapshot[key];
-
-        result[item.slug] = item;
-    });
-
-    return result;
-};
 
 export function controller() {
     var ctrl = this,
@@ -71,11 +31,16 @@ export function controller() {
     ctrl.schema  = null;
     ctrl.content = null;
     ctrl.results = null;
+    ctrl.pages = null;
 
-    // test
-    pg.someInt = 42;
+    ctrl.onunload = function(a, b, c) {
+        console.log("onunload NAV :: a, b, c", a, b, c);
+    };
 
     schema.on("value", function(snap) {
+        if(!snap.exists()) {
+            console.error("Error retrieving schema snapshot from Firebase.");
+        }
         ctrl.schema = snap.val();
         ctrl.schema.key = snap.key();
 
@@ -84,67 +49,71 @@ export function controller() {
 
     // Go get initial data
     // eslint-disable-next-line newline-per-chained-call
-    // debugger;
 
+    // Having trouble naming this padPage thing. "overflow item"?
+    // I need to peek at the next page's first item to precalc stuff
+    // for it, like its starting timestamp, and whether or not we're 
+    // currently on the last page.
     function onValue(snap) {
-        var content = [],
-            oldestTs = Number.MAX_SAFE_INTEGER;
+        var recordCt = Object.keys(snap.val()).length,
+            hasOverflow = recordCt === pg.itemsPer + 1,
+            isLastPage = !hasOverflow && recordCt <= pg.itemsPer,
+
+            oldestTs = Number.MAX_SAFE_INTEGER,
+            iter = 0,
+            content = [],
+            overflow;
 
         snap.forEach(function(record) {
-            var data = record.val();
+            var data = record.val(),
+                isOverflowItem = ++iter > pg.itemsPer;
+
+            if(isOverflowItem) {
+                overflow = record;
+
+                return true; // Kill the loop, we're done.. (Firebase API)
+            }
 
             data.key          = record.key();
             data.published_at = data.published_at;
-            data.sort_by      = data.updated_at;
+            data.order_by     = data[DB_ORDER_BY];
             data.search       = slug(data.name, { separator : "" });
 
-            if(data.sort_by < oldestTs) {
-                oldestTs = data.sort_by;
+            if(data.order_by < oldestTs) {
+                oldestTs = data.order_by;
             }
 
             content.push(data);
+            return null;
         });
 
-        if(snap.numChildren() === pg.itemsPer) {
-            pg.limits.push(oldestTs);
-        } else {
-            db.child("content/" + ctrl.schema.key)
-                .endAt(oldestTs)
-                .limitToLast(1)
-                .once("value", function(quicksnap) {
-                    debugger;
-                });
-            // Fewer results than `itemsPer`, this is definitely the last page.
-            // pg.limits.push(NaN);
-            // TODO do we just do nothing?
-        }
         ctrl.content = content;
+
+        if(!isLastPage && overflow) {        
+            pg.limits.push(oldestTs);
+        }
 
         m.redraw();
     }
 
-
-    // TODO BOOKEND AT MAX
     ctrl.nextPage = function() {
         pg.next();
         ctrl.showPage();
     };
-    // TODO 0 bookend
     ctrl.prevPage = function() {
         pg.prev();
         ctrl.showPage();
     };
 
     ctrl.showPage = function() {
-        // console.log("try get next page with ", pageEndTs);
+        var overflowItem = 1;
+
         db.child("content/" + ctrl.schema.key)
-            .orderByChild("updated_at")
+            .orderByChild(DB_ORDER_BY)
             .endAt(pg.limits[pg.page])
-            .limitToLast(pg.itemsPer)
+            .limitToLast(pg.itemsPer + overflowItem)
             .once("value", onValue);
     };
-
-    ctrl.showPage();
 
     // Event handlers
     ctrl.add = function() {
@@ -189,6 +158,9 @@ export function controller() {
             ref.remove().catch(console.error.bind(console));
         }
     };
+
+
+    ctrl.showPage();
 }
 
 export function view(ctrl) {
@@ -208,14 +180,16 @@ export function view(ctrl) {
             m("ul", { class : css.list },
                 content
                 .sort(function(a, b) {
-                    var aTime = a.sort_by,
-                        bTime = b.sort_by;
+                    var aTime = a.order_by,
+                        bTime = b.order_by;
 
+                    // return aTime - bTime;
                     return bTime - aTime;
                 })
                 .map(function(data) {
                     var url      = "/content/" + ctrl.schema.key + "/" + data.key,
                         cssClass = css.item,
+                        pageTs = pg.limits[pg.page],
                         status;
 
                     if(data.published_at && current.indexOf(url) === 0) {
@@ -240,6 +214,7 @@ export function view(ctrl) {
                     return m("li", { class : cssClass },
                         m("a", {
                                 class  : css.anchor,
+                                // href   : prefix("/content/" + ctrl.schema.key + "/" + data.key + "?pgTs=" + pageTs),
                                 href   : prefix("/content/" + ctrl.schema.key + "/" + data.key),
                                 config : m.route
                             },

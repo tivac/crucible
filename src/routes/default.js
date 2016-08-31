@@ -12,6 +12,7 @@ import * as schemaEdit from "../pages/schema-edit/index.js";
 import * as edit from "../pages/content-edit/index.js";
 
 export default function() {
+    console.log("routes/default");
     m.route(document.body, prefix("/"), keys({
         "/" : auth(home),
 
@@ -20,9 +21,9 @@ export default function() {
 
         "/content/new" : auth(schemaNew),
 
-        "/content/:schema"      : auth(edit),
         "/content/:schema/edit" : auth(schemaEdit),
         "/content/:schema/:id"  : auth(edit),
+        "/content/:schema"      : auth(edit),
         
         "/..." : {
             view : function() {
