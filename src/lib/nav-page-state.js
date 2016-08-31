@@ -15,8 +15,11 @@ var PageState = function() {
         return this.limits.length - 1;
     };
 
-    this.pageTs = function() {
+    this.currPageTs = function() {
         return this.limits[this.page];
+    };
+    this.hasNextPageTs = function() {
+        return Boolean(this.limits[this.page + 1]);
     };
 
     this.next = function() {

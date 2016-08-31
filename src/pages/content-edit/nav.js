@@ -21,80 +21,163 @@ var DB_ORDER_BY = "updated_at",
     pg = new PageState();
 
 
-console.log("undo global, temp");
+console.log("TEMP undo global pg TEMP");
 window.pg = pg;
+
+function contentFromRecord(record) {
+    var data = record.val();
+
+    data.key          = record.key();
+    data.published_at = data.published_at;
+    data.order_by     = data[DB_ORDER_BY];
+    data.search       = slug(data.name, { separator : "" });
+
+    return data;
+}
+
 
 export function controller() {
     var ctrl = this,
-        schema = db.child("schemas/" + m.route.param("schema"));
+        schema;
 
     ctrl.schema  = null;
     ctrl.content = null;
     ctrl.results = null;
-    ctrl.pages = null;
 
-    ctrl.onunload = function(a, b, c) {
-        console.log("onunload NAV :: a, b, c", a, b, c);
-    };
-
-    schema.on("value", function(snap) {
-        if(!snap.exists()) {
-            console.error("Error retrieving schema snapshot from Firebase.");
-        }
-        ctrl.schema = snap.val();
-        ctrl.schema.key = snap.key();
-
-        m.redraw();
-    });
+    ctrl.pg = pg;
+    ctrl.contentLoc = null;
+    ctrl.queryRef = null;
 
     // Go get initial data
     // eslint-disable-next-line newline-per-chained-call
 
-    // Having trouble naming this padPage thing. "overflow item"?
-    // I need to peek at the next page's first item to precalc stuff
-    // for it, like its starting timestamp, and whether or not we're 
-    // currently on the last page.
-    function onValue(snap) {
-        var recordCt = Object.keys(snap.val()).length,
-            hasOverflow = recordCt === pg.itemsPer + 1,
-            isLastPage = !hasOverflow && recordCt <= pg.itemsPer,
+    // We need to check for an "overflowItem" to peek at
+    // the next page's first item. This lets us grab the
+    // next page's timestamp limit, or find we're on the last page.
+    function onNext(snap) {
+        var recordCt    = Object.keys(snap.val()).length,
+            isLastPage  = recordCt <= pg.itemsPer,
+            hasOverflow = !isLastPage && recordCt === pg.itemsPer + 1,
 
             oldestTs = Number.MAX_SAFE_INTEGER,
-            iter = 0,
-            content = [],
+            content  = [],
             overflow;
 
         snap.forEach(function(record) {
-            var data = record.val(),
-                isOverflowItem = ++iter > pg.itemsPer;
+            var item = contentFromRecord(record);
 
-            if(isOverflowItem) {
-                overflow = record;
-
-                return true; // Kill the loop, we're done.. (Firebase API)
-            }
-
-            data.key          = record.key();
-            data.published_at = data.published_at;
-            data.order_by     = data[DB_ORDER_BY];
-            data.search       = slug(data.name, { separator : "" });
-
-            if(data.order_by < oldestTs) {
-                oldestTs = data.order_by;
-            }
-
-            content.push(data);
-            return null;
+            oldestTs = (item.order_by < oldestTs) ? item.order_by : oldestTs;
+            content.push(item);
         });
 
+        overflow = (hasOverflow) ? content.pop() : null;
         ctrl.content = content;
 
         if(!isLastPage && overflow) {        
             pg.limits.push(oldestTs);
         }
+    }
+
+    // When we go backward, there's very little work to be done.
+    function onPrev(snap) {
+        var content = [];
+
+        snap.forEach(function(record) {
+            var item = contentFromRecord(record);
+
+            content.push(item);
+        });
+
+        ctrl.content = content;
+    }
+
+    function onValue(snap) {
+        var wentPrev = ctrl.pg.hasNextPageTs();
+
+        if(wentPrev) {
+            onPrev.call(this, snap);
+        } else {
+            onNext.call(this, snap);
+        }
 
         m.redraw();
     }
+
+    function onBackfillPages(pgTs, snap) {
+        var iter = 0;
+
+        var ts = [];
+
+        console.log("onBackfillPages");
+
+        // These pages are in Ascending order, but we
+        // need to examine them in descending order.
+        snap.forEach(function(record) {
+            // if(++iter === pg.itemsPer) {
+            //     pg.limits.push(record.val()[DB_ORDER_BY]);
+            //     iter = 0;
+            // }
+
+            ts.push({
+                ts   : record.val()[DB_ORDER_BY],
+                name : record.val().slug
+            });
+        });
+
+        ts.reverse();
+        while(ts.length > (iter += pg.itemsPer)) {
+            pg.limits.push(ts[iter].ts);
+        }
+
+        pg.limits.push(pgTs);
+        pg.page = pg.limits.indexOf(pgTs);
+
+        ctrl.showPage();
+    }
+
+    function backfillPages(pgTs) {
+        console.log("TODO backfill pages");
+
+        // pgTs++; // Don't include current page's first item.
+
+        ctrl.contentLoc
+            .orderByChild(DB_ORDER_BY)
+            .startAt(pgTs)
+            .once("value", onBackfillPages.bind(ctrl, pgTs));
+    }
+
+    function onSchemaValue(snap) {
+        var pgTs = m.route.param("pgTs"),
+            needsBackfill;
+
+        if(pgTs) {
+            pgTs = parseInt(pgTs, 10);
+            needsBackfill = pg.limits.indexOf(pgTs) === -1;
+        }
+
+        if(!snap.exists()) {
+            console.error("Error retrieving schema snapshot from Firebase.");
+            return;
+        }
+
+        ctrl.schema = snap.val();
+        ctrl.schema.key = snap.key();
+
+        ctrl.contentLoc = db.child("content/" + ctrl.schema.key);
+
+        if(needsBackfill) {
+            pgTs = parseInt(pgTs, 10);
+            backfillPages(pgTs);
+        } else {
+            ctrl.showPage();
+        }
+    }
+
+    ctrl.init = function() {
+        schema = db.child("schemas/" + m.route.param("schema"));
+        schema.on("value", onSchemaValue);
+    };
+
 
     ctrl.nextPage = function() {
         pg.next();
@@ -102,18 +185,29 @@ export function controller() {
     };
     ctrl.prevPage = function() {
         pg.prev();
-        ctrl.showPage();
+        ctrl.showPage("back");
     };
 
-    ctrl.showPage = function() {
-        var overflowItem = 1;
+    ctrl.showPage = function(back) {
+        var overflowItem = (back === "back") ? 0 : 1;
 
-        db.child("content/" + ctrl.schema.key)
+        if(ctrl.queryRef) {
+            ctrl.queryRef.off("value", onValue);
+        }
+
+        // Firebase orders Ascending, so the lowest value &
+        // oldest entry will be first in the snapshot.
+        // We want items in descneding, so we slice our
+        // query from the other end via .endAt/.limitToLast
+        ctrl.queryRef = ctrl.contentLoc
             .orderByChild(DB_ORDER_BY)
             .endAt(pg.limits[pg.page])
-            .limitToLast(pg.itemsPer + overflowItem)
-            .once("value", onValue);
+            .limitToLast(pg.itemsPer + overflowItem);
+
+        ctrl.queryRef.on("value", onValue);
     };
+
+
 
     // Event handlers
     ctrl.add = function() {
@@ -139,6 +233,7 @@ export function controller() {
         if(input.length < 2) {
             ctrl.results = false;
 
+            console.log("nav  : filter redraw");
             return m.redraw();
         }
 
@@ -148,6 +243,7 @@ export function controller() {
             return fuzzy(input, content.search);
         });
 
+        console.log("nav  : filter redraw");
         return m.redraw();
     }, 100);
 
@@ -160,7 +256,7 @@ export function controller() {
     };
 
 
-    ctrl.showPage();
+    ctrl.init();
 }
 
 export function view(ctrl) {
@@ -189,7 +285,8 @@ export function view(ctrl) {
                 .map(function(data) {
                     var url      = "/content/" + ctrl.schema.key + "/" + data.key,
                         cssClass = css.item,
-                        pageTs = pg.limits[pg.page],
+                        page = ctrl.pg.page,
+                        pageTs = ctrl.pg.currPageTs(),
                         status;
 
                     if(data.published_at && current.indexOf(url) === 0) {
@@ -214,9 +311,13 @@ export function view(ctrl) {
                     return m("li", { class : cssClass },
                         m("a", {
                                 class  : css.anchor,
-                                // href   : prefix("/content/" + ctrl.schema.key + "/" + data.key + "?pgTs=" + pageTs),
-                                href   : prefix("/content/" + ctrl.schema.key + "/" + data.key),
-                                config : m.route
+                                config : m.route,
+
+                                // href : prefix("/content/" + ctrl.schema.key + "/" + data.key),
+                                href : prefix("/content/" + ctrl.schema.key + "/" + data.key +
+                                    "?pgTs=" + ctrl.pg.currPageTs()
+                                    // "?" + [ "page=" + page, "pageTs=" + pageTs ].join("&")
+                                )
                             },
                             m("h3", { class : css.heading }, name(ctrl.schema, data)),
                             m("p", { class : css.date },
@@ -281,3 +382,4 @@ export function view(ctrl) {
         )
     );
 }
+

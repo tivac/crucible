@@ -37,7 +37,7 @@ export function controller() {
         ctrl.schema = snap.val();
         ctrl.schema.key = snap.key();
 
-        debugger;
+        console.log("index : schema onValue redraw");
         m.redraw();
     });
 
@@ -64,7 +64,7 @@ export function controller() {
             ctrl.data.slug = sluggo(ctrl.data.name);
         }
 
-        debugger;
+        console.log("index : ref onValue redraw");
         return m.redraw();
     });
 
@@ -84,14 +84,13 @@ export function view(ctrl) {
         return m.component(layout);
     }
 
-    console.log("----------------------");
-    console.log("ctrl.data.name", ctrl.data.name);
+    console.log("-- VIEW RENDER -- ");
 
-    if(!ctrl.data.name) {
-        var e = new Error();
+    // if(!ctrl.data.name) {
+    //     var e = new Error();
         
-        throw e;
-    }
+    //     throw e;
+    // }
     // console.log("new Error().stack", new Error().stack);
 
     title = [ get(ctrl.data, "name"), ctrl.schema.name ]
@@ -129,7 +128,8 @@ export function view(ctrl) {
 
                                 // force a redraw so publishing component can get
                                 // new args w/ actual validity
-                                debugger;
+
+                                console.log("index : form config redraw");
                                 m.redraw();
                             }
                         },

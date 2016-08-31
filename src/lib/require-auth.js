@@ -15,8 +15,7 @@ export default function(component, r) {
         },
 
         view : function() {
-            // return m.component(component);
-            return component;
+            return m.component(component);
         }
     };
 }
