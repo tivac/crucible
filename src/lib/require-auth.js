@@ -4,8 +4,7 @@ import config from "../config";
 import valid from "./valid-auth";
 import prefix from "./prefix";
 
-export default function(component, r) {
-    console.log("r", r);
+export default function(component) {
     return {
         controller : function() {
             /* eslint consistent-return: 0 */

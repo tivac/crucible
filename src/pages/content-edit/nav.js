@@ -22,7 +22,7 @@ var DB_ORDER_BY = "updated_at",
 
 
 console.log("TEMP undo global pg TEMP");
-window.pg = pg;
+// window.pg = pg;
 
 function contentFromRecord(record) {
     var data = record.val();
@@ -70,7 +70,7 @@ export function controller() {
             content.push(item);
         });
 
-        overflow = (hasOverflow) ? content.pop() : null;
+        overflow = (hasOverflow) ? content.splice(0, 1)[0] : null;
         ctrl.content = content;
 
         if(!isLastPage && overflow) {        
@@ -79,7 +79,7 @@ export function controller() {
     }
 
     // When we go backward, there's very little work to be done.
-    function onPrev(snap) {
+    function onPageReturn(snap) {
         var content = [];
 
         snap.forEach(function(record) {
@@ -88,14 +88,16 @@ export function controller() {
             content.push(item);
         });
 
+        content.splice(0, 1);
+
         ctrl.content = content;
     }
 
     function onValue(snap) {
-        var wentPrev = ctrl.pg.hasNextPageTs();
+        var wentPrev = Boolean(ctrl.pg.nextPageTs());
 
         if(wentPrev) {
-            onPrev.call(this, snap);
+            onPageReturn.call(this, snap);
         } else {
             onNext.call(this, snap);
         }
@@ -104,42 +106,30 @@ export function controller() {
     }
 
     function onBackfillPages(pgTs, snap) {
-        var iter = 0;
-
-        var ts = [];
-
-        console.log("onBackfillPages");
+        var iter = 0,
+            ts = [];
 
         // These pages are in Ascending order, but we
         // need to examine them in descending order.
         snap.forEach(function(record) {
-            // if(++iter === pg.itemsPer) {
-            //     pg.limits.push(record.val()[DB_ORDER_BY]);
-            //     iter = 0;
-            // }
-
-            ts.push({
-                ts   : record.val()[DB_ORDER_BY],
-                name : record.val().slug
-            });
+            ts.push( record.val()[DB_ORDER_BY] );
         });
-
         ts.reverse();
-        while(ts.length > (iter += pg.itemsPer)) {
-            pg.limits.push(ts[iter].ts);
+
+        iter += pg.itemsPer;
+        while(ts.length > iter) {
+            if(pg.limits.indexOf( ts[iter] ) === -1) {
+                pg.limits.push( ts[iter] );
+            }
+            iter += pg.itemsPer;
         }
 
-        pg.limits.push(pgTs);
         pg.page = pg.limits.indexOf(pgTs);
 
         ctrl.showPage();
     }
 
     function backfillPages(pgTs) {
-        console.log("TODO backfill pages");
-
-        // pgTs++; // Don't include current page's first item.
-
         ctrl.contentLoc
             .orderByChild(DB_ORDER_BY)
             .startAt(pgTs)
@@ -150,14 +140,14 @@ export function controller() {
         var pgTs = m.route.param("pgTs"),
             needsBackfill;
 
-        if(pgTs) {
-            pgTs = parseInt(pgTs, 10);
-            needsBackfill = pg.limits.indexOf(pgTs) === -1;
-        }
-
         if(!snap.exists()) {
             console.error("Error retrieving schema snapshot from Firebase.");
             return;
+        }
+
+        if(pgTs) {
+            pgTs = parseInt(pgTs, 10);
+            needsBackfill = pg.limits.indexOf(pgTs) === -1;
         }
 
         ctrl.schema = snap.val();
@@ -178,25 +168,39 @@ export function controller() {
         schema.on("value", onSchemaValue);
     };
 
-
     ctrl.nextPage = function() {
         pg.next();
         ctrl.showPage();
     };
     ctrl.prevPage = function() {
         pg.prev();
-        ctrl.showPage("back");
+        ctrl.showPage();
     };
 
-    ctrl.showPage = function(back) {
-        var overflowItem = (back === "back") ? 0 : 1;
+    ctrl.showPage = function() {
+        var overflowItem = 1,
+            pageTs = pg.currPageTs(),
+            nextTs = pg.nextPageTs();
 
         if(ctrl.queryRef) {
-            ctrl.queryRef.off("value", onValue);
+            ctrl.queryRef.off();
         }
 
-        // Firebase orders Ascending, so the lowest value &
-        // oldest entry will be first in the snapshot.
+        console.log("pg.page", pg.page, "of", pg.limits.length - 1);
+
+        if(nextTs) {
+            // This is safer in the case that firebase updates 
+            // because of another user's acitvity.
+            ctrl.queryRef = ctrl.contentLoc
+                .orderByChild(DB_ORDER_BY)
+                .startAt(nextTs)
+                .endAt(pageTs);
+
+            ctrl.queryRef.on("value", onValue);
+        }
+
+        // Firebase orders Ascending, so the 
+        // lowest/oldest entry will be first in the snapshot.
         // We want items in descneding, so we slice our
         // query from the other end via .endAt/.limitToLast
         ctrl.queryRef = ctrl.contentLoc
@@ -206,7 +210,6 @@ export function controller() {
 
         ctrl.queryRef.on("value", onValue);
     };
-
 
 
     // Event handlers
@@ -233,7 +236,6 @@ export function controller() {
         if(input.length < 2) {
             ctrl.results = false;
 
-            console.log("nav  : filter redraw");
             return m.redraw();
         }
 
@@ -243,7 +245,6 @@ export function controller() {
             return fuzzy(input, content.search);
         });
 
-        console.log("nav  : filter redraw");
         return m.redraw();
     }, 100);
 
@@ -285,7 +286,6 @@ export function view(ctrl) {
                 .map(function(data) {
                     var url      = "/content/" + ctrl.schema.key + "/" + data.key,
                         cssClass = css.item,
-                        page = ctrl.pg.page,
                         pageTs = ctrl.pg.currPageTs(),
                         status;
 
@@ -313,10 +313,8 @@ export function view(ctrl) {
                                 class  : css.anchor,
                                 config : m.route,
 
-                                // href : prefix("/content/" + ctrl.schema.key + "/" + data.key),
                                 href : prefix("/content/" + ctrl.schema.key + "/" + data.key +
-                                    "?pgTs=" + ctrl.pg.currPageTs()
-                                    // "?" + [ "page=" + page, "pageTs=" + pageTs ].join("&")
+                                    "?pgTs=" + pageTs
                                 )
                             },
                             m("h3", { class : css.heading }, name(ctrl.schema, data)),

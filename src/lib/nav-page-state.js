@@ -4,7 +4,7 @@ var PageState = function() {
     var MIN_PAGE = 1;
 
     this.page     = 1;
-    this.itemsPer = 5;
+    this.itemsPer = 4;
 
     this.limits = [
         NaN, // Pad with a NaN so our indexes match page number
@@ -18,8 +18,10 @@ var PageState = function() {
     this.currPageTs = function() {
         return this.limits[this.page];
     };
-    this.hasNextPageTs = function() {
-        return Boolean(this.limits[this.page + 1]);
+    this.nextPageTs = function() {
+        var nextIndex = this.page + 1;
+
+        return this.limits.length > nextIndex && this.limits[nextIndex];
     };
 
     this.next = function() {
