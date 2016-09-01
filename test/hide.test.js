@@ -55,7 +55,7 @@ describe("Anthracite", () => {
             assert(!out);
         });
         
-        it("should return an empty div if values don't match (value)", () => {
+        it("should return true if values don't match (value)", () => {
             var out = query(hide({
                     state : {
                         fooga : true
@@ -69,10 +69,10 @@ describe("Anthracite", () => {
                     }
                 }));
             
-            assert(out.has(".hidden"));
+            assert(out);
         });
         
-        it("should return an empty div if values don't match (regexp)", () => {
+        it("should return true if values don't match (regexp)", () => {
             var out = query(hide({
                     state : {
                         fooga : "wooga"
@@ -87,7 +87,7 @@ describe("Anthracite", () => {
                     }
                 }));
             
-            assert(out.has(".hidden"));
+            assert(out);
         });
     });
 });

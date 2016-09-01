@@ -33,7 +33,8 @@ describe("Anthracite", () => {
                     state : {},
                     field : {
                         show : {
-                            field : "fooga"
+                            hidden : true,
+                            field  : "fooga"
                         }
                     }
                 }));
