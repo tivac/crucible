@@ -27,21 +27,7 @@ describe("Anthracite", () => {
             
             assert(out.has("div"));
         });
-        
-        it("should render hidden", () => {
-            var out = query(view(null, {
-                    state : {},
-                    field : {
-                        show : {
-                            hidden : true,
-                            field  : "fooga"
-                        }
-                    }
-                }));
-            
-            assert(out.has(".hidden"));
-        });
-        
+ 
         it("should respect options.class", () => {
             var out = query(view(null, {
                     field : {},

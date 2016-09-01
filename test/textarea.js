@@ -37,26 +37,6 @@ describe("Anthracite", () => {
             assert(out.has("div"));
         });
         
-        it("should render hidden", () => {
-            var ctrl = new Controller({
-                    path    : [],
-                    details : {
-                        key : "textarea"
-                    }
-                }),
-                
-                out = query(view(ctrl, {
-                    state : {},
-                    field : {
-                        show : {
-                            field : "fooga"
-                        }
-                    }
-                }));
-            
-            assert(out.has(".hidden"));
-        });
-        
         it("should respect options.class", () => {
             var ctrl = new Controller({
                     path    : [],
