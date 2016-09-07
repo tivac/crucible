@@ -6,6 +6,7 @@ var fs = require("fs"),
     duration = require("humanize-duration"),
     size     = require("filesize"),
 
+    files  = require("./lib/files"),
     config = require("./lib/rollup")(),
     
     start;
