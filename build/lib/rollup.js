@@ -6,7 +6,7 @@ var path = require("path"),
     entry = path.resolve("./src/index.js"),
 
     // Firebase included as a banner to avoid all sorts of weird bundling issues :mad:
-    firebase = require("fs").readFileSync("./node_modules/firebase/firebase.js", "utf8");
+    firebase = require("fs").readFileSync("./node_modules/firebase/lib/firebase-web.js", "utf8");
 
 module.exports = function(options) {
     var opts = options || {};
@@ -32,7 +32,8 @@ module.exports = function(options) {
             require("rollup-plugin-node-builtins")(),
             
             require("rollup-plugin-node-resolve")({
-                browser : true
+                browser : true,
+                ignoreGlobal : true
             }),
             
             require("rollup-plugin-commonjs")(),
