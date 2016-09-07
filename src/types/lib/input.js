@@ -16,7 +16,7 @@ export default function(type) {
                 
             ctrl.id = id(options);
             
-            // tivac/anthracite#96
+            // tivac/crucible#96
             // If this is a new item (never been updated) set the default value
             // Don't want to use that value on every render because it is bad UX,
             // the user becomes unable to clear out the field
