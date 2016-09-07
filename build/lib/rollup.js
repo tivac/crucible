@@ -6,7 +6,7 @@ var path = require("path"),
     entry = path.resolve("./src/index.js"),
 
     // Firebase included as a banner to avoid all sorts of weird bundling issues :mad:
-    firebase = require("fs").readFileSync("./node_modules/firebase/lib/firebase-web.js", "utf8");
+    firebase = require("fs").readFileSync("./build/external/firebase-2.4.2.js", "utf8");
 
 module.exports = function(options) {
     var opts = options || {};
@@ -25,7 +25,7 @@ module.exports = function(options) {
         ],
 
         globals : {
-            firebase : "firebase"
+            firebase : "Firebase"
         },
 
         plugins : [
