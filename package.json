@@ -3,6 +3,7 @@
   "version": "0.3.0",
   "description": "Serverless CMS backed by Firebase",
   "main": "index.js",
+  "repository": "tivac/crucible",
   "scripts": {
     "build": "node build/build.js",
     "export": "node build/export.js",
@@ -22,8 +23,6 @@
   "devDependencies": {
     "awesomplete": "^1.1.0",
     "better-assert": "^1.0.2",
-    "browserify": "^13.0.0",
-    "bundle-collapser": "^1.2.1",
     "chokidar": "^1.5.1",
     "codemirror": "^5.11.0",
     "connect": "^3.4.1",
@@ -62,7 +61,6 @@
     "postcss-nested": "^1.0.0",
     "pretty-bytes": "^4.0.2",
     "purecss": "^0.6.0",
-    "randexp": "^0.4.2",
     "remarkable": "^1.6.2",
     "rollup": "^0.34.8",
     "rollup-plugin-babel": "^2.6.1",
@@ -76,13 +74,9 @@
     "run-parallel": "^1.1.4",
     "shelljs": "^0.7.3",
     "sluggo": "^0.2.0",
-    "standard-version": "^2.1.2",
-    "uglify-js": "^2.6.1",
     "unique-slug": "^2.0.0",
     "url": "^0.11.0",
     "url-join": "0.0.1",
-    "watchify": "^3.7.0",
-    "webworkify": "^1.1.0",
     "whatwg-fetch": "^0.11.0"
   },
   "eslintConfig": {
