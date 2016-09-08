@@ -1,9 +1,7 @@
-var Firebase = require("firebase"),
-    firebase;
-
+import Firebase from "firebase";
 import config from "../config";
 
-firebase = new Firebase(config.firebase);
+var firebase = new Firebase(config.firebase);
 
 firebase.TIMESTAMP = Firebase.ServerValue.TIMESTAMP;
 
