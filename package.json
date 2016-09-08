@@ -52,7 +52,7 @@
     "lodash.times": "^4.0.0",
     "minimist": "^1.2.0",
     "mithril": "^0.2.0",
-    "mithril-objectify": "2.2.3",
+    "mithril-objectify": "^3.0.2",
     "mithril-query": "^1.0.0",
     "mocha": "^3.0.2",
     "modular-css": "^0.27.1",

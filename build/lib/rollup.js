@@ -62,16 +62,14 @@ module.exports = function(options) {
                 require("rollup-plugin-strip")() :
                 {},
             
-            // Breaking for some reason, disabling for now
-            //
-            // opts.compress ?
-            //     require("rollup-plugin-babel")({
-            //         exclude : "node_modules/**",
-            //         plugins : [
-            //             require("mithril-objectify")
-            //         ]
-            //     }) :
-            //     {},
+            opts.compress ?
+                require("rollup-plugin-babel")({
+                    exclude : "node_modules/**",
+                    plugins : [
+                        require("mithril-objectify")
+                    ]
+                }) :
+                {},
             
             opts.compress ? require("rollup-plugin-uglify")() : {}
         ]
