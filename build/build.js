@@ -5,15 +5,15 @@ var fs = require("fs"),
     rollup   = require("rollup").rollup,
     duration = require("humanize-duration"),
     size     = require("filesize"),
+    
+    argv = require("minimist")(process.argv.slice(2)),
 
     files  = require("./lib/files"),
-    config = require("./lib/rollup")(),
+    config = require("./lib/rollup")(argv),
     
-    start;
+    start = Date.now();
 
 files.copy();
-
-start = Date.now();
 
 rollup(config)
     .then((bundle) => bundle.write(config))

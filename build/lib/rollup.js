@@ -40,12 +40,10 @@ module.exports = function(options) {
 
             require("modular-css/rollup")({
                 css : "./gen/index.css",
-                
+                map : true,
+
                 // Optional tiny exported selectors
                 namer : opts.compress ? require("modular-css-namer")() : undefined,
-                
-                // Output sourcemap if not compressing
-                map : !opts.compress,
                 
                 // lifecycle hooks
                 before : [
@@ -61,19 +59,19 @@ module.exports = function(options) {
             }),
 
             opts.compress ?
-                require("rollup-plugin-strip")({
-                    sourceMap : false
-                }) :
+                require("rollup-plugin-strip")() :
                 {},
-
-            opts.compress ?
-                require("rollup-plugin-babel")({
-                    exclude : "node_modules/**",
-                    plugins : [
-                        require("mithril-objectify")
-                    ]
-                }) :
-                {},
+            
+            // Breaking for some reason, disabling for now
+            //
+            // opts.compress ?
+            //     require("rollup-plugin-babel")({
+            //         exclude : "node_modules/**",
+            //         plugins : [
+            //             require("mithril-objectify")
+            //         ]
+            //     }) :
+            //     {},
             
             opts.compress ? require("rollup-plugin-uglify")() : {}
         ]
