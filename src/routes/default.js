@@ -11,6 +11,8 @@ import * as schemaNew from "../pages/schema-new.js";
 import * as schemaEdit from "../pages/schema-edit/index.js";
 import * as edit from "../pages/content-edit/index.js";
 
+import * as listing from "../pages/listing/index.js";
+
 export default function() {
     console.log("routes/default");
     m.route(document.body, prefix("/"), keys({
@@ -24,6 +26,9 @@ export default function() {
         "/content/:schema/edit" : auth(schemaEdit),
         "/content/:schema/:id"  : auth(edit),
         "/content/:schema"      : auth(edit),
+
+        "/listing/:schema" : auth(listing),
+        "/listing/"        : auth(listing),
         
         "/..." : {
             view : function() {

@@ -1,0 +1,265 @@
+@value pure: "../../_pure.css";
+@value icons_css: "../../icons.css";
+@value layout_css: "../layout/layout.css";
+@value buttons_css: "../../buttons.css";
+@value header: "../layout/header.css";
+
+@value anchor: #446;
+@value iconTransition: color 0.2s ease-in;
+
+.ellipsisOverflow {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+.nav {
+    composes: section from layout_css;
+
+    display: flex;
+    flex: 1 0 200px;
+
+    border-right: solid 1px #CCC;
+    background: #EEE;
+}
+
+.crumbs {
+    composes: header_bg from header;
+    composes: sep from header;
+    composes: head from layout_css;
+    composes: global(pure-form);
+
+    overflow: hidden;
+    position: relative;
+}
+
+
+
+.body {
+    composes: body from layout_css;
+    
+    margin: 1.5em auto 0 1.5em;
+    min-width: 550px;
+    width: 90%;
+}
+
+/* Metadata controls */
+.search {
+    composes: global(pure-u-1-1);
+
+    width: 100%;
+    margin-bottom: 1em;
+}
+
+.metas {
+    composes: global(pure-g);
+
+    margin: 0 auto;
+    padding: 0 0 1em 0;
+
+    border-bottom: solid 1px #CCC;
+    width: 100%;
+}
+
+.pages {
+    composes: global(pure-u-18-24);
+    composes: ellipsisOverflow;
+}
+
+.nextPage {
+    composes: add from buttons_css;
+
+    text-align: right;
+}
+
+.prevPage {
+    composes: add from buttons_css;
+}
+
+.manage {
+    composes: global(pure-u-6-24);
+    composes: ellipsisOverflow;
+
+    text-align: right;
+}
+
+.add {
+    composes: add from buttons_css;
+    composes: ellipsisOverflow;
+}
+
+
+
+
+.listContainer {
+    composes: global(pure-g);
+
+    width: 100%;
+    margin: 0 auto;
+}
+
+.list {
+    list-style: none;
+    margin: 1em auto 0 auto;
+    padding: 0;
+    width: 100%;
+}
+
+.listHeader {
+    composes: global(pure-g);
+
+    border-bottom: solid 1px #CCC;
+    font-size: 1.2em;
+}
+
+
+.listHeader .listCell {
+    padding-top: 0;
+}
+
+.listCell {
+    composes: ellipsisOverflow;
+
+    margin: 0;
+    padding: 8px 18px;
+    line-height: 24px;
+}
+
+.listCol1 {
+    composes: global(pure-u-16-24);
+    composes: listCell;
+}
+
+.listCol2 {
+    composes: global(pure-u-4-24);
+    composes: listCell;
+}
+
+.listCol3 {
+    composes: global(pure-u-4-24);
+    composes: listCell;
+}
+
+
+
+.item {
+    position: relative;
+
+    padding-left: 4px;
+    border-bottom: solid 1px #CCC;
+
+    transition: background-color 0.2s ease-in;
+}
+
+.item:hover {
+    background: #DFDFDF;
+
+    transition: background-color 0.2s ease-in;
+}
+
+.itemTitle {
+    composes: ellipsisOverflow;
+
+    color: anchor;
+    font-size: 1.2em;
+}
+
+.published_at {
+    composes: item;
+
+    padding-left: 0;
+    border-left: solid 4px #68A;
+}
+
+.active {
+    composes: item;
+    background: #FFF;
+}
+
+.activePublished {
+    composes: published_at;
+    composes: active;
+}
+
+.anchor {
+    composes: global(pure-g);
+
+    text-decoration: none;
+    color: anchor;
+}
+
+.heading {
+    margin: 0 0 0.2em;
+}
+
+.date {
+    color: #888;
+    font-size: 0.8em;
+}
+
+.status {
+    composes: date;
+}
+
+.excerpt {
+    margin: 0;
+
+    font-size: 0.8em;
+}
+
+.actions {
+    position: absolute;
+
+    top: 0;
+    right: 4px;
+    bottom: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.action {
+    composes: icon from icons_css;
+
+    width: 18px;
+    height: 18px;
+
+    color: anchor;
+    transition: iconTransition;
+}
+
+.action:hover {
+    color: #2F343C;
+
+    transition: iconTransition;
+}
+
+.icon {
+    composes: action;
+}
+
+.remove {
+    composes: plain from buttons_css;
+}
+
+.removeIcon {
+    composes: icon;
+}
+
+.removeIcon:hover {
+    color: colorRemove from buttons_css;
+}
+
+.hidden {
+    overflow: visible;
+    flex: 0 1 0;
+}
+
+.hidden .filter {
+    padding: 0;
+    overflow: visible;
+}

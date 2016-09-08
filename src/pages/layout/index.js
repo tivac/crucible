@@ -66,7 +66,8 @@ export function view(ctrl, options) {
                 ctrl.auth ? [
                     m("div", { class : header.schemas },
                         (ctrl.schemas || []).map(function(schema) {
-                            var url = prefix("/content/" + schema.key);
+                            // var url = prefix("/content/" + schema.key);
+                            var url = prefix("/listing/" + schema.key);
 
                             return m("a", {
                                     class  : header[current.indexOf(url) === 0 ? "active" : "schema"],
