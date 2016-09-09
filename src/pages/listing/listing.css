@@ -14,14 +14,15 @@
 }
 
 
-.nav {
+.nav {    
     composes: section from layout_css;
-
+    
     display: flex;
     flex: 1 0 200px;
 
     border-right: solid 1px #CCC;
     background: #EEE;
+    background: red;
 }
 
 .crumbs {
@@ -40,7 +41,7 @@
     composes: body from layout_css;
     
     margin: 1.5em auto 0 1.5em;
-    min-width: 550px;
+    min-width: 600px;
     width: 90%;
 }
 
@@ -63,8 +64,15 @@
 }
 
 .pages {
-    composes: global(pure-u-18-24);
+    composes: global(pure-u-16-24);
     composes: ellipsisOverflow;
+}
+
+.manage {
+    composes: global(pure-u-8-24);
+    composes: ellipsisOverflow;
+
+    text-align: right;
 }
 
 .nextPage {
@@ -77,12 +85,6 @@
     composes: add from buttons_css;
 }
 
-.manage {
-    composes: global(pure-u-6-24);
-    composes: ellipsisOverflow;
-
-    text-align: right;
-}
 
 .add {
     composes: add from buttons_css;
