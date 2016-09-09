@@ -16,13 +16,12 @@
 
 .nav {    
     composes: section from layout_css;
-    
+
     display: flex;
     flex: 1 0 200px;
 
     border-right: solid 1px #CCC;
     background: #EEE;
-    background: red;
 }
 
 .crumbs {
@@ -103,7 +102,7 @@
 
 .list {
     list-style: none;
-    margin: 1em auto 0 auto;
+    margin: 0 auto;
     padding: 0;
     width: 100%;
 }
@@ -112,6 +111,7 @@
     composes: global(pure-g);
 
     border-bottom: solid 1px #CCC;
+    padding-top: 0.6em;
     font-size: 1.2em;
 }
 
@@ -129,7 +129,7 @@
 }
 
 .listCol1 {
-    composes: global(pure-u-16-24);
+    composes: global(pure-u-13-24);
     composes: listCell;
 }
 
@@ -143,7 +143,17 @@
     composes: listCell;
 }
 
+.listCol4 {
+    composes: global(pure-u-3-24);
+    composes: listCell;
 
+    text-align: right;
+}
+
+.listHeader,
+.list .item:nth-child(odd) {
+    background: rgba(0,0,0,0.025);
+}
 
 .item {
     position: relative;
@@ -211,14 +221,8 @@
 }
 
 .actions {
-    position: absolute;
-
-    top: 0;
-    right: 4px;
-    bottom: 0;
-
     display: flex;
-    flex-direction: column;
+    flex-direction: row-reverse;
 
     justify-content: center;
     align-items: center;
@@ -227,10 +231,12 @@
 .action {
     composes: icon from icons_css;
 
-    width: 18px;
-    height: 18px;
+    flex: 1 1 auto;
 
     color: anchor;
+    text-align: right;
+    vertical-align: top;
+    
     transition: iconTransition;
 }
 

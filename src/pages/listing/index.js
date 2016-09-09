@@ -312,7 +312,8 @@ export function view(ctrl) {
                                 m("li", { class : css.listHeader }, [
                                     m("div", { class : css.listCol1 }, "Name"),
                                     m("div", { class : css.listCol2 }, "State"),
-                                    m("div", { class : css.listCol3 }, "Scheduled")
+                                    m("div", { class : css.listCol3 }, "Scheduled"),
+                                    m("div", { class : css.listCol4 }, "Actions")
                                 ])
                             ].concat(
                                 content
@@ -367,34 +368,34 @@ export function view(ctrl) {
                                                 status
                                             ),
                                             m("span", { class : [ css.status, css.listCol3 ].join(" ") },
-                                                Boolean(data.published_at) ? format(data.published_at, dateFormat) : "--"
-                                            )
-                                        ),
-                                        m("div", { class : css.actions },
-                                            ctrl.schema.preview ?
-                                                m("a", {
-                                                        class  : css.preview,
-                                                        title  : "Preview",
-                                                        href   : ctrl.schema.preview + data.key,
-                                                        target : "_blank"
+                                                Boolean(data.published_at) ? format(data.published_at, dateFormat) : "--/--/----"
+                                            ),
+                                            m("div", { class : [ css.actions, css.listCol4 ].join(" ") },
+                                                m("button", {
+                                                        // Attrs
+                                                        class    : [ css.remove, css.action ].join(" "),
+                                                        title    : "Remove",
+                                                        disabled : locked || null,
+
+                                                        // Events
+                                                        onclick : ctrl.remove.bind(ctrl, data)
                                                     },
                                                     m("svg", { class : css.icon },
-                                                        m("use", { href : icons + "#preview" })
+                                                        m("use", { href : icons + "#remove" })
                                                     )
-                                                ) :
-                                                null,
-                                            m("button", {
-                                                    // Attrs
-                                                    class    : css.remove,
-                                                    title    : "Remove",
-                                                    disabled : locked || null,
-
-                                                    // Events
-                                                    onclick : ctrl.remove.bind(ctrl, data)
-                                                },
-                                                m("svg", { class : css.icon },
-                                                    m("use", { href : icons + "#remove" })
-                                                )
+                                                ),
+                                                ctrl.schema.preview ?
+                                                    m("a", {
+                                                            class  : [ css.preview, css.action ].join(" "),
+                                                            title  : "Preview",
+                                                            href   : ctrl.schema.preview + data.key,
+                                                            target : "_blank"
+                                                        },
+                                                        m("svg", { class : css.icon },
+                                                            m("use", { href : icons + "#preview" })
+                                                        )
+                                                    ) :
+                                                null
                                             )
                                         )
                                     );
