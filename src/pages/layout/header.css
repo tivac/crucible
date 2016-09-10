@@ -21,7 +21,12 @@
 
 .sep {
     border-bottom: solid 1px #222;
-    box-shadow: 0 1px 0 #545454;
+     box-shadow: 0 1px 0 #545454;
+}
+
+.lightsep {
+    border-bottom: solid 1px rgba(171, 171, 171, 0.75);
+    box-shadow: 0 1px 0 rgba(220 ,220 ,220 , 0.75);
 }
 
 .top {

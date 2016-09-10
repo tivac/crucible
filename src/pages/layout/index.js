@@ -66,12 +66,15 @@ export function view(ctrl, options) {
                 ctrl.auth ? [
                     m("div", { class : header.schemas },
                         (ctrl.schemas || []).map(function(schema) {
-                            // var url = prefix("/content/" + schema.key);
-                            var url = prefix("/listing/" + schema.key);
+                            var searchUrl = prefix("/content/" + schema.key),
+                                targetUrl = prefix("/listing/" + schema.key),
+                                active;
+
+                            active = current.indexOf(searchUrl) === 0 || current.indexOf(targetUrl) === 0;
 
                             return m("a", {
-                                    class  : header[current.indexOf(url) === 0 ? "active" : "schema"],
-                                    href   : url,
+                                    class  : header[active ? "active" : "schema"],
+                                    href   : targetUrl,
                                     config : m.route
                                 },
                                 schema.name

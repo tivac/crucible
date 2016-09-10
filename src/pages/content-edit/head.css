@@ -1,16 +1,21 @@
 @value   icons_css: "../../icons.css";
 @value  layout_css: "../layout/layout.css";
 @value buttons_css: "../../buttons.css";
+@value header: "../layout/header.css";
 
 .head {
     composes: head from layout_css;
+    composes: lightsep from header;
     
     position: relative;
+    width: 100%;
 
-    align-items: center;
+    align-items: flex-start;
     
     padding-left: 0;
     padding-right: 0;
+
+    text-align: left;
 }
 
 .main {
@@ -18,9 +23,11 @@
     
     flex: 1 0;
     width: 100%;
+    max-width: 1000px;
 
-    padding-left: 10px;
+    padding-left: 0px;
     padding-right: 10px;
+    margin-left: 20px;
     
     align-items: center;
 }
@@ -42,8 +49,15 @@
     padding: 20px;
 }
 
-.status,
+.headButton {
+    margin-left: 10px;
+}
+
 .actions {
+    flex: 2 1 25%;
+}
+
+.status {
     flex: 1 1 25%;
 }
 
@@ -73,34 +87,46 @@
     border-color: orange;
 }
 
+.controls {
+    flex: 1 1 25%;
+    justify-content: flex-start;
+}
+
 .actions,
 .publishing {
     composes: horizontal from layout_css;
     
     align-items: center;
-    justify-content: center;
 }
+.publishing {
+    justify-content: flex-end;
+}
+.actions {
+    justify-content: flex-start;
+}
+
 
 .save {
     composes: primary from buttons_css;
+    composes: headButton;
 }
 
 .schedule {
     composes: color from buttons_css;
+    composes: headButton;
     
     background-color: teal;
 }
 
+
 .publish {
     composes: add from buttons_css;
-
-    margin-left: 10px;
+    composes: headButton;
 }
 
 .unpublish {
     composes: remove from buttons_css;
-    
-    margin-left: 10px;
+    composes: headButton;
 }
 
 .icon {

@@ -8,6 +8,7 @@ import get from "lodash.get";
 
 import config, { icons } from "../../config";
 import db from "../../lib/firebase";
+import prefix from "../../lib/prefix";
 
 import css from "./head.css";
 
@@ -245,23 +246,37 @@ export function view(ctrl, options) {
         status = "unpublished";
     }
 
-    function mSaveButton() {
-        return m("div", { class : css.actions },
-            ctrl.saving ?
-                "SAVING..." : m("button", {
+    function mControls() {
+        return m("div", { class : css.actions }, [
+            m("a", {
                     // Attrs
-                    class    : css.save,
-                    title    : "Save your changes",
-                    disabled : locked || null,
-
-                    // Events
-                    onclick : ctrl.save.bind(null, options)
+                    class : css.back,
+                    title : "Back to Listing",
+                    href  : prefix("/listing/" + options.schema.key)
                 },
                 m("svg", { class : css.icon },
-                    m("use", { href : icons + "#save" })
+                    m("use", { href : icons + "#arrow" })
                 ),
-                "Save"
-            )
+                "Back"
+            ),
+
+            ctrl.saving ?
+                "SAVING..." :
+                m("button", {
+                        // Attrs
+                        class    : css.save,
+                        title    : "Save your changes",
+                        disabled : locked || null,
+
+                        // Events
+                        onclick : ctrl.save.bind(null, options)
+                    },
+                    m("svg", { class : css.icon },
+                        m("use", { href : icons + "#save" })
+                    ),
+                    "Save"
+                )
+            ]
         );
     }
 
@@ -392,11 +407,12 @@ export function view(ctrl, options) {
 
     return m("div", { class : css.head },
         m("div", { class : css.main },
+
+            mControls(),
+
             m("p", { class : css[status] },
                 upper(status)
             ),
-
-            mSaveButton(),
 
             m("div", { class : css.publishing },
                 mScheduleButton(),

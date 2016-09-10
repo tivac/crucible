@@ -25,8 +25,7 @@
 }
 
 .crumbs {
-    composes: header_bg from header;
-    composes: sep from header;
+    composes: lightsep from header;
     composes: head from layout_css;
     composes: global(pure-form);
 
@@ -42,6 +41,7 @@
     margin: 1.5em auto 0 1.5em;
     min-width: 600px;
     width: 90%;
+    max-width: 1000px;
 }
 
 /* Metadata controls */
@@ -236,7 +236,7 @@
     color: anchor;
     text-align: right;
     vertical-align: top;
-    
+
     transition: iconTransition;
 }
 

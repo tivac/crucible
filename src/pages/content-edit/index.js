@@ -102,7 +102,6 @@ export function view(ctrl) {
     return m.component(layout, {
         title   : title,
         content : [
-            m.component(nav),
             m("div", { class : css.content },
                 m.component(head, ctrl),
                 m("div", { class : css.body },
