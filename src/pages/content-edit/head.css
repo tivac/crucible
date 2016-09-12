@@ -1,3 +1,4 @@
+@value pure: "../../_pure.css";
 @value   icons_css: "../../icons.css";
 @value  layout_css: "../layout/layout.css";
 @value buttons_css: "../../buttons.css";
@@ -19,21 +20,22 @@
 }
 
 .main {
-    composes: horizontal from layout_css;
+    composes: global(pure-g);
+    composes: contentWidth from layout_css;
     
-    flex: 1 0;
+    flex-flow: row;
+    flex-wrap: nowrap;
     width: 100%;
-    max-width: 1000px;
 
-    padding-left: 0px;
-    padding-right: 10px;
-    margin-left: 20px;
+    padding-left: 20px;
+    /* padding-right: 10px; 
+    margin-left: 20px; */
     
     align-items: center;
 }
 
 .details {
-    composes: horizontal from layout_css;
+    composes: contentWidth from layout_css;
     
     flex: 1 0;
     
@@ -47,44 +49,48 @@
     background: #FFF;
     
     padding: 20px;
+
+    transform-origin: top center;
+    animation: expand-reveal 0.15s linear;
+}
+
+@keyframes expand-reveal {
+    0% {
+        transform: scaleY(0);
+    }
+    100% {
+        transform: scaleY(1);
+    }
 }
 
 .headButton {
     margin-left: 10px;
 }
 
-.actions {
-    flex: 2 1 25%;
+.actions,
+.publishing {
+    /* composes: global(pure-g);
+
+    flex-wrap: nowrap; */
+    overflow: hidden;
 }
 
-.status {
-    flex: 1 1 25%;
+.publish,
+.unpublish,
+.back,
+.save {
+    max-width: 50%;
+}
+
+.actions {
+    composes: global(pure-u-2-5);
 }
 
 .publishing {
-    flex: 2 0 50%;
-}
+    composes: global(pure-u-3-5);
 
-.status {
-    margin: 0;
-
-    border-bottom: solid 2px;
-}
-
-.draft {
-    composes : status;
-
-    border-color: #ddd;
-}
-.published {
-    composes : status;
-
-    border-color: green;
-}
-.scheduled {
-    composes : status;
-
-    border-color: orange;
+    padding-right: 20px;
+    text-align: right;
 }
 
 .controls {
@@ -138,7 +144,7 @@
 }
 
 .back {
-    composes: remove from buttons_css;
+    composes: warn from buttons_css;
 }
 
 .back svg {

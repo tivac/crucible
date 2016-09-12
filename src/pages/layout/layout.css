@@ -4,6 +4,11 @@
     height: 100%;
 }
 
+.contentWidth {
+    max-width: 1170px;
+    min-width: 600px;
+}
+
 .horizontal {
     display: flex;
     flex-direction: row;

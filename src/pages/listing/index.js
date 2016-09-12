@@ -328,7 +328,10 @@ export function view(ctrl) {
                                     var url      = "/content/" + ctrl.schema.key + "/" + data.key,
                                         cssClass = css.item,
                                         pageTs = ctrl.pg.currPageTs(),
-                                        status;
+
+                                        itemName,
+                                        itemStatus,
+                                        itemSchedule;
 
                                     if(data.published_at && current.indexOf(url) === 0) {
                                         cssClass = css.activePublished;
@@ -340,17 +343,21 @@ export function view(ctrl) {
 
                                     if(isFuture(data.published_at)) {
                                         // status = "scheduled: " + format(data.published_at, dateFormat);
-                                        status = "scheduled";
+                                        itemStatus = "scheduled";
                                     } else if(isPast(data.published_at)) {
                                         // status = "published: " + format(data.published_at, dateFormat);
-                                        status = "published";
+                                        itemStatus = "published";
                                     } else if(data.updated_at) {
                                         // status = "updated: " + format(data.updated_at, dateFormat);
-                                        status = "updated";
+                                        itemStatus = "updated";
                                     } else {
                                         // Prevents a flash of NaN/NaN/NaN on new creation
-                                        status = "updated:";
+                                        itemStatus = "updated:";
                                     }
+
+
+                                    itemName = name(ctrl.schema, data);
+                                    itemSchedule = data.published_at ? format(data.published_at, dateFormat) : "--/--/----";
 
                                     return m("li", { class : cssClass },
                                         m("a", {
@@ -361,20 +368,29 @@ export function view(ctrl) {
                                                     "?pgTs=" + pageTs
                                                 )
                                             },
-                                            m("span", { class : [ css.itemTitle, css.listCol1 ].join(" ") },
-                                                name(ctrl.schema, data)
+                                            m("span", {
+                                                    class : [ css.itemTitle, css.listCol1 ].join(" "),
+                                                    title : itemName
+                                                },
+                                                itemName
                                             ),
-                                            m("span", { class : [ css.date, css.listCol2 ].join(" ") },
-                                                status
+                                            m("span", {
+                                                    class : [ css.date, css.listCol2 ].join(" "),
+                                                    title : itemStatus
+                                                },
+                                                itemStatus
                                             ),
-                                            m("span", { class : [ css.status, css.listCol3 ].join(" ") },
-                                                Boolean(data.published_at) ? format(data.published_at, dateFormat) : "--/--/----"
+                                            m("span", {
+                                                    class : [ css.status, css.listCol3 ].join(" "),
+                                                    title : itemSchedule
+                                                },
+                                                itemSchedule  
                                             ),
                                             m("div", { class : [ css.actions, css.listCol4 ].join(" ") },
                                                 m("button", {
                                                         // Attrs
                                                         class    : [ css.remove, css.action ].join(" "),
-                                                        title    : "Remove",
+                                                        title    : "Remove: " + itemName,
                                                         disabled : locked || null,
 
                                                         // Events
@@ -387,7 +403,7 @@ export function view(ctrl) {
                                                 ctrl.schema.preview ?
                                                     m("a", {
                                                             class  : [ css.preview, css.action ].join(" "),
-                                                            title  : "Preview",
+                                                            title  : "Preview: " + itemName,
                                                             href   : ctrl.schema.preview + data.key,
                                                             target : "_blank"
                                                         },

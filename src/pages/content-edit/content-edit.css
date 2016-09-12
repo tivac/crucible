@@ -19,9 +19,47 @@
     align-items: center;
 }
 
+.itemStatus {
+    margin-bottom: 1em;
+}
+
+.statusLabel {
+    font-weight: 600;
+}
+.status {
+    margin: 0;
+
+    border-bottom: solid 3px;
+}
+
+.draft {
+    composes : status;
+
+    border-color: #ddd;
+}
+.published {
+    composes : status;
+
+    border-color: green;
+}
+.scheduled {
+    composes : status;
+
+    border-color: orange;
+}
 .body {
     composes: body from layout_css;
     composes: padding from layout_css;
+}
+
+.contentsContainer {
+    composes: contentWidth from layout_css;
+}
+
+.form {
+    composes: global(pure-form), global(pure-form-stacked);
+
+    width: 100%;
 }
 
 /* No item selected */
@@ -80,12 +118,6 @@
 }
 
 /* Form contents */
-.form {
-    composes: global(pure-form), global(pure-form-stacked);
-
-    width: 100%;
-    max-width: 1000px;
-}
 
 .children {
     margin-top: 20px;

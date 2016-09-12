@@ -1,6 +1,8 @@
 import m from "mithril";
 
 import sluggo from "sluggo";
+import isFuture from "date-fns/is_future";
+import isPast from "date-fns/is_past";
 import get from "lodash.get";
 import merge from "lodash.merge";
 import assign from "lodash.assign";
@@ -76,7 +78,18 @@ export function controller() {
 }
 
 export function view(ctrl) {
-    var title;
+    var status  = "draft",
+        publishTs = get(ctrl, "data.published_at"),
+        unpublishTs = get(ctrl, "data.unpublished_at"),
+        title;
+
+    if(isFuture(publishTs)) {
+        status = "scheduled";
+    } else if(isPast(publishTs)) {
+        status = "published";
+    } else if(isPast(unpublishTs)) {
+        status = "unpublished";
+    }
 
     if(!ctrl.schema) {
         return m.component(layout);
@@ -105,67 +118,72 @@ export function view(ctrl) {
             m("div", { class : css.content },
                 m.component(head, ctrl),
                 m("div", { class : css.body },
-                    m("form", {
-                            class  : css.form,
-                            config : function(el, init) {
-                                if(init) {
-                                    return;
-                                }
-
-                                ctrl.form = el;
-
-                                // force a redraw so publishing component can get
-                                // new args w/ actual validity
-
-                                m.redraw();
-                            }
-                        },
-                        m("h2", { class : css.schema },
-                            "/" + ctrl.schema.name + "/",
-                            ctrl.schema.slug ?
-                                (ctrl.data.slug || "???") + "/" : null
+                    m("div", { class : css.contentsContainer },
+                        m("div", { class : css.itemStatus },
+                            m("p", { class : css[status] }, [
+                                m("span", { class : css.statusLabel },
+                                    "Status: "
+                                ),
+                                capitalize(status)
+                            ])
                         ),
-                        m("h1", {
-                                // Attrs
-                                class  : css.title,
+                        m("form", {
+                                class  : css.form,
                                 config : function(el, init) {
-                                    var range, selection;
-
-                                    if(init || ctrl.data.name) {
+                                    if(init) {
                                         return;
                                     }
 
-                                    // Select the text contents
-                                    range = document.createRange();
-                                    range.selectNodeContents(el);
-                                    selection = window.getSelection();
-                                    selection.removeAllRanges();
-                                    selection.addRange(range);
-                                },
+                                    ctrl.form = el;
 
-                                contenteditable : true,
+                                    // force a redraw so publishing component can get
+                                    // new args w/ actual validity
 
-                                // Events
-                                oninput : m.withAttr("innerText", ctrl.titleChange)
+                                    m.redraw();
+                                }
                             },
-                            // (function() {
-                            //     if(!this.schema || !this.data.name) {
-                            //         debugger;
-                            //     }
+                            m("h1", {
+                                    // Attrs
+                                    class  : css.title,
+                                    config : function(el, init) {
+                                        var range, selection;
 
-                            //     return null;
-                            // }).call(ctrl),
-                            name(ctrl.schema, ctrl.data)
-                        ),
-                        m.component(children, {
-                            class  : css.children,
-                            data   : ctrl.data.fields || {},
-                            fields : ctrl.schema.fields,
-                            path   : [ "fields" ],
-                            root   : ctrl.ref,
-                            state  : ctrl.data.fields,
-                            update : update.bind(null, ctrl.data)
-                        })
+                                        if(init || ctrl.data.name) {
+                                            return;
+                                        }
+
+                                        // Select the text contents
+                                        range = document.createRange();
+                                        range.selectNodeContents(el);
+                                        selection = window.getSelection();
+                                        selection.removeAllRanges();
+                                        selection.addRange(range);
+                                    },
+
+                                    contenteditable : true,
+
+                                    // Events
+                                    oninput : m.withAttr("innerText", ctrl.titleChange)
+                                },
+                                // (function() {
+                                //     if(!this.schema || !this.data.name) {
+                                //         debugger;
+                                //     }
+
+                                //     return null;
+                                // }).call(ctrl),
+                                name(ctrl.schema, ctrl.data)
+                            ),
+                            m.component(children, {
+                                class  : css.children,
+                                data   : ctrl.data.fields || {},
+                                fields : ctrl.schema.fields,
+                                path   : [ "fields" ],
+                                root   : ctrl.ref,
+                                state  : ctrl.data.fields,
+                                update : update.bind(null, ctrl.data)
+                            })
+                        )
                     )
                 )
             )

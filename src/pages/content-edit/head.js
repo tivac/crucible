@@ -3,7 +3,6 @@ import format from "date-fns/format";
 import isFuture from "date-fns/is_future";
 import isPast from "date-fns/is_past";
 import subSeconds from "date-fns/sub_seconds";
-import upper from "lodash.capitalize";
 import get from "lodash.get";
 
 import config, { icons } from "../../config";
@@ -409,10 +408,6 @@ export function view(ctrl, options) {
         m("div", { class : css.main },
 
             mControls(),
-
-            m("p", { class : css[status] },
-                upper(status)
-            ),
 
             m("div", { class : css.publishing },
                 mScheduleButton(),
