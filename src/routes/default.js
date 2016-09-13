@@ -14,7 +14,6 @@ import * as edit from "../pages/content-edit/index.js";
 import * as listing from "../pages/listing/index.js";
 
 export default function() {
-    console.log("routes/default");
     m.route(document.body, prefix("/"), keys({
         "/" : auth(home),
 
@@ -23,12 +22,15 @@ export default function() {
 
         "/content/new" : auth(schemaNew),
 
-        "/content/:schema/edit" : auth(schemaEdit),
-        "/content/:schema/:id"  : auth(edit),
-        "/content/:schema"      : auth(edit),
+        "/content/:schema/:id" : auth(edit),
+        "/content/:schema"     : auth(edit),
 
         "/listing/:schema" : auth(listing),
         "/listing/"        : auth(listing),
+
+        // Screw it, support both.
+        "/content/:schema/edit" : auth(schemaEdit),
+        "/listing/:schema/edit" : auth(schemaEdit),
         
         "/..." : {
             view : function() {

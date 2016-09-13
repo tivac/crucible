@@ -66,9 +66,6 @@ export function controller() {
     ctrl.searchInput = null;
     ctrl.searchMode = SEARCH_MODE_RECENT;
 
-    // Go get initial data
-    // eslint-disable-next-line newline-per-chained-call
-
     // We need to check for an "overflowItem" to peek at
     // the next page's first item. This lets us grab the
     // next page's timestamp limit, or find we're on the last page.
@@ -127,6 +124,7 @@ export function controller() {
         ctrl.showPage();
     }
 
+    // Go get initial data
     ctrl.init = function() {        
         ctrl.pg = new PageState();
 
@@ -438,12 +436,10 @@ export function view(ctrl) {
                                     } else if(isFuture(data.published_at)) {
                                         itemStatus = "scheduled";
                                     } else if(isPast(data.published_at)) {
-                                        // itemStatus = "published";
                                         itemStatus = "live";
                                     } else if(data.updated_at) {
                                         itemStatus = "updated";
                                     } else {
-                                        // Prevents a flash of NaN/NaN/NaN on new creation
                                         itemStatus = "...";
                                     }
 
@@ -467,7 +463,7 @@ export function view(ctrl) {
                                                 itemStatus
                                             ),
                                             m("span", { class : [ css.listCol3, css.status ].join(" "),
-                                                title : itemSchedule },
+                                                title : itemUpdated },
                                                 itemUpdated  
                                             ),
                                             m("span", { class : [ css.listCol4, css.status ].join(" "),
