@@ -300,6 +300,10 @@ export function view(ctrl) {
         locked  = config.locked,
         isSearchResults = Boolean(ctrl.results);
 
+    if(!m.route.param("schema")) {
+        m.route("/");
+    }
+
     return m.component(layout, {
         title   : get(ctrl, "schema.name") || "...",
         content : [
