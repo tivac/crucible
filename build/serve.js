@@ -48,7 +48,7 @@ server.use("/gen/index.js", function(req, res, next) {
 server.use(ecstatic);
 
 // SPA support
-server.use(function(req, res, next) {
+server.use((req, res, next) => {
     var parts = url.parse(req.url);
     
     if(path.extname(parts.pathname)) {
@@ -69,7 +69,7 @@ console.log("Server listening at http://localhost:9966");
 // Set up rollup-watch
 watcher = watch(rollup, config());
 
-watcher.on("event", function(details) {
+watcher.on("event", (details) => {
     if(details.code === "BUILD_START") {
         bundling = true;
 

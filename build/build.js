@@ -5,23 +5,20 @@ var fs = require("fs"),
     rollup   = require("rollup").rollup,
     duration = require("humanize-duration"),
     size     = require("filesize"),
+    
+    argv = require("minimist")(process.argv.slice(2)),
 
     files  = require("./lib/files"),
-    config = require("./lib/rollup")(),
+    config = require("./lib/rollup")(argv),
     
-    start;
+    start = Date.now();
 
 files.copy();
 
-start = Date.now();
-
-rollup(config).then(function(bundle) {
-    return bundle.write(config);
-})
-.then(function() {
-    console.log("Bundle written to ./gen/index.js in %s", duration(Date.now() - start));
-    console.log("Bundle size: %s", size(fs.lstatSync(config.dest).size));
-})
-.catch(function(error) {
-    console.error(error.stack);
-});
+rollup(config)
+    .then((bundle) => bundle.write(config))
+    .then(() => {
+        console.log("Bundle written to ./gen/index.js in %s", duration(Date.now() - start));
+        console.log("Bundle size: %s", size(fs.lstatSync(config.dest).size));
+    })
+    .catch((error) => console.error(error.stack));
