@@ -24,7 +24,6 @@ var DB_ORDER_BY = "updated_at",
     SEARCH_MODE_RECENT = "recent",
     SEARCH_MODE_ALL = "all",
     dateFormat = "MM/DD/YYYY";
-    // pg = new PageState();
 
 function contentFromRecord(record) {
     var data = record.val();
@@ -104,7 +103,6 @@ export function controller() {
     }
 
     function onValue(snap) {
-        console.log("onValue");
         var wentPrev = Boolean(ctrl.pg.nextPageTs());
 
         if(wentPrev) {
@@ -116,8 +114,10 @@ export function controller() {
         m.redraw();
     }
 
+
+    // Do we still need backfill?
     function onBackfillPages(pgTs, snap) {
-        var iter = 0,
+        var i = 0,
             ts = [];
 
         // These pages are in Ascending order, but we
@@ -127,12 +127,12 @@ export function controller() {
         });
         ts.reverse();
 
-        iter += pg.itemsPer;
-        while(ts.length > iter) {
-            if(ctrl.pg.limits.indexOf( ts[iter] ) === -1) {
-                ctrl.pg.limits.push( ts[iter] );
+        i += ctrl.pg.itemsPer;
+        while(ts.length > i) {
+            if(ctrl.pg.limits.indexOf( ts[i] ) === -1) {
+                ctrl.pg.limits.push( ts[i] );
             }
-            iter += ctrl.pg.itemsPer;
+            i += ctrl.pg.itemsPer;
         }
 
         ctrl.pg.page = ctrl.pg.limits.indexOf(pgTs);
@@ -263,6 +263,15 @@ export function controller() {
 
     // m.redraw calls are necessary due to debouncing, this function
     // may not be executing during a planned redraw cycle
+    function onSearchResults(searchStr, snap) {
+        var contents = contentFromSnapshot(snap);
+
+        ctrl.results = contents.filter(function(content) {
+            return fuzzy(searchStr, content.search);
+        });
+
+        return m.redraw();
+    }
 
     ctrl.registerSearchInput = function(el) {
         ctrl.searchInput = el;
@@ -283,15 +292,6 @@ export function controller() {
         return null;
     }, 800);
 
-    function onSearchResults(searchStr, snap) {
-        var contents = contentFromSnapshot(snap);
-
-        ctrl.results = contents.filter(function(content) {
-            return fuzzy(searchStr, content.search);
-        });
-
-        return m.redraw();
-    }
 
     ctrl.getSearchResults = function(searchStr) {
         if(ctrl.queryRef) {
@@ -444,8 +444,9 @@ export function view(ctrl) {
                                 m("li", { class : css.listHeader }, [
                                     m("div", { class : css.listCol1 }, "Name"),
                                     m("div", { class : css.listCol2 }, "State"),
-                                    m("div", { class : css.listCol3 }, "Scheduled"),
-                                    m("div", { class : css.listCol4 }, "Actions")
+                                    m("div", { class : css.listCol3 }, "Updated"),
+                                    m("div", { class : css.listCol4 }, "Scheduled"),
+                                    m("div", { class : css.listCol5 }, "Actions")
                                 ])
                             ].concat(
                                 content
@@ -463,6 +464,7 @@ export function view(ctrl) {
 
                                         itemName,
                                         itemStatus,
+                                        itemUpdated,
                                         itemSchedule;
 
                                     if(data.published_at && current.indexOf(url) === 0) {
@@ -489,6 +491,7 @@ export function view(ctrl) {
 
 
                                     itemName = name(ctrl.schema, data);
+                                    itemUpdated = data.updated_at ? format(data.updated_at, dateFormat) : "--/--/----";
                                     itemSchedule = data.published_at ? format(data.published_at, dateFormat) : "--/--/----";
 
                                     return m("li", { class : cssClass },
@@ -516,9 +519,15 @@ export function view(ctrl) {
                                                     class : [ css.status, css.listCol3 ].join(" "),
                                                     title : itemSchedule
                                                 },
+                                                itemUpdated  
+                                            ),
+                                            m("span", {
+                                                    class : [ css.status, css.listCol4 ].join(" "),
+                                                    title : itemSchedule
+                                                },
                                                 itemSchedule  
                                             ),
-                                            m("div", { class : [ css.actions, css.listCol4 ].join(" ") },
+                                            m("div", { class : [ css.actions, css.listCol5 ].join(" ") },
                                                 m("button", {
                                                         // Attrs
                                                         class    : [ css.remove, css.action ].join(" "),

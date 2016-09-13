@@ -16,7 +16,6 @@ import name from "./name.js";
 
 import * as children from "../../types/children.js";
 import * as layout from "../layout/index.js";
-import * as nav from "./nav.js";
 import * as head from "./head.js";
 
 import css from "./content-edit.css";
@@ -101,15 +100,7 @@ export function view(ctrl) {
         .join(" | ");
 
     if(!ctrl.id) {
-        return m.component(layout, {
-            title   : title,
-            content : [
-                m.component(nav),
-                m("div", { class : css.empty },
-                    m("p", "Select an entry from the list")
-                )
-            ]
-        });
+        m.route("/listing/" + ctrl.schema.key);
     }
 
     return m.component(layout, {
