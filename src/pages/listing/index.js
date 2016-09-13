@@ -20,7 +20,9 @@ import name from "../content-edit/name.js";
 import css from "./listing.css";
 
 var DB_ORDER_BY = "updated_at",
-    SEARCH_CHUNK_SIZE = 100,
+    INITIAL_SEARCH_CHUNK_SIZE = 100,
+    SEARCH_MODE_RECENT = "recent",
+    SEARCH_MODE_ALL = "all",
     dateFormat = "MM/DD/YYYY";
     // pg = new PageState();
 
@@ -60,10 +62,11 @@ export function controller() {
     ctrl.results = null;
 
     ctrl.pg = new PageState();
-    ctrl.searchPg = new PageState(SEARCH_CHUNK_SIZE);
-
     ctrl.contentLoc = null;
     ctrl.queryRef = null;
+
+    ctrl.searchInput = null;
+    ctrl.searchMode = SEARCH_MODE_RECENT;    
 
     // Go get initial data
     // eslint-disable-next-line newline-per-chained-call
@@ -101,6 +104,7 @@ export function controller() {
     }
 
     function onValue(snap) {
+        console.log("onValue");
         var wentPrev = Boolean(ctrl.pg.nextPageTs());
 
         if(wentPrev) {
@@ -259,7 +263,14 @@ export function controller() {
 
     // m.redraw calls are necessary due to debouncing, this function
     // may not be executing during a planned redraw cycle
+
+    ctrl.registerSearchInput = function(el) {
+        ctrl.searchInput = el;
+    };
+
     ctrl.searchFor = debounce(function(input) {
+        ctrl.searchMode = SEARCH_MODE_RECENT;
+
         if(input.length < 2) {
             ctrl.results = false;
 
@@ -290,13 +301,38 @@ export function controller() {
         ctrl.queryRef = ctrl.contentLoc
             .orderByChild(DB_ORDER_BY)
             .endAt(Number.MAX_SAFE_INTEGER)
-            .limitToLast(ctrl.searchPg.itemsPer);
+            .limitToLast(INITIAL_SEARCH_CHUNK_SIZE);
 
         ctrl.queryRef.on("value", onSearchResults.bind(ctrl, searchStr));
     };
 
-    ctrl.nextSearch = function() {
-        console.log("TODO NEXT SEARCH");
+    ctrl.searchAll = function() {
+        var searchStr = ctrl.searchInput && ctrl.searchInput.value;
+
+        if(!searchStr) {
+            return; // Not ready
+        }
+
+        ctrl.searchMode = SEARCH_MODE_ALL;
+
+        if(ctrl.queryRef) {
+            ctrl.queryRef.off();
+        }
+
+        ctrl.queryRef = ctrl.contentLoc
+            .orderByChild(DB_ORDER_BY);
+
+        ctrl.queryRef.on("value", onSearchResults.bind(ctrl, searchStr));
+    };
+
+
+    ctrl.clearSearch = function() {
+        if(ctrl.searchInput) {
+            ctrl.searchInput.value = "";
+            ctrl.results = null;
+            ctrl.pg.first();
+            ctrl.showPage();
+        }
     };
 
     ctrl.init();
@@ -325,12 +361,23 @@ export function view(ctrl) {
                 ),
                 m("div", { class : css.body }, [
                     m("div", { class : css.metas },
-                        m("input", {
-                            class       : css.search,
-                            placeholder : "Search...",
-                            oninput     : m.withAttr("value", ctrl.searchFor)
-                            // oninput     : m.withAttr("value", ctrl.filter)
-                        }),
+                        m("div", {
+                                class : css.search
+                            }, [
+                            m("input", {
+                                class       : css.searchInput,
+                                placeholder : "Search...",
+                                oninput     : m.withAttr("value", ctrl.searchFor),
+
+                                config : ctrl.registerSearchInput
+                            }),
+                            ctrl.searchInput && ctrl.searchInput.value ?
+                                m("button", {
+                                    class   : css.searchClear,
+                                    onclick : ctrl.clearSearch.bind(ctrl)
+                                }, "") :
+                            null
+                        ]),
                         m("div", { class : css.manage }, [
                             m("span", { class : css.itemsPerLabel }, "Items Per Page: "),
                             m("input", {
@@ -343,20 +390,32 @@ export function view(ctrl) {
                                 onchange : m.withAttr("value", ctrl.changeItemsPer)
                             })
                         ]),
-                        (
-                            isSearchResults ?
-                            m("div", { class : css.showingResults },
-                                "Showing results from most recent " + ctrl.searchPg.itemsPer + " items...",
-                                m("button", {
-                                        onclick : ctrl.nextSearch.bind(ctrl),
-                                        class   : css.nextPage
-                                        // ,
-                                        // disabled : locked ||  || ctrl.pg.page === 1 || null // TODO
-                                    },
-                                    "Search next " + ctrl.searchPg.itemsPer + " \>"
-                                )
-                            ) :
-                            m("div", { class : css.pages }, [
+                        (function() {
+                            var searchContents;
+
+                            if(isSearchResults) {
+                                if(ctrl.searchMode === SEARCH_MODE_ALL) {
+                                    searchContents = "Showing all results.";
+                                } else {
+                                    searchContents = [
+                                        "Showing results from most recent " + INITIAL_SEARCH_CHUNK_SIZE + " items... ",
+                                        m("button", {
+                                                onclick : ctrl.searchAll.bind(ctrl),
+                                                class   : css.nextPage
+                                                // ,
+                                                // disabled : locked ||  || ctrl.pg.page === 1 || null // TODO
+                                            },
+                                            "Search All"
+                                        ) 
+                                    ];
+                                }
+                                
+                                return m("div", { class : css.showingResults },
+                                    searchContents
+                                );
+                            }
+
+                            return m("div", { class : css.pages }, [
                                 m("button", {
                                         onclick  : ctrl.prevPage.bind(ctrl),
                                         class    : css.prevPage,
@@ -376,8 +435,8 @@ export function view(ctrl) {
                                     },
                                     "Next Page \>"
                                 )
-                            ])
-                        )
+                            ]);
+                        }())
                     ),
                     m("div", { class : css.listContainer }, 
                         m("ul", { class : css.list },

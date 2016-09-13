@@ -40,6 +40,10 @@ PageState.prototype = {
         return this.limits.length > nextIndex ? this.limits[nextIndex] : null;
     },
 
+    first : function() {
+        this.page = MIN_PAGE;
+    },
+
     next : function() {
         this.page = this.clampPage(++this.page);
     },
