@@ -356,7 +356,7 @@ export function view(ctrl) {
                             class    : css.add,
                             disabled : locked || null
                         },
-                        "Add " + (ctrl.schema && ctrl.schema.name || "...")
+                        "+ Add " + (ctrl.schema && ctrl.schema.name || "...")
                     )
                 ),
                 m("div", { class : css.body }, [
