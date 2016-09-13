@@ -13,12 +13,8 @@
     white-space: nowrap;
 }
 
-
-.nav {    
-    composes: section from layout_css;
-
-    display: flex;
-    flex: 1 0 200px;
+.listing {
+    width: 100%;
 
     border-right: solid 1px #CCC;
     background: #EEE;
@@ -26,11 +22,9 @@
 
 .crumbs {
     composes: lightsep from header;
-    composes: head from layout_css;
-    composes: global(pure-form);
-
     overflow: hidden;
     position: relative;
+    padding: 0.3em 20px;
 }
 
 
@@ -39,17 +33,30 @@
     composes: body from layout_css;
     composes: contentWidth from layout_css;
     
-    margin: 1.5em auto 0 1.5em;
+    padding: 20px 0 0 20px;
     min-width: 600px;
     width: 90%;
 }
 
 /* Metadata controls */
 .search {
-    composes: global(pure-u-1-1);
-
-    width: 100%;
+    composes: global(pure-u-3-5);
     margin-bottom: 1em;
+}
+
+.manage {
+    composes: global(pure-u-2-5);
+    composes: ellipsisOverflow;
+
+    text-align: right;
+}
+
+.itemsPerLabel {
+    padding-left: 20px;
+}
+
+.itemsPer {
+    max-width: 100px;
 }
 
 .metas {
@@ -67,21 +74,23 @@
     composes: ellipsisOverflow;
 }
 
-.manage {
-    composes: global(pure-u-8-24);
-    composes: ellipsisOverflow;
-
-    text-align: right;
+.pages *:not(:first-child) {
+    margin-left: 20px;
 }
 
 .nextPage {
-    composes: add from buttons_css;
+    composes: secondary from buttons_css;
 
     text-align: right;
 }
 
 .prevPage {
-    composes: add from buttons_css;
+    composes: secondary from buttons_css;
+}
+
+.currPage {
+    font-size: 18px;
+    vertical-align: middle;
 }
 
 
@@ -90,6 +99,9 @@
     composes: ellipsisOverflow;
 }
 
+.showingResults {
+    composes: global(pure-u-1-1);
+}
 
 
 
@@ -110,7 +122,7 @@
 .listHeader {
     composes: global(pure-g);
 
-    border-bottom: solid 1px #CCC;
+    border-bottom: solid 1px #AAA;
     padding-top: 0.6em;
     font-size: 1.2em;
 }

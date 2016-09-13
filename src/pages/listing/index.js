@@ -4,6 +4,7 @@ import isFuture from "date-fns/is_future";
 import isPast from "date-fns/is_past";
 import fuzzy from "fuzzysearch";
 import debounce from "lodash.debounce";
+import get from "lodash.get";
 import slug from "sluggo";
 
 import config, { icons } from "../../config.js";
@@ -19,9 +20,9 @@ import name from "../content-edit/name.js";
 import css from "./listing.css";
 
 var DB_ORDER_BY = "updated_at",
-    dateFormat = "MM/DD/YYYY",
-    pg = new PageState(),
-    title = "TITLE NOT FOUND";
+    SEARCH_CHUNK_SIZE = 100,
+    dateFormat = "MM/DD/YYYY";
+    // pg = new PageState();
 
 function contentFromRecord(record) {
     var data = record.val();
@@ -34,6 +35,21 @@ function contentFromRecord(record) {
     return data;
 }
 
+function contentFromSnapshot(snap, removeOverflow) {
+    var content = [];
+
+    snap.forEach(function(record) {
+        var item = contentFromRecord(record);
+
+        content.push(item);
+    });
+
+    if(removeOverflow) {
+        content.splice(0, 1);
+    }
+
+    return content;
+}
 
 export function controller() {
     var ctrl = this,
@@ -43,7 +59,9 @@ export function controller() {
     ctrl.content = null;
     ctrl.results = null;
 
-    ctrl.pg = pg;
+    ctrl.pg = new PageState();
+    ctrl.searchPg = new PageState(SEARCH_CHUNK_SIZE);
+
     ctrl.contentLoc = null;
     ctrl.queryRef = null;
 
@@ -55,8 +73,8 @@ export function controller() {
     // next page's timestamp limit, or find we're on the last page.
     function onNext(snap) {
         var recordCt    = Object.keys(snap.val()).length,
-            isLastPage  = recordCt <= pg.itemsPer,
-            hasOverflow = !isLastPage && recordCt === pg.itemsPer + 1,
+            isLastPage  = recordCt <= ctrl.pg.itemsPer,
+            hasOverflow = !isLastPage && recordCt === ctrl.pg.itemsPer + 1,
 
             oldestTs = Number.MAX_SAFE_INTEGER,
             content  = [],
@@ -73,23 +91,13 @@ export function controller() {
         ctrl.content = content;
 
         if(!isLastPage && overflow) {        
-            pg.limits.push(oldestTs);
+            ctrl.pg.limits.push(oldestTs);
         }
     }
 
     // When we go backward, there's very little work to be done.
     function onPageReturn(snap) {
-        var content = [];
-
-        snap.forEach(function(record) {
-            var item = contentFromRecord(record);
-
-            content.push(item);
-        });
-
-        content.splice(0, 1);
-
-        ctrl.content = content;
+        ctrl.content = contentFromSnapshot(snap, true);
     }
 
     function onValue(snap) {
@@ -117,13 +125,13 @@ export function controller() {
 
         iter += pg.itemsPer;
         while(ts.length > iter) {
-            if(pg.limits.indexOf( ts[iter] ) === -1) {
-                pg.limits.push( ts[iter] );
+            if(ctrl.pg.limits.indexOf( ts[iter] ) === -1) {
+                ctrl.pg.limits.push( ts[iter] );
             }
-            iter += pg.itemsPer;
+            iter += ctrl.pg.itemsPer;
         }
 
-        pg.page = pg.limits.indexOf(pgTs);
+        ctrl.pg.page = ctrl.pg.limits.indexOf(pgTs);
 
         ctrl.showPage();
     }
@@ -146,7 +154,7 @@ export function controller() {
 
         if(pgTs) {
             pgTs = parseInt(pgTs, 10);
-            needsBackfill = pg.limits.indexOf(pgTs) === -1;
+            needsBackfill = ctrl.pg.limits.indexOf(pgTs) === -1;
         }
 
         ctrl.schema = snap.val();
@@ -167,25 +175,34 @@ export function controller() {
         schema.on("value", onSchemaValue);
     };
 
+    ctrl.changeItemsPer = function(val) {
+        var num = parseInt(val, 10);
+
+        if(isNaN(num)) {
+            return;
+        }
+
+        ctrl.pg.changeItemsPer(num);
+        ctrl.showPage();
+    };
+
     ctrl.nextPage = function() {
-        pg.next();
+        ctrl.pg.next();
         ctrl.showPage();
     };
     ctrl.prevPage = function() {
-        pg.prev();
+        ctrl.pg.prev();
         ctrl.showPage();
     };
 
     ctrl.showPage = function() {
         var overflowItem = 1,
-            pageTs = pg.currPageTs(),
-            nextTs = pg.nextPageTs();
+            pageTs = ctrl.pg.currPageTs(),
+            nextTs = ctrl.pg.nextPageTs();
 
         if(ctrl.queryRef) {
             ctrl.queryRef.off();
         }
-
-        console.log("pg.page", pg.page, "of", pg.limits.length - 1);
 
         if(nextTs) {
             // This is safer in the case that firebase updates 
@@ -196,6 +213,8 @@ export function controller() {
                 .endAt(pageTs);
 
             ctrl.queryRef.on("value", onValue);
+
+            return;
         }
 
         // Firebase orders Ascending, so the 
@@ -204,8 +223,8 @@ export function controller() {
         // query from the other end via .endAt/.limitToLast
         ctrl.queryRef = ctrl.contentLoc
             .orderByChild(DB_ORDER_BY)
-            .endAt(pg.limits[pg.page])
-            .limitToLast(pg.itemsPer + overflowItem);
+            .endAt(ctrl.pg.limits[ctrl.pg.page])
+            .limitToLast(ctrl.pg.itemsPer + overflowItem);
 
         ctrl.queryRef.on("value", onValue);
     };
@@ -223,30 +242,6 @@ export function controller() {
         m.route(prefix("/content/" + ctrl.schema.key + "/" + result.key()));
     };
 
-    ctrl.change = function(page, e) {
-        e.preventDefault();
-
-        ctrl.page = page;
-    };
-
-    // m.redraw calls are necessary due to debouncing, this function
-    // may not be executing during a planned redraw cycle
-    ctrl.filter = debounce(function(input) {
-        if(input.length < 2) {
-            ctrl.results = false;
-
-            return m.redraw();
-        }
-
-        input = slug(input);
-
-        ctrl.results = ctrl.content.filter(function(content) {
-            return fuzzy(input, content.search);
-        });
-
-        return m.redraw();
-    }, 100);
-
     ctrl.remove = function(data) {
         var ref = db.child("content").child(ctrl.schema.key, data.key);
 
@@ -255,6 +250,54 @@ export function controller() {
         }
     };
 
+    ctrl.change = function(page, e) {
+        e.preventDefault();
+
+        ctrl.page = page;
+    };
+
+
+    // m.redraw calls are necessary due to debouncing, this function
+    // may not be executing during a planned redraw cycle
+    ctrl.searchFor = debounce(function(input) {
+        if(input.length < 2) {
+            ctrl.results = false;
+
+            return m.redraw();
+        }
+
+        input = slug(input);
+        ctrl.getSearchResults(input);
+
+        return null;
+    }, 800);
+
+    function onSearchResults(searchStr, snap) {
+        var contents = contentFromSnapshot(snap);
+
+        ctrl.results = contents.filter(function(content) {
+            return fuzzy(searchStr, content.search);
+        });
+
+        return m.redraw();
+    }
+
+    ctrl.getSearchResults = function(searchStr) {
+        if(ctrl.queryRef) {
+            ctrl.queryRef.off();
+        }
+
+        ctrl.queryRef = ctrl.contentLoc
+            .orderByChild(DB_ORDER_BY)
+            .endAt(Number.MAX_SAFE_INTEGER)
+            .limitToLast(ctrl.searchPg.itemsPer);
+
+        ctrl.queryRef.on("value", onSearchResults.bind(ctrl, searchStr));
+    };
+
+    ctrl.nextSearch = function() {
+        console.log("TODO NEXT SEARCH");
+    };
 
     ctrl.init();
 }
@@ -263,48 +306,78 @@ export function controller() {
 export function view(ctrl) {
     var current = m.route(),
         content = ctrl.results || ctrl.content || [],
-        locked  = config.locked;
+        locked  = config.locked,
+        isSearchResults = Boolean(ctrl.results);
 
     return m.component(layout, {
-        title   : title || "TITLE NOT FOUND",
+        title   : get(ctrl, "schema.name") || "...",
         content : [
 
-            m("div", { class : css.nav },
+            m("div", { class : css.listing },
                 m("div", { class : css.crumbs },
-                    "asdfasdfasdf"
+                    m("button", {
+                            onclick  : ctrl.add,
+                            class    : css.add,
+                            disabled : locked || null
+                        },
+                        "Add " + (ctrl.schema && ctrl.schema.name || "...")
+                    )
                 ),
                 m("div", { class : css.body }, [
                     m("div", { class : css.metas },
                         m("input", {
                             class       : css.search,
                             placeholder : "Search...",
-                            oninput     : m.withAttr("value", ctrl.filter)
+                            oninput     : m.withAttr("value", ctrl.searchFor)
+                            // oninput     : m.withAttr("value", ctrl.filter)
                         }),
-                        m("div", { class : css.pages }, [
-                            m("button", {
-                                    onclick  : ctrl.prevPage.bind(ctrl),
-                                    class    : css.prevPage,
-                                    disabled : locked || pg.page === 1 || null
-                                },
-                                "\< Prev Page"
-                            ),
-                            m("button", {
-                                    onclick  : ctrl.nextPage.bind(ctrl),
-                                    class    : css.nextPage,
-                                    disabled : locked || pg.page === pg.numPages() || null
-                                },
-                                "Next Page \>"
-                            )
-                        ]),
                         m("div", { class : css.manage }, [
-                            m("button", {
-                                    onclick  : ctrl.add,
-                                    class    : css.add,
-                                    disabled : locked || null
-                                },
-                                "Add " + (ctrl.schema && ctrl.schema.name || "SCHEMA NAME NOT FOUND")
-                            )
-                        ])
+                            m("span", { class : css.itemsPerLabel }, "Items Per Page: "),
+                            m("input", {
+                                class : css.itemsPer,
+                                type  : "number",
+                                value : ctrl.pg.itemsPer,
+
+                                disabled : isSearchResults,
+
+                                onchange : m.withAttr("value", ctrl.changeItemsPer)
+                            })
+                        ]),
+                        (
+                            isSearchResults ?
+                            m("div", { class : css.showingResults },
+                                "Showing results from most recent " + ctrl.searchPg.itemsPer + " items...",
+                                m("button", {
+                                        onclick : ctrl.nextSearch.bind(ctrl),
+                                        class   : css.nextPage
+                                        // ,
+                                        // disabled : locked ||  || ctrl.pg.page === 1 || null // TODO
+                                    },
+                                    "Search next " + ctrl.searchPg.itemsPer + " \>"
+                                )
+                            ) :
+                            m("div", { class : css.pages }, [
+                                m("button", {
+                                        onclick  : ctrl.prevPage.bind(ctrl),
+                                        class    : css.prevPage,
+                                        disabled : locked || isSearchResults || ctrl.pg.page === 1 || null
+                                    },
+                                    "\< Prev Page"
+                                ),
+                                m("span", {
+                                        class : css.currPage
+                                    },
+                                    isSearchResults ? "-" : ctrl.pg.page
+                                ),
+                                m("button", {
+                                        onclick  : ctrl.nextPage.bind(ctrl),
+                                        class    : css.nextPage,
+                                        disabled : locked || isSearchResults || ctrl.pg.page === ctrl.pg.numPages() || null
+                                    },
+                                    "Next Page \>"
+                                )
+                            ])
+                        )
                     ),
                     m("div", { class : css.listContainer }, 
                         m("ul", { class : css.list },
@@ -341,18 +414,18 @@ export function view(ctrl) {
                                         cssClass = css.published_at;
                                     }
 
-                                    if(isFuture(data.published_at)) {
-                                        // status = "scheduled: " + format(data.published_at, dateFormat);
+                                    if(isPast(data.unpublished_at)) {
+                                        itemStatus = "unpublished";
+                                    } else if(isFuture(data.published_at)) {
                                         itemStatus = "scheduled";
                                     } else if(isPast(data.published_at)) {
-                                        // status = "published: " + format(data.published_at, dateFormat);
-                                        itemStatus = "published";
+                                        // itemStatus = "published";
+                                        itemStatus = "live";
                                     } else if(data.updated_at) {
-                                        // status = "updated: " + format(data.updated_at, dateFormat);
                                         itemStatus = "updated";
                                     } else {
                                         // Prevents a flash of NaN/NaN/NaN on new creation
-                                        itemStatus = "updated:";
+                                        itemStatus = "...";
                                     }
 
 

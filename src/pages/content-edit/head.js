@@ -249,9 +249,10 @@ export function view(ctrl, options) {
         return m("div", { class : css.actions }, [
             m("a", {
                     // Attrs
-                    class : css.back,
-                    title : "Back to Listing",
-                    href  : prefix("/listing/" + options.schema.key)
+                    class  : css.back,
+                    title  : "Back to Listing",
+                    href   : prefix("/listing/" + options.schema.key),
+                    config : m.route
                 },
                 m("svg", { class : css.icon },
                     m("use", { href : icons + "#arrow" })

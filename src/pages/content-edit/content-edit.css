@@ -19,6 +19,17 @@
     align-items: center;
 }
 
+.body {
+    composes: body from layout_css;
+
+    padding-bottom: 5em;
+}
+
+.contentsContainer {
+    composes: contentWidth from layout_css;
+    composes: padding from layout_css;
+}
+
 .itemStatus {
     margin-bottom: 1em;
 }
@@ -46,14 +57,6 @@
     composes : status;
 
     border-color: orange;
-}
-.body {
-    composes: body from layout_css;
-    composes: padding from layout_css;
-}
-
-.contentsContainer {
-    composes: contentWidth from layout_css;
 }
 
 .form {

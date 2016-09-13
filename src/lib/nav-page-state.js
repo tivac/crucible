@@ -1,38 +1,56 @@
 import clamp from "lodash.clamp";
 
-var PageState = function() {    
-    var MIN_PAGE = 1;
-
-    this.page     = 1;
-    this.itemsPer = 4;
-
-    this.limits = [
+var MIN_PAGE = 1,
+    DEFAULT_ITEMS_PER = 10,
+    INITIAL_LIMITS = [
         NaN, // Pad with a NaN so our indexes match page number
         Number.MAX_SAFE_INTEGER
     ];
 
-    this.numPages = function() {
-        return this.limits.length - 1;
-    };
+// eslint-disable-next-line one-var, func-style
+var PageState = function(itemsPer) {
+    this.itemsPer = itemsPer || DEFAULT_ITEMS_PER;
+    this.limits = INITIAL_LIMITS.slice(); // copy
 
-    this.currPageTs = function() {
+    this.page = 1;
+};
+
+PageState.prototype = {
+    changeItemsPer : function(newNum) {
+        this.itemsPer = newNum;
+        this.reset();
+    },
+
+    reset : function() {
+        this.limits = INITIAL_LIMITS.slice(); // copy
+        this.page = 1;
+    },
+
+    numPages : function() {
+        return this.limits.length - 1;
+    },
+
+    currPageTs : function() {
         return this.limits[this.page];
-    };
-    this.nextPageTs = function() {
+    },
+
+    nextPageTs : function() {
         var nextIndex = this.page + 1;
 
-        return this.limits.length > nextIndex && this.limits[nextIndex];
-    };
+        return this.limits.length > nextIndex ? this.limits[nextIndex] : null;
+    },
 
-    this.next = function() {
+    next : function() {
         this.page = this.clampPage(++this.page);
-    };
-    this.prev = function() {
+    },
+
+    prev : function() {
         this.page = this.clampPage(--this.page);
-    };
-    this.clampPage = function(pgNum) {
+    },
+
+    clampPage : function(pgNum) {
         return clamp(pgNum, MIN_PAGE, this.numPages());
-    };
+    }
 };
 
 export default PageState;
