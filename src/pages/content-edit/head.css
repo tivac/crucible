@@ -21,40 +21,39 @@
 
 .main {
     composes: global(pure-g);
-    composes: contentWidth from layout_css;
+    composes: textContentWidth from layout_css;
     
+    position: relative;
+
     flex-flow: row;
     flex-wrap: nowrap;
     width: 100%;
 
     padding-left: 20px;
-    /* padding-right: 10px; 
-    margin-left: 20px; */
     
     align-items: center;
 }
 
 .details {
-    composes: contentWidth from layout_css;
-    
-    flex: 1 0;
-    
+    composes: global(pure-g);
+
     position: absolute;
-    top: 47px;
+    top: 42px;
+    right: 0;
     
-    width: 81%;
+    padding: 20px;
+    width: 75%;
     
     border: 1px solid #CCC;
     border-top: 0;
     background: #FFF;
-    
-    padding: 20px;
+    text-align: left;    
 
     transform-origin: top center;
-    animation: expand-reveal 0.15s linear;
+    animation: expandReveal 0.15s linear;
 }
 
-@keyframes expand-reveal {
+@keyframes expandReveal {
     0% {
         transform: scaleY(0);
     }
@@ -69,9 +68,6 @@
 
 .actions,
 .publishing {
-    /* composes: global(pure-g);
-
-    flex-wrap: nowrap; */
     overflow: hidden;
 }
 
@@ -157,7 +153,8 @@
 
 .start,
 .end {
-    flex: 1 0 50%;
+    composes: global(pure-u-1-2);
+    // flex: 1 0 50%;
 }
 
 .invalidDate {

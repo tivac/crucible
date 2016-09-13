@@ -260,24 +260,21 @@ export function view(ctrl, options) {
                 "Back"
             ),
 
-            ctrl.saving ?
-                "SAVING..." :
-                m("button", {
-                        // Attrs
-                        class    : css.save,
-                        title    : "Save your changes",
-                        disabled : locked || null,
+            m("button", {
+                    // Attrs
+                    class    : css.save,
+                    title    : "Save your changes",
+                    disabled : locked || null,
 
-                        // Events
-                        onclick : ctrl.save.bind(null, options)
-                    },
-                    m("svg", { class : css.icon },
-                        m("use", { href : icons + "#save" })
-                    ),
-                    "Save"
-                )
-            ]
-        );
+                    // Events
+                    onclick : ctrl.saving ? null : ctrl.save.bind(null, options)
+                },
+                m("svg", { class : css.icon },
+                    m("use", { href : icons + "#save" })
+                ),
+                ctrl.saving ? "SAVING..." : "Save"
+            )
+        ]);
     }
 
 
@@ -368,26 +365,16 @@ export function view(ctrl, options) {
 
         return m("div", { class : css.details },
             m("div", { class : css.start },
-                m("p",
-                    m("label", { for : "published_at_date" }, "Publish at")
-                ),
-                m("p",
-                    scheduleInput("published_at_date", "date", "start", "date")
-                ),
-                m("p",
-                    scheduleInput("published_at_time", "time", "start", "time")
-                )
+                m("p", m("label", { for : "published_at_date" }, "Publish at")),
+
+                m("p", scheduleInput("published_at_date", "date", "start", "date")),
+                m("p", scheduleInput("published_at_time", "time", "start", "time"))
             ),
             m("div", { class : css.end },
-                m("p",
-                    m("label", { for : "unpublished_at_date" }, "Until (optional)")
-                ),
-                m("p",
-                    scheduleInput("unpublished_at_date", "date", "end", "date")
-                ),
-                m("p",
-                    scheduleInput("unpublished_at_time", "time", "end", "time")
-                ),
+                m("p", m("label", { for : "unpublished_at_date" }, "Until (optional)")),
+
+                m("p", scheduleInput("unpublished_at_date", "date", "end", "date")),
+                m("p", scheduleInput("unpublished_at_time", "time", "end", "time")),
                 m("p",
                     m("button", {
                         class    : css.clearSchedule,
@@ -414,8 +401,8 @@ export function view(ctrl, options) {
                 mScheduleButton(),
                 mPublishButton(),
                 mUnpublishButton()
-            )
-        ),
-        mDateScheduler()
+            ),
+            mDateScheduler()
+        )
     );
 }

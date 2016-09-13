@@ -156,13 +156,6 @@ export function view(ctrl) {
                                     // Events
                                     oninput : m.withAttr("innerText", ctrl.titleChange)
                                 },
-                                // (function() {
-                                //     if(!this.schema || !this.data.name) {
-                                //         debugger;
-                                //     }
-
-                                //     return null;
-                                // }).call(ctrl),
                                 name(ctrl.schema, ctrl.data)
                             ),
                             m.component(children, {

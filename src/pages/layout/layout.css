@@ -8,6 +8,10 @@
     max-width: 1170px;
     min-width: 720px;
 }
+.textContentWidth {
+    max-width: 850px;
+    min-width: 550px;
+}
 
 .horizontal {
     display: flex;
