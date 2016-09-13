@@ -60,12 +60,11 @@ export function controller() {
     ctrl.content = null;
     ctrl.results = null;
 
-    ctrl.pg = new PageState();
     ctrl.contentLoc = null;
     ctrl.queryRef = null;
 
     ctrl.searchInput = null;
-    ctrl.searchMode = SEARCH_MODE_RECENT;    
+    ctrl.searchMode = SEARCH_MODE_RECENT;
 
     // Go get initial data
     // eslint-disable-next-line newline-per-chained-call
@@ -97,7 +96,8 @@ export function controller() {
         }
     }
 
-    // When we go backward, there's very little work to be done.
+    // When we go backward, or return to a page we've already
+    // loaded, there's very little work to be done.
     function onPageReturn(snap) {
         ctrl.content = contentFromSnapshot(snap, true);
     }
@@ -114,79 +114,34 @@ export function controller() {
         m.redraw();
     }
 
-
-    // Do we still need backfill?
-    function onBackfillPages(pgTs, snap) {
-        var i = 0,
-            ts = [];
-
-        // These pages are in Ascending order, but we
-        // need to examine them in descending order.
-        snap.forEach(function(record) {
-            ts.push( record.val()[DB_ORDER_BY] );
-        });
-        ts.reverse();
-
-        i += ctrl.pg.itemsPer;
-        while(ts.length > i) {
-            if(ctrl.pg.limits.indexOf( ts[i] ) === -1) {
-                ctrl.pg.limits.push( ts[i] );
-            }
-            i += ctrl.pg.itemsPer;
-        }
-
-        ctrl.pg.page = ctrl.pg.limits.indexOf(pgTs);
-
-        ctrl.showPage();
-    }
-
-    function backfillPages(pgTs) {
-        ctrl.contentLoc
-            .orderByChild(DB_ORDER_BY)
-            .startAt(pgTs)
-            .once("value", onBackfillPages.bind(ctrl, pgTs));
-    }
-
-    function onSchemaValue(snap) {
-        var pgTs = m.route.param("pgTs"),
-            needsBackfill;
-
+    function onSchema(snap) {
         if(!snap.exists()) {
             console.error("Error retrieving schema snapshot from Firebase.");
             return;
-        }
-
-        if(pgTs) {
-            pgTs = parseInt(pgTs, 10);
-            needsBackfill = ctrl.pg.limits.indexOf(pgTs) === -1;
         }
 
         ctrl.schema = snap.val();
         ctrl.schema.key = snap.key();
 
         ctrl.contentLoc = db.child("content/" + ctrl.schema.key);
-
-        if(needsBackfill) {
-            pgTs = parseInt(pgTs, 10);
-            backfillPages(pgTs);
-        } else {
-            ctrl.showPage();
-        }
+        ctrl.showPage();
     }
 
-    ctrl.init = function() {
+    ctrl.init = function() {        
+        ctrl.pg = new PageState();
+
         schema = db.child("schemas/" + m.route.param("schema"));
-        schema.on("value", onSchemaValue);
+        schema.on("value", onSchema);
     };
 
-    ctrl.changeItemsPer = function(val) {
+    ctrl.setItemsPer = function(val) {
         var num = parseInt(val, 10);
 
         if(isNaN(num)) {
             return;
         }
 
-        ctrl.pg.changeItemsPer(num);
+        ctrl.pg.setItemsPer(num);
         ctrl.showPage();
     };
 
@@ -387,7 +342,7 @@ export function view(ctrl) {
 
                                 disabled : isSearchResults,
 
-                                onchange : m.withAttr("value", ctrl.changeItemsPer)
+                                onchange : m.withAttr("value", ctrl.setItemsPer)
                             })
                         ]),
                         (function() {
@@ -460,7 +415,6 @@ export function view(ctrl) {
                                 .map(function(data) {
                                     var url      = "/content/" + ctrl.schema.key + "/" + data.key,
                                         cssClass = css.item,
-                                        pageTs = ctrl.pg.currPageTs(),
 
                                         itemName,
                                         itemStatus,
@@ -498,36 +452,25 @@ export function view(ctrl) {
                                         m("a", {
                                                 class  : css.anchor,
                                                 config : m.route,
-
-                                                href : prefix("/content/" + ctrl.schema.key + "/" + data.key +
-                                                    "?pgTs=" + pageTs
-                                                )
+                                                href   : prefix("/content/" + ctrl.schema.key + "/" + data.key)
                                             },
-                                            m("span", {
-                                                    class : [ css.itemTitle, css.listCol1 ].join(" "),
-                                                    title : itemName
-                                                },
+                                            m("span", { class : [ css.listCol1, css.itemTitle ].join(" "),
+                                                title : itemName },
                                                 itemName
                                             ),
-                                            m("span", {
-                                                    class : [ css.date, css.listCol2 ].join(" "),
-                                                    title : itemStatus
-                                                },
+                                            m("span", { class : [ css.listCol2, css.date ].join(" "),
+                                                title : itemStatus },
                                                 itemStatus
                                             ),
-                                            m("span", {
-                                                    class : [ css.status, css.listCol3 ].join(" "),
-                                                    title : itemSchedule
-                                                },
+                                            m("span", { class : [ css.listCol3, css.status ].join(" "),
+                                                title : itemSchedule },
                                                 itemUpdated  
                                             ),
-                                            m("span", {
-                                                    class : [ css.status, css.listCol4 ].join(" "),
-                                                    title : itemSchedule
-                                                },
+                                            m("span", { class : [ css.listCol4, css.status ].join(" "),
+                                                title : itemSchedule },
                                                 itemSchedule  
                                             ),
-                                            m("div", { class : [ css.actions, css.listCol5 ].join(" ") },
+                                            m("div", { class : [ css.listCol5, css.actions ].join(" ") },
                                                 m("button", {
                                                         // Attrs
                                                         class    : [ css.remove, css.action ].join(" "),

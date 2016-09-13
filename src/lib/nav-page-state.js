@@ -9,15 +9,40 @@ var MIN_PAGE = 1,
 
 // eslint-disable-next-line one-var, func-style
 var PageState = function(itemsPer) {
-    this.itemsPer = itemsPer || DEFAULT_ITEMS_PER;
     this.limits = INITIAL_LIMITS.slice(); // copy
-
     this.page = 1;
+
+    this.itemsPer = itemsPer;
+
+    if(this.itemsPer) {
+        return;
+    }
+
+    if(window.localStorage) {
+        itemsPer = window.localStorage.getItem("crucible:itemsPer");
+        itemsPer = parseInt(itemsPer, 10);
+
+        if(!itemsPer) {
+            itemsPer = DEFAULT_ITEMS_PER;
+        }
+    }
+
+    this.setItemsPer(itemsPer);
 };
 
 PageState.prototype = {
-    changeItemsPer : function(newNum) {
-        this.itemsPer = newNum;
+    setItemsPer : function(newNum) {
+        var setTo = newNum;
+
+        if(typeof setTo !== "number") {
+            setTo = parseInt(setTo, 10);
+            if(isNaN(setTo)) {
+                setTo = DEFAULT_ITEMS_PER;
+            }
+        }
+
+        this.itemsPer = setTo;
+        window.localStorage.setItem("crucible:itemsPer", setTo);
         this.reset();
     },
 
