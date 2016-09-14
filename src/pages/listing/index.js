@@ -11,12 +11,12 @@ import config, { icons } from "../../config.js";
 
 import db from "../../lib/firebase.js";
 import prefix from "../../lib/prefix.js";
-import PageState from "../../lib/nav-page-state.js";
 
 import * as layout from "../layout/index.js";
 
 import name from "../content-edit/name.js";
 
+import PageState from "./page-state.js";
 import css from "./listing.css";
 
 var DB_ORDER_BY = "updated_at",
@@ -200,7 +200,11 @@ export function controller() {
     };
 
     ctrl.remove = function(data) {
-        var ref = db.child("content").child(ctrl.schema.key, data.key);
+        var ref;
+
+        ref = db.child("content")
+            .child(ctrl.schema.key)
+            .child(data.key);
 
         if(window.confirm("Remove " + data.name + "?")) {
             ref.remove().catch(console.error.bind(console));
@@ -288,6 +292,24 @@ export function controller() {
         }
     };
 
+    // ctrl.checkBypassItemClick = function(evt) {
+    //     var doBypass = false,
+    //         actionBtn;
+
+    //     actionBtn = evt.path.find(function(item) {
+    //         var dataset = item.dataset;
+
+    //         return dataset && dataset.action === "true";
+    //     });
+
+    //     doBypass = Boolean(actionBtn);
+
+    //     debugger
+
+    //     // `return false` will bypass the `a` click;
+    //     return !doBypass;
+    // };
+
     ctrl.init();
 }
 
@@ -307,7 +329,7 @@ export function view(ctrl) {
         content : [
 
             m("div", { class : css.listing },
-                m("div", { class : css.crumbs },
+                m("div", { class : css.contentHead },
                     m("button", {
                             onclick  : ctrl.add,
                             class    : css.add,
@@ -416,7 +438,7 @@ export function view(ctrl) {
                                 })
                                 .map(function(data) {
                                     var url      = "/content/" + ctrl.schema.key + "/" + data.key,
-                                        cssClass = css.item,
+                                        cssClasses = css.item,
 
                                         itemName,
                                         itemStatus,
@@ -424,11 +446,11 @@ export function view(ctrl) {
                                         itemSchedule;
 
                                     if(data.published_at && current.indexOf(url) === 0) {
-                                        cssClass = css.activePublished;
+                                        cssClasses = css.activePublished;
                                     } else if(current.indexOf(url) === 0) {
-                                        cssClass = css.active;
+                                        cssClasses = css.active;
                                     } else if(data.published_at) {
-                                        cssClass = css.published_at;
+                                        cssClasses = css.published_at;
                                     }
 
                                     if(isPast(data.unpublished_at)) {
@@ -448,55 +470,55 @@ export function view(ctrl) {
                                     itemUpdated = data.updated_at ? format(data.updated_at, dateFormat) : "--/--/----";
                                     itemSchedule = data.published_at ? format(data.published_at, dateFormat) : "--/--/----";
 
-                                    return m("li", { class : cssClass },
+                                    return m("li", { class : cssClasses },
                                         m("a", {
                                                 class  : css.anchor,
                                                 config : m.route,
                                                 href   : prefix("/content/" + ctrl.schema.key + "/" + data.key)
-                                            },
-                                            m("span", { class : [ css.listCol1, css.itemTitle ].join(" "),
-                                                title : itemName },
-                                                itemName
-                                            ),
-                                            m("span", { class : [ css.listCol2, css.date ].join(" "),
-                                                title : itemStatus },
-                                                itemStatus
-                                            ),
-                                            m("span", { class : [ css.listCol3, css.status ].join(" "),
-                                                title : itemUpdated },
-                                                itemUpdated  
-                                            ),
-                                            m("span", { class : [ css.listCol4, css.status ].join(" "),
-                                                title : itemSchedule },
-                                                itemSchedule  
-                                            ),
-                                            m("div", { class : [ css.listCol5, css.actions ].join(" ") },
-                                                m("button", {
-                                                        // Attrs
-                                                        class    : [ css.remove, css.action ].join(" "),
-                                                        title    : "Remove: " + itemName,
-                                                        disabled : locked || null,
+                                            }, ""
+                                        ),
+                                        m("span", { class : [ css.listCol1, css.itemTitle ].join(" "),
+                                            title : itemName },
+                                            itemName
+                                        ),
+                                        m("span", { class : [ css.listCol2, css.date ].join(" "),
+                                            title : itemStatus },
+                                            itemStatus
+                                        ),
+                                        m("span", { class : [ css.listCol3, css.status ].join(" "),
+                                            title : itemUpdated },
+                                            itemUpdated  
+                                        ),
+                                        m("span", { class : [ css.listCol4, css.status ].join(" "),
+                                            title : itemSchedule },
+                                            itemSchedule  
+                                        ),
+                                        m("div", { class : [ css.listCol5, css.actions ].join(" ") },
+                                            m("button", {
+                                                    // Attrs
+                                                    class    : [ css.remove, css.action ].join(" "),
+                                                    title    : "Remove: " + itemName,
+                                                    disabled : locked || null,
 
-                                                        // Events
-                                                        onclick : ctrl.remove.bind(ctrl, data)
+                                                    // Events
+                                                    onclick : ctrl.remove.bind(ctrl, data)
+                                                },
+                                                m("svg", { class : css.icon },
+                                                    m("use", { href : icons + "#remove" })
+                                                )
+                                            ),
+                                            ctrl.schema.preview ?
+                                                m("a", {
+                                                        class  : [ css.preview, css.action ].join(" "),
+                                                        title  : "Preview: " + itemName,
+                                                        href   : ctrl.schema.preview + data.key,
+                                                        target : "_blank"
                                                     },
                                                     m("svg", { class : css.icon },
-                                                        m("use", { href : icons + "#remove" })
+                                                        m("use", { href : icons + "#preview" })
                                                     )
-                                                ),
-                                                ctrl.schema.preview ?
-                                                    m("a", {
-                                                            class  : [ css.preview, css.action ].join(" "),
-                                                            title  : "Preview: " + itemName,
-                                                            href   : ctrl.schema.preview + data.key,
-                                                            target : "_blank"
-                                                        },
-                                                        m("svg", { class : css.icon },
-                                                            m("use", { href : icons + "#preview" })
-                                                        )
-                                                    ) :
-                                                null
-                                            )
+                                                ) :
+                                            null
                                         )
                                     );
                                 })

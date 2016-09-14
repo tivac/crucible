@@ -1,7 +1,7 @@
 import clamp from "lodash.clamp";
 
 var MIN_PAGE = 1,
-    DEFAULT_ITEMS_PER = 10,
+    DEFAULT_ITEMS_PER = 15,
     INITIAL_LIMITS = [
         NaN, // Pad with a NaN so our indexes match page number
         Number.MAX_SAFE_INTEGER

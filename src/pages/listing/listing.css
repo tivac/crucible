@@ -20,9 +20,12 @@
     background: #EEE;
 }
 
-.crumbs {
+.contentHead {
     composes: lightsep from header;
     overflow: hidden;
+
+    height: 48px;
+
     position: relative;
     padding: 0.3em 20px;
 }
@@ -199,6 +202,8 @@
 }
 
 .item {
+    composes: global(pure-g);
+
     position: relative;
 
     padding-left: 4px;
@@ -211,6 +216,19 @@
     background: #DFDFDF;
 
     transition: background-color 0.2s ease-in;
+}
+
+.item .anchor {
+    position: absolute;;
+    top: 0;
+    left: 0;
+    z-index: 2;
+
+    width: 100%;
+    height: 100%;
+}
+.item .actions {
+    z-index: 3;
 }
 
 .itemTitle {
@@ -238,8 +256,6 @@
 }
 
 .anchor {
-    composes: global(pure-g);
-
     text-decoration: none;
     color: anchor;
 }
@@ -264,6 +280,11 @@
 }
 
 .actions {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1423;
+
     display: flex;
     flex-direction: row-reverse;
 
