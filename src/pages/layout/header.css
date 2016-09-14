@@ -11,9 +11,8 @@
     composes: section from layout_css;
     composes: header_bg;
     
-    flex: 0 0 180px;
-    /*flex: 1 1 320px;
-    min-width: 180px;*/
+    flex: 1 1 360px;
+    min-width: 180px;
     
     z-index: 1;
     font-size: 0.8em;
