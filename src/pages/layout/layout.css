@@ -39,11 +39,6 @@
     padding: 1em 20px;
 }
 
-.content {
-    composes: section, padding;
-    
-    position: relative;
-}
 
 .head {
     composes: vertical;

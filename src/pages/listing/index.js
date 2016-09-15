@@ -292,24 +292,6 @@ export function controller() {
         }
     };
 
-    // ctrl.checkBypassItemClick = function(evt) {
-    //     var doBypass = false,
-    //         actionBtn;
-
-    //     actionBtn = evt.path.find(function(item) {
-    //         var dataset = item.dataset;
-
-    //         return dataset && dataset.action === "true";
-    //     });
-
-    //     doBypass = Boolean(actionBtn);
-
-    //     debugger
-
-    //     // `return false` will bypass the `a` click;
-    //     return !doBypass;
-    // };
-
     ctrl.init();
 }
 

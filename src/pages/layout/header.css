@@ -10,8 +10,8 @@
 .container {
     composes: section from layout_css;
     composes: header_bg;
-    
-    flex: 1 1 360px;
+
+    flex: 0 1 320px;
     min-width: 180px;
     
     z-index: 1;

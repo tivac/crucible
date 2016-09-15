@@ -4,8 +4,9 @@
 
 .content {
     composes: section from layout_css;
+    position: relative;
 
-    flex: 2 0 400px;
+    flex: 1 1 100%;
 }
 
 .head {
@@ -21,13 +22,17 @@
 
 .body {
     composes: body from layout_css;
+    composes: contentWidth from layout_css;
 
     padding-bottom: 5em;
 }
 
+
 .contentsContainer {
     composes: textContentWidth from layout_css;
     composes: padding from layout_css;
+
+    width: 100%;
 }
 
 .itemStatus {
