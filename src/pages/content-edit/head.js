@@ -4,6 +4,7 @@ import isFuture from "date-fns/is_future";
 import isPast from "date-fns/is_past";
 import subSeconds from "date-fns/sub_seconds";
 import get from "lodash.get";
+import clone from "lodash.clone";
 
 import config, { icons } from "../../config";
 import db from "../../lib/firebase";
@@ -35,6 +36,22 @@ function nulledDate(time) {
         time : time,
         ts   : null
     };
+}
+
+function filterHidden(fields, hidden) {
+    // People can hide/unhide a field without losing work.
+    // But we don't want to persist data from hidden fields,
+    // so overwrite the data to be saved, but clone the 
+    // source data so we do not modify the form's data.
+    var filtered = clone(fields);
+
+    Object.keys(filtered).forEach(function(key) {
+        if(hidden.indexOf(key) > -1) {
+            filtered[key] = null;
+        }
+    });
+
+    return filtered;
 }
 
 export function controller(options) {
@@ -157,7 +174,7 @@ export function controller(options) {
         m.redraw();
 
         updated = {
-            fields : opts.data.fields,
+            fields : filterHidden( opts.data.fields, opts.hidden ),
             name   : opts.data.name,
             slug   : opts.data.slug || null
         };

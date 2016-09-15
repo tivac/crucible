@@ -2,8 +2,13 @@ import m from "mithril";
 import assign from "lodash.assign";
 
 import id from "./id";
-import hide from "./hide";
 import label from "./label";
+
+/**
+ * Examples of `multiple` types include `checkbox.js` and `radio.js`,
+ * in both cases you're very likely or certain to have multiple inputs 
+ * defined in a single field definition. (See README for examples.)
+ */
 
 export default function(args, view) {
     return {
@@ -53,14 +58,7 @@ export default function(args, view) {
         },
 
         view : function(ctrl, options) {
-            var hidden = hide(options),
-                children;
-            
-            if(hidden) {
-                return hidden;
-            }
-
-            children = ctrl.selected(options);
+            var children = ctrl.selected(options);
             
             return m("div", { class : options.class },
                 label(ctrl, options, children),

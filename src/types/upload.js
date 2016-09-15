@@ -12,7 +12,6 @@ import join from "url-join";
 import { icons } from "../config";
 
 import id from "./lib/id";
-import hide from "./lib/hide";
 import label from "./lib/label";
 
 import css from "./upload.css";
@@ -245,12 +244,7 @@ export function controller(options) {
 }
 
 export function view(ctrl, options) {
-    var field  = options.field,
-        hidden = hide(options);
-    
-    if(hidden) {
-        return hidden;
-    }
+    var field  = options.field;
     
     ctrl.options = options;
 

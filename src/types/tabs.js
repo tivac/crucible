@@ -1,7 +1,5 @@
 import m from "mithril";
 import assign from "lodash.assign";
-    
-import hide from "./lib/hide";
 
 import * as children from "./children";
 import css from "./tabs.css";
@@ -19,12 +17,7 @@ export function controller() {
 }
 
 export function view(ctrl, options) {
-    var tabs   = options.field.children || [],
-        hidden = hide(options);
-        
-    if(hidden) {
-        return hidden;
-    }
+    var tabs   = options.field.children || [];
     
     return m("div", { class : options.class },
         m("div", { class : css.nav },
