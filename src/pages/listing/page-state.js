@@ -7,8 +7,7 @@ var MIN_PAGE = 1,
         Number.MAX_SAFE_INTEGER
     ];
 
-// eslint-disable-next-line one-var, func-style
-var PageState = function(itemsPer) {
+function PageState(itemsPer) {
     this.limits = INITIAL_LIMITS.slice(); // copy
     this.page = 1;
 
@@ -28,7 +27,7 @@ var PageState = function(itemsPer) {
     }
 
     this.setItemsPer(itemsPer);
-};
+}
 
 PageState.prototype = {
     setItemsPer : function(newNum) {

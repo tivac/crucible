@@ -1,7 +1,5 @@
 import m from "mithril";
 import format from "date-fns/format";
-import isFuture from "date-fns/is_future";
-import isPast from "date-fns/is_past";
 import fuzzy from "fuzzysearch";
 import debounce from "lodash.debounce";
 import get from "lodash.get";
@@ -11,6 +9,7 @@ import config, { icons } from "../../config.js";
 
 import db from "../../lib/firebase.js";
 import prefix from "../../lib/prefix.js";
+import getItemStatus from "../../lib/item-status.js";
 
 import * as layout from "../layout/index.js";
 
@@ -147,6 +146,7 @@ export function controller() {
         ctrl.pg.next();
         ctrl.showPage();
     };
+
     ctrl.prevPage = function() {
         ctrl.pg.prev();
         ctrl.showPage();
@@ -339,7 +339,7 @@ export function view(ctrl) {
                                 }, "") :
                             null
                         ]),
-                        m("div", { class : css.manage }, [
+                        m("div", { class : css.manage },
                             m("span", { class : css.itemsPerLabel }, "Items Per Page: "),
                             m("input", {
                                 class : css.itemsPer,
@@ -350,7 +350,7 @@ export function view(ctrl) {
 
                                 onchange : m.withAttr("value", ctrl.setItemsPer)
                             })
-                        ]),
+                        ),
                         (function() {
                             var searchContents;
 
@@ -435,17 +435,8 @@ export function view(ctrl) {
                                         cssClasses = css.published_at;
                                     }
 
-                                    if(isPast(data.unpublished_at)) {
-                                        itemStatus = "unpublished";
-                                    } else if(isFuture(data.published_at)) {
-                                        itemStatus = "scheduled";
-                                    } else if(isPast(data.published_at)) {
-                                        itemStatus = "live";
-                                    } else if(data.updated_at) {
-                                        itemStatus = "updated";
-                                    } else {
-                                        itemStatus = "...";
-                                    }
+                                    itemStatus = getItemStatus(data);
+                                    console.log("status", status);
 
 
                                     itemName = name(ctrl.schema, data);

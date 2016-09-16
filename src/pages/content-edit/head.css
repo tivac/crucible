@@ -100,9 +100,11 @@
     
     align-items: center;
 }
+
 .publishing {
     justify-content: flex-end;
 }
+
 .actions {
     justify-content: flex-start;
 }
@@ -154,7 +156,6 @@
 .start,
 .end {
     composes: global(pure-u-1-2);
-    // flex: 1 0 50%;
 }
 
 .invalidDate {
