@@ -11,6 +11,7 @@ import db from "../../lib/firebase";
 import prefix from "../../lib/prefix";
 
 import css from "./head.css";
+import contentCss from "./content-edit.css";
 
 var DEFAULT_START_TIME = "00:00",
     DEFAULT_END_TIME   = "23:59",
@@ -52,6 +53,23 @@ function filterHidden(fields, hidden) {
     });
 
     return filtered;
+}
+
+function checkRequired(fields, form) {
+    var reqs = form.querySelectorAll("*[required]"),
+        invalid = [];
+
+    console.log("reqs", reqs);
+        
+    reqs.forEach(function(input) {
+        if(!input.validity.valid) {
+            input.classList.add(contentCss.highlightInvalid); // To differentiate from the passive `:invalid` style.
+            console.log("add " + contentCss.highlightInvalid + " to " + input);
+            invalid.push(input);
+        }
+    });
+
+    return invalid;
 }
 
 export function controller(options) {
@@ -168,7 +186,8 @@ export function controller(options) {
     };
 
     ctrl.save = function(opts) {
-        var updated = {};
+        var updated = {},
+            invalid = [];
 
         ctrl.saving = true;
         m.redraw();
@@ -180,8 +199,14 @@ export function controller(options) {
         };
 
         updated = ctrl.addScheduleData(updated);
+        invalid = checkRequired(opts.data.fields, opts.form);
 
-        ref.update(updated, function() {
+        if(invalid.length) {
+            ctrl.saving = false;
+            return null;
+        }
+
+        return ref.update(updated, function() {
             ctrl.saving = false;
             m.redraw();
         });

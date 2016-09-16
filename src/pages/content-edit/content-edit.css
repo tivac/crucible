@@ -130,3 +130,12 @@
 .children {
     margin-top: 20px;
 }
+
+
+/* Had a specificity war with pure-css */
+input.highlightInvalid:invalid,
+textarea.highlightInvalid:invalid {
+    background: #f5cecd;
+    border-color: #e9322d;
+    color: black;
+}
