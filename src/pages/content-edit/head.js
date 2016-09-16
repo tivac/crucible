@@ -3,12 +3,12 @@ import format from "date-fns/format";
 import isFuture from "date-fns/is_future";
 import isPast from "date-fns/is_past";
 import subSeconds from "date-fns/sub_seconds";
-import upper from "lodash.capitalize";
 import get from "lodash.get";
 import clone from "lodash.clone";
 
 import config, { icons } from "../../config";
 import db from "../../lib/firebase";
+import prefix from "../../lib/prefix";
 
 import css from "./head.css";
 
@@ -262,24 +262,36 @@ export function view(ctrl, options) {
         status = "unpublished";
     }
 
-    function mSaveButton() {
-        return m("div", { class : css.actions },
-            ctrl.saving ?
-                "SAVING..." : m("button", {
+    function mControls() {
+        return m("div", { class : css.actions }, [
+            m("a", {
+                    // Attrs
+                    class  : css.back,
+                    title  : "Back to Listing",
+                    href   : prefix("/listing/" + options.schema.key),
+                    config : m.route
+                },
+                m("svg", { class : css.icon },
+                    m("use", { href : icons + "#arrow" })
+                ),
+                "Back"
+            ),
+
+            m("button", {
                     // Attrs
                     class    : css.save,
                     title    : "Save your changes",
                     disabled : locked || null,
 
                     // Events
-                    onclick : ctrl.save.bind(null, options)
+                    onclick : ctrl.saving ? null : ctrl.save.bind(null, options)
                 },
                 m("svg", { class : css.icon },
                     m("use", { href : icons + "#save" })
                 ),
-                "Save"
+                ctrl.saving ? "SAVING..." : "Save"
             )
-        );
+        ]);
     }
 
 
@@ -370,26 +382,16 @@ export function view(ctrl, options) {
 
         return m("div", { class : css.details },
             m("div", { class : css.start },
-                m("p",
-                    m("label", { for : "published_at_date" }, "Publish at")
-                ),
-                m("p",
-                    scheduleInput("published_at_date", "date", "start", "date")
-                ),
-                m("p",
-                    scheduleInput("published_at_time", "time", "start", "time")
-                )
+                m("p", m("label", { for : "published_at_date" }, "Publish at")),
+
+                m("p", scheduleInput("published_at_date", "date", "start", "date")),
+                m("p", scheduleInput("published_at_time", "time", "start", "time"))
             ),
             m("div", { class : css.end },
-                m("p",
-                    m("label", { for : "unpublished_at_date" }, "Until (optional)")
-                ),
-                m("p",
-                    scheduleInput("unpublished_at_date", "date", "end", "date")
-                ),
-                m("p",
-                    scheduleInput("unpublished_at_time", "time", "end", "time")
-                ),
+                m("p", m("label", { for : "unpublished_at_date" }, "Until (optional)")),
+
+                m("p", scheduleInput("unpublished_at_date", "date", "end", "date")),
+                m("p", scheduleInput("unpublished_at_time", "time", "end", "time")),
                 m("p",
                     m("button", {
                         class    : css.clearSchedule,
@@ -409,18 +411,15 @@ export function view(ctrl, options) {
 
     return m("div", { class : css.head },
         m("div", { class : css.main },
-            m("p", { class : css[status] },
-                upper(status)
-            ),
 
-            mSaveButton(),
+            mControls(),
 
             m("div", { class : css.publishing },
                 mScheduleButton(),
                 mPublishButton(),
                 mUnpublishButton()
-            )
-        ),
-        mDateScheduler()
+            ),
+            mDateScheduler()
+        )
     );
 }

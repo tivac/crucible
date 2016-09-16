@@ -1,76 +1,97 @@
+@value pure: "../../_pure.css";
 @value   icons_css: "../../icons.css";
 @value  layout_css: "../layout/layout.css";
 @value buttons_css: "../../buttons.css";
+@value header: "../layout/header.css";
 
 .head {
     composes: head from layout_css;
+    composes: lightsep from header;
     
     position: relative;
+    width: 100%;
 
-    align-items: center;
+    align-items: flex-start;
     
     padding-left: 0;
     padding-right: 0;
+
+    text-align: left;
 }
 
 .main {
-    composes: horizontal from layout_css;
+    composes: global(pure-g);
+    composes: textContentWidth from layout_css;
     
-    flex: 1 0;
+    position: relative;
+
+    flex-flow: row;
+    flex-wrap: nowrap;
     width: 100%;
 
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 20px;
     
     align-items: center;
 }
 
 .details {
-    composes: horizontal from layout_css;
-    
-    flex: 1 0;
-    
+    composes: global(pure-g);
+
     position: absolute;
-    top: 47px;
+    top: 42px;
+    right: 0;
     
-    width: 81%;
+    padding: 20px;
+    width: 75%;
     
     border: 1px solid #CCC;
     border-top: 0;
     background: #FFF;
-    
-    padding: 20px;
+    text-align: left;    
+
+    transform-origin: top center;
+    animation: expandReveal 0.15s linear;
 }
 
-.status,
+@keyframes expandReveal {
+    0% {
+        transform: scaleY(0);
+    }
+    100% {
+        transform: scaleY(1);
+    }
+}
+
+.headButton {
+    margin-left: 10px;
+}
+
+.actions,
+.publishing {
+    overflow: hidden;
+}
+
+.publish,
+.unpublish,
+.back,
+.save {
+    max-width: 50%;
+}
+
 .actions {
-    flex: 1 1 25%;
+    composes: global(pure-u-2-5);
 }
 
 .publishing {
-    flex: 2 0 50%;
+    composes: global(pure-u-3-5);
+
+    padding-right: 20px;
+    text-align: right;
 }
 
-.status {
-    margin: 0;
-
-    border-bottom: solid 2px;
-}
-
-.draft {
-    composes : status;
-
-    border-color: #ddd;
-}
-.published {
-    composes : status;
-
-    border-color: green;
-}
-.scheduled {
-    composes : status;
-
-    border-color: orange;
+.controls {
+    flex: 1 1 25%;
+    justify-content: flex-start;
 }
 
 .actions,
@@ -78,29 +99,38 @@
     composes: horizontal from layout_css;
     
     align-items: center;
-    justify-content: center;
 }
+
+.publishing {
+    justify-content: flex-end;
+}
+
+.actions {
+    justify-content: flex-start;
+}
+
 
 .save {
     composes: primary from buttons_css;
+    composes: headButton;
 }
 
 .schedule {
     composes: color from buttons_css;
+    composes: headButton;
     
     background-color: teal;
 }
 
+
 .publish {
     composes: add from buttons_css;
-
-    margin-left: 10px;
+    composes: headButton;
 }
 
 .unpublish {
     composes: remove from buttons_css;
-    
-    margin-left: 10px;
+    composes: headButton;
 }
 
 .icon {
@@ -112,7 +142,7 @@
 }
 
 .back {
-    composes: remove from buttons_css;
+    composes: warn from buttons_css;
 }
 
 .back svg {
@@ -125,7 +155,7 @@
 
 .start,
 .end {
-    flex: 1 0 50%;
+    composes: global(pure-u-1-2);
 }
 
 .invalidDate {
