@@ -436,8 +436,6 @@ export function view(ctrl) {
                                     }
 
                                     itemStatus = getItemStatus(data);
-                                    console.log("status", status);
-
 
                                     itemName = name(ctrl.schema, data);
                                     itemUpdated = data.updated_at ? format(data.updated_at, dateFormat) : "--/--/----";
