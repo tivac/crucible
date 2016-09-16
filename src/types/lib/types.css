@@ -6,10 +6,20 @@
     margin-top: 20px;
 }
 
+.fieldHidden {
+    composes: field;
+    composes: global(hidden);
+}
+
 .first {
     composes: field;
     
     margin-top: 0;
+}
+
+.firstHidden {
+    composes: first;
+    composes: global(hidden);
 }
 
 .label {

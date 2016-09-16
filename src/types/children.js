@@ -4,7 +4,6 @@ import assign from "lodash.assign";
 
 import input from "./lib/input.js";
 import checkHidden from "./lib/hide.js";
-import addClasses from "./lib/classer.js";
 
 import css from "./lib/types.css";
 
@@ -42,7 +41,7 @@ export function view(ctrl, options) {
 
         result = m.component(component, assign({}, options, {
             field : field,
-            class : addClasses(field, css[index ? "field" : "first"] ),
+            class : css[(index ? "field" : "first") + (field.show && field.show.hidden ? "Hidden" : "")],
             data  : get(options.data, field.key),
             path  : options.path.concat(field.key)
         }));
