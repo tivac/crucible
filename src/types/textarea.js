@@ -1,5 +1,6 @@
 import m from "mithril";
 import assign from "lodash.assign";
+import get from "lodash.get";
 
 import id from "./lib/id";
 import label from "./lib/label";
@@ -30,7 +31,7 @@ export function view(ctrl, options) {
                     // attrs
                     id       : ctrl.id,
                     class    : css.textarea,
-                    required : field.required ? "required" : null,
+                    required : options.required,
 
                     // events
                     oninput : m.withAttr("value", ctrl.resize.bind(null, options))

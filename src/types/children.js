@@ -29,23 +29,30 @@ export function view(ctrl, options) {
                 m("pre", JSON.stringify(field, null, 4))
             );
         }
-        
+
         if(field.show) {
             wasHidden = field.show.hidden;
             field.show.hidden = checkHidden(options.state, field);
 
+            // Avoid bug, never require a hidden field.
+            // field.required = (field.show.hidden) ? false : field.required;
+
             if(registerHidden && field.show.hidden !== wasHidden) {
                 // hidden status changed, notify the controller.
                 registerHidden(field.key, field.show.hidden);
+                m.redraw();
             }
         }
 
         result = m.component(component, assign({}, options, {
             field : field,
-            class : addClasses(field, css[index ? "field" : "first"] ),
+            class : addClasses(field, css[index ? "field" : "first"]),
             data  : get(options.data, field.key),
-            path  : options.path.concat(field.key)
+            path  : options.path.concat(field.key),
+
+            required : !get(field, "show.hidden") && field.required
         }));
+
 
         return result;
     });

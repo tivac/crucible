@@ -55,22 +55,22 @@ function filterHidden(fields, hidden) {
     return filtered;
 }
 
-function checkRequired(fields, form) {
-    var reqs = form.querySelectorAll("*[required]"),
-        invalid = [];
+// function checkRequired(fields, form) {
+//     var reqs = form.querySelectorAll("*[required]"),
+//         invalid = [];
 
-    console.log("reqs", reqs);
-        
-    reqs.forEach(function(input) {
-        if(!input.validity.valid) {
-            input.classList.add(contentCss.highlightInvalid); // To differentiate from the passive `:invalid` style.
-            console.log("add " + contentCss.highlightInvalid + " to " + input);
-            invalid.push(input);
-        }
-    });
+//     console.log("reqs", reqs);
 
-    return invalid;
-}
+//     reqs.forEach(function(input) {
+//         if(!input.validity.valid) {
+//             input.classList.add(contentCss.highlightInvalid); // To differentiate from the passive `:invalid` style.
+//             console.log("add " + contentCss.highlightInvalid + " to " + input);
+//             invalid.push(input);
+//         }
+//     });
+
+//     return invalid;
+// }
 
 export function controller(options) {
     var ctrl = this,
@@ -105,12 +105,55 @@ export function controller(options) {
         ctrl.schedule = typeof force !== "undefined" ? Boolean(force) : !ctrl.schedule;
     };
 
-    ctrl.publish = function() {
+
+    function arr(x) {
+        x = Array.prototype.slice.call(x);
+        return x;
+    }
+    function allInputs(form) {
+        var result = [],
+            inputs;
+
+        [ "input", "select", "textarea" ].forEach(function(kind) {
+            inputs = arr(form.querySelectorAll(kind));
+            result = result.concat(inputs);
+        });
+
+        console.log("result", result);
+        return result;
+    }
+
+    var doneDid;
+    function handleInvalid(form) {
+        if(doneDid) {
+            return;
+        }
+        doneDid = true;
+
+        console.log("REQURIED NOT BEING SET PROPERLY ON A BUNCH OF ELEMENTS FIX ASAP");
+        allInputs(form).forEach(function(inp) {
+            inp.addEventListener('invalid', function(evt) {
+                console.log(evt.target.classList.value, evt);
+            });
+        });
+    }
+
+    ctrl.publish = function(opts) {
         var startTs,
             updated,
             pubDateIsPast,
             hasUnpubDate,
-            unpubDateIsFuture;
+            unpubDateIsFuture,
+            valid;
+
+        handleInvalid(opts.form);
+
+        valid = opts.form.checkValidity();
+        if(!valid) {
+            console.log("invalid! prevent publish");
+            return null;
+        }
+
 
         pubDateIsPast = Boolean(ctrl.start.ts) && isPast(ctrl.start.ts);
 
@@ -187,7 +230,7 @@ export function controller(options) {
 
     ctrl.save = function(opts) {
         var updated = {},
-            invalid = [];
+            valid = opts.form.checkValidity();
 
         ctrl.saving = true;
         m.redraw();
@@ -199,11 +242,9 @@ export function controller(options) {
         };
 
         updated = ctrl.addScheduleData(updated);
-        invalid = checkRequired(opts.data.fields, opts.form);
 
-        if(invalid.length) {
-            ctrl.saving = false;
-            return null;
+        if(!valid) {
+            console.log("TODO warn about invalid fields, but still allow save to go through.");
         }
 
         return ref.update(updated, function() {
@@ -277,7 +318,7 @@ export function view(ctrl, options) {
         publishTs = options.data.published_at,
         unpublishTs = options.data.unpublished_at,
         future  = isFuture(ctrl.start.date + " " + ctrl.start.time),
-        locked  = config.locked;
+        locked  = config.locked; 
 
     if(isFuture(publishTs)) {
         status = "scheduled";
@@ -350,7 +391,7 @@ export function view(ctrl, options) {
                 disabled : locked || isDisabled || null,
 
                 // Events
-                onclick : ctrl.publish
+                onclick : ctrl.publish.bind(null, options)
             },
             m("svg", { class : css.icon },
                 m("use", { href : icons + (future ? "#schedule" : "#publish") })
