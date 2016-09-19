@@ -8,7 +8,7 @@ import css from "./fieldset.css";
 export function view(ctrl, options) {   
     return m("fieldset", { class : options.class },
         options.field.name ? m("legend", { class : css.legend }, options.field.name) : null,
-        m.component(children, assign({}, options, {
+        m(children, assign({}, options, {
             fields : options.field.children
         }))
     );

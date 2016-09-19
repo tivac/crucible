@@ -269,7 +269,7 @@ export function view(ctrl, options) {
                     class  : css.back,
                     title  : "Back to Listing",
                     href   : prefix("/listing/" + options.schema.key),
-                    config : m.route
+                    oncreate: m.route.link
                 },
                 m("svg", { class : css.icon },
                     m("use", { href : icons + "#arrow" })

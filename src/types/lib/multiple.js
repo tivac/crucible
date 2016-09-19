@@ -12,10 +12,10 @@ import label from "./label";
 
 export default function(args, view) {
     return {
-        controller : function(options) {
+        oninit: function(options) {
             var ctrl = this;
 
-            ctrl.id = id(options);
+            ctrl.id = id(options.attrs);
 
             // Update data object w/ default status of the field (if set)
 
@@ -57,12 +57,12 @@ export default function(args, view) {
             };
         },
 
-        view : function(ctrl, options) {
-            var children = ctrl.selected(options);
+        view : function(vnode) {
+            var children = vnode.state.selected(vnode.attrs);
             
-            return m("div", { class : options.class },
-                label(ctrl, options, children),
-                view(ctrl, options, children)
+            return m("div", { class : vnode.attrs.class },
+                label(vnode.state, vnode.attrs, children),
+                view(vnode.state, vnode.attrs, children)
             );
         }
     };

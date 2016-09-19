@@ -26,12 +26,12 @@ export function controller() {
             updated : db.TIMESTAMP
         });
 
-        m.route(prefix("/content/" + ctrl.slug + "/edit"));
+        m.route.set(prefix("/content/" + ctrl.slug + "/edit"));
     };
 }
 
 export function view(ctrl) {
-    return m.component(layout, {
+    return m(layout, {
         title   : "Create a Schema",
         content : m("div", { class : layout.css.content },
             m("form", { onsubmit : ctrl.onsubmit },

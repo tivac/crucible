@@ -23,7 +23,7 @@ function child(ctrl, options, data, idx) {
                 )
             )
         ),
-        m.component(children, assign({}, options, {
+        m(children, assign({}, options, {
             fields : options.field.children,
             class  : css.fields,
             data   : data,

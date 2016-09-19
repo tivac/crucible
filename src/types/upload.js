@@ -88,7 +88,7 @@ export function controller(options) {
         e.preventDefault();
 
         if(ctrl.dragging) {
-            m.redraw.strategy("none");
+            e.redraw = false;
 
             return;
         }
@@ -96,7 +96,7 @@ export function controller(options) {
         // Don't show this as a drag target if there's already something there
         // and it's not a multiple field
         if(ctrl.files.length && !ctrl.options.field.multiple) {
-            m.redraw.strategy("none");
+            e.redraw = false;
             
             return;
         }

@@ -14,7 +14,7 @@ import * as edit from "../pages/content-edit/index.js";
 import * as listing from "../pages/listing/index.js";
 
 export default function() {
-    m.route(document.body, prefix("/"), keys({
+    m.route.set(document.body, prefix("/"), keys({
         "/" : auth(home),
 
         "/login"  : login,

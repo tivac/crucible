@@ -19,7 +19,7 @@ export function controller() {
     ctrl.auth = auth();
 
     ctrl.add = function() {
-        m.route(prefix("/content/new"));
+        m.route.set(prefix("/content/new"));
     };
 
     db.child("schemas").on("value", function(snap) {
@@ -38,7 +38,7 @@ export function controller() {
 }
 
 export function view(ctrl, options) {
-    var current = m.route(),
+    var current = m.route.get(),
         locked  = config.locked;
 
     if(!options) {
@@ -56,7 +56,7 @@ export function view(ctrl, options) {
                 m("a", {
                         class  : header.heading,
                         href   : prefix("/"),
-                        config : m.route
+                        oncreate: m.route.link
                     },
                     m("h1", { class : header.title }, title)
                 )
@@ -75,7 +75,7 @@ export function view(ctrl, options) {
                             return m("a", {
                                     class  : header[active ? "active" : "schema"],
                                     href   : targetUrl,
-                                    config : m.route
+                                    oncreate: m.route.link
                                 },
                                 schema.name
                             );
@@ -94,7 +94,7 @@ export function view(ctrl, options) {
                     m("a", {
                         class  : header.logout,
                         href   : prefix("/logout"),
-                        config : m.route
+                        oncreate: m.route.link
                     }, "Logout")
                 ] :
                 null

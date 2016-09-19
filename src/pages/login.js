@@ -20,23 +20,23 @@ export function controller() {
     var ctrl = this;
     
     if(config.auth === "jwt") {
-        if(!m.route.param("auth")) {
+        if(!vnode.attrs.auth) {
             return loginRedirect();
         }
 
-        return db.authWithCustomToken(m.route.param("auth"), function(error) {
+        return db.authWithCustomToken(vnode.attrs.auth, function(error) {
             if(error) {
                 console.log(error);
                 
                 return loginRedirect();
             }
             
-            return m.route(prefix("/"));
+            return m.route.set(prefix("/"));
         });
     }
     
     if(!config.auth || valid()) {
-        return m.route(prefix("/"));
+        return m.route.set(prefix("/"));
     }
     
     ctrl.onsubmit = function(e) {
@@ -54,7 +54,7 @@ export function controller() {
                 return m.redraw();
             }
             
-            return m.route(prefix("/"));
+            return m.route.set(prefix("/"));
         });
     };
     
@@ -65,22 +65,22 @@ export function controller() {
 
 export function view(ctrl) {
     if(config.auth === "jwt") {
-        if(m.route.param("auth")) {
-            return m.component(layout, {
+        if(vnode.attrs.auth) {
+            return m(layout, {
                 content : m("div", { class : layout.css.content },
                     m("p", "Validating credentials...")
                 )
             });
         }
         
-        return m.component(layout, {
+        return m(layout, {
             content : m("div", { class : layout.css.content },
                 m("p", "Redirecting to login...")
             )
         });
     }
     
-    return m.component(layout, {
+    return m(layout, {
         title   : "Login",
         content : m("div", { class : layout.css.content },
             m("form", { class : css.form, onsubmit : ctrl.onsubmit },
