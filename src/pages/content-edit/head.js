@@ -377,26 +377,34 @@ export function view(ctrl, options) {
     }
 
     function mPublishButton() {
-        var isDisabled = false;
+        var isDisabled = false,
+            validForm = options.form && options.form.checkValidity();
+
+        console.log("options.form", options.form);
 
         // TODO Better implementation.
         // if(ctrl.start.ts && isPast(ctrl.start.ts)) {
         //     isDisabled = true;
         // }
 
-        return m("button", {
-                // Attrs
-                class    : css.publish,
-                title    : future ? "Schedule publish" : "Already published",
-                disabled : locked || isDisabled || null,
+        return m("div", { class : css.publishContainer },
+                m("button", {
+                    // Attrs
+                    class    : css.publish,
+                    title    : future ? "Schedule publish" : "Already published",
+                    disabled : locked || isDisabled || null,
 
-                // Events
-                onclick : ctrl.publish.bind(null, options)
-            },
-            m("svg", { class : css.icon },
-                m("use", { href : icons + (future ? "#schedule" : "#publish") })
+                    // Events
+                    onclick : ctrl.publish.bind(null, options)
+                },
+                m("svg", { class : css.icon },
+                    m("use", { href : icons + (future ? "#schedule" : "#publish") })
+                ),
+                future ? "Schedule" : "Publish"
             ),
-            future ? "Schedule" : "Publish"
+            m("div", { class : css.invalidMessage },
+                "status : " + validForm
+            )
         );
     }
 

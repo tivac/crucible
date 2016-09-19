@@ -66,12 +66,12 @@
     margin-left: 10px;
 }
 
-.actions,
-.publishing {
+/*.publishing,*/
+.actions {
     overflow: hidden;
 }
 
-.publish,
+.publishContainer,
 .unpublish,
 .back,
 .save {
@@ -131,6 +131,38 @@
 .unpublish {
     composes: remove from buttons_css;
     composes: headButton;
+}
+
+.publishContainer {
+    position: relative;
+}
+.invalidMessage {
+    position: absolute;
+    right: -5px;
+    transform: translateY(3px);
+
+    display: block;
+    min-width: 320px;
+    height: auto;
+    min-height: 60px;
+    padding: 10px;
+
+    background: rgb(222, 33, 33);
+    border: 1px solid rgb(202, 13, 13);;
+    border-radius: 2px;
+    color: #fff;
+    text-align: left;
+}
+
+.invalidMessage:before {
+    content: '';
+    position: absolute;
+    top: -7px;
+    right: 10px;
+
+    border-bottom: 8px solid rgb(222, 33, 33);
+    border-left:   7px solid transparent;
+    border-right:  7px solid transparent;
 }
 
 .icon {
