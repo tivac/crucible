@@ -10,8 +10,9 @@ import config, { icons } from "../../config";
 import db from "../../lib/firebase";
 import prefix from "../../lib/prefix";
 
+import * as validator from "./validator.js";
+
 import css from "./head.css";
-import contentCss from "./content-edit.css";
 
 var DEFAULT_START_TIME = "00:00",
     DEFAULT_END_TIME   = "23:59",
@@ -55,23 +56,6 @@ function filterHidden(fields, hidden) {
     return filtered;
 }
 
-// function checkRequired(fields, form) {
-//     var reqs = form.querySelectorAll("*[required]"),
-//         invalid = [];
-
-//     console.log("reqs", reqs);
-
-//     reqs.forEach(function(input) {
-//         if(!input.validity.valid) {
-//             input.classList.add(contentCss.highlightInvalid); // To differentiate from the passive `:invalid` style.
-//             console.log("add " + contentCss.highlightInvalid + " to " + input);
-//             invalid.push(input);
-//         }
-//     });
-
-//     return invalid;
-// }
-
 export function controller(options) {
     var ctrl = this,
         ref  = options.ref,
@@ -106,59 +90,6 @@ export function controller(options) {
         ctrl.schedule = typeof force !== "undefined" ? Boolean(force) : !ctrl.schedule;
     };
 
-
-    function arr(x) {
-        x = Array.prototype.slice.call(x);
-        return x;
-    }
-    function allInputs(form) {
-        var result = [],
-            inputs;
-
-        [ "input", "select", "textarea" ].forEach(function(kind) {
-            inputs = arr(form.querySelectorAll(kind));
-            result = result.concat(inputs);
-        });
-
-        console.log("result", result);
-        return result;
-    }
-
-    function registerInvalidField(el) {
-        if(ctrl.invalidInputs.indexOf(el) > -1) {
-            return;
-        }
-
-        ctrl.invalidInputs.push(el);
-    }
-
-    ctrl.resetInvalidFields = function() {
-        ctrl.invalidInputs = [];
-        console.log("resetInvalidFields redraw");
-        // m.redraw();
-    };
-
-    var doneDid;
-    function handleInvalid(form) {
-        if(doneDid) {
-            return;
-        }
-        doneDid = true;
-
-        allInputs(form).forEach(function(inp) {
-            inp.addEventListener("invalid", function(evt) {
-                console.log("evt.target", evt.target);
-                registerInvalidField(evt.target.name);
-            });
-        });
-    }
-
-    ctrl.onFormFocus = function(evt) {
-        if(ctrl.invalidInputs.length) {
-            ctrl.resetInvalidFields();
-        }
-    };
-
     ctrl.publish = function(opts) {
         var self = ctrl,
             startTs,
@@ -168,13 +99,11 @@ export function controller(options) {
             unpubDateIsFuture,
             valid;
 
-        handleInvalid(opts.form);
-
+        console.log("checkValidity");
         valid = opts.form.checkValidity();
         if(!valid) {
             return null;
         }
-
 
         pubDateIsPast = Boolean(ctrl.start.ts) && isPast(ctrl.start.ts);
 
@@ -206,7 +135,7 @@ export function controller(options) {
             console.warn("Invalid end date. Resetting end date.");
         }
 
-        ref.update(updated, function() {
+        return ref.update(updated, function() {
             ctrl.saving = false;
             m.redraw();
         });
@@ -415,22 +344,9 @@ export function view(ctrl, options) {
                     ),
                     future ? "Schedule" : "Publish"
                 ),
-                ctrl.invalidInputs.length === 0 ?
-                    null :
-                    m("div", { class : css.invalidMessage },
-                        "Missing required fields.",
-                        m("ul",
-                            ctrl.invalidInputs.map(function(name) {
-                                return m("li", name);
-                            })
-                        ),
-                        m("button", {
-                            class   : css.closeInvalidMessage,
-                            onclick : ctrl.resetInvalidFields
-                        },
-                            "x" // todo
-                        )
-                    )
+                options.form ? m.component(validator, {
+                    form : options.form
+                }) : null
             );
     }
 
