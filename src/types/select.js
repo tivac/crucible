@@ -1,6 +1,5 @@
 import m from "mithril";
 import assign from "lodash.assign";
-import get from "lodash.get";
 
 import css from "./select.css";
 import multiple from "./lib/multiple.js";

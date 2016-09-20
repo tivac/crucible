@@ -1,6 +1,5 @@
 import m from "mithril";
 import assign from "lodash.assign";
-import get from "lodash.get";
 
 import id from "./lib/id";
 import label from "./lib/label";

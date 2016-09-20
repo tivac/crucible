@@ -1,14 +1,16 @@
 
-/* Probably worth making more generic and maybe even adding other color options. */
-
+/* 
+   TODO Probably worth making more generic at some point,
+   and maybe even adding other color options.
+*/
 .invalidMessage {
     position: absolute;
     right: -5px;
     transform: translateY(3px);
 
     display: block;
-    min-width: 320px;
     height: auto;
+    min-width: 320px;
     min-height: 60px;
     padding: 10px;
 
@@ -17,13 +19,11 @@
     border-radius: 2px;
     color: #fff;
     text-align: left;
-
-    opacity: 1;
-    // transition: 0.5s 3s linear;
 }
 
 .invalidMessage:before {
     content: '';
+
     position: absolute;
     top: -7px;
     right: 10px;
@@ -37,6 +37,7 @@
     position: absolute;
     top: 3px;
     right: 3px;
+
     height: 20px;
     width: 20px;
 

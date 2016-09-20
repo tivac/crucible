@@ -1,5 +1,4 @@
 import m from "mithril";
-import get from "lodash.get";
 
 import css from "./checkbox.css";
 import multiple from "./lib/multiple";

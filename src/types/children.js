@@ -19,6 +19,7 @@ export function view(ctrl, options) {
     mFields = fields.map(function(field, index) {
         var component,
             wasHidden,
+            isHidden,
             result;
 
         component = types[field.type || field];
@@ -41,13 +42,15 @@ export function view(ctrl, options) {
             }
         }
 
+        isHidden = get(field, "show.hidden");
+
         result = m.component(component, assign({}, options, {
             field : field,
             class : addClasses(field, css[index ? "field" : "first"]),
             data  : get(options.data, field.key),
             path  : options.path.concat(field.key),
 
-            required : !get(field, "show.hidden") && field.required
+            required : !isHidden && field.required
         }));
 
 

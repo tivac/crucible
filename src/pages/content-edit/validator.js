@@ -6,75 +6,67 @@ import debounce from "lodash.debounce";
 import css from "./validator.css";
 
 function allInputs(form) {
-    var result = [],
+    var all = [],
         inputs;
 
     [ "input", "select", "textarea" ].forEach(function(kind) {
         inputs = toArray(form.querySelectorAll(kind));
-        result = result.concat(inputs);
+        all = all.concat(inputs);
     });
 
-    return result;
+    return all;
 }
 
 function attachInputHandlers(ctrl) {
     var form = ctrl.form;
 
-    allInputs(form).forEach(function(inp) {
-        inp.addEventListener("invalid", function(evt) {
+    allInputs(form).forEach(function(formInput) {
+        formInput.addEventListener("invalid", function(evt) {
             ctrl.registerInvalidField(evt.target.name);
 
             evt.target.classList.add(css.highlightInvalid);
         });
 
         // focus doesn't bubble
-        inp.addEventListener("focus", function(evt) {
+        formInput.addEventListener("focus", function(evt) {
             ctrl.onFormFocus(evt);
-            
+
             evt.target.classList.remove(css.highlightInvalid);
         });
     });
 }
 
 export function controller(options) {
-    var ctrl = this,
-        form = options.form;
+    var ctrl = this;
 
-    ctrl.form = form;
+    ctrl.form = null;
 
     ctrl.init = function() {
         ctrl.form = options.form;
+        if(!ctrl.form) {
+            return;
+        }
+
         ctrl.currOpacity = 0;
         ctrl.fadeTime = 0.5;
         ctrl.fadeDelay = 1.5;
         ctrl.invalidInputs = [];
 
-        if(!ctrl.form) {
-            return;
-        }
-
-        attachInputHandlers(ctrl, ctrl.form);
+        attachInputHandlers(ctrl);
     };
 
     ctrl.registerInvalidField = function(name) {
-        var currOpacity = ctrl.currOpacity;
-
         if(ctrl.invalidInputs.indexOf(name) > -1) {
-            return;
+            return; // Already registered.
         }
 
-        ctrl.currOpacity = 1;
+        ctrl.show();
         ctrl.invalidInputs.push(name);
         ctrl.debounceFade();
-
-        if(currOpacity !== ctrl.currOpacity) {
-            m.redraw();
-        }
     };
 
     ctrl.debounceFade = debounce(function() {
-        ctrl.currOpacity = 0;
-        m.redraw();
+        ctrl.hide();
     }, 100);
 
     ctrl.onFormFocus = function() {
@@ -85,6 +77,22 @@ export function controller(options) {
 
     ctrl.resetInvalidFields = function() {
         ctrl.invalidInputs = [];
+        ctrl.hide();
+    };
+
+    ctrl.show = function() {
+        var currOpacity = ctrl.currOpacity;
+
+        ctrl.currOpacity = 1;
+
+        if(currOpacity !== ctrl.currOpacity) {
+            // Only do once; avoid superfluous redraws.
+            m.redraw();
+        }
+    };
+
+    ctrl.hide = function() {
+        // CSS transition does the rest.
         ctrl.currOpacity = 0;
         m.redraw();
     };
@@ -99,10 +107,11 @@ export function view(ctrl, options) {
         return m("div", { style : "display:none;" });
     }
 
+    // No transition if we're going from 0 -> 1.
     style = `opacity:${ctrl.currOpacity};`;
     style += ctrl.currOpacity === 0 ? `transition: opacity ${ctrl.fadeTime}s ${ctrl.fadeDelay}s linear` : "";
 
-    return m("div#invalidMessage",
+    return m("div",
         {
             class : css.invalidMessage,
             style : style,

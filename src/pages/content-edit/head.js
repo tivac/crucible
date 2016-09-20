@@ -69,7 +69,6 @@ export function controller(options) {
 
     ctrl.init = function() {
         ctrl.schedule   = false;
-        ctrl.invalidInputs = [];
 
         ctrl.start = (publishTs) ? makeScheduleObj(publishTs) : nulledDate(defaultStartTime);
         ctrl.end   = (unpublishTs) ? makeScheduleObj(unpublishTs) : nulledDate(defaultEndTime);
@@ -96,12 +95,11 @@ export function controller(options) {
             updated,
             pubDateIsPast,
             hasUnpubDate,
-            unpubDateIsFuture,
-            valid;
+            unpubDateIsFuture;
 
-        console.log("checkValidity");
-        valid = opts.form.checkValidity();
-        if(!valid) {
+        // This check will also trigger the Validator which
+        // is listening for each input's "invalid" event.
+        if(!opts.form.checkValidity()) {
             return null;
         }
 
@@ -263,7 +261,7 @@ export function view(ctrl, options) {
         publishTs = options.data.published_at,
         unpublishTs = options.data.unpublished_at,
         future  = isFuture(ctrl.start.date + " " + ctrl.start.time),
-        locked  = config.locked; 
+        locked  = config.locked;
 
     if(isFuture(publishTs)) {
         status = "scheduled";
@@ -329,25 +327,26 @@ export function view(ctrl, options) {
         //     isDisabled = true;
         // }
 
-        return m("div", { class : css.publishContainer },
-                m("button", {
-                        // Attrs
-                        class    : css.publish,
-                        title    : future ? "Schedule publish" : "Already published",
-                        disabled : locked || isDisabled || null,
+        return m("div",
+            { class : css.publishContainer },
+            m("button", {
+                    // Attrs
+                    class    : css.publish,
+                    title    : future ? "Schedule publish" : "Already published",
+                    disabled : locked || isDisabled || null,
 
-                        // Events
-                        onclick : ctrl.publish.bind(null, options)
-                    },
-                    m("svg", { class : css.icon },
-                        m("use", { href : icons + (future ? "#schedule" : "#publish") })
-                    ),
-                    future ? "Schedule" : "Publish"
+                    // Events
+                    onclick : ctrl.publish.bind(null, options)
+                },
+                m("svg", { class : css.icon },
+                    m("use", { href : icons + (future ? "#schedule" : "#publish") })
                 ),
-                options.form ? m.component(validator, {
-                    form : options.form
-                }) : null
-            );
+                future ? "Schedule" : "Publish"
+            ),
+            options.form ? m.component(validator, {
+                form : options.form
+            }) : null
+        );
     }
 
     function mUnpublishButton() {
