@@ -8,17 +8,17 @@ export default multiple({
         multiple : false
     },
         
-    function(ctrl, options) {
+    function(ctrl, options, children) {
         var field = options.field;
-        
-        return (field.children || []).map(function(opt) {
+
+        return (children || []).map(function(opt) {
             return m("label", { class : css.choice },
                 m("input", assign({}, opt.attrs, {
                     // attrs
                     type    : "radio",
                     name    : field.name,
                     value   : opt.value,
-                    checked : opt.checked,
+                    checked : opt.selected,
 
                     // events
                     onchange : function() {

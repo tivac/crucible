@@ -1,9 +1,9 @@
-@import "../../node_modules/codemirror/lib/codemirror.css";
+@import "../../../node_modules/codemirror/lib/codemirror.css";
 
-@value flexCss: "../flex.css";
+@value flexCss: "../../flex.css";
 
 .body {
-    composes: body from "./layout/layout.css";
+    composes: body from "../layout/layout.css";
 }
 
 .meta {
@@ -76,7 +76,7 @@
 
 /* Override codemirror styling to make it expannnnd */
 .editor :global(.CodeMirror) {
-    composes: input from "../form.css";
+    composes: input from "../../form.css";
     
     height: 100% !important;
 }

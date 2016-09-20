@@ -5,6 +5,8 @@ index.html
 # Ignore directories
 /build
 /src
+/test
+/coverage
 
 # Ignore config files
 /.*

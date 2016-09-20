@@ -3,6 +3,8 @@ import get from "lodash.get";
 import assign from "lodash.assign";
 
 import input from "./lib/input.js";
+import checkHidden from "./lib/hide.js";
+import addClasses from "./lib/classer.js";
 
 import css from "./lib/types.css";
 
@@ -10,43 +12,63 @@ import css from "./lib/types.css";
 var types;
 
 export function view(ctrl, options) {
-    var fields = options.fields || [];
+    var fields = options.fields || [],
+        registerHidden = options.registerHidden,
+        mFields = [];
+
+    mFields = fields.map(function(field, index) {
+        var component,
+            wasHidden,
+            result;
+
+        component = types[field.type || field];
+
+        if(!component) {
+            return m("div",
+                m("p", "Unknown component"),
+                m("pre", JSON.stringify(field, null, 4))
+            );
+        }
+        
+        if(field.show) {
+            wasHidden = field.show.hidden;
+            field.show.hidden = checkHidden(options.state, field);
+
+            if(registerHidden && field.show.hidden !== wasHidden) {
+                // hidden status changed, notify the controller.
+                registerHidden(field.key, field.show.hidden);
+            }
+        }
+
+        result = m.component(component, assign({}, options, {
+            field : field,
+            class : addClasses(field, css[index ? "field" : "first"] ),
+            data  : get(options.data, field.key),
+            path  : options.path.concat(field.key)
+        }));
+
+        return result;
+    });
 
     return m("div", options.class ? { class : options.class } : null,
-        fields.map(function(field, index) {
-            var component = types[field.type || field];
-
-            if(!component) {
-                return m("div",
-                    m("p", "Unknown component"),
-                    m("pre", JSON.stringify(field, null, 4))
-                );
-            }
-
-            return m.component(component, assign({}, options, {
-                field : field,
-                class : css[index ? "field" : "first"],
-                data  : get(options.data, field.key),
-                path  : options.path.concat(field.key)
-            }));
-        })
+        mFields
     );
 }
 
 // Structural
-import * as fieldset from "./fieldset.js";
-import * as repeating from "./repeating.js";
-import * as split from "./split.js";
-import * as tabs from "./tabs.js";
+import fieldset from "./fieldset.js";
+import repeating from "./repeating.js";
+import split from "./split.js";
+import tabs from "./tabs.js";
 
 // Non-input fields
-import * as instructions from "./instructions.js";
+import instructions from "./instructions.js";
 
 // Custom input types
-import * as relationship from "./relationship.js";
-import * as markdown from "./markdown.js";
-import * as textarea from "./textarea.js";
-import * as upload from "./upload.js";
+import relationship from "./relationship.js";
+import markdown from "./markdown.js";
+import textarea from "./textarea.js";
+import upload from "./upload.js";
 
 // Implementations based on lib/multiple.js
 import select from "./select.js";

@@ -1,4 +1,4 @@
-window.anthracite = {
+window.crucible = {
     // Uncomment and add your firebase URL
     // firebase : "https://<YOUR-APP-HERE>.firebaseio.com/"
     

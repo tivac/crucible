@@ -1,8 +1,14 @@
 import m from "mithril";
+import assign from "lodash.assign";
 
 import id from "./id";
-import hide from "./hide";
 import label from "./label";
+
+/**
+ * Examples of `multiple` types include `checkbox.js` and `radio.js`,
+ * in both cases you're very likely or certain to have multiple inputs 
+ * defined in a single field definition. (See README for examples.)
+ */
 
 export default function(args, view) {
     return {
@@ -11,14 +17,17 @@ export default function(args, view) {
 
             ctrl.id = id(options);
 
-            // Decorate children w/ their selection status
+            // Update data object w/ default status of the field (if set)
+
+
+            // Figure out selected status for children
             ctrl.selected = function(opts) {
                 var field  = opts.field,
                     values = opts.data,
                     matches;
 
                 if(!values) {
-                    return;
+                    return field.children;
                 }
 
                 matches = field.children.filter(function(opt) {
@@ -33,10 +42,10 @@ export default function(args, view) {
                     matches.length = 1;
                 }
 
-                field.children = field.children.map(function(opt) {
-                    opt.selected = matches.indexOf(opt) > -1;
-
-                    return opt;
+                return field.children.map(function(opt) {
+                    return assign({}, opt, {
+                        selected : matches.indexOf(opt) > -1
+                    });
                 });
             };
 
@@ -49,17 +58,11 @@ export default function(args, view) {
         },
 
         view : function(ctrl, options) {
-            var hidden  = hide(options);
-            
-            if(hidden) {
-                return hidden;
-            }
-
-            ctrl.selected(options);
+            var children = ctrl.selected(options);
             
             return m("div", { class : options.class },
-                label(ctrl, options),
-                view(ctrl, options)
+                label(ctrl, options, children),
+                view(ctrl, options, children)
             );
         }
     };

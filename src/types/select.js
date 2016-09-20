@@ -8,7 +8,7 @@ export default multiple({
         multiple : false
     },
 
-    function(ctrl, options) {
+    function(ctrl, options, children) {
         var field = options.field;
 
         return m("select", assign({
@@ -18,12 +18,13 @@ export default multiple({
                 // events
                 onchange : function(e) {
                     var tgt = e.target,
-                        opt = field.children[tgt.selectedIndex];
+                        opt = children[tgt.selectedIndex];
 
                     ctrl.value(options, opt.key, opt.value);
                 }
             }, field.attrs),
-            field.children.map(function(option) {
+            
+            children.map(function(option) {
                 return m("option", assign({}, option.attrs, {
                         value    : option.value,
                         selected : option.selected ? "selected" : null

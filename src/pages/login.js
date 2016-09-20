@@ -1,7 +1,7 @@
 import m from "mithril";
 import join from "url-join";
 
-import config from "../config";
+import config, { root } from "../config";
 import db from "../lib/firebase";
 import valid from "../lib/valid-auth";
 import prefix from "../lib/prefix";
@@ -12,10 +12,11 @@ import css from "./login.css";
 
 function loginRedirect() {
     window.location = config.loginBaseUrl +
-        window.encodeURIComponent(join(window.location.origin, config.root, "/login"));
+        window.encodeURIComponent(join(window.location.origin, root, "/login"));
 }
 
 export function controller() {
+    /* eslint consistent-return: off */
     var ctrl = this;
     
     if(config.auth === "jwt") {

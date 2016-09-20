@@ -2,7 +2,6 @@ import m from "mithril";
 import assign from "lodash.assign";
 import get from "lodash.get";
 
-import hide from "./hide";
 import id from "./id";
 import label from "./label";
 
@@ -16,7 +15,7 @@ export default function(type) {
                 
             ctrl.id = id(options);
             
-            // tivac/anthracite#96
+            // tivac/crucible#96
             // If this is a new item (never been updated) set the default value
             // Don't want to use that value on every render because it is bad UX,
             // the user becomes unable to clear out the field
@@ -34,12 +33,7 @@ export default function(type) {
         },
 
         view : function(ctrl, options) {
-            var field  = options.field,
-                hidden = hide(options);
-
-            if(hidden) {
-                return hidden;
-            }
+            var field  = options.field;
             
             return m("div", { class : options.class },
                 label(ctrl, options),

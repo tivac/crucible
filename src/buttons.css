@@ -1,6 +1,8 @@
-@value colorRemove: rgb(202, 60, 60);
-@value    colorAdd: rgb(28, 184, 65);
-
+@value colorRemove: rgb(202,  60, 60);
+@value    colorAdd: rgb(28,  184, 65);
+@value   colorWarn: rgb(223, 117, 20);
+@value colorSecondary: rgb(66, 184, 221);
+ 
 .button {
     composes: global(pure-button);
 }
@@ -26,6 +28,18 @@
     composes: color;
     
     background: colorRemove;
+}
+
+.warn {
+    composes: color;
+
+    background: colorWarn;
+}
+
+.secondary {
+    composes: color;
+
+    background: colorSecondary;
 }
 
 /* Strip <button> styling */

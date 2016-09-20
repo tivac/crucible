@@ -1,11 +1,12 @@
-@value layout_css:  "./layout/layout.css";
-@value icons_css:   "../icons.css";
-@value buttons_css: "../buttons.css";
+@value layout_css:  "../layout/layout.css";
+@value icons_css:   "../../icons.css";
+@value buttons_css: "../../buttons.css";
 
 .content {
     composes: section from layout_css;
+    position: relative;
 
-    flex: 2 0 400px;
+    flex: 1 1 100%;
 }
 
 .head {
@@ -14,14 +15,59 @@
     flex-direction: row;
     
     padding-left: 10px;
-    padding-right: 10px; 
+    padding-right: 10px;
     
     align-items: center;
 }
 
 .body {
     composes: body from layout_css;
+    composes: contentWidth from layout_css;
+
+    padding-bottom: 5em;
+}
+
+
+.contentsContainer {
+    composes: textContentWidth from layout_css;
     composes: padding from layout_css;
+
+    width: 100%;
+}
+
+.itemStatus {
+    margin-bottom: 1em;
+}
+
+.statusLabel {
+    font-weight: 600;
+}
+.status {
+    margin: 0;
+
+    border-bottom: solid 3px;
+}
+
+.draft {
+    composes : status;
+
+    border-color: #ddd;
+}
+.published {
+    composes : status;
+
+    border-color: green;
+}
+.scheduled {
+    composes : status;
+
+    border-color: orange;
+}
+
+.form {
+    composes: global(pure-form), global(pure-form-stacked);
+
+    width: 100%;
 }
 
 /* No item selected */
@@ -30,7 +76,7 @@
     
     text-align: center;
     justify-content: center;
-    align-content: center;    
+    align-content: center;
 }
 
 .empty p {
@@ -80,12 +126,6 @@
 }
 
 /* Form contents */
-.form {
-    composes: global(pure-form), global(pure-form-stacked);
-
-    width: 100%;
-    max-width: 1000px;
-}
 
 .children {
     margin-top: 20px;

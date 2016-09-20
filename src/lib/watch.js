@@ -21,4 +21,4 @@ export default function(ref) {
             updated_by : auth.uid
         });
     });
-};
+}

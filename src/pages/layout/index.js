@@ -13,7 +13,7 @@ import progress from "./progress.css";
 export { layout as css };
     
 export function controller() {
-    var ctrl   = this;
+    var ctrl = this;
 
     ctrl.schemas = null;
     ctrl.auth = auth();
@@ -66,11 +66,15 @@ export function view(ctrl, options) {
                 ctrl.auth ? [
                     m("div", { class : header.schemas },
                         (ctrl.schemas || []).map(function(schema) {
-                            var url = prefix("/content/" + schema.key);
+                            var searchUrl = prefix("/content/" + schema.key),
+                                targetUrl = prefix("/listing/" + schema.key),
+                                active;
+
+                            active = current.indexOf(searchUrl) === 0 || current.indexOf(targetUrl) === 0;
 
                             return m("a", {
-                                    class  : header[current.indexOf(url) === 0 ? "active" : "schema"],
-                                    href   : url,
+                                    class  : header[active ? "active" : "schema"],
+                                    href   : targetUrl,
                                     config : m.route
                                 },
                                 schema.name

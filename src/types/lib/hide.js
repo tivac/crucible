@@ -1,42 +1,63 @@
-import m from "mithril";
 import get from "lodash.get";
-    
-var field = [ "show", "field" ],
-    
-    dom = m("div", "");
 
-export default function(options) {
-    /* eslint: eqeqeq:0 */
-    var dep = get(options.field, field),
-        src, tgt;
+/**
+ * See README for example schema with a hidden/dependent field.
+ */
+
+ function rxFindMatch(src, target) {
+    var rx = new RegExp(src, "i"),
+        vals,
+        found;
     
-    // No conditional visibility config or missing target field
-    if(!dep) {
+    if(rx.test(target)) {
+        return true;
+    }
+
+    if(Array.isArray(target)) {
+        vals = target;
+    } else {
+        vals = Object.keys(target).map(function(key) {
+            return target[key];
+        });
+    }
+
+    found = vals.find(function(str) {
+        return rx.test(str);
+    });
+
+    return found;
+ }
+
+export default function checkHidden(state, field) {
+    var dependsOn = get(field, [ "show", "field" ]),
+        src,
+        target;
+
+    // No conditional show config, or missing target field
+    if(!dependsOn) {
         return false;
     }
-    
-    src = options.field.show.value;
-    tgt = get(options.state, dep);
-    
+
+    src = field.show.value;
+    target = get(state, dependsOn);
+
     // No target value, so have to hide it
-    if(typeof tgt === "undefined" || tgt === null) {
-        return dom;
+    if(typeof target === "undefined" || target === null) {
+        return true;
     }
     
     // RegExp matched
-    if(options.field.show.type === "regexp") {
-        src = new RegExp(src, "i");
-        
-        if(src.test(tgt)) {
-            return false;
-        }
+    // * If appropriate, `field.show.type` will be set to "regexp" by `parse-schema.js`
+    if(field.show.type === "regexp" && rxFindMatch(src, target)) {
+        return false;
     }
     
     // Values match-ish
-    if(src == tgt) {
+    // eslint-disable-next-line eqeqeq
+    if(src == target) {
         return false;
     }
     
     // Otherwise this field should hide
-    return dom;
+    return true;
 }
