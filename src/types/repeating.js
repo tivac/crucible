@@ -33,7 +33,6 @@ function child(ctrl, options, data, idx) {
 }
 
 export default {
-
     controller : function(options) {
         var ctrl = this;
         
@@ -72,7 +71,7 @@ export default {
     },
 
     view : function(ctrl, options) {
-        var field   = options.field,
+        var field = options.field,
             items;
         
         if(options.data) {
