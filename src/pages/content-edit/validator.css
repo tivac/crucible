@@ -1,4 +1,3 @@
-
 /* 
    TODO Probably worth making more generic at some point,
    and maybe even adding other color options.
@@ -44,7 +43,6 @@
     background: transparent;
     border: none;
 }
-
 
 /* Had a specificity war with pure-css */
 input.highlightInvalid:invalid,

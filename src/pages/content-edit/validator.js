@@ -22,16 +22,13 @@ function attachInputHandlers(ctrl) {
 
     allInputs(form).forEach(function(formInput) {
         formInput.addEventListener("invalid", function(evt) {
-            ctrl.registerInvalidField(evt.target.name);
-
             evt.target.classList.add(css.highlightInvalid);
+            ctrl.registerInvalidField(evt.target.name);
         });
 
-        // focus doesn't bubble
         formInput.addEventListener("focus", function(evt) {
-            ctrl.onFormFocus(evt);
-
             evt.target.classList.remove(css.highlightInvalid);
+            ctrl.onFormFocus(evt); // focus doesn't bubble, so we listen to all the inputs for this.
         });
     });
 }
@@ -44,6 +41,8 @@ export function controller(options) {
     ctrl.init = function() {
         ctrl.form = options.form;
         if(!ctrl.form) {
+            console.warn("Validator did not receive a reference to the form.");
+
             return;
         }
 
@@ -81,11 +80,10 @@ export function controller(options) {
     };
 
     ctrl.show = function() {
-        var currOpacity = ctrl.currOpacity;
+        var oldOpacity = ctrl.currOpacity;
 
         ctrl.currOpacity = 1;
-
-        if(currOpacity !== ctrl.currOpacity) {
+        if(oldOpacity !== ctrl.currOpacity) {
             // Only do once; avoid superfluous redraws.
             m.redraw();
         }
