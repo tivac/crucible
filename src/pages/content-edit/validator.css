@@ -32,11 +32,21 @@
     border-right:  7px solid transparent;
 }
 
+
+/*
+    No transition if we're going from 0 -> 1,
+    we want the invalid notification to show up immediately
+*/
 .visible {
+    composes: invalidMessage;
+
     opacity: 1;
     transition: none;    
 }
+
 .delayedHide {
+    composes: invalidMessage;
+
     opacity: 0;
     transition: opacity 0.5s 3s linear;
 }

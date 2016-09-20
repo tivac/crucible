@@ -84,18 +84,12 @@ export function controller(options) {
 }
 
 export function view(ctrl, options) {
-    var classes = css.invalidMessage + " ";
-
     if(!ctrl.invalidInputs.length) {
         return m("div", { style : "display:none;" });
     }
 
-    // No transition if we're going from 0 -> 1.
-    classes += ctrl.currOpacity === 0 ? css.delayedHide : css.visible;
-
-    return m("div",
-        {
-            class : classes,
+    return m("div", {
+            class : ctrl.currOpacity === 0 ? css.delayedHide : css.visible,
 
             config : function(el, initialized) {
                 if(initialized) {

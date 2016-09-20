@@ -63,19 +63,19 @@ export function view(ctrl, options) {
 }
 
 // Structural
-import * as fieldset from "./fieldset.js";
-import * as repeating from "./repeating.js";
-import * as split from "./split.js";
-import * as tabs from "./tabs.js";
+import fieldset from "./fieldset.js";
+import repeating from "./repeating.js";
+import split from "./split.js";
+import tabs from "./tabs.js";
 
 // Non-input fields
-import * as instructions from "./instructions.js";
+import instructions from "./instructions.js";
 
 // Custom input types
-import * as relationship from "./relationship.js";
-import * as markdown from "./markdown.js";
-import * as textarea from "./textarea.js";
-import * as upload from "./upload.js";
+import relationship from "./relationship.js";
+import markdown from "./markdown.js";
+import textarea from "./textarea.js";
+import upload from "./upload.js";
 
 // Implementations based on lib/multiple.js
 import select from "./select.js";
