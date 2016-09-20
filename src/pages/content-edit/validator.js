@@ -17,17 +17,10 @@ function allInputs(form) {
     return all;
 }
 
-function allRequiredInputs(form) {
-    return allInputs(form).filter(function(formInput) {
-        console.log("formInput.required", formInput.required);
-        return formInput.required;
-    });
-}
-
 function attachInputHandlers(ctrl) {
     var form = ctrl.form;
 
-    allRequiredInputs(form).forEach(function(formInput) {
+    allInputs(form).forEach(function(formInput) {
         formInput.addEventListener("invalid", function(evt) {
             evt.target.classList.add(css.highlightInvalid);
             ctrl.registerInvalidField(evt.target.name);
