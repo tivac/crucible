@@ -15,6 +15,7 @@ export default multiple({
 
         return m("select", assign({
                 // attrs
+                name     : field.name,
                 class    : css.select,
                 required : options.required,
 

@@ -34,9 +34,6 @@ export function view(ctrl, options) {
             wasHidden = field.show.hidden;
             field.show.hidden = checkHidden(options.state, field);
 
-            // Avoid bug, never require a hidden field.
-            // field.required = (field.show.hidden) ? false : field.required;
-
             if(registerHidden && field.show.hidden !== wasHidden) {
                 // hidden status changed, notify the controller.
                 registerHidden(field.key, field.show.hidden);

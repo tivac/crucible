@@ -85,6 +85,7 @@ export function controller(options) {
 
     ctrl.init = function() {
         ctrl.schedule   = false;
+        ctrl.invalidInputs = [];
 
         ctrl.start = (publishTs) ? makeScheduleObj(publishTs) : nulledDate(defaultStartTime);
         ctrl.end   = (unpublishTs) ? makeScheduleObj(unpublishTs) : nulledDate(defaultEndTime);
@@ -123,6 +124,20 @@ export function controller(options) {
         return result;
     }
 
+    function registerInvalidField(el) {
+        if(ctrl.invalidInputs.indexOf(el) > -1) {
+            return;
+        }
+
+        ctrl.invalidInputs.push(el);
+    }
+
+    ctrl.resetInvalidFields = function() {
+        ctrl.invalidInputs = [];
+        console.log("resetInvalidFields redraw");
+        // m.redraw();
+    };
+
     var doneDid;
     function handleInvalid(form) {
         if(doneDid) {
@@ -130,16 +145,23 @@ export function controller(options) {
         }
         doneDid = true;
 
-        console.log("REQURIED NOT BEING SET PROPERLY ON A BUNCH OF ELEMENTS FIX ASAP");
         allInputs(form).forEach(function(inp) {
-            inp.addEventListener('invalid', function(evt) {
-                console.log(evt.target.classList.value, evt);
+            inp.addEventListener("invalid", function(evt) {
+                console.log("evt.target", evt.target);
+                registerInvalidField(evt.target.name);
             });
         });
     }
 
+    ctrl.onFormFocus = function(evt) {
+        if(ctrl.invalidInputs.length) {
+            ctrl.resetInvalidFields();
+        }
+    };
+
     ctrl.publish = function(opts) {
-        var startTs,
+        var self = ctrl,
+            startTs,
             updated,
             pubDateIsPast,
             hasUnpubDate,
@@ -150,7 +172,6 @@ export function controller(options) {
 
         valid = opts.form.checkValidity();
         if(!valid) {
-            console.log("invalid! prevent publish");
             return null;
         }
 
@@ -229,8 +250,7 @@ export function controller(options) {
     };
 
     ctrl.save = function(opts) {
-        var updated = {},
-            valid = opts.form.checkValidity();
+        var updated = {};
 
         ctrl.saving = true;
         m.redraw();
@@ -242,10 +262,6 @@ export function controller(options) {
         };
 
         updated = ctrl.addScheduleData(updated);
-
-        if(!valid) {
-            console.log("TODO warn about invalid fields, but still allow save to go through.");
-        }
 
         return ref.update(updated, function() {
             ctrl.saving = false;
@@ -377,10 +393,7 @@ export function view(ctrl, options) {
     }
 
     function mPublishButton() {
-        var isDisabled = false,
-            validForm = options.form && options.form.checkValidity();
-
-        console.log("options.form", options.form);
+        var isDisabled = false;
 
         // TODO Better implementation.
         // if(ctrl.start.ts && isPast(ctrl.start.ts)) {
@@ -389,23 +402,36 @@ export function view(ctrl, options) {
 
         return m("div", { class : css.publishContainer },
                 m("button", {
-                    // Attrs
-                    class    : css.publish,
-                    title    : future ? "Schedule publish" : "Already published",
-                    disabled : locked || isDisabled || null,
+                        // Attrs
+                        class    : css.publish,
+                        title    : future ? "Schedule publish" : "Already published",
+                        disabled : locked || isDisabled || null,
 
-                    // Events
-                    onclick : ctrl.publish.bind(null, options)
-                },
-                m("svg", { class : css.icon },
-                    m("use", { href : icons + (future ? "#schedule" : "#publish") })
+                        // Events
+                        onclick : ctrl.publish.bind(null, options)
+                    },
+                    m("svg", { class : css.icon },
+                        m("use", { href : icons + (future ? "#schedule" : "#publish") })
+                    ),
+                    future ? "Schedule" : "Publish"
                 ),
-                future ? "Schedule" : "Publish"
-            ),
-            m("div", { class : css.invalidMessage },
-                "status : " + validForm
-            )
-        );
+                ctrl.invalidInputs.length === 0 ?
+                    null :
+                    m("div", { class : css.invalidMessage },
+                        "Missing required fields.",
+                        m("ul",
+                            ctrl.invalidInputs.map(function(name) {
+                                return m("li", name);
+                            })
+                        ),
+                        m("button", {
+                            class   : css.closeInvalidMessage,
+                            onclick : ctrl.resetInvalidFields
+                        },
+                            "x" // todo
+                        )
+                    )
+            );
     }
 
     function mUnpublishButton() {

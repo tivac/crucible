@@ -30,6 +30,7 @@ export function view(ctrl, options) {
             m("textarea", assign({
                     // attrs
                     id       : ctrl.id,
+                    name     : field.name,
                     class    : css.textarea,
                     required : options.required,
 
