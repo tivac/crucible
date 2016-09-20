@@ -327,8 +327,7 @@ export function view(ctrl, options) {
         //     isDisabled = true;
         // }
 
-        return m("div",
-            { class : css.publishContainer },
+        return m("div", { class : css.publishContainer },
             m("button", {
                     // Attrs
                     class    : css.publish,

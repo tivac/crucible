@@ -9,8 +9,7 @@ export default multiple({
     },
         
     function(ctrl, options, children) {
-        var field = options.field,
-            req = options.required;
+        var field = options.field;
 
         return (children || []).map(function(opt) {
             return m("label", { class : css.choice },
@@ -21,7 +20,7 @@ export default multiple({
                     value   : opt.value,
                     checked : opt.selected,
 
-                    required : req,
+                    required : options.required,
 
                     // events
                     onchange : function() {

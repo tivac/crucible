@@ -1,26 +1,12 @@
 import m from "mithril";
-import toArray from "lodash.toarray";
-
 import debounce from "lodash.debounce";
 
 import css from "./validator.css";
 
-function allInputs(form) {
-    var all = [],
-        inputs;
-
-    [ "input", "select", "textarea" ].forEach(function(kind) {
-        inputs = toArray(form.querySelectorAll(kind));
-        all = all.concat(inputs);
-    });
-
-    return all;
-}
-
 function attachInputHandlers(ctrl) {
     var form = ctrl.form;
 
-    allInputs(form).forEach(function(formInput) {
+    form.querySelectorAll("input, textarea, select").forEach(function(formInput) {
         formInput.addEventListener("invalid", function(evt) {
             evt.target.classList.add(css.highlightInvalid);
             ctrl.registerInvalidField(evt.target.name);
@@ -40,10 +26,9 @@ export function controller(options) {
 
     ctrl.init = function() {
         ctrl.form = options.form;
-        if(!ctrl.form) {
-            console.warn("Validator did not receive a reference to the form.");
 
-            return;
+        if(!ctrl.form) {
+            return console.warn("Validator did not receive a reference to the form.");
         }
 
         ctrl.currOpacity = 0;
@@ -99,22 +84,24 @@ export function controller(options) {
 }
 
 export function view(ctrl, options) {
-    var style = "";
+    var classes = css.invalidMessage + " ";
 
     if(!ctrl.invalidInputs.length) {
         return m("div", { style : "display:none;" });
     }
 
     // No transition if we're going from 0 -> 1.
-    style = `opacity:${ctrl.currOpacity};`;
-    style += ctrl.currOpacity === 0 ? `transition: opacity ${ctrl.fadeTime}s ${ctrl.fadeDelay}s linear` : "";
+    classes += ctrl.currOpacity === 0 ? css.delayedHide : css.visible;
 
     return m("div",
         {
-            class : css.invalidMessage,
-            style : style,
+            class : classes,
 
-            config : function(el) {
+            config : function(el, initialized) {
+                if(initialized) {
+                    return;
+                }
+
                 el.addEventListener("transitionend", function() {
                     ctrl.resetInvalidFields();
                     m.redraw();
@@ -128,9 +115,9 @@ export function view(ctrl, options) {
             })
         ),
         m("button", {
-            class   : css.closeInvalidMessage,
-            onclick : ctrl.resetInvalidFields
-        },
+                class   : css.closeInvalidMessage,
+                onclick : ctrl.resetInvalidFields
+            },
             "x" // todo
         )
     );

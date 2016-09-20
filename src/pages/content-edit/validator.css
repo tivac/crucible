@@ -32,6 +32,15 @@
     border-right:  7px solid transparent;
 }
 
+.visible {
+    opacity: 1;
+    transition: none;    
+}
+.delayedHide {
+    opacity: 0;
+    transition: opacity 0.5s 3s linear;
+}
+
 .closeInvalidMessage {
     position: absolute;
     top: 3px;
