@@ -23,11 +23,15 @@ function attachInputHandlers(ctrl) {
     allInputs(form).forEach(function(inp) {
         inp.addEventListener("invalid", function(evt) {
             ctrl.registerInvalidField(evt.target.name);
+
+            evt.target.classList.add(css.highlightInvalid);
         });
 
         // focus doesn't bubble
         inp.addEventListener("focus", function(evt) {
             ctrl.onFormFocus(evt);
+            
+            evt.target.classList.remove(css.highlightInvalid);
         });
     });
 }
@@ -84,7 +88,6 @@ export function controller(options) {
         ctrl.currOpacity = 0;
         m.redraw();
     };
-
 
     ctrl.init();
 }

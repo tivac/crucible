@@ -43,3 +43,13 @@
     background: transparent;
     border: none;
 }
+
+
+/* Had a specificity war with pure-css */
+input.highlightInvalid:invalid,
+select.highlightInvalid:invalid,
+textarea.highlightInvalid:invalid {
+    background: #f5cecd;
+    border-color: #e9322d;
+    color: black;
+}
