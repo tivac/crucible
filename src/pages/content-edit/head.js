@@ -10,6 +10,8 @@ import config, { icons } from "../../config";
 import db from "../../lib/firebase";
 import prefix from "../../lib/prefix";
 
+import * as validator from "./validator.js";
+
 import css from "./head.css";
 
 var DEFAULT_START_TIME = "00:00",
@@ -87,12 +89,19 @@ export function controller(options) {
         ctrl.schedule = typeof force !== "undefined" ? Boolean(force) : !ctrl.schedule;
     };
 
-    ctrl.publish = function() {
-        var startTs,
+    ctrl.publish = function(opts) {
+        var self = ctrl,
+            startTs,
             updated,
             pubDateIsPast,
             hasUnpubDate,
             unpubDateIsFuture;
+
+        // This check will also trigger the Validator which
+        // is listening for each input's "invalid" event.
+        if(!opts.form.checkValidity()) {
+            return null;
+        }
 
         pubDateIsPast = Boolean(ctrl.start.ts) && isPast(ctrl.start.ts);
 
@@ -124,7 +133,7 @@ export function controller(options) {
             console.warn("Invalid end date. Resetting end date.");
         }
 
-        ref.update(updated, function() {
+        return ref.update(updated, function() {
             ctrl.saving = false;
             m.redraw();
         });
@@ -181,7 +190,7 @@ export function controller(options) {
 
         updated = ctrl.addScheduleData(updated);
 
-        ref.update(updated, function() {
+        return ref.update(updated, function() {
             ctrl.saving = false;
             m.redraw();
         });
@@ -318,19 +327,24 @@ export function view(ctrl, options) {
         //     isDisabled = true;
         // }
 
-        return m("button", {
-                // Attrs
-                class    : css.publish,
-                title    : future ? "Schedule publish" : "Already published",
-                disabled : locked || isDisabled || null,
+        return m("div", { class : css.publishContainer },
+            m("button", {
+                    // Attrs
+                    class    : css.publish,
+                    title    : future ? "Schedule publish" : "Already published",
+                    disabled : locked || isDisabled || null,
 
-                // Events
-                onclick : ctrl.publish
-            },
-            m("svg", { class : css.icon },
-                m("use", { href : icons + (future ? "#schedule" : "#publish") })
+                    // Events
+                    onclick : ctrl.publish.bind(null, options)
+                },
+                m("svg", { class : css.icon },
+                    m("use", { href : icons + (future ? "#schedule" : "#publish") })
+                ),
+                future ? "Schedule" : "Publish"
             ),
-            future ? "Schedule" : "Publish"
+            options.form ? m.component(validator, {
+                form : options.form
+            }) : null
         );
     }
 

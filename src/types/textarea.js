@@ -30,8 +30,9 @@ export default {
                 m("textarea", assign({
                         // attrs
                         id       : ctrl.id,
+                        name     : field.name,
                         class    : css.textarea,
-                        required : field.required ? "required" : null,
+                        required : options.required,
 
                         // events
                         oninput : m.withAttr("value", ctrl.resize.bind(null, options))

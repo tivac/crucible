@@ -1,0 +1,73 @@
+/* 
+   TODO Probably worth making more generic at some point,
+   and maybe even adding other color options.
+*/
+.invalidMessage {
+    position: absolute;
+    right: -5px;
+    transform: translateY(3px);
+
+    display: block;
+    height: auto;
+    min-width: 320px;
+    min-height: 60px;
+    padding: 10px;
+
+    background: rgb(222, 33, 33);
+    border: 1px solid rgb(202, 13, 13);;
+    border-radius: 2px;
+    color: #fff;
+    text-align: left;
+}
+
+.invalidMessage:before {
+    content: '';
+
+    position: absolute;
+    top: -7px;
+    right: 10px;
+
+    border-bottom: 8px solid rgb(222, 33, 33);
+    border-left:   7px solid transparent;
+    border-right:  7px solid transparent;
+}
+
+
+/*
+    No transition if we're going from 0 -> 1,
+    we want the invalid notification to show up immediately
+*/
+.visible {
+    composes: invalidMessage;
+
+    opacity: 1;
+    transition: none;    
+}
+
+.delayedHide {
+    composes: invalidMessage;
+
+    opacity: 0;
+    transition: opacity 0.5s 3s linear;
+}
+
+.closeInvalidMessage {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+
+    height: 20px;
+    width: 20px;
+
+    background: transparent;
+    border: none;
+}
+
+/* Had a specificity war with pure-css */
+input.highlightInvalid:invalid,
+select.highlightInvalid:invalid,
+textarea.highlightInvalid:invalid {
+    background: #f5cecd;
+    border-color: #e9322d;
+    color: black;
+}

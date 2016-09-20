@@ -40,10 +40,11 @@ export default function(type) {
                 m("input", assign({}, field.attrs || {}, {
                         // attrs
                         id       : ctrl.id,
+                        name     : field.name,
                         type     : type || "text",
                         class    : css[type || "text"],
                         value    : options.data || "",
-                        required : field.required ? "required" : null,
+                        required : options.required,
 
                         // events
                         oninput : m.withAttr("value", options.update(options.path))
