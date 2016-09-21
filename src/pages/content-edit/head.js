@@ -56,211 +56,211 @@ function filterHidden(fields, hidden) {
     return filtered;
 }
 
-export function controller(options) {
-    var ctrl = this,
-        ref  = options.ref,
-        user = db.getAuth().uid,
+// export function controller(options) {
+//     var ctrl = this,
+//         ref  = options.ref,
+//         user = db.getAuth().uid,
 
-        publishTs   = options.data.published_at ? options.data.published_at : null,
-        unpublishTs = options.data.unpublished_at ? options.data.unpublished_at : null,
+//         publishTs   = options.data.published_at ? options.data.published_at : null,
+//         unpublishTs = options.data.unpublished_at ? options.data.unpublished_at : null,
 
-        defaultStartTime = get(config, "defaults.publish_start_time") || DEFAULT_START_TIME,
-        defaultEndTime   = get(config, "defaults.publish_end_time")   || DEFAULT_END_TIME;
+//         defaultStartTime = get(config, "defaults.publish_start_time") || DEFAULT_START_TIME,
+//         defaultEndTime   = get(config, "defaults.publish_end_time")   || DEFAULT_END_TIME;
 
-    ctrl.init = function() {
-        ctrl.schedule   = false;
+//     ctrl.init = function() {
+//         ctrl.schedule   = false;
 
-        ctrl.start = (publishTs) ? makeScheduleObj(publishTs) : nulledDate(defaultStartTime);
-        ctrl.end   = (unpublishTs) ? makeScheduleObj(unpublishTs) : nulledDate(defaultEndTime);
+//         ctrl.start = (publishTs) ? makeScheduleObj(publishTs) : nulledDate(defaultStartTime);
+//         ctrl.end   = (unpublishTs) ? makeScheduleObj(unpublishTs) : nulledDate(defaultEndTime);
 
-        ctrl.recalculateTimestamps();
-    };
+//         ctrl.recalculateTimestamps();
+//     };
 
-    // Event handlers
-    ctrl.update = function(section, field, value) {
-        ctrl[section][field] = value;
+//     // Event handlers
+//     ctrl.update = function(section, field, value) {
+//         ctrl[section][field] = value;
 
-        if(section === "start" || section === "end") {
-            ctrl.recalculateTimestamps();
-        }
-    };
+//         if(section === "start" || section === "end") {
+//             ctrl.recalculateTimestamps();
+//         }
+//     };
 
-    ctrl.toggle = function(force) {
-        ctrl.schedule = typeof force !== "undefined" ? Boolean(force) : !ctrl.schedule;
-    };
+//     ctrl.toggle = function(force) {
+//         ctrl.schedule = typeof force !== "undefined" ? Boolean(force) : !ctrl.schedule;
+//     };
 
-    ctrl.publish = function(opts) {
-        var self = ctrl,
-            startTs,
-            updated,
-            pubDateIsPast,
-            hasUnpubDate,
-            unpubDateIsFuture;
+//     ctrl.publish = function(opts) {
+//         var self = ctrl,
+//             startTs,
+//             updated,
+//             pubDateIsPast,
+//             hasUnpubDate,
+//             unpubDateIsFuture;
 
-        // This check will also trigger the Validator which
-        // is listening for each input's "invalid" event.
-        if(!opts.form.checkValidity()) {
-            return null;
-        }
+//         // This check will also trigger the Validator which
+//         // is listening for each input's "invalid" event.
+//         if(!opts.form.checkValidity()) {
+//             return null;
+//         }
 
-        pubDateIsPast = Boolean(ctrl.start.ts) && isPast(ctrl.start.ts);
+//         pubDateIsPast = Boolean(ctrl.start.ts) && isPast(ctrl.start.ts);
 
-        hasUnpubDate  = Boolean(ctrl.end.ts);
-        unpubDateIsFuture = hasUnpubDate && isFuture(ctrl.end.ts);
+//         hasUnpubDate  = Boolean(ctrl.end.ts);
+//         unpubDateIsFuture = hasUnpubDate && isFuture(ctrl.end.ts);
 
-        if(pubDateIsPast && (unpubDateIsFuture || !hasUnpubDate)) {
-            // Already currently published.
-            return;
-        }
+//         if(pubDateIsPast && (unpubDateIsFuture || !hasUnpubDate)) {
+//             // Already currently published.
+//             return;
+//         }
 
-        ctrl.saving = true;
-        m.redraw();
+//         ctrl.saving = true;
+//         m.redraw();
 
-        startTs = subSeconds(Date.now(), 10);
-        ctrl.start = makeScheduleObj(startTs);
+//         startTs = subSeconds(Date.now(), 10);
+//         ctrl.start = makeScheduleObj(startTs);
 
-        updated = {
-            published_at : startTs,
-            published_by : user
-        };
+//         updated = {
+//             published_at : startTs,
+//             published_by : user
+//         };
 
-        if(ctrl.end.ts && (ctrl.start.ts > ctrl.end.ts)) {
-            ctrl.end = nulledDate(defaultEndTime);
+//         if(ctrl.end.ts && (ctrl.start.ts > ctrl.end.ts)) {
+//             ctrl.end = nulledDate(defaultEndTime);
 
-            updated.unpublished_at = null;
-            updated.unpublished_by = null;
+//             updated.unpublished_at = null;
+//             updated.unpublished_by = null;
 
-            console.warn("Invalid end date. Resetting end date.");
-        }
+//             console.warn("Invalid end date. Resetting end date.");
+//         }
 
-        return ref.update(updated, function() {
-            ctrl.saving = false;
-            m.redraw();
-        });
-    };
+//         return ref.update(updated, function() {
+//             ctrl.saving = false;
+//             m.redraw();
+//         });
+//     };
 
-    ctrl.unpublish = function() {
-        var nowTs,
-            updated;
+//     ctrl.unpublish = function() {
+//         var nowTs,
+//             updated;
 
-        if(ctrl.end.ts && isPast(ctrl.end.ts)) {
-            // Already unpublished.
-            return;
-        }
+//         if(ctrl.end.ts && isPast(ctrl.end.ts)) {
+//             // Already unpublished.
+//             return;
+//         }
 
-        ctrl.saving = true;
-        m.redraw();
+//         ctrl.saving = true;
+//         m.redraw();
 
-        nowTs = Date.now();
-        ctrl.end = makeScheduleObj(nowTs);
+//         nowTs = Date.now();
+//         ctrl.end = makeScheduleObj(nowTs);
 
-        updated = {
-            unpublished_at : nowTs,
-            unpublished_by : user
-        };
+//         updated = {
+//             unpublished_at : nowTs,
+//             unpublished_by : user
+//         };
 
-        if(ctrl.start.ts &&  ctrl.start.ts > ctrl.end.ts) {
-            // Invalid start.
-            ctrl.start = nulledDate(defaultStartTime);
-        }
+//         if(ctrl.start.ts &&  ctrl.start.ts > ctrl.end.ts) {
+//             // Invalid start.
+//             ctrl.start = nulledDate(defaultStartTime);
+//         }
 
-        ref.update(updated, function() {
-            ctrl.saving = false;
-            m.redraw();
-        });
-    };
+//         ref.update(updated, function() {
+//             ctrl.saving = false;
+//             m.redraw();
+//         });
+//     };
 
-    ctrl.clearSchedule = function() {
-        ctrl.start = nulledDate(defaultStartTime);
-        ctrl.end   = nulledDate(defaultEndTime);
-        ctrl.invalidDates = false;
-    };
+//     ctrl.clearSchedule = function() {
+//         ctrl.start = nulledDate(defaultStartTime);
+//         ctrl.end   = nulledDate(defaultEndTime);
+//         ctrl.invalidDates = false;
+//     };
 
-    ctrl.save = function(opts) {
-        var updated = {};
+//     ctrl.save = function(opts) {
+//         var updated = {};
 
-        ctrl.saving = true;
-        m.redraw();
+//         ctrl.saving = true;
+//         m.redraw();
 
-        updated = {
-            fields : filterHidden( opts.data.fields, opts.hidden ),
-            name   : opts.data.name,
-            slug   : opts.data.slug || null
-        };
+//         updated = {
+//             fields : filterHidden( opts.data.fields, opts.hidden ),
+//             name   : opts.data.name,
+//             slug   : opts.data.slug || null
+//         };
 
-        updated = ctrl.addScheduleData(updated);
+//         updated = ctrl.addScheduleData(updated);
 
-        return ref.update(updated, function() {
-            ctrl.saving = false;
-            m.redraw();
-        });
-    };
+//         return ref.update(updated, function() {
+//             ctrl.saving = false;
+//             m.redraw();
+//         });
+//     };
 
-    ctrl.addScheduleData = function(updated) {
-        var startTs = null,
-            endTs = null,
-            startTime = ctrl.start.time || DEFAULT_START_TIME,
-            endTime = ctrl.end.time || DEFAULT_END_TIME;
+//     ctrl.addScheduleData = function(updated) {
+//         var startTs = null,
+//             endTs = null,
+//             startTime = ctrl.start.time || DEFAULT_START_TIME,
+//             endTime = ctrl.end.time || DEFAULT_END_TIME;
 
-        if(ctrl.invalidDates) {
-            return updated;
-        }
+//         if(ctrl.invalidDates) {
+//             return updated;
+//         }
 
-        if(ctrl.start.date) {
-            startTs = getTimestampFromStr(ctrl.start.date + " " + startTime);
-        }
+//         if(ctrl.start.date) {
+//             startTs = getTimestampFromStr(ctrl.start.date + " " + startTime);
+//         }
 
-        if(ctrl.end.date) {
-            endTs = getTimestampFromStr(ctrl.end.date + " " + endTime);
-        }
+//         if(ctrl.end.date) {
+//             endTs = getTimestampFromStr(ctrl.end.date + " " + endTime);
+//         }
 
-        updated.published_at = startTs;
-        updated.unpublished_at = endTs;
+//         updated.published_at = startTs;
+//         updated.unpublished_at = endTs;
 
-        if(options.data.published_at && !updated.published_at) {
-            // Publish date was removed. Null it out.
-            updated.published_at = null;
-            updated.published_by = null;
+//         if(options.data.published_at && !updated.published_at) {
+//             // Publish date was removed. Null it out.
+//             updated.published_at = null;
+//             updated.published_by = null;
 
-            ctrl.start = nulledDate(defaultStartTime);
-        }
+//             ctrl.start = nulledDate(defaultStartTime);
+//         }
 
-        if(options.data.unpublished_at && !updated.unpublished_at) {
-            // Unpublish date was removed. Null it out.
-            updated.unpublished_at = null;
-            updated.unpublished_by = null;
+//         if(options.data.unpublished_at && !updated.unpublished_at) {
+//             // Unpublish date was removed. Null it out.
+//             updated.unpublished_at = null;
+//             updated.unpublished_by = null;
 
-            ctrl.end = nulledDate(defaultEndTime);
-        }
+//             ctrl.end = nulledDate(defaultEndTime);
+//         }
 
-        return updated;
-    };
+//         return updated;
+//     };
 
 
-    ctrl.recalculateTimestamps = function() {
-        var start = ctrl.start,
-            end = ctrl.end;
+//     ctrl.recalculateTimestamps = function() {
+//         var start = ctrl.start,
+//             end = ctrl.end;
 
-        if(start.date) {
-            start.ts = getTimestampFromStr(start.date + " " + start.time);
-        }
-        if(end.date) {
-            end.ts = getTimestampFromStr(end.date + " " + end.time);
-        }
+//         if(start.date) {
+//             start.ts = getTimestampFromStr(start.date + " " + start.time);
+//         }
+//         if(end.date) {
+//             end.ts = getTimestampFromStr(end.date + " " + end.time);
+//         }
 
-        if(start.date && end.date) {
-            ctrl.invalidDates = (start.ts > end.ts);
-        }
-    };  
+//         if(start.date && end.date) {
+//             ctrl.invalidDates = (start.ts > end.ts);
+//         }
+//     };  
 
-    ctrl.init();
-}
+//     ctrl.init();
+// }
 
-export function view(ctrl, options) {
+export function view(state, options) {
     var status  = "draft",
         publishTs = options.data.published_at,
         unpublishTs = options.data.unpublished_at,
-        future  = isFuture(ctrl.start.date + " " + ctrl.start.time),
+        future  = isFuture(publishTs),
         locked  = config.locked;
 
     if(isFuture(publishTs)) {
@@ -293,7 +293,7 @@ export function view(ctrl, options) {
                     disabled : locked || null,
 
                     // Events
-                    onclick : ctrl.saving ? null : ctrl.save.bind(null, options)
+                    onclick : state.ui.saving ? null : state.save.bind(null, options)
                 },
                 m("svg", { class : css.icon },
                     m("use", { href : icons + "#save" })

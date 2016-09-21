@@ -16,9 +16,12 @@ import name from "./name.js";
 
 import * as children from "../../types/children.js";
 import * as layout from "../layout/index.js";
+import ContentState from "./content-state.js";
 import * as head from "./head.js";
 
 import css from "./content-edit.css";
+
+var state = new ContentState();
 
 export function controller() {
     var ctrl = this,
@@ -37,6 +40,7 @@ export function controller() {
     schema.on("value", function(snap) {
         ctrl.schema = snap.val();
         ctrl.schema.key = snap.key();
+        console.log("ctrl.schema", ctrl.schema);
 
         m.redraw();
     });
@@ -54,6 +58,8 @@ export function controller() {
         if(!snap.exists()) {
             return m.route(prefix("/content/" + m.route.param("schema")));
         }
+
+        state.processServerData(snap.val());
 
         ctrl.data = assign(data, {
             fields : merge(data.fields, ctrl.data.fields)
@@ -137,6 +143,8 @@ export function view(ctrl) {
                                     }
 
                                     ctrl.form = el;
+                                    state.form = el;
+                                    console.log("state", state);
 
                                     // force a redraw so publishing component can get
                                     // new args w/ actual validity
