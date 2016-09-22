@@ -8,8 +8,8 @@ export default multiple({
     },
     
     // View function
-    function(ctrl, options, children) {
-        var field = options.field;
+    function(vnode, children) {
+        var field = vnode.attrs.field;
         
         return (children || []).map(function(opt) {
             return m("label", { class : css.checkbox },
@@ -20,11 +20,11 @@ export default multiple({
                     value   : opt.value,
                     checked : opt.selected,
 
-                    required : options.required,
+                    required : vnode.attrs.required,
 
                     // events
                     onchange : m.withAttr("checked", function(state) {
-                        ctrl.value(options, opt.key, state && opt.value);
+                        vnode.state.value(vnode.attrs, opt.key, state && opt.value);
                     })
                 }),
                 " " + opt.name

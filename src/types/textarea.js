@@ -7,11 +7,11 @@ import label from "./lib/label";
 import css from "./textarea.css";
 
 export default {
-    controller : function(options) {
+    oninit : function(vnode) {
         var ctrl = this;
 
-        ctrl.id   = id(options);
-        ctrl.text = options.data || "";
+        ctrl.id   = id(vnode.attrs);
+        ctrl.text = vnode.attrs.data || "";
 
         ctrl.resize = function(opt, value) {
             opt.update(opt.path, value);
@@ -20,25 +20,25 @@ export default {
         };
     },
 
-    view : function(ctrl, options) {
-        var field  = options.field;
+    view : function(vnode) {
+        var field  = vnode.attrs.field;
 
-        return m("div", { class : options.class },
-            label(ctrl, options),
+        return m("div", { class : vnode.attrs.class },
+            label(vnode.state, vnode.attrs),
             m("div", { class : css.expander },
-                m("pre", { class : css.shadow }, m("span", ctrl.text), m("br")),
+                m("pre", { class : css.shadow }, m("span", vnode.state.text), m("br")),
                 m("textarea", assign({
                         // attrs
-                        id       : ctrl.id,
+                        id       : vnode.state.id,
                         name     : field.name,
                         class    : css.textarea,
-                        required : options.required,
+                        required : vnode.attrs.required,
 
                         // events
-                        oninput : m.withAttr("value", ctrl.resize.bind(null, options))
+                        oninput : m.withAttr("value", vnode.state.resize.bind(null, vnode.attrs))
                     },
                     field.attrs || {}
-                ), options.data || "")
+                ), vnode.attrs.data || "")
             )
         );
     }

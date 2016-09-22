@@ -6,11 +6,11 @@ import * as children from "./children.js";
 import css from "./fieldset.css";
 
 export default {
-    view : function(ctrl, options) {   
-        return m("fieldset", { class : options.class },
-            options.field.name ? m("legend", { class : css.legend }, options.field.name) : null,
-            m.component(children, assign({}, options, {
-                fields : options.field.children
+    view : function(vnode) {   
+        return m("fieldset", { class : vnode.attrs.class },
+            vnode.attrs.field.name ? m("legend", { class : css.legend }, vnode.attrs.field.name) : null,
+            m(children, assign({}, vnode.attrs, {
+                fields : vnode.attrs.field.children
             }))
         );
     }

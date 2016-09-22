@@ -43,29 +43,29 @@ function name(remote) {
 }
 
 export default {
-    controller : function(options) {
+    oninit : function(vnode) {
         var ctrl = this;
         
-        if(!options.field.ws) {
+        if(!vnode.attrs.field.ws) {
             console.error("No ws for upload field");
             // throw new Error("Must define a ws for upload fields");
         }
         
-        ctrl.id = id(options);
+        ctrl.id = id(vnode.attrs);
         
         // Drag-n-drop state tracking
         ctrl.dragging  = false;
         ctrl.uploading = false;
         
         // Options caching
-        ctrl.options = options;
+        ctrl.options = vnode.attrs;
         
-        if(options.data) {
-            if(typeof options.data === "string") {
-                options.data = [ options.data ];
+        if(vnode.attrs.data) {
+            if(typeof vnode.attrs.data === "string") {
+                vnode.attrs.data = [ vnode.attrs.data ];
             }
             
-            ctrl.files = options.data.map(function(remote) {
+            ctrl.files = vnode.attrs.data.map(function(remote) {
                 return {
                     name     : name(remote),
                     uploaded : true,
@@ -89,7 +89,7 @@ export default {
             e.preventDefault();
 
             if(ctrl.dragging) {
-                m.redraw.strategy("none");
+                vnode.redraw = false;
 
                 return;
             }
@@ -97,7 +97,7 @@ export default {
             // Don't show this as a drag target if there's already something there
             // and it's not a multiple field
             if(ctrl.files.length && !ctrl.options.field.multiple) {
-                m.redraw.strategy("none");
+                vnode.redraw = false;
                 
                 return;
             }
@@ -244,26 +244,26 @@ export default {
         };
     },
 
-    view : function(ctrl, options) {
-        var field  = options.field;
+    view : function(vnode) {
+        var field  = vnode.attrs.field;
         
-        ctrl.options = options;
+        vnode.state.options = vnode.attrs;
 
-        return m("div", { class : options.class },
-            label(ctrl, options),
+        return m("div", { class : vnode.attrs.class },
+            label(vnode.state, vnode.attrs),
             m("div", {
                     // Attrs
-                    class : css[ctrl.dragging ? "highlight" : "target"],
+                    class : css[vnode.state.dragging ? "highlight" : "target"],
                     
                     // Events
-                    ondragover  : ctrl.dragon,
-                    ondragleave : ctrl.dragoff,
-                    ondragend   : ctrl.dragoff,
-                    ondrop      : ctrl.drop
+                    ondragover  : vnode.state.dragon,
+                    ondragleave : vnode.state.dragoff,
+                    ondragend   : vnode.state.dragoff,
+                    ondrop      : vnode.state.drop
                 },
-                ctrl.files.length ?
+                vnode.state.files.length ?
                     m("ul", { class : css.queue },
-                        ctrl.files.map(function(file, idx) {
+                        vnode.state.files.map(function(file, idx) {
                             return m("li", { class : css.queued },
                                 m("div", { class : css.image },
                                     m("img", {
@@ -292,10 +292,10 @@ export default {
                                             title : "Remove",
                                             
                                             // Events
-                                            onclick : ctrl.remove.bind(ctrl, idx)
+                                            onclick : vnode.state.remove.bind(vnode.state, idx)
                                         },
                                         m("svg", { class : css.icon },
-                                            m("use", { href : icons + "#remove" })
+                                            m("use", { "xlink:href" : icons + "#remove" })
                                         )
                                     )
                                 )

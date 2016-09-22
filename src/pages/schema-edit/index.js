@@ -14,7 +14,7 @@ import css from "./schema-edit.css";
 
 export function controller() {
     var ctrl   = this,
-        id     = m.route.param("schema"),
+        id     = vnode.attrs.schema,
         ref    = db.child("schemas/" + id),
         worker = new Worker(prefix("/gen/parse-schema.js"));
 
@@ -74,16 +74,16 @@ export function controller() {
     watch(ref);
 }
 
-export function view(ctrl) {
-    if(!ctrl.schema) {
-        return m.component(layout);
+export function view(vnode) {
+    if(!vnode.state.schema) {
+        return m(layout);
     }
     
-    return m.component(layout, {
-        title   : "Edit - " + capitalize(ctrl.schema.name),
+    return m(layout, {
+        title   : "Edit - " + capitalize(vnode.state.schema.name),
         content : m("div", { class : layout.css.content },
-            ctrl.error ?
-                m("p", { class : css.error }, ctrl.error) :
+            vnode.state.error ?
+                m("p", { class : css.error }, vnode.state.error) :
                 null,
 
             m("div", { class : css.meta },
@@ -94,25 +94,21 @@ export function view(ctrl) {
                         m("input", {
                             // Attrs
                             id    : "preview",
-                            class : css[ctrl.preview.valid ? "preview" : "previewError"],
+                            class : css[vnode.state.preview.valid ? "preview" : "previewError"],
                             type  : "url",
-                            value : ctrl.preview.value || "",
+                            value : vnode.state.preview.value || "",
                             
                             // Events
-                            oninput : ctrl.previewChanged,
+                            oninput : vnode.state.previewChanged,
                             
                             // Config Fn
-                            config : function(el, init) {
-                                if(init) {
-                                    return;
-                                }
-
-                                ctrl.preview.valid = el.validity.valid;
+                            oncreate : function(vnode) {
+                                vnode.state.preview.valid = vnode.dom.validity.valid;
                             }
                         }),
                         m("p", { class : css.note },
-                            ctrl.preview.value ?
-                                ctrl.preview.value + "-0IhUBgUFfhyLQ2m6s5x" :
+                            vnode.state.preview.value ?
+                                vnode.state.preview.value + "-0IhUBgUFfhyLQ2m6s5x" :
                                 null
                         )
                     ),
@@ -122,10 +118,10 @@ export function view(ctrl) {
                                 // Attrs
                                 css     : css.slug,
                                 type    : "checkbox",
-                                checked : ctrl.schema.slug,
+                                checked : vnode.state.schema.slug,
                                 
                                 // Events
-                                onchange : m.withAttr("checked", ctrl.slugChanged)
+                                onchange : m.withAttr("checked", vnode.state.slugChanged)
                             }),
                             " Generate slugs for entries?"
                         )
@@ -135,21 +131,21 @@ export function view(ctrl) {
             m("div", { class : css.contents },
                 m("div", { class : css.editor },
                     m("h3", "Field Definitions"),
-                    m.component(editor, {
-                        ref    : ctrl.ref,
-                        worker : ctrl.worker,
-                        source : ctrl.schema.source || "{\n\n}"
+                    m(editor, {
+                        ref    : vnode.state.ref,
+                        worker : vnode.state.worker,
+                        source : vnode.state.schema.source || "{\n\n}"
                     })
                 ),
 
                 m("div", { class : css.fields },
                     m("h3", "Preview"),
-                    m.component(children, {
-                        fields : ctrl.schema.fields,
-                        data   : ctrl.data,
+                    m(children, {
+                        fields : vnode.state.schema.fields,
+                        data   : vnode.state.data,
                         path   : [],
-                        state  : ctrl.data,
-                        update : update.bind(null, ctrl.data)
+                        state  : vnode.state.data,
+                        update : update.bind(null, vnode.state.data)
                     })
                 )
             )

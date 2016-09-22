@@ -59,8 +59,8 @@ export function controller(options) {
     };
 }
 
-export function view(ctrl, options) {
-    return m("textarea", { config : ctrl.editorSetup },
-        options.source
+export function view(vnode) {
+    return m("textarea", { config : vnode.state.editorSetup },
+        vnode.attrs.source
     );
 }

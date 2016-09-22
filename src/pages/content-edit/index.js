@@ -23,9 +23,9 @@ import css from "./content-edit.css";
 export function controller() {
     var ctrl = this,
 
-        id     = m.route.param("id"),
-        schema = db.child("schemas/" + m.route.param("schema")),
-        ref    = db.child("content/" + m.route.param("schema") + "/" + id);
+        id     = vnode.attrs.id,
+        schema = db.child("schemas/" + vnode.attrs.schema),
+        ref    = db.child("content/" + vnode.attrs.schema + "/" + id);
 
     ctrl.id     = id;
     ctrl.ref    = ref;
@@ -52,7 +52,7 @@ export function controller() {
 
         // Don't try to grab non-existent data
         if(!snap.exists()) {
-            return m.route(prefix("/content/" + m.route.param("schema")));
+            return m.route.set(prefix("/content/" + vnode.attrs.schema));
         }
 
         ctrl.data = assign(data, {
@@ -87,10 +87,10 @@ export function controller() {
     };
 }
 
-export function view(ctrl) {
+export function view(vnode) {
     var status  = "draft",
-        publishTs = get(ctrl, "data.published_at"),
-        unpublishTs = get(ctrl, "data.unpublished_at"),
+        publishTs = get(vnode.state, "data.published_at"),
+        unpublishTs = get(vnode.state, "data.unpublished_at"),
         title;
 
     if(isFuture(publishTs)) {
@@ -101,24 +101,24 @@ export function view(ctrl) {
         status = "unpublished";
     }
 
-    if(!ctrl.schema) {
-        return m.component(layout);
+    if(!vnode.state.schema) {
+        return m(layout);
     }
 
-    title = [ get(ctrl.data, "name"), ctrl.schema.name ]
+    title = [ get(vnode.state.data, "name"), vnode.state.schema.name ]
         .filter(Boolean)
         .map(capitalize)
         .join(" | ");
 
-    if(!ctrl.id) {
-        m.route("/listing/" + ctrl.schema.key);
+    if(!vnode.state.id) {
+        m.route.set("/listing/" + vnode.state.schema.key);
     }
 
-    return m.component(layout, {
+    return m(layout, {
         title   : title,
         content : [
             m("div", { class : css.content },
-                m.component(head, ctrl),
+                m(head, vnode.state),
                 m("div", { class : css.body },
                     m("div", { class : css.contentsContainer },
                         m("div", { class : css.itemStatus },
@@ -131,12 +131,8 @@ export function view(ctrl) {
                         ),
                         m("form", {
                                 class  : css.form,
-                                config : function(el, init) {
-                                    if(init) {
-                                        return;
-                                    }
-
-                                    ctrl.form = el;
+                                oncreate : function(vnode) {
+                                    vnode.state.form = vnode.dom;
 
                                     // force a redraw so publishing component can get
                                     // new args w/ actual validity
@@ -147,16 +143,12 @@ export function view(ctrl) {
                             m("h1", {
                                     // Attrs
                                     class  : css.title,
-                                    config : function(el, init) {
+                                    oncreate : function(vnode) {
                                         var range, selection;
-
-                                        if(init || ctrl.data.name) {
-                                            return;
-                                        }
 
                                         // Select the text contents
                                         range = document.createRange();
-                                        range.selectNodeContents(el);
+                                        range.selectNodeContents(vnode.dom);
                                         selection = window.getSelection();
                                         selection.removeAllRanges();
                                         selection.addRange(range);
@@ -165,18 +157,18 @@ export function view(ctrl) {
                                     contenteditable : true,
 
                                     // Events
-                                    oninput : m.withAttr("innerText", ctrl.titleChange)
+                                    oninput : m.withAttr("innerText", vnode.state.titleChange)
                                 },
-                                name(ctrl.schema, ctrl.data)
+                                name(vnode.state.schema, vnode.state.data)
                             ),
-                            m.component(children, {
+                            m(children, {
                                 class  : css.children,
-                                data   : ctrl.data.fields || {},
-                                fields : ctrl.schema.fields,
+                                data   : vnode.state.data.fields || {},
+                                fields : vnode.state.schema.fields,
                                 path   : [ "fields" ],
-                                root   : ctrl.ref,
-                                state  : ctrl.data.fields,
-                                update : update.bind(null, ctrl.data)
+                                root   : vnode.state.ref,
+                                state  : vnode.state.data.fields,
+                                update : update.bind(null, vnode.state.data)
                             })
                         )
                     )

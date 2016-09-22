@@ -10,33 +10,33 @@ import * as children from "./children";
 
 import css from "./repeating.css";
 
-function child(ctrl, options, data, idx) {
+function child(vnode, data, idx) {
     return m("div", { class : css[idx === 0 ? "first" : "child"] },
         m("div", { class : css.meta },
             m("p", { class : css.counter }, idx + 1),
             m("button", {
                     class   : css.remove,
-                    onclick : ctrl.remove.bind(null, options, data, idx)
+                    onclick : vnode.state.remove.bind(null, vnode.attrs, data, idx)
                 },
                 m("svg", { class : css.icon },
-                    m("use", { href : icons + "#remove" })
+                    m("use", { "xlink:href" : icons + "#remove" })
                 )
             )
         ),
-        m.component(children, assign({}, options, {
-            fields : options.field.children,
+        m(children, assign({}, vnode.attrs, {
+            fields : vnode.attrs.field.children,
             class  : css.fields,
             data   : data,
-            path   : options.path.concat(idx)
+            path   : vnode.attrs.path.concat(idx)
         }))
     );
 }
 
 export default {
-    controller : function(options) {
+    oninit : function(vnode) {
         var ctrl = this;
         
-        ctrl.children = (options.data && options.data.length) || 1;
+        ctrl.children = (vnode.attrs.data && vnode.attrs.data.length) || 1;
         
         ctrl.add = function(opts, e) {
             e.preventDefault();
@@ -70,21 +70,21 @@ export default {
         };
     },
 
-    view : function(ctrl, options) {
-        var field = options.field,
+    view : function(vnode) {
+        var field = vnode.attrs.field,
             items;
         
-        if(options.data) {
-            items = options.data.map(child.bind(null, ctrl, options));
+        if(vnode.attrs.data) {
+            items = vnode.attrs.data.map(child.bind(null, vnode.state, vnode.attrs));
         } else {
-            items = times(ctrl.children, child.bind(null, ctrl, options, false));
+            items = times(vnode.state.children, child.bind(null, vnode.state, vnode.attrs, false));
         }
         
-        return m("div", { class : options.class + " " + css.container },
+        return m("div", { class : vnode.attrs.class + " " + css.container },
             items,
             m("button", {
                 class   : css.add,
-                onclick : ctrl.add.bind(null, options)
+                onclick : vnode.state.add.bind(null, vnode.attrs)
             }, field.button || "Add")
         );
     }

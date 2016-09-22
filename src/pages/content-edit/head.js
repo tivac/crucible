@@ -256,11 +256,11 @@ export function controller(options) {
     ctrl.init();
 }
 
-export function view(ctrl, options) {
+export function view(vnode) {
     var status  = "draft",
-        publishTs = options.data.published_at,
-        unpublishTs = options.data.unpublished_at,
-        future  = isFuture(ctrl.start.date + " " + ctrl.start.time),
+        publishTs = vnode.attrs.data.published_at,
+        unpublishTs = vnode.attrs.data.unpublished_at,
+        future  = isFuture(vnode.state.start.date + " " + vnode.state.start.time),
         locked  = config.locked;
 
     if(isFuture(publishTs)) {
@@ -277,11 +277,11 @@ export function view(ctrl, options) {
                     // Attrs
                     class  : css.back,
                     title  : "Back to Listing",
-                    href   : prefix("/listing/" + options.schema.key),
-                    config : m.route
+                    href   : prefix("/listing/" + vnode.attrs.schema.key),
+                    oncreate: m.route.link
                 },
                 m("svg", { class : css.icon },
-                    m("use", { href : icons + "#arrow" })
+                    m("use", { "xlink:href" : icons + "#arrow" })
                 ),
                 "Back"
             ),
@@ -293,12 +293,12 @@ export function view(ctrl, options) {
                     disabled : locked || null,
 
                     // Events
-                    onclick : ctrl.saving ? null : ctrl.save.bind(null, options)
+                    onclick : vnode.state.saving ? null : vnode.state.save.bind(null, vnode.attrs)
                 },
                 m("svg", { class : css.icon },
-                    m("use", { href : icons + "#save" })
+                    m("use", { "xlink:href" : icons + "#save" })
                 ),
-                ctrl.saving ? "SAVING..." : "Save"
+                vnode.state.saving ? "SAVING..." : "Save"
             )
         ]);
     }
@@ -311,10 +311,10 @@ export function view(ctrl, options) {
                 title : "Schedule a publish",
 
                 // Events
-                onclick : ctrl.toggle.bind(null, undefined)
+                onclick : vnode.state.toggle.bind(null, undefined)
             },
             m("svg", { class : css.onlyIcon },
-                m("use", { href : icons + "#schedule" })
+                m("use", { "xlink:href" : icons + "#schedule" })
             )
         );
     }
@@ -335,15 +335,15 @@ export function view(ctrl, options) {
                     disabled : locked || isDisabled || null,
 
                     // Events
-                    onclick : ctrl.publish.bind(null, options)
+                    onclick : vnode.state.publish.bind(null, vnode.attrs)
                 },
                 m("svg", { class : css.icon },
-                    m("use", { href : icons + (future ? "#schedule" : "#publish") })
+                    m("use", { "xlink:href" : icons + (future ? "#schedule" : "#publish") })
                 ),
                 future ? "Schedule" : "Publish"
             ),
-            options.form ? m.component(validator, {
-                form : options.form
+            vnode.attrs.form ? m(validator, {
+                form : vnode.attrs.form
             }) : null
         );
     }
@@ -367,10 +367,10 @@ export function view(ctrl, options) {
                 disabled : locked || isDisabled || null,
 
                 // Events
-                onclick : ctrl.unpublish
+                onclick : vnode.state.unpublish
             },
             m("svg", { class : css.icon },
-                m("use", { href : icons + "#remove" })
+                m("use", { "xlink:href" : icons + "#remove" })
             ),
             "Unpublish"
         );
@@ -378,18 +378,18 @@ export function view(ctrl, options) {
 
     function scheduleInput(id, type, section, field) {
         return m("input", {
-            class : ctrl.invalidDates ? css.invalidDate : css.date,
+            class : vnode.state.invalidDates ? css.invalidDate : css.date,
             type  : type,
             id    : id,
-            value : ctrl[section][field],
+            value : vnode.state[section][field],
 
             // Events
-            oninput : m.withAttr("value", ctrl.update.bind(ctrl, section, field))
+            oninput : m.withAttr("value", vnode.state.update.bind(vnode.state, section, field))
         });
     }
 
     function mDateScheduler() {
-        if(!ctrl.schedule) {
+        if(!vnode.state.schedule) {
             return null;
         }
 
@@ -410,10 +410,10 @@ export function view(ctrl, options) {
                     m("button", {
                         class    : css.clearSchedule,
                         title    : "Clear schedule dates",
-                        disabled : (!ctrl.start.ts && !ctrl.end.ts),
+                        disabled : (!vnode.state.start.ts && !vnode.state.end.ts),
 
                         // Events
-                        onclick : ctrl.clearSchedule
+                        onclick : vnode.state.clearSchedule
                     },
                     "clear schedule"
                     )

@@ -5,7 +5,7 @@ import * as children from "./children";
 import css from "./tabs.css";
 
 export default {
-    controller : function() {
+    oninit : function() {
         var ctrl = this;
 
         ctrl.tab = 0;
@@ -17,27 +17,27 @@ export default {
         };
     },
 
-    view : function(ctrl, options) {
-        var tabs   = options.field.children || [];
+    view : function(vnode) {
+        var tabs   = vnode.attrs.field.children || [];
         
-        return m("div", { class : options.class },
+        return m("div", { class : vnode.attrs.class },
             m("div", { class : css.nav },
                 tabs.map(function(tab, idx) {
                     return m("a", {
-                            class   : css[idx === ctrl.tab ? "activetab" : "tab"],
+                            class   : css[idx === vnode.state.tab ? "activetab" : "tab"],
                             href    : "#" + idx,
-                            onclick : ctrl.switchtab.bind(ctrl, idx)
+                            onclick : vnode.state.switchtab.bind(vnode.state, idx)
                         }, tab.name
                     );
                 })
             ),
             tabs.map(function(tab, idx) {
-                return m("div", { class : css[idx === ctrl.tab ? "activebody" : "body"] },
-                    m.component(children, assign({}, options, {
+                return m("div", { class : css[idx === vnode.state.tab ? "activebody" : "body"] },
+                    m(children, assign({}, vnode.attrs, {
                         class  : false,
                         fields : tab.children,
-                        data   : options.data && options.data[tab.key],
-                        path   : options.path.concat(tab.key)
+                        data   : vnode.attrs.data && vnode.attrs.data[tab.key],
+                        path   : vnode.attrs.path.concat(tab.key)
                     }))
                 );
             })

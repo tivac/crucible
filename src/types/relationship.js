@@ -11,18 +11,18 @@ import types from "./lib/types.css";
 import css from "./relationship.css";
 
 export default {
-    controller : function(options) {
+    oninit : function(vnode) {
         var ctrl    = this,
-            schema  = options.field.schema,
+            schema  = vnode.attrs.field.schema,
             content = db.child("content/" + schema);
 
-        ctrl.id      = id(options);
+        ctrl.id      = id(vnode.attrs);
         ctrl.lookup  = null;
         ctrl.handle  = null;
         ctrl.related = null;
         ctrl.names   = [];
         
-        ctrl.options = options;
+        ctrl.options = vnode.attrs;
 
         ctrl.config = function(el, init) {
             if(init) {
@@ -97,50 +97,50 @@ export default {
 
             e.preventDefault();
             
-            options.update(options.path.concat(tgt), false);
+            vnode.attrs.update(vnode.attrs.path.concat(tgt), false);
             
-            if(options.root) {
-                content.child(key + "/relationships/" + options.root.key()).remove();
+            if(vnode.attrs.root) {
+                content.child(key + "/relationships/" + vnode.attrs.root.key()).remove();
             }
         };
 
-        if(options.data) {
+        if(vnode.attrs.data) {
             ctrl.load();
         }
     },
 
-    view : function(ctrl, options) {
-        var field  = options.field;
+    view : function(vnode) {
+        var field  = vnode.attrs.field;
         
-        ctrl.options = options;
+        vnode.state.options = vnode.attrs;
 
-        return m("div", { class : options.class },
-            label(ctrl, options),
+        return m("div", { class : vnode.attrs.class },
+            label(vnode.state, vnode.attrs),
             m("input", assign(field.attrs || {}, {
                 // Attrs
-                id     : ctrl.id,
+                id     : vnode.state.id,
                 class  : types.input,
-                config : ctrl.config,
+                config : vnode.state.config,
 
                 // Events
                 onkeydown : function(e) {
-                    if(e.keyCode !== 9 || ctrl.autocomplete.opened === false) {
+                    if(e.keyCode !== 9 || vnode.state.autocomplete.opened === false) {
                         return;
                     }
 
-                    ctrl.autocomplete.select();
+                    vnode.state.autocomplete.select();
                 }
             })),
             m("div", { class : css.relationships },
-                options.data && Object.keys(options.data).map(function(key) {
+                vnode.attrs.data && Object.keys(vnode.attrs.data).map(function(key) {
                     return m("div", { class : css.relationship },
                         m("p", { class : css.name },
-                            ctrl.related ? ctrl.related[key].name : "Loading..."
+                            vnode.state.related ? vnode.state.related[key].name : "Loading..."
                         ),
                         m("div", { class : css.actions },
                             m("button", {
                                 class   : css.remove,
-                                onclick : ctrl.remove.bind(ctrl, key)
+                                onclick : vnode.state.remove.bind(vnode.state, key)
                             }, "Remove")
                         )
                     );

@@ -19,7 +19,7 @@ export function controller() {
     ctrl.auth = auth();
 
     ctrl.add = function() {
-        m.route(prefix("/content/new"));
+        m.route.set(prefix("/content/new"));
     };
 
     db.child("schemas").on("value", function(snap) {
@@ -37,18 +37,18 @@ export function controller() {
     });
 }
 
-export function view(ctrl, options) {
-    var current = m.route(),
+export function view(vnode) {
+    var current = m.route.get(),
         locked  = config.locked;
 
-    if(!options) {
-        options = false;
+    if(!vnode.attrs) {
+        vnode.attrs = false;
     }
     
-    document.title = (options.title || "Loading...") + " | " + title;
+    document.title = (vnode.attrs.title || "Loading...") + " | " + title;
 
     return m("div", { class : layout.container },
-        options.content ? null : m("div", { class : progress.bar }),
+        vnode.attrs.content ? null : m("div", { class : progress.bar }),
 
         m("div", { class : header.container },
 
@@ -56,16 +56,16 @@ export function view(ctrl, options) {
                 m("a", {
                         class  : header.heading,
                         href   : prefix("/"),
-                        config : m.route
+                        oncreate: m.route.link
                     },
                     m("h1", { class : header.title }, title)
                 )
             ),
 
             m("div", { class : header.body },
-                ctrl.auth ? [
+                vnode.state.auth ? [
                     m("div", { class : header.schemas },
-                        (ctrl.schemas || []).map(function(schema) {
+                        (vnode.state.schemas || []).map(function(schema) {
                             var searchUrl = prefix("/content/" + schema.key),
                                 targetUrl = prefix("/listing/" + schema.key),
                                 active;
@@ -75,7 +75,7 @@ export function view(ctrl, options) {
                             return m("a", {
                                     class  : header[active ? "active" : "schema"],
                                     href   : targetUrl,
-                                    config : m.route
+                                    oncreate: m.route.link
                                 },
                                 schema.name
                             );
@@ -88,18 +88,18 @@ export function view(ctrl, options) {
                         disabled : locked || null,
                         
                         // Events
-                        onclick : ctrl.add
+                        onclick : vnode.state.add
                     }, "New Schema"),
                     
                     m("a", {
                         class  : header.logout,
                         href   : prefix("/logout"),
-                        config : m.route
+                        oncreate: m.route.link
                     }, "Logout")
                 ] :
                 null
             )
         ),
-        options.content ? options.content : null
+        vnode.attrs.content ? vnode.attrs.content : null
     );
 }

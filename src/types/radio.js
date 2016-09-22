@@ -8,8 +8,8 @@ export default multiple({
         multiple : false
     },
         
-    function(ctrl, options, children) {
-        var field = options.field;
+    function(vnode, children) {
+        var field = vnode.attrs.field;
 
         return (children || []).map(function(opt) {
             return m("label", { class : css.choice },
@@ -20,11 +20,11 @@ export default multiple({
                     value   : opt.value,
                     checked : opt.selected,
 
-                    required : options.required,
+                    required : vnode.attrs.required,
 
                     // events
                     onchange : function() {
-                        ctrl.value(options, opt.key, opt.value);
+                        vnode.state.value(vnode.attrs, opt.key, opt.value);
                     }
                 })),
                 " " + opt.name

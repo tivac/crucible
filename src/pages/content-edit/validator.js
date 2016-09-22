@@ -3,18 +3,18 @@ import debounce from "lodash.debounce";
 
 import css from "./validator.css";
 
-function attachInputHandlers(ctrl) {
-    var form = ctrl.form;
+function attachInputHandlers(vnode) {
+    var form = vnode.state.form;
 
     form.querySelectorAll("input, textarea, select").forEach(function(formInput) {
         formInput.addEventListener("invalid", function(evt) {
             evt.target.classList.add(css.highlightInvalid);
-            ctrl.registerInvalidField(evt.target.name);
+            vnode.state.registerInvalidField(evt.target.name);
         });
 
         formInput.addEventListener("focus", function(evt) {
             evt.target.classList.remove(css.highlightInvalid);
-            ctrl.onFormFocus(evt); // focus doesn't bubble, so we listen to all the inputs for this.
+            vnode.state.onFormFocus(evt); // focus doesn't bubble, so we listen to all the inputs for this.
         });
     });
 }
@@ -83,34 +83,30 @@ export function controller(options) {
     ctrl.init();
 }
 
-export function view(ctrl, options) {
-    if(!ctrl.invalidInputs.length) {
+export function view(vnode) {
+    if(!vnode.state.invalidInputs.length) {
         return m("div", { style : "display:none;" });
     }
 
     return m("div", {
-            class : ctrl.currOpacity === 0 ? css.delayedHide : css.visible,
+            class : vnode.state.currOpacity === 0 ? css.delayedHide : css.visible,
 
-            config : function(el, initialized) {
-                if(initialized) {
-                    return;
-                }
-
-                el.addEventListener("transitionend", function() {
-                    ctrl.resetInvalidFields();
+            oncreate : function(vnode) {
+                vnode.dom.addEventListener("transitionend", function() {
+                    vnode.state.resetInvalidFields();
                     m.redraw();
                 });
             }
         },
         "Missing required fields.",
         m("ul",
-            ctrl.invalidInputs.map(function(name) {
+            vnode.state.invalidInputs.map(function(name) {
                 return m("li", name);
             })
         ),
         m("button", {
                 class   : css.closeInvalidMessage,
-                onclick : ctrl.resetInvalidFields
+                onclick : vnode.state.resetInvalidFields
             },
             "x" // todo
         )

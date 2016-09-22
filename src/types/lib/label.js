@@ -2,8 +2,8 @@ import m from "mithril";
 
 import css from "./types.css";
  
-export default function(ctrl, options) {
-    var field = options.field,
+export default function(vnode) {
+    var field = vnode.attrs.field,
         name  = field.name,
         style = css.label;
     
@@ -13,7 +13,7 @@ export default function(ctrl, options) {
     }
      
     return m("label", {
-        for   : ctrl.id,
+        for   : vnode.state.id,
         class : style
     }, name);
-}
+};

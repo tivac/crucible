@@ -26,21 +26,21 @@ export function controller() {
             updated : db.TIMESTAMP
         });
 
-        m.route(prefix("/content/" + ctrl.slug + "/edit"));
+        m.route.set(prefix("/content/" + ctrl.slug + "/edit"));
     };
 }
 
-export function view(ctrl) {
-    return m.component(layout, {
+export function view(vnode) {
+    return m(layout, {
         title   : "Create a Schema",
         content : m("div", { class : layout.css.content },
-            m("form", { onsubmit : ctrl.onsubmit },
+            m("form", { onsubmit : vnode.state.onsubmit },
                 m("input[name=name]", {
-                    oninput : m.withAttr("value", ctrl.oninput),
-                    value   : ctrl.name
+                    oninput : m.withAttr("value", vnode.state.oninput),
+                    value   : vnode.state.name
                 }),
                 m("p",
-                    "Slug: " + (ctrl.slug || "???")
+                    "Slug: " + (vnode.state.slug || "???")
                 ),
                 m("input[type=submit]", { value : "Add" })
             )

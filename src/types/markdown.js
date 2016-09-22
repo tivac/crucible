@@ -12,15 +12,15 @@ var md = new Remarkable();
 import "codemirror/mode/markdown/markdown";
 
 export default {
-    controller (options) {
+    oninit (vnode) {
         var ctrl = this;
         
-        ctrl.id       = id(options);
-        ctrl.markdown = options.data || "";
+        ctrl.id       = id(vnode.attrs);
+        ctrl.markdown = vnode.attrs.data || "";
         ctrl.previewing = false;
         ctrl.previewHTML = null;
         
-        ctrl.options = options;
+        ctrl.options = vnode.attrs;
 
         ctrl.togglePreview = function(e) {
             e.preventDefault();
@@ -51,24 +51,24 @@ export default {
         };
     },
 
-    view : function(ctrl, options) {
-        ctrl.options = options;
+    view : function(vnode) {
+        vnode.state.options = vnode.attrs;
 
-        return m("div", { class : options.class },
-            label(ctrl, options),
-            m("div", { class : ctrl.previewing ? css.inputHidden : css.input },
-                m("textarea", { config : ctrl.editorSetup },
-                    ctrl.markdown
+        return m("div", { class : vnode.attrs.class },
+            label(vnode.state, vnode.attrs),
+            m("div", { class : vnode.state.previewing ? css.inputHidden : css.input },
+                m("textarea", { config : vnode.state.editorSetup },
+                    vnode.state.markdown
                 )
             ),
-            m("div", { class : ctrl.previewing ? css.input : css.inputHidden },
-                m.trust(ctrl.previewHTML)
+            m("div", { class : vnode.state.previewing ? css.input : css.inputHidden },
+                m.trust(vnode.state.previewHTML)
             ),
             m("button.pure-button", {
-                    onclick : ctrl.togglePreview,
+                    onclick : vnode.state.togglePreview,
                     class   : css.button
                 },
-                ctrl.previewing ? "Edit" : "Preview"
+                vnode.state.previewing ? "Edit" : "Preview"
             )
         );
     }

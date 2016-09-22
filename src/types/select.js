@@ -8,22 +8,22 @@ export default multiple({
         multiple : false
     },
 
-    function(ctrl, options, children) {
-        var field = options.field;
+    function(vnode, children) {
+        var field = vnode.attrs.field;
 
 
         return m("select", assign({
                 // attrs
                 name     : field.name,
                 class    : css.select,
-                required : options.required,
+                required : vnode.attrs.required,
 
                 // events
                 onchange : function(e) {
                     var tgt = e.target,
                         opt = children[tgt.selectedIndex];
 
-                    ctrl.value(options, opt.key, opt.value);
+                    vnode.state.value(vnode.attrs, opt.key, opt.value);
                 }
             }, field.attrs),
             

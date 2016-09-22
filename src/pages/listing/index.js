@@ -127,7 +127,7 @@ export function controller() {
     ctrl.init = function() {        
         ctrl.pg = new PageState();
 
-        schema = db.child("schemas/" + m.route.param("schema"));
+        schema = db.child("schemas/" + vnode.attrs.schema);
         schema.on("value", onSchema);
     };
 
@@ -196,7 +196,7 @@ export function controller() {
             created_by : db.getAuth().uid
         });
 
-        m.route(prefix("/content/" + ctrl.schema.key + "/" + result.key()));
+        m.route.set(prefix("/content/" + ctrl.schema.key + "/" + result.key()));
     };
 
     ctrl.remove = function(data) {
@@ -296,28 +296,28 @@ export function controller() {
 }
 
 
-export function view(ctrl) {
-    var current = m.route(),
-        content = ctrl.results || ctrl.content || [],
+export function view(vnode) {
+    var current = m.route.get(),
+        content = vnode.state.results || vnode.state.content || [],
         locked  = config.locked,
-        isSearchResults = Boolean(ctrl.results);
+        isSearchResults = Boolean(vnode.state.results);
 
-    if(!m.route.param("schema")) {
-        m.route("/");
+    if(!vnode.attrs.schema) {
+        m.route.set("/");
     }
 
-    return m.component(layout, {
-        title   : get(ctrl, "schema.name") || "...",
+    return m(layout, {
+        title   : get(vnode.state, "schema.name") || "...",
         content : [
 
             m("div", { class : css.listing },
                 m("div", { class : css.contentHead },
                     m("button", {
-                            onclick  : ctrl.add,
+                            onclick  : vnode.state.add,
                             class    : css.add,
                             disabled : locked || null
                         },
-                        "+ Add " + (ctrl.schema && ctrl.schema.name || "...")
+                        "+ Add " + (vnode.state.schema && vnode.state.schema.name || "...")
                     )
                 ),
                 m("div", { class : css.body }, [
@@ -328,14 +328,14 @@ export function view(ctrl) {
                             m("input", {
                                 class       : css.searchInput,
                                 placeholder : "Search...",
-                                oninput     : m.withAttr("value", ctrl.searchFor),
+                                oninput     : m.withAttr("value", vnode.state.searchFor),
 
-                                config : ctrl.registerSearchInput
+                                config : vnode.state.registerSearchInput
                             }),
-                            ctrl.searchInput && ctrl.searchInput.value ?
+                            vnode.state.searchInput && vnode.state.searchInput.value ?
                                 m("button", {
                                     class   : css.searchClear,
-                                    onclick : ctrl.clearSearch.bind(ctrl)
+                                    onclick : vnode.state.clearSearch.bind(vnode.state)
                                 }, "") :
                             null
                         ]),
@@ -344,24 +344,24 @@ export function view(ctrl) {
                             m("input", {
                                 class : css.itemsPer,
                                 type  : "number",
-                                value : ctrl.pg.itemsPer,
+                                value : vnode.state.pg.itemsPer,
 
                                 disabled : isSearchResults,
 
-                                onchange : m.withAttr("value", ctrl.setItemsPer)
+                                onchange : m.withAttr("value", vnode.state.setItemsPer)
                             })
                         ),
                         (function() {
                             var searchContents;
 
                             if(isSearchResults) {
-                                if(ctrl.searchMode === SEARCH_MODE_ALL) {
+                                if(vnode.state.searchMode === SEARCH_MODE_ALL) {
                                     searchContents = "Showing all results.";
                                 } else {
                                     searchContents = [
                                         "Showing results from most recent " + INITIAL_SEARCH_CHUNK_SIZE + " items... ",
                                         m("button", {
-                                                onclick : ctrl.searchAll.bind(ctrl),
+                                                onclick : vnode.state.searchAll.bind(vnode.state),
                                                 class   : css.nextPage
                                                 // ,
                                                 // disabled : locked ||  || ctrl.pg.page === 1 || null // TODO
@@ -378,21 +378,21 @@ export function view(ctrl) {
 
                             return m("div", { class : css.pages }, [
                                 m("button", {
-                                        onclick  : ctrl.prevPage.bind(ctrl),
+                                        onclick  : vnode.state.prevPage.bind(vnode.state),
                                         class    : css.prevPage,
-                                        disabled : locked || isSearchResults || ctrl.pg.page === 1 || null
+                                        disabled : locked || isSearchResults || vnode.state.pg.page === 1 || null
                                     },
                                     "\< Prev Page"
                                 ),
                                 m("span", {
                                         class : css.currPage
                                     },
-                                    isSearchResults ? "-" : ctrl.pg.page
+                                    isSearchResults ? "-" : vnode.state.pg.page
                                 ),
                                 m("button", {
-                                        onclick  : ctrl.nextPage.bind(ctrl),
+                                        onclick  : vnode.state.nextPage.bind(vnode.state),
                                         class    : css.nextPage,
-                                        disabled : locked || isSearchResults || ctrl.pg.page === ctrl.pg.numPages() || null
+                                        disabled : locked || isSearchResults || vnode.state.pg.page === vnode.state.pg.numPages() || null
                                     },
                                     "Next Page \>"
                                 )
@@ -419,7 +419,7 @@ export function view(ctrl) {
                                     return bTime - aTime;
                                 })
                                 .map(function(data) {
-                                    var url      = "/content/" + ctrl.schema.key + "/" + data.key,
+                                    var url      = "/content/" + vnode.state.schema.key + "/" + data.key,
                                         cssClasses = css.item,
 
                                         itemName,
@@ -437,15 +437,15 @@ export function view(ctrl) {
 
                                     itemStatus = getItemStatus(data);
 
-                                    itemName = name(ctrl.schema, data);
+                                    itemName = name(vnode.state.schema, data);
                                     itemUpdated = data.updated_at ? format(data.updated_at, dateFormat) : "--/--/----";
                                     itemSchedule = data.published_at ? format(data.published_at, dateFormat) : "--/--/----";
 
                                     return m("li", { class : cssClasses },
                                         m("a", {
                                                 class  : css.anchor,
-                                                config : m.route,
-                                                href   : prefix("/content/" + ctrl.schema.key + "/" + data.key)
+                                                oncreate: m.route.link,
+                                                href   : prefix("/content/" + vnode.state.schema.key + "/" + data.key)
                                             }, ""
                                         ),
                                         m("span", { class : [ css.listCol1, css.itemTitle ].join(" "),
@@ -472,21 +472,21 @@ export function view(ctrl) {
                                                     disabled : locked || null,
 
                                                     // Events
-                                                    onclick : ctrl.remove.bind(ctrl, data)
+                                                    onclick : vnode.state.remove.bind(vnode.state, data)
                                                 },
                                                 m("svg", { class : css.icon },
-                                                    m("use", { href : icons + "#remove" })
+                                                    m("use", { "xlink:href" : icons + "#remove" })
                                                 )
                                             ),
-                                            ctrl.schema.preview ?
+                                            vnode.state.schema.preview ?
                                                 m("a", {
                                                         class  : [ css.preview, css.action ].join(" "),
                                                         title  : "Preview: " + itemName,
-                                                        href   : ctrl.schema.preview + data.key,
+                                                        href   : vnode.state.schema.preview + data.key,
                                                         target : "_blank"
                                                     },
                                                     m("svg", { class : css.icon },
-                                                        m("use", { href : icons + "#preview" })
+                                                        m("use", { "xlink:href" : icons + "#preview" })
                                                     )
                                                 ) :
                                             null

@@ -6,5 +6,5 @@ import prefix from "../lib/prefix";
 export function controller() {
     db.unauth();
     
-    m.route(prefix("/"));
+    m.route.set(prefix("/"));
 }
