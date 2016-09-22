@@ -32,7 +32,7 @@ export function view(ctrl, options) {
         ),
         tabs.map(function(tab, idx) {
             return m("div", { class : css[idx === ctrl.tab ? "activebody" : "body"] },
-                m(children, assign({}, options, {
+                m.component(children, assign({}, options, {
                     class  : false,
                     fields : tab.children,
                     data   : options.data && options.data[tab.key],

@@ -10,7 +10,7 @@ import "./_global.css";
 import "./_pure.css";
 
 // Always route in pathname mode
-m.route.prefix("");
+m.route.mode = "pathname";
 
 (function() {
     if(!config.firebase) {

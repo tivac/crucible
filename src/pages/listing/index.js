@@ -127,7 +127,7 @@ export function controller() {
     ctrl.init = function() {        
         ctrl.pg = new PageState();
 
-        schema = db.child("schemas/" + vnode.attrs.schema);
+        schema = db.child("schemas/" + m.route.param("schema"));
         schema.on("value", onSchema);
     };
 
@@ -196,7 +196,7 @@ export function controller() {
             created_by : db.getAuth().uid
         });
 
-        m.route.set(prefix("/content/" + ctrl.schema.key + "/" + result.key()));
+        m.route(prefix("/content/" + ctrl.schema.key + "/" + result.key()));
     };
 
     ctrl.remove = function(data) {
@@ -297,16 +297,16 @@ export function controller() {
 
 
 export function view(ctrl) {
-    var current = m.route.get(),
+    var current = m.route(),
         content = ctrl.results || ctrl.content || [],
         locked  = config.locked,
         isSearchResults = Boolean(ctrl.results);
 
-    if(!vnode.attrs.schema) {
-        m.route.set("/");
+    if(!m.route.param("schema")) {
+        m.route("/");
     }
 
-    return m(layout, {
+    return m.component(layout, {
         title   : get(ctrl, "schema.name") || "...",
         content : [
 
@@ -444,7 +444,7 @@ export function view(ctrl) {
                                     return m("li", { class : cssClasses },
                                         m("a", {
                                                 class  : css.anchor,
-                                                oncreate: m.route.link,
+                                                config : m.route,
                                                 href   : prefix("/content/" + ctrl.schema.key + "/" + data.key)
                                             }, ""
                                         ),

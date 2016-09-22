@@ -9,44 +9,44 @@ import css from "./types.css";
 
 export default function(type) {
     return {
-        oninit: function(options) {
+        controller : function(options) {
             var ctrl = this,
-                val  = get(options.attrs.field, "attrs.value");
+                val  = get(options.field, "attrs.value");
                 
-            ctrl.id = id(options.attrs);
+            ctrl.id = id(options);
             
             // tivac/crucible#96
             // If this is a new item (never been updated) set the default value
             // Don't want to use that value on every render because it is bad UX,
             // the user becomes unable to clear out the field
-            if(val && options.attrs.root) {
-                options.attrs.root.child("updated_at").on("value", function(snap) {
+            if(val && options.root) {
+                options.root.child("updated_at").on("value", function(snap) {
                     if(snap.exists()) {
                         return;
                     }
                     
-                    options.attrs.update(options.attrs.path, val);
+                    options.update(options.path, val);
                     
                     m.redraw();
                 });
             }
         },
 
-        view : function(vnode) {
-            var field  = vnode.attrs.field;
+        view : function(ctrl, options) {
+            var field  = options.field;
             
-            return m("div", { class : vnode.attrs.class },
-                label(vnode.state, vnode.attrs),
+            return m("div", { class : options.class },
+                label(ctrl, options),
                 m("input", assign({}, field.attrs || {}, {
                         // attrs
-                        id       : vnode.state.id,
+                        id       : ctrl.id,
                         type     : type || "text",
                         class    : css[type || "text"],
-                        value    : vnode.attrs.data || "",
+                        value    : options.data || "",
                         required : field.required ? "required" : null,
 
                         // events
-                        oninput : m.withAttr("value", vnode.attrs.update(vnode.attrs.path))
+                        oninput : m.withAttr("value", options.update(options.path))
                     }
                 ))
             );

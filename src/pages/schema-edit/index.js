@@ -14,7 +14,7 @@ import css from "./schema-edit.css";
 
 export function controller() {
     var ctrl   = this,
-        id     = vnode.attrs.schema,
+        id     = m.route.param("schema"),
         ref    = db.child("schemas/" + id),
         worker = new Worker(prefix("/gen/parse-schema.js"));
 
@@ -76,10 +76,10 @@ export function controller() {
 
 export function view(ctrl) {
     if(!ctrl.schema) {
-        return m(layout);
+        return m.component(layout);
     }
     
-    return m(layout, {
+    return m.component(layout, {
         title   : "Edit - " + capitalize(ctrl.schema.name),
         content : m("div", { class : layout.css.content },
             ctrl.error ?
@@ -102,12 +102,12 @@ export function view(ctrl) {
                             oninput : ctrl.previewChanged,
                             
                             // Config Fn
-                            onupdate : function(vnode) {
+                            config : function(el, init) {
                                 if(init) {
                                     return;
                                 }
 
-                                ctrl.preview.valid = vnode.dom.validity.valid;
+                                ctrl.preview.valid = el.validity.valid;
                             }
                         }),
                         m("p", { class : css.note },
@@ -135,7 +135,7 @@ export function view(ctrl) {
             m("div", { class : css.contents },
                 m("div", { class : css.editor },
                     m("h3", "Field Definitions"),
-                    m(editor, {
+                    m.component(editor, {
                         ref    : ctrl.ref,
                         worker : ctrl.worker,
                         source : ctrl.schema.source || "{\n\n}"
@@ -144,7 +144,7 @@ export function view(ctrl) {
 
                 m("div", { class : css.fields },
                     m("h3", "Preview"),
-                    m(children, {
+                    m.component(children, {
                         fields : ctrl.schema.fields,
                         data   : ctrl.data,
                         path   : [],

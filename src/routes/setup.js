@@ -5,9 +5,13 @@ import prefix from "../lib/prefix";
 import * as setup from "../pages/setup.js";
 
 export default function() {
-    m.route.set(document.body, prefix("/setup"), keys({
-        "/setup" : setup
-    }, function(value, key) {
-        return prefix(key);
-    }));
+    m.route(
+        document.body,
+        prefix("/setup"),
+        keys({
+            "/setup" : setup
+        }, function(value, key) {
+            return prefix(key);
+        })
+    );
 }

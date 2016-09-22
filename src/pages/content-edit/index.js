@@ -23,9 +23,9 @@ import css from "./content-edit.css";
 export function controller() {
     var ctrl = this,
 
-        id     = vnode.attrs.id,
-        schema = db.child("schemas/" + vnode.attrs.schema),
-        ref    = db.child("content/" + vnode.attrs.schema + "/" + id);
+        id     = m.route.param("id"),
+        schema = db.child("schemas/" + m.route.param("schema")),
+        ref    = db.child("content/" + m.route.param("schema") + "/" + id);
 
     ctrl.id     = id;
     ctrl.ref    = ref;
@@ -52,7 +52,7 @@ export function controller() {
 
         // Don't try to grab non-existent data
         if(!snap.exists()) {
-            return m.route.set(prefix("/content/" + vnode.attrs.schema));
+            return m.route(prefix("/content/" + m.route.param("schema")));
         }
 
         ctrl.data = assign(data, {
@@ -102,7 +102,7 @@ export function view(ctrl) {
     }
 
     if(!ctrl.schema) {
-        return m(layout);
+        return m.component(layout);
     }
 
     title = [ get(ctrl.data, "name"), ctrl.schema.name ]
@@ -111,14 +111,14 @@ export function view(ctrl) {
         .join(" | ");
 
     if(!ctrl.id) {
-        m.route.set("/listing/" + ctrl.schema.key);
+        m.route("/listing/" + ctrl.schema.key);
     }
 
-    return m(layout, {
+    return m.component(layout, {
         title   : title,
         content : [
             m("div", { class : css.content },
-                m(head, ctrl),
+                m.component(head, ctrl),
                 m("div", { class : css.body },
                     m("div", { class : css.contentsContainer },
                         m("div", { class : css.itemStatus },
@@ -131,12 +131,12 @@ export function view(ctrl) {
                         ),
                         m("form", {
                                 class  : css.form,
-                                onupdate : function(vnode) {
+                                config : function(el, init) {
                                     if(init) {
                                         return;
                                     }
 
-                                    ctrl.form = vnode.dom;
+                                    ctrl.form = el;
 
                                     // force a redraw so publishing component can get
                                     // new args w/ actual validity
@@ -147,7 +147,7 @@ export function view(ctrl) {
                             m("h1", {
                                     // Attrs
                                     class  : css.title,
-                                    onupdate : function(vnode) {
+                                    config : function(el, init) {
                                         var range, selection;
 
                                         if(init || ctrl.data.name) {
@@ -156,7 +156,7 @@ export function view(ctrl) {
 
                                         // Select the text contents
                                         range = document.createRange();
-                                        range.selectNodeContents(vnode.dom);
+                                        range.selectNodeContents(el);
                                         selection = window.getSelection();
                                         selection.removeAllRanges();
                                         selection.addRange(range);
@@ -169,7 +169,7 @@ export function view(ctrl) {
                                 },
                                 name(ctrl.schema, ctrl.data)
                             ),
-                            m(children, {
+                            m.component(children, {
                                 class  : css.children,
                                 data   : ctrl.data.fields || {},
                                 fields : ctrl.schema.fields,

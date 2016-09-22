@@ -10,10 +10,10 @@ export function view(ctrl, options) {
     var field  = options.field;
     
     return m("div", { class : css.container },
-        field.instructions ? m(instructions, { field : field.instructions }) : null,
+        field.instructions ? m.component(instructions, { field : field.instructions }) : null,
         (field.children || []).map(function(section) {
             return m("div", { class : css.section },
-                m(children, assign({}, options, {
+                m.component(children, assign({}, options, {
                     // Don't want to repeat any incoming class that children might've passed in
                     class  : false,
                     fields : section.children
