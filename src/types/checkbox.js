@@ -20,6 +20,8 @@ export default multiple({
                     value   : opt.value,
                     checked : opt.selected,
 
+                    required : options.required,
+
                     // events
                     onchange : m.withAttr("checked", function(state) {
                         ctrl.value(options, opt.key, state && opt.value);

@@ -20,6 +20,8 @@ export default multiple({
                     value   : opt.value,
                     checked : opt.selected,
 
+                    required : options.required,
+
                     // events
                     onchange : function() {
                         ctrl.value(options, opt.key, opt.value);

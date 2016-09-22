@@ -19,6 +19,7 @@ export function view(ctrl, options) {
     mFields = fields.map(function(field, index) {
         var component,
             wasHidden,
+            isHidden,
             result;
 
         component = types[field.type || field];
@@ -29,7 +30,7 @@ export function view(ctrl, options) {
                 m("pre", JSON.stringify(field, null, 4))
             );
         }
-        
+
         if(field.show) {
             wasHidden = field.show.hidden;
             field.show.hidden = checkHidden(options.state, field);
@@ -37,15 +38,21 @@ export function view(ctrl, options) {
             if(registerHidden && field.show.hidden !== wasHidden) {
                 // hidden status changed, notify the controller.
                 registerHidden(field.key, field.show.hidden);
+                m.redraw();
             }
         }
 
+        isHidden = get(field, "show.hidden");
+
         result = m.component(component, assign({}, options, {
             field : field,
-            class : addClasses(field, css[index ? "field" : "first"] ),
+            class : addClasses(field, css[index ? "field" : "first"]),
             data  : get(options.data, field.key),
-            path  : options.path.concat(field.key)
+            path  : options.path.concat(field.key),
+
+            required : !isHidden && field.required
         }));
+
 
         return result;
     });
@@ -56,19 +63,19 @@ export function view(ctrl, options) {
 }
 
 // Structural
-import * as fieldset from "./fieldset.js";
-import * as repeating from "./repeating.js";
-import * as split from "./split.js";
-import * as tabs from "./tabs.js";
+import fieldset from "./fieldset.js";
+import repeating from "./repeating.js";
+import split from "./split.js";
+import tabs from "./tabs.js";
 
 // Non-input fields
-import * as instructions from "./instructions.js";
+import instructions from "./instructions.js";
 
 // Custom input types
-import * as relationship from "./relationship.js";
-import * as markdown from "./markdown.js";
-import * as textarea from "./textarea.js";
-import * as upload from "./upload.js";
+import relationship from "./relationship.js";
+import markdown from "./markdown.js";
+import textarea from "./textarea.js";
+import upload from "./upload.js";
 
 // Implementations based on lib/multiple.js
 import select from "./select.js";

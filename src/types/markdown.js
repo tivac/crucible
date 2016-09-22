@@ -11,63 +11,65 @@ var md = new Remarkable();
 
 import "codemirror/mode/markdown/markdown";
 
-export function controller(options) {
-    var ctrl = this;
-    
-    ctrl.id       = id(options);
-    ctrl.markdown = options.data || "";
-    ctrl.previewing = false;
-    ctrl.previewHTML = null;
-    
-    ctrl.options = options;
+export default {
+    controller (options) {
+        var ctrl = this;
+        
+        ctrl.id       = id(options);
+        ctrl.markdown = options.data || "";
+        ctrl.previewing = false;
+        ctrl.previewHTML = null;
+        
+        ctrl.options = options;
 
-    ctrl.togglePreview = function(e) {
-        e.preventDefault();
+        ctrl.togglePreview = function(e) {
+            e.preventDefault();
 
-        ctrl.previewHTML = md.render(ctrl.markdown);
-        ctrl.previewing = !ctrl.previewing;
-    };
+            ctrl.previewHTML = md.render(ctrl.markdown);
+            ctrl.previewing = !ctrl.previewing;
+        };
 
-    ctrl.editorChanged = function() {
-        ctrl.markdown = ctrl.editor.doc.getValue();
+        ctrl.editorChanged = function() {
+            ctrl.markdown = ctrl.editor.doc.getValue();
 
-        ctrl.options.update(ctrl.options.path, ctrl.markdown);
-    };
+            ctrl.options.update(ctrl.options.path, ctrl.markdown);
+        };
 
-    ctrl.editorSetup = function(el, init) {
-        if(init) {
-            return;
-        }
+        ctrl.editorSetup = function(el, init) {
+            if(init) {
+                return;
+            }
 
-        ctrl.editor = editor.fromTextArea(el, {
-            mode : "text/x-markdown",
+            ctrl.editor = editor.fromTextArea(el, {
+                mode : "text/x-markdown",
 
-            indentUnit   : 4,
-            lineWrapping : true
-        });
+                indentUnit   : 4,
+                lineWrapping : true
+            });
 
-        ctrl.editor.on("changes", ctrl.editorChanged);
-    };
-}
+            ctrl.editor.on("changes", ctrl.editorChanged);
+        };
+    },
 
-export function view(ctrl, options) {
-    ctrl.options = options;
+    view : function(ctrl, options) {
+        ctrl.options = options;
 
-    return m("div", { class : options.class },
-        label(ctrl, options),
-        m("div", { class : ctrl.previewing ? css.inputHidden : css.input },
-            m("textarea", { config : ctrl.editorSetup },
-                ctrl.markdown
+        return m("div", { class : options.class },
+            label(ctrl, options),
+            m("div", { class : ctrl.previewing ? css.inputHidden : css.input },
+                m("textarea", { config : ctrl.editorSetup },
+                    ctrl.markdown
+                )
+            ),
+            m("div", { class : ctrl.previewing ? css.input : css.inputHidden },
+                m.trust(ctrl.previewHTML)
+            ),
+            m("button.pure-button", {
+                    onclick : ctrl.togglePreview,
+                    class   : css.button
+                },
+                ctrl.previewing ? "Edit" : "Preview"
             )
-        ),
-        m("div", { class : ctrl.previewing ? css.input : css.inputHidden },
-            m.trust(ctrl.previewHTML)
-        ),
-        m("button.pure-button", {
-                onclick : ctrl.togglePreview,
-                class   : css.button
-            },
-            ctrl.previewing ? "Edit" : "Preview"
-        )
-    );
-}
+        );
+    }
+};

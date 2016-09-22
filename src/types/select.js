@@ -11,9 +11,12 @@ export default multiple({
     function(ctrl, options, children) {
         var field = options.field;
 
+
         return m("select", assign({
                 // attrs
-                class : css.select,
+                name     : field.name,
+                class    : css.select,
+                required : options.required,
 
                 // events
                 onchange : function(e) {
