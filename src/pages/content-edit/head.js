@@ -301,7 +301,7 @@ export function view(ctrl, content) {
                         title : "Schedule a publish",
 
                         // Events
-                        // onclick : ctrl.toggle.bind(null, undefined)
+                        onclick : content.toggleSchedule
                     },
                     m("svg", { class : css.onlyIcon },
                         m("use", { href : icons + "#schedule" })
@@ -330,7 +330,7 @@ export function view(ctrl, content) {
                 // Unpublish
                 (state.meta.status === "draft") ?
                 null :
-                 ("button", {
+                m("button", {
                         // Attrs
                         class    : css.unpublish,
                         title    : isPast(unpublishTs) ? "Already unpublished" : "Unpublish immediately",
@@ -347,6 +347,8 @@ export function view(ctrl, content) {
             ),
 
             // Schedule Pop Up
+            (!state.ui.schedule) ?
+            null :
             m("div", { class : css.details },
                 m("div", { class : css.start },
                     m("p", m("label", { for : "published_at_date" }, "Publish at")),
@@ -362,7 +364,7 @@ export function view(ctrl, content) {
                     m("p",
                         m("button", {
                             class : css.clearSchedule,
-                            title : "Clear schedule dates",
+                            title : "Clear schedule dates"//,
 
                             // Events
                             // onclick : ctrl.clearSchedule

@@ -21,7 +21,9 @@ var contentState = {
     },
 
     ui : {
-        saving : Boolean()
+        saving : Boolean(),
+
+        schedule : Boolean()
     },
 
     user : {
@@ -65,6 +67,10 @@ var contentState = {
 
     fields : {}
 };
+
+if(Object.preventExtensions) {
+    Object.preventExtensions(contentState);
+}
 
 function transformSnapshot(val) {
     // var val = snap.val();
@@ -129,19 +135,13 @@ export default function Content() {
         return clone(state);
     };
 
-    this.titleChange = function(title) {
-        state.meta.title = title;
-        m.redraw();
-    };
-
+    // Setup
     this.registerForm = function(formEl) {
         this.form = state.form.el = formEl;
     };
-
     this.processServerData = function(data) {
         state = transformSnapshot(data);
     };
-
     this.addSchemaData = function(schema) {
         state = merge(state, {
             meta : {
@@ -149,6 +149,18 @@ export default function Content() {
                 schemaKey : schema.key
             }
         });
+    };
+
+    // Data Changes
+    this.titleChange = function(title) {
+        state.meta.title = title;
+        m.redraw();
+    };
+
+    this.toggleSchedule = function(force) {
+        console.log("toggleSchedule");
+        state.ui.schedule = typeof force !== "undefined" ? Boolean(force) : !state.ui.schedule;
+        m.redraw();
     };
 
     this.resetInvalid = function() {

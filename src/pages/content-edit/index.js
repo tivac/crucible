@@ -97,18 +97,7 @@ export function controller() {
 
 export function view(ctrl) {
     var state = ctrl.content.get(),
-        status  = "draft",
-        publishTs = get(ctrl, "data.published_at"),
-        unpublishTs = get(ctrl, "data.unpublished_at"),
         title;
-
-    if(isFuture(publishTs)) {
-        status = "scheduled";
-    } else if(isPast(publishTs)) {
-        status = "published";
-    } else if(isPast(unpublishTs)) {
-        status = "unpublished";
-    }
 
     if(!ctrl.schema) {
         return m.component(layout);
