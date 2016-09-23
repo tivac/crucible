@@ -10,11 +10,6 @@ import css from "./content-edit.css";
 export function view(ctrl, content) {
     var state = content.get();
 
-    console.log("state.fields", state.fields);
-    console.log("state.meta.schema.fields", state.meta.schema.fields);
-
-    console.log("state.meta.schema", state.meta.schema);
-
     return m("div", { class : css.body },
         m("div", { class : css.contentsContainer },
             m("div", { class : css.itemStatus },

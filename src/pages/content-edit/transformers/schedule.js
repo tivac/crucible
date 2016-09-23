@@ -16,7 +16,6 @@ var DEFAULT_START_TIME = "00:00",
 
     ;
 
-
 function status(pub, unpub) {
     if(isFuture(pub)) {
         return "scheduled";
@@ -53,7 +52,9 @@ function validSchedule(pub, unpub) {
     return pub && unpub && pub > unpub;
 }
 
-export function processSchedule(state) {
+export default {};
+
+export function toTimestamps(state) {
     var sched = state.schedule,
         prevPub = state.published_at,
         prevUnpub = state.unpublished_at,
@@ -89,30 +90,41 @@ export function processSchedule(state) {
     });
 }
 
-export function transformSchedule(pub, unpub) {
-    console.log("TODO transformSchedule");
-    return {
-        valid : validSchedule(pub, unpub),
+export function fromTimestamps(state) {
+    var pub = state.dates.published_at,
+        unpub = state.dates.unpublished_at;
 
-        start : {
-            date : formatDate(pub, DATE_FORMAT),
-            time : formatDate(pub, TIME_FORMAT)
-        },
+    return merge(state, {
+        schedule : {
+            valid : validSchedule(pub, unpub),
 
-        end : {
-            date : formatDate(unpub, DATE_FORMAT),
-            time : formatDate(unpub, TIME_FORMAT)
+            start : {
+                date : pub ? formatDate(pub, DATE_FORMAT) : "",
+                time : pub ? formatDate(pub, TIME_FORMAT) : DEFAULT_START_TIME
+            },
+
+            end : {
+                date : unpub ? formatDate(unpub, DATE_FORMAT) : "",
+                time : unpub ? formatDate(unpub, TIME_FORMAT) : DEFAULT_END_TIME
+            }
         }
-    };
+    });
 }
 
-// export function processDates(state) {
+export function clear(state) {
+    return merge(state, {
+        schedule : {
+            valid : true,
 
-//     return {
-//         created_at : Number(),
-//         updated_at : Number(),
+            start : {
+                date : "",
+                time : DEFAULT_START_TIME
+            },
 
-//         published_at   : Number(),
-//         unpublished_at : Number()
-//     },
-// }
+            end : {
+                date : "",
+                time : DEFAULT_END_TIME
+            }
+        }
+    });
+}

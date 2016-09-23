@@ -5,19 +5,18 @@ import clone from "lodash.clone";
 import get from "lodash.get";
 import merge from "lodash.merge";
 
-import { processSchedule, transformSchedule } from "./transformers/dates.js";
+import * as schedule from "./transformers/schedule.js";
+import * as snapshot from "./transformers/snapshot.js";
 
 var contentState = {
     meta : {
-        id : String(),
-
+        id   : String(),
         name : String(),
         slug : String(),
 
         status : String(),
 
-        schema    : {},
-        schemaKey : String()
+        schema : {}
     },
 
     ui : {
@@ -68,81 +67,31 @@ var contentState = {
     fields : {}
 };
 
-if(Object.preventExtensions) {
-    Object.preventExtensions(contentState);
-}
-
-function transformSnapshot(val) {
-    // var val = snap.val();
-
-    return merge(contentState, {
-        meta : {
-            name : val.name,
-            slug : val.slug
-        },
-
-        user : {
-            created_by : val.created_by,
-            updated_by : val.updated_by,
-
-            published_by   : val.published_by,
-            unpublished_by : val.unpublished_by
-        },
-
-        dates : {
-            created_at : val.created_at,
-            updated_at : val.updated_at,
-
-            published_at   : val.published_at,
-            unpublished_at : val.unpublished_at
-        },
-
-        schedule : transformSchedule({
-            pub   : val.published_at, 
-            unpub : val.unpublished_at
-        }),
-
-        fields : val.fields
-    });
-}
-
-// function unTransform(state) {
-//     var dates = state.dates,
-//         meta = state.meta;
-
-//     return {
-//         name : meta.name,
-//         slug : meta.slug,
-
-//         created_at : dates.created_at,
-//         updated_at : Date.now(),
-//         published_at : dates.published_at,
-//         unpublished_at : dates.unpublished_at,
-
-//         created_by : meta.created_by,
-//         updated_by : meta.created_by,
-//         published_by : meta.published_by,
-//         unpublished_by : meta.unpublished_by,
-
-//         fields : state.fields
-//     };
-// }
 
 export default function Content() {
-    var state = contentState;
+    var con = this,
+        state = contentState;
 
-    this.get = function() {
+    con.get = function() {
         return clone(state);
     };
 
     // Setup
-    this.registerForm = function(formEl) {
-        this.form = state.form.el = formEl;
+    con.setSchema = function(schema) {
+        state.meta.schema = schema;
     };
-    this.processServerData = function(data) {
-        state = transformSnapshot(data);
+    con.registerForm = function(formEl) {
+        con.form = state.form.el = formEl;
     };
-    this.addSchemaData = function(schema) {
+    con.processServerData = function(data) {
+        state = snapshot.toState(data, state);
+        con.assessDerivedVals();
+    };
+    con.assessDerivedVals = function() {
+        state = schedule.fromTimestamps(state);
+    };
+
+    con.addSchemaData = function(schema) {
         state = merge(state, {
             meta : {
                 schema    : schema,
@@ -152,29 +101,34 @@ export default function Content() {
     };
 
     // Data Changes
-    this.titleChange = function(title) {
+    con.titleChange = function(title) {
         state.meta.title = title;
         m.redraw();
     };
 
-    this.toggleSchedule = function(force) {
-        console.log("toggleSchedule");
+    con.toggleSchedule = function(evt, force) {
         state.ui.schedule = typeof force !== "undefined" ? Boolean(force) : !state.ui.schedule;
         m.redraw();
     };
 
-    this.resetInvalid = function() {
+    con.resetInvalid = function() {
         state.form.valid = true;
         state.form.invalidFields = [];
     };
 
-    this.setSchedule = function(str, side, part) {
+    con.setScheduleField = function(side, part, str) {
         state.schedule[side][part] = str;
-        state = processSchedule(state);
+
+        state = schedule.toTimestamps(state);
+
         m.redraw();
     };
 
-    this.save = function(a,b,c) {
+    con.clearSchedule = function() {
+        state = schedule.clear(state);
+    };
+
+    con.save = function() {
         console.log("TODO SAVE");
     };
 }

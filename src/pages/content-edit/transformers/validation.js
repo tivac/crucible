@@ -1,6 +1,8 @@
 import m from "mithril";
 import debounce from "lodash.debounce";
 
+import css from "./invalid-msg.css";
+
 function attachInputHandlers(ctrl) {
     var form = ctrl.form;
 
@@ -18,67 +20,54 @@ function attachInputHandlers(ctrl) {
 }
 
 export function validity(state) {
-    var ctrl = this;
+    var v = this,
+        form;
 
-    ctrl.form = null;
+    v.init = function() {
+        form = state.form.el;
 
-    ctrl.init = function() {
-        ctrl.form = options.form.el;
-
-        if(!ctrl.form) {
+        if(!form) {
             return console.warn("Validator did not receive a reference to the form.");
         }
 
-        ctrl.currOpacity = 0;
-        ctrl.fadeTime = 0.5;
-        ctrl.fadeDelay = 1.5;
-        ctrl.invalidInputs = [];
-
-        attachInputHandlers(ctrl);
+        attachInputHandlers(form);
     };
 
-    ctrl.registerInvalidField = function(name) {
-        if(ctrl.invalidInputs.indexOf(name) > -1) {
+    v.registerInvalidField = function(name) {
+        if(v.invalidInputs.indexOf(name) > -1) {
             return; // Already registered.
         }
 
-        ctrl.show();
-        ctrl.invalidInputs.push(name);
-        ctrl.debounceFade();
+        v.show();
+        v.invalidInputs.push(name);
+        v.debounceFade();
     };
 
-    ctrl.debounceFade = debounce(function() {
-        ctrl.hide();
+    v.debounceFade = debounce(function() {
+        v.hide();
     }, 100);
 
-    ctrl.onFormFocus = function() {
-        if(ctrl.invalidInputs.length) {
-            ctrl.debounceFade();
+    v.onFormFocus = function() {
+        if(v.invalidInputs.length) {
+            v.debounceFade();
         }
     };
 
-    ctrl.resetInvalidFields = function() {
-        ctrl.invalidInputs = [];
-        ctrl.hide();
-    };
+    v.show = function() {
+        var oldOpacity = v.currOpacity;
 
-    ctrl.show = function() {
-        var oldOpacity = ctrl.currOpacity;
-
-        ctrl.currOpacity = 1;
-        if(oldOpacity !== ctrl.currOpacity) {
+        v.currOpacity = 1;
+        if(oldOpacity !== v.currOpacity) {
             // Only do once; avoid superfluous redraws.
             m.redraw();
         }
     };
 
-    ctrl.hide = function() {
+    v.hide = function() {
         // CSS transition does the rest.
-        ctrl.currOpacity = 0;
+        v.currOpacity = 0;
         m.redraw();
     };
 
-    ctrl.init();
-
-    
-}
+    v.init();    
+};

@@ -237,15 +237,21 @@ export function view(ctrl, content) {
         future  = isFuture(publishTs),
         locked  = config.locked;
 
-    function scheduleInput(id, type, side, field) {
+    function scheduleInput(id, type, side, part) {
+        
+        console.log("state.schedule.start", state.schedule.start);
+        console.log("state.schedule.end", state.schedule.end);
+        console.log("state.schedule, side, part", side, part);
+        console.log("state.schedule[side][part]", state.schedule[side][part]);
+        
         return m("input", {
             class : state.schedule.valid ? css.date : css.invalidDate,
             type  : type,
             id    : id,
-            value : state.schedule[side][field],
+            value : state.schedule[side][part],
 
             // Events
-            // oninput : m.withAttr("value", ctrl.update.bind(ctrl, section, field))
+            oninput : m.withAttr("value", content.setScheduleField.bind(content, side, part))
         });
     }
 
@@ -267,7 +273,7 @@ export function view(ctrl, content) {
                         // Attrs
                         class  : css.back,
                         title  : "Back to Listing",
-                        href   : prefix("/listing/" + state.meta.schemaKey),
+                        href   : prefix("/listing/" + state.meta.schema.key),
                         config : m.route
                     },
                     m("svg", { class : css.icon },
@@ -364,10 +370,10 @@ export function view(ctrl, content) {
                     m("p",
                         m("button", {
                             class : css.clearSchedule,
-                            title : "Clear schedule dates"//,
+                            title : "Clear schedule dates",
 
                             // Events
-                            // onclick : ctrl.clearSchedule
+                            onclick : content.clearSchedule
                         },
                         "clear schedule"
                         )

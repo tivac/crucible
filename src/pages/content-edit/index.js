@@ -44,6 +44,8 @@ export function controller() {
         ctrl.schema = snap.val();
         ctrl.schema.key = snap.key();
 
+        content.setSchema(snap.val());
+
         m.redraw();
     });
 
