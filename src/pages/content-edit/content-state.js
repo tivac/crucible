@@ -1,10 +1,11 @@
-
+import m from "mithril";
 import format from "date-fns/format";
+import assign from "lodash.assign";
+import clone from "lodash.clone";
 import get from "lodash.get";
 import merge from "lodash.merge";
-import assign from "lodash.assign";
 
-import { processSchedule, transformSchedule } from "./content-dates.js";
+import { processSchedule, transformSchedule } from "./transformers/dates.js";
 
 var contentState = {
     meta : {
@@ -54,19 +55,21 @@ var contentState = {
     },
 
     form : {
-        valid : Boolean(),
+        el : document.createElement("form"),
 
-        invalidFields : [],
-        hiddenFields  : []
+        hiddenFields  : [],
+
+        valid         : Boolean(),
+        invalidFields : []
     },
 
     fields : {}
 };
 
-function transform(val) {
+function transformSnapshot(val) {
     // var val = snap.val();
 
-    return {
+    return merge(contentState, {
         meta : {
             name : val.name,
             slug : val.slug
@@ -93,15 +96,8 @@ function transform(val) {
             unpub : val.unpublished_at
         }),
 
-        fields : val.fields,
-
-        form : {
-            valid : false,
-
-            invalidFields : [],
-            hiddenFields  : []
-        }
-    };
+        fields : val.fields
+    });
 }
 
 // function unTransform(state) {
@@ -126,11 +122,19 @@ function transform(val) {
 //     };
 // }
 
-export default function ContentMgr() {
+export default function Content() {
     var state = contentState;
 
+    this.get = function() {
+        return clone(state);
+    };
+
+    this.registerForm = function(formEl) {
+        this.form = state.form.el = formEl;
+    };
+
     this.processServerData = function(data) {
-        state = transform(data);
+        state = transformSnapshot(data);
     };
 
     this.addSchemaData = function(schema) {
@@ -142,19 +146,19 @@ export default function ContentMgr() {
         });
     };
 
-    this.setSchedule = function(str, side, part) {
-        state.schedule[side][part] = str;
-
-        state = processSchedule(state);
+    this.resetInvalid = function() {
+        state.form.valid = true;
+        state.form.invalidFields = [];
     };
 
-    this.setForm = function(el) {
-        this.form = el;
+    this.setSchedule = function(str, side, part) {
+        state.schedule[side][part] = str;
+        state = processSchedule(state);
+        m.redraw();
     };
 
     this.save = function(a,b,c) {
         console.log("TODO SAVE");
-
     };
 }
 

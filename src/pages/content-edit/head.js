@@ -10,7 +10,7 @@ import config, { icons } from "../../config";
 import db from "../../lib/firebase";
 import prefix from "../../lib/prefix";
 
-import * as validator from "./validator.js";
+import * as invalidMsg from "./invalid-msg.js";
 
 import css from "./head.css";
 
@@ -256,184 +256,152 @@ function filterHidden(fields, hidden) {
 //     ctrl.init();
 // }
 
-export function view(state, options) {
-    var status  = "draft",
-        publishTs = options.data.published_at,
-        unpublishTs = options.data.unpublished_at,
+export function view(ctrl, content) {
+    console.log("ctrl, content", ctrl, content);
+    var state = content.get(),
+        status  = "draft",
+        publishTs = state.dates.published_at,
+        unpublishTs = state.dates.unpublished_at,
         future  = isFuture(publishTs),
         locked  = config.locked;
 
-    if(isFuture(publishTs)) {
-        status = "scheduled";
-    } else if(isPast(publishTs)) {
-        status = "published";
-    } else if(isPast(unpublishTs)) {
-        status = "unpublished";
-    }
+    console.log("HEAD content", content);
 
-    function mControls() {
-        return m("div", { class : css.actions }, [
-            m("a", {
-                    // Attrs
-                    class  : css.back,
-                    title  : "Back to Listing",
-                    href   : prefix("/listing/" + options.schema.key),
-                    config : m.route
-                },
-                m("svg", { class : css.icon },
-                    m("use", { href : icons + "#arrow" })
-                ),
-                "Back"
-            ),
-
-            m("button", {
-                    // Attrs
-                    class    : css.save,
-                    title    : "Save your changes",
-                    disabled : locked || null,
-
-                    // Events
-                    onclick : state.ui.saving ? null : state.save.bind(null, options)
-                },
-                m("svg", { class : css.icon },
-                    m("use", { href : icons + "#save" })
-                ),
-                ctrl.saving ? "SAVING..." : "Save"
-            )
-        ]);
-    }
-
-
-    function mScheduleButton() {
-        return m("button", {
-                // Attrs
-                class : css.schedule,
-                title : "Schedule a publish",
-
-                // Events
-                onclick : ctrl.toggle.bind(null, undefined)
-            },
-            m("svg", { class : css.onlyIcon },
-                m("use", { href : icons + "#schedule" })
-            )
-        );
-    }
-
-    function mPublishButton() {
-        var isDisabled = false;
-
-        // TODO Better implementation.
-        // if(ctrl.start.ts && isPast(ctrl.start.ts)) {
-        //     isDisabled = true;
-        // }
-
-        return m("div", { class : css.publishContainer },
-            m("button", {
-                    // Attrs
-                    class    : css.publish,
-                    title    : future ? "Schedule publish" : "Already published",
-                    disabled : locked || isDisabled || null,
-
-                    // Events
-                    onclick : ctrl.publish.bind(null, options)
-                },
-                m("svg", { class : css.icon },
-                    m("use", { href : icons + (future ? "#schedule" : "#publish") })
-                ),
-                future ? "Schedule" : "Publish"
-            ),
-            options.form ? m.component(validator, {
-                form : options.form
-            }) : null
-        );
-    }
-
-    function mUnpublishButton() {
-        var isDisabled = false;
-
-        if(status === "draft") {
-            return null;
-        }
-
-        // TODO Better implementation.
-        // if(ctrl.end.ts && isPast(ctrl.end.ts)) {
-        //     isDisabled = true;
-        // }
-
-        return m("button", {
-                // Attrs
-                class    : css.unpublish,
-                title    : isPast(unpublishTs) ? "Already unpublished" : "Unpublish immediately",
-                disabled : locked || isDisabled || null,
-
-                // Events
-                onclick : ctrl.unpublish
-            },
-            m("svg", { class : css.icon },
-                m("use", { href : icons + "#remove" })
-            ),
-            "Unpublish"
-        );
-    }
-
-    function scheduleInput(id, type, section, field) {
+    function scheduleInput(id, type, side, field) {
         return m("input", {
-            class : ctrl.invalidDates ? css.invalidDate : css.date,
+            class : state.schedule.valid ? css.date : css.invalidDate,
             type  : type,
             id    : id,
-            value : ctrl[section][field],
+            value : state.schedule[side][field],
 
             // Events
-            oninput : m.withAttr("value", ctrl.update.bind(ctrl, section, field))
+            // oninput : m.withAttr("value", ctrl.update.bind(ctrl, section, field))
         });
     }
 
-    function mDateScheduler() {
-        if(!ctrl.schedule) {
-            return null;
-        }
-
-
-        return m("div", { class : css.details },
-            m("div", { class : css.start },
-                m("p", m("label", { for : "published_at_date" }, "Publish at")),
-
-                m("p", scheduleInput("published_at_date", "date", "start", "date")),
-                m("p", scheduleInput("published_at_time", "time", "start", "time"))
-            ),
-            m("div", { class : css.end },
-                m("p", m("label", { for : "unpublished_at_date" }, "Until (optional)")),
-
-                m("p", scheduleInput("unpublished_at_date", "date", "end", "date")),
-                m("p", scheduleInput("unpublished_at_time", "time", "end", "time")),
-                m("p",
-                    m("button", {
-                        class    : css.clearSchedule,
-                        title    : "Clear schedule dates",
-                        disabled : (!ctrl.start.ts && !ctrl.end.ts),
-
-                        // Events
-                        onclick : ctrl.clearSchedule
-                    },
-                    "clear schedule"
-                    )
-                )
-            )
-        );
-    }
-
+    // TODO Better implementation.
+    // if(ctrl.start.ts && isPast(ctrl.start.ts)) {
+    //     isDisabled = true;
+    // }
+    // TODO Better implementation.
+    // if(ctrl.end.ts && isPast(ctrl.end.ts)) {
+    //     isDisabled = true;
+    // }
 
     return m("div", { class : css.head },
         m("div", { class : css.main },
 
-            mControls(),
+            // Controls
+            m("div", { class : css.actions }, [
+                m("a", {
+                        // Attrs
+                        class  : css.back,
+                        title  : "Back to Listing",
+                        href   : prefix("/listing/" + state.meta.schemaKey),
+                        config : m.route
+                    },
+                    m("svg", { class : css.icon },
+                        m("use", { href : icons + "#arrow" })
+                    ),
+                    "Back"
+                ),
 
+                m("button", {
+                        // Attrs
+                        class    : css.save,
+                        title    : "Save your changes",
+                        disabled : locked || null,
+
+                        // Events
+                        onclick : state.ui.saving ? null : content.save.bind(null, state)
+                    },
+                    m("svg", { class : css.icon },
+                        m("use", { href : icons + "#save" })
+                    ),
+                    state.ui.saving ? "SAVING..." : "Save"
+                )
+            ]),
+
+            // Publishing
             m("div", { class : css.publishing },
-                mScheduleButton(),
-                mPublishButton(),
-                mUnpublishButton()
+                // Schedule
+                m("button", {
+                        // Attrs
+                        class : css.schedule,
+                        title : "Schedule a publish",
+
+                        // Events
+                        // onclick : ctrl.toggle.bind(null, undefined)
+                    },
+                    m("svg", { class : css.onlyIcon },
+                        m("use", { href : icons + "#schedule" })
+                    )
+                ),
+
+                // Publish
+                m("div", { class : css.publishContainer },
+                    m("button", {
+                            // Attrs
+                            class    : css.publish,
+                            title    : future ? "Schedule publish" : "Already published",
+                            disabled : locked || null,
+
+                            // Events
+                            // onclick : ctrl.publish.bind(null, options)
+                        },
+                        m("svg", { class : css.icon },
+                            m("use", { href : icons + (future ? "#schedule" : "#publish") })
+                        ),
+                        future ? "Schedule" : "Publish"
+                    ),
+                    state.form ? m.component(invalidMsg, content) : null
+                ),
+
+                // Unpublish
+                (status === "draft") ?
+                null :
+                 ("button", {
+                        // Attrs
+                        class    : css.unpublish,
+                        title    : isPast(unpublishTs) ? "Already unpublished" : "Unpublish immediately",
+                        disabled : locked || null,
+
+                        // Events
+                        // onclick : ctrl.unpublish
+                    },
+                    m("svg", { class : css.icon },
+                        m("use", { href : icons + "#remove" })
+                    ),
+                    "Unpublish"
+                )
             ),
-            mDateScheduler()
+
+            // Schedule Pop Up
+            m("div", { class : css.details },
+                m("div", { class : css.start },
+                    m("p", m("label", { for : "published_at_date" }, "Publish at")),
+
+                    m("p", scheduleInput("published_at_date", "date", "start", "date")),
+                    m("p", scheduleInput("published_at_time", "time", "start", "time"))
+                ),
+                m("div", { class : css.end },
+                    m("p", m("label", { for : "unpublished_at_date" }, "Until (optional)")),
+
+                    m("p", scheduleInput("unpublished_at_date", "date", "end", "date")),
+                    m("p", scheduleInput("unpublished_at_time", "time", "end", "time")),
+                    m("p",
+                        m("button", {
+                            class : css.clearSchedule,
+                            title : "Clear schedule dates",
+
+                            // Events
+                            // onclick : ctrl.clearSchedule
+                        },
+                        "clear schedule"
+                        )
+                    )
+                )
+            )
         )
     );
-}
+};

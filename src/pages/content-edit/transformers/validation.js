@@ -1,8 +1,6 @@
 import m from "mithril";
 import debounce from "lodash.debounce";
 
-import css from "./validator.css";
-
 function attachInputHandlers(ctrl) {
     var form = ctrl.form;
 
@@ -19,13 +17,13 @@ function attachInputHandlers(ctrl) {
     });
 }
 
-export function controller(options) {
+export function validity(state) {
     var ctrl = this;
 
     ctrl.form = null;
 
     ctrl.init = function() {
-        ctrl.form = options.form;
+        ctrl.form = options.form.el;
 
         if(!ctrl.form) {
             return console.warn("Validator did not receive a reference to the form.");
@@ -81,38 +79,6 @@ export function controller(options) {
     };
 
     ctrl.init();
-}
 
-export function view(ctrl, options) {
-    if(!ctrl.invalidInputs.length) {
-        return m("div", { style : "display:none;" });
-    }
-
-    return m("div", {
-            class : ctrl.currOpacity === 0 ? css.delayedHide : css.visible,
-
-            config : function(el, initialized) {
-                if(initialized) {
-                    return;
-                }
-
-                el.addEventListener("transitionend", function() {
-                    ctrl.resetInvalidFields();
-                    m.redraw();
-                });
-            }
-        },
-        "Missing required fields.",
-        m("ul",
-            ctrl.invalidInputs.map(function(name) {
-                return m("li", name);
-            })
-        ),
-        m("button", {
-                class   : css.closeInvalidMessage,
-                onclick : ctrl.resetInvalidFields
-            },
-            "x" // todo
-        )
-    );
+    
 }

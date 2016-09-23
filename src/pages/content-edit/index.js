@@ -16,12 +16,14 @@ import name from "./name.js";
 
 import * as children from "../../types/children.js";
 import * as layout from "../layout/index.js";
-import ContentState from "./content-state.js";
 import * as head from "./head.js";
+import * as contentEdit from "./content-edit.js";
+
+import Content from "./content-state.js";
 
 import css from "./content-edit.css";
 
-var state = new ContentState();
+var content = new Content();
 
 export function controller() {
     var ctrl = this,
@@ -59,7 +61,7 @@ export function controller() {
             return m.route(prefix("/content/" + m.route.param("schema")));
         }
 
-        state.processServerData(snap.val());
+        content.state.processServerData(snap.val());
 
         ctrl.data = assign(data, {
             fields : merge(data.fields, ctrl.data.fields)
@@ -124,71 +126,8 @@ export function view(ctrl) {
         title   : title,
         content : [
             m("div", { class : css.content },
-                m.component(head, ctrl),
-                m("div", { class : css.body },
-                    m("div", { class : css.contentsContainer },
-                        m("div", { class : css.itemStatus },
-                            m("p", { class : css[status] }, [
-                                m("span", { class : css.statusLabel },
-                                    "Status: "
-                                ),
-                                capitalize(status)
-                            ])
-                        ),
-                        m("form", {
-                                class  : css.form,
-                                config : function(el, init) {
-                                    if(init) {
-                                        return;
-                                    }
-
-                                    ctrl.form = el;
-                                    state.form = el;
-                                    console.log("state", state);
-
-                                    // force a redraw so publishing component can get
-                                    // new args w/ actual validity
-
-                                    m.redraw();
-                                }
-                            },
-                            m("h1", {
-                                    // Attrs
-                                    class  : css.title,
-                                    config : function(el, init) {
-                                        var range, selection;
-
-                                        if(init || ctrl.data.name) {
-                                            return;
-                                        }
-
-                                        // Select the text contents
-                                        range = document.createRange();
-                                        range.selectNodeContents(el);
-                                        selection = window.getSelection();
-                                        selection.removeAllRanges();
-                                        selection.addRange(range);
-                                    },
-
-                                    contenteditable : true,
-
-                                    // Events
-                                    oninput : m.withAttr("innerText", ctrl.titleChange)
-                                },
-                                name(ctrl.schema, ctrl.data)
-                            ),
-                            m.component(children, {
-                                class  : css.children,
-                                data   : ctrl.data.fields || {},
-                                fields : ctrl.schema.fields,
-                                path   : [ "fields" ],
-                                root   : ctrl.ref,
-                                state  : ctrl.data.fields,
-                                update : update.bind(null, ctrl.data)
-                            })
-                        )
-                    )
-                )
+                m.component(head, content),
+                m.component(contentEdit, content)
             )
         ]
     });

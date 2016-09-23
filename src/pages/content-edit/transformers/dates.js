@@ -90,6 +90,7 @@ export function processSchedule(state) {
 }
 
 export function transformSchedule(pub, unpub) {
+    console.log("TODO transformSchedule");
     return {
         valid : validSchedule(pub, unpub),
 
