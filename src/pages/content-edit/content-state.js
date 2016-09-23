@@ -57,7 +57,7 @@ var contentState = {
     form : {
         el : document.createElement("form"),
 
-        hiddenFields  : [],
+        hiddenFields : [],
 
         valid         : Boolean(),
         invalidFields : []
@@ -127,6 +127,11 @@ export default function Content() {
 
     this.get = function() {
         return clone(state);
+    };
+
+    this.titleChange = function(title) {
+        state.meta.title = title;
+        m.redraw();
     };
 
     this.registerForm = function(formEl) {

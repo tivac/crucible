@@ -12,7 +12,6 @@ import db from "../../lib/firebase.js";
 import update from "../../lib/update.js";
 import watch from "../../lib/watch.js";
 import prefix from "../../lib/prefix.js";
-import name from "./name.js";
 
 import * as children from "../../types/children.js";
 import * as layout from "../layout/index.js";
@@ -39,10 +38,11 @@ export function controller() {
     ctrl.data   = {};
     ctrl.hidden = [];
 
+    ctrl.content = content;
+
     schema.on("value", function(snap) {
         ctrl.schema = snap.val();
         ctrl.schema.key = snap.key();
-        console.log("ctrl.schema", ctrl.schema);
 
         m.redraw();
     });
@@ -61,7 +61,7 @@ export function controller() {
             return m.route(prefix("/content/" + m.route.param("schema")));
         }
 
-        content.state.processServerData(snap.val());
+        content.processServerData(snap.val());
 
         ctrl.data = assign(data, {
             fields : merge(data.fields, ctrl.data.fields)
@@ -96,7 +96,8 @@ export function controller() {
 }
 
 export function view(ctrl) {
-    var status  = "draft",
+    var state = ctrl.content.get(),
+        status  = "draft",
         publishTs = get(ctrl, "data.published_at"),
         unpublishTs = get(ctrl, "data.unpublished_at"),
         title;
@@ -113,7 +114,7 @@ export function view(ctrl) {
         return m.component(layout);
     }
 
-    title = [ get(ctrl.data, "name"), ctrl.schema.name ]
+    title = [ get(state.meta, "name"), get(state.schema, "name") ]
         .filter(Boolean)
         .map(capitalize)
         .join(" | ");
@@ -126,8 +127,8 @@ export function view(ctrl) {
         title   : title,
         content : [
             m("div", { class : css.content },
-                m.component(head, content),
-                m.component(contentEdit, content)
+                m.component(head, ctrl.content),
+                m.component(contentEdit, ctrl.content)
             )
         ]
     });

@@ -14,32 +14,6 @@ import * as invalidMsg from "./invalid-msg.js";
 
 import css from "./head.css";
 
-var DEFAULT_START_TIME = "00:00",
-    DEFAULT_END_TIME   = "23:59",
-    DATE_FORMAT = "YYYY-MM-DD",
-    TIME_FORMAT = "HH:mm";
-
-
-function makeScheduleObj(ts) {
-     return {
-        date : format(ts, DATE_FORMAT),
-        time : format(ts, TIME_FORMAT),
-        ts   : ts
-    };
-}
-
-function getTimestampFromStr(str) {
-    return parseInt(format(str, "x"), 10);
-}
-
-function nulledDate(time) {
-    return {
-        date : "",
-        time : time,
-        ts   : null
-    };
-}
-
 function filterHidden(fields, hidden) {
     // People can hide/unhide a field without losing work.
     // But we don't want to persist data from hidden fields,
@@ -257,15 +231,11 @@ function filterHidden(fields, hidden) {
 // }
 
 export function view(ctrl, content) {
-    console.log("ctrl, content", ctrl, content);
     var state = content.get(),
-        status  = "draft",
         publishTs = state.dates.published_at,
         unpublishTs = state.dates.unpublished_at,
         future  = isFuture(publishTs),
         locked  = config.locked;
-
-    console.log("HEAD content", content);
 
     function scheduleInput(id, type, side, field) {
         return m("input", {
@@ -358,7 +328,7 @@ export function view(ctrl, content) {
                 ),
 
                 // Unpublish
-                (status === "draft") ?
+                (state.meta.status === "draft") ?
                 null :
                  ("button", {
                         // Attrs
@@ -404,4 +374,4 @@ export function view(ctrl, content) {
             )
         )
     );
-};
+}

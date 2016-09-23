@@ -1,5 +1,5 @@
 "use strict";
 
-export default function name(schema, state) {
-    return state.meta.name || "Untitled " + schema.name;
+export default function name(schema, data) {
+    return data.name || "Untitled " + schema.name;
 }

@@ -2,14 +2,13 @@ import m from "mithril";
 
 import capitalize from "lodash.capitalize";
 import update from "../../lib/update.js";
+import name from "./name.js";
 import * as children from "../../types/children.js";
 
 import css from "./content-edit.css";
 
 export function view(ctrl, content) {
     var state = content.get();
-
-    console.log("content :: content", content);
 
     return m("div", { class : css.body },
         m("div", { class : css.contentsContainer },
@@ -18,7 +17,7 @@ export function view(ctrl, content) {
                     m("span", { class : css.statusLabel },
                         "Status: "
                     ),
-                    capitalize(status)
+                    capitalize(state.meta.status)
                 ])
             ),
             m("form", {
@@ -39,10 +38,11 @@ export function view(ctrl, content) {
                 m("h1", {
                         // Attrs
                         class  : css.title,
-                        config : function(el, init) {
+                        config : function(el, isInit) {
                             var range, selection;
 
-                            if(init || ctrl.data.name) {
+                            // if(isInit || ctrl.data.name) {
+                            if(isInit) {
                                 return;
                             }
 
@@ -59,15 +59,15 @@ export function view(ctrl, content) {
                         // Events
                         oninput : m.withAttr("innerText", ctrl.titleChange)
                     },
-                    name(ctrl.schema, ctrl.data)
+                    name(state.meta.schema, state.meta)
                 ),
                 m.component(children, {
                     class  : css.children,
-                    data   : ctrl.data.fields || {},
-                    fields : ctrl.schema.fields,
+                    data   : state.fields || {},
+                    fields : state.meta.schema.fields,
                     path   : [ "fields" ],
                     root   : ctrl.ref,
-                    state  : ctrl.data.fields,
+                    state  : state.fields,
                     update : update.bind(null, ctrl.data)
                 })
             )
