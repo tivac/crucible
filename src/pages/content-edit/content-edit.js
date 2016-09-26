@@ -64,7 +64,7 @@ export function view(ctrl, content) {
                 m.component(children, {
                     class  : css.children,
                     data   : state.fields || {},
-                    fields : state.meta.schema.fields,
+                    fields : state.schema.fields,
                     path   : [ "fields" ],
                     root   : ctrl.ref,
                     state  : state.fields,

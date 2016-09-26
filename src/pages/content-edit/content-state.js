@@ -8,69 +8,82 @@ import merge from "lodash.merge";
 import * as schedule from "./transformers/schedule.js";
 import * as snapshot from "./transformers/snapshot.js";
 
-var contentState = {
-    meta : {
-        id   : String(),
-        name : String(),
-        slug : String(),
+function ContentState() {
+    // These are 100% unneccesary, programmatically,
+    // they are supposed to make the data object readable.
+    var string = null,
+        number = null,
+        boolean = null,
+        object = null,
+        array = null,
+        formEl = null;
 
-        status : String(),
-
-        schema : {}
-    },
-
-    ui : {
-        saving : Boolean(),
-
-        schedule : Boolean()
-    },
-
-    user : {
-        created_by : String(),
-        updated_by : String(),
-
-        published_by   : String(),
-        unpublished_by : String()
-    },
-
-    dates : {
-        created_at : Number(),
-        updated_at : Number(),
-
-        published_at   : Number(),
-        unpublished_at : Number()
-    },
-
-    schedule : {
-        valid : Boolean(),
-
-        start : {
-            date : String(),
-            time : String()
+    return {
+        meta : {
+            id     : string,
+            name   : string,
+            slug   : string,
+            status : string
         },
 
-        end : {
-            date : String(),
-            time : String()
-        }
-    },
+        schema : object,
 
-    form : {
-        el : document.createElement("form"),
+        ui : {
+            saving   : boolean,
+            schedule : boolean
+        },
 
-        hiddenFields : [],
+        user : {
+            created_by : string,
+            updated_by : string,
 
-        valid         : Boolean(),
-        invalidFields : []
-    },
+            published_by   : string,
+            unpublished_by : string
+        },
 
-    fields : {}
-};
+        dates : {
+            created_at : number,
+            updated_at : number,
+
+            published_at   : number,
+            unpublished_at : number
+        },
+
+        schedule : {
+            valid : boolean,
+
+            start : {
+                date : string,
+                time : string
+            },
+
+            end : {
+                date : string,
+                time : string
+            }
+        },
+
+        form : {
+            el : formEl,
+
+            hiddenFields : array,
+
+            valid         : boolean,
+            invalidFields : array
+        },
+
+        fields : {}
+    };
+}
+
+
 
 
 export default function Content() {
     var con = this,
-        state = contentState;
+        state;
+
+    con.state = state = new ContentState();
 
     con.get = function() {
         return clone(state);
@@ -78,26 +91,19 @@ export default function Content() {
 
     // Setup
     con.setSchema = function(schema) {
-        state.meta.schema = schema;
+        state.schema = schema;
     };
+
     con.registerForm = function(formEl) {
         con.form = state.form.el = formEl;
     };
     con.processServerData = function(data) {
-        state = snapshot.toState(data, state);
+        state = merge(state, snapshot.toState(data, state));
         con.assessDerivedVals();
+        con.resetInvalid();
     };
     con.assessDerivedVals = function() {
-        state = schedule.fromTimestamps(state);
-    };
-
-    con.addSchemaData = function(schema) {
-        state = merge(state, {
-            meta : {
-                schema    : schema,
-                schemaKey : schema.key
-            }
-        });
+        state = merge(state, schedule.fromTimestamps(state));
     };
 
     // Data Changes

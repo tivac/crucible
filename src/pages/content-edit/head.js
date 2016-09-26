@@ -273,7 +273,7 @@ export function view(ctrl, content) {
                         // Attrs
                         class  : css.back,
                         title  : "Back to Listing",
-                        href   : prefix("/listing/" + state.meta.schema.key),
+                        href   : prefix("/listing/" + state.schema.key),
                         config : m.route
                     },
                     m("svg", { class : css.icon },

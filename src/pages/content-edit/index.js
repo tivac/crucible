@@ -22,14 +22,14 @@ import Content from "./content-state.js";
 
 import css from "./content-edit.css";
 
-var content = new Content();
-
 export function controller() {
     var ctrl = this,
 
         id     = m.route.param("id"),
         schema = db.child("schemas/" + m.route.param("schema")),
-        ref    = db.child("content/" + m.route.param("schema") + "/" + id);
+        ref    = db.child("content/" + m.route.param("schema") + "/" + id),
+
+        content;
 
     ctrl.id     = id;
     ctrl.ref    = ref;
@@ -38,7 +38,13 @@ export function controller() {
     ctrl.data   = {};
     ctrl.hidden = [];
 
-    ctrl.content = content;
+    ctrl.content = content = new Content();
+
+    // No sense doing any work if we don't have an id to operate on
+    if(!id) {
+        return;
+    }
+
 
     schema.on("value", function(snap) {
         ctrl.schema = snap.val();
@@ -48,11 +54,6 @@ export function controller() {
 
         m.redraw();
     });
-
-    // No sense doing any work if we don't have an id to operate on
-    if(!id) {
-        return;
-    }
 
     // On updates from firebase we need to merge in fields carefully
     ref.on("value", function(snap) {
