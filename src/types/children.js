@@ -12,7 +12,8 @@ import css from "./lib/types.css";
 var types;
 
 export function view(ctrl, options) {
-    var fields = options.fields || [],
+    var content = options.content,
+        fields = options.fields || [],
         registerHidden = options.registerHidden,
         mFields = [];
 
@@ -45,7 +46,9 @@ export function view(ctrl, options) {
         isHidden = get(field, "show.hidden");
 
         result = m.component(component, assign({}, options, {
-            field : field,
+            field   : field,
+            content : content,
+
             class : addClasses(field, css[index ? "field" : "first"]),
             data  : get(options.data, field.key),
             path  : options.path.concat(field.key),

@@ -49,7 +49,9 @@ function timestamp(side, day, time) {
 }
 
 function validSchedule(pub, unpub) {
-    return pub && unpub && pub > unpub;
+    return (pub && !unpub) ||
+        (unpub && !pub) ||
+        (pub && unpub && pub > unpub);
 }
 
 export default {};
@@ -73,7 +75,7 @@ export function toTimestamps(state) {
     pub   = pub ? pub : prevPub;
     unpub = unpub ? unpub : prevUnpub;
 
-    return merge(state, {
+    return {
         meta : {
             status : status(pub, unpub)
         },
@@ -87,14 +89,14 @@ export function toTimestamps(state) {
         schedule : {
             valid : valid
         }
-    });
+    };
 }
 
 export function fromTimestamps(state) {
     var pub = state.dates.published_at,
         unpub = state.dates.unpublished_at;
 
-    return merge(state, {
+    return {
         schedule : {
             valid : validSchedule(pub, unpub),
 
@@ -108,11 +110,11 @@ export function fromTimestamps(state) {
                 time : unpub ? formatDate(unpub, TIME_FORMAT) : DEFAULT_END_TIME
             }
         }
-    });
+    };
 }
 
 export function clear(state) {
-    return merge(state, {
+    return {
         schedule : {
             valid : true,
 
@@ -126,5 +128,5 @@ export function clear(state) {
                 time : DEFAULT_END_TIME
             }
         }
-    });
+    };
 }

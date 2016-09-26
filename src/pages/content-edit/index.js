@@ -13,14 +13,13 @@ import update from "../../lib/update.js";
 import watch from "../../lib/watch.js";
 import prefix from "../../lib/prefix.js";
 
-import * as children from "../../types/children.js";
 import * as layout from "../layout/index.js";
 import * as head from "./head.js";
-import * as contentEdit from "./content-edit.js";
+import * as formView from "./form.js";
 
 import Content from "./content-state.js";
 
-import css from "./content-edit.css";
+import css from "./form.css";
 
 export function controller() {
     var ctrl = this,
@@ -38,6 +37,7 @@ export function controller() {
     ctrl.data   = {};
     ctrl.hidden = [];
 
+    // New state for every page change.
     ctrl.content = content = new Content();
 
     // No sense doing any work if we don't have an id to operate on
@@ -67,12 +67,12 @@ export function controller() {
         content.processServerData(snap.val());
 
         ctrl.data = assign(data, {
-            fields : merge(data.fields, ctrl.data.fields)
+            fields : merge(data.fields, content.fields)
         });
 
         // Create slug value if it doesnt exist already
         if(!ctrl.data.slug) {
-            ctrl.data.slug = sluggo(ctrl.data.name);
+            ctrl.data.slug = sluggo(content.meta.name);
         }
 
         return m.redraw();
@@ -80,14 +80,13 @@ export function controller() {
 
     watch(ref);
 
-
     ctrl.registerHidden = function(key, isHidden) {
-        var index = ctrl.hidden.indexOf(key);
+        var index = content.form.hidden.indexOf(key);
 
-        if(isHidden) {
-            ctrl.hidden.push(key);
+        if(isHidden && index === -1) {
+            content.form.hidden.push(key);
         } else if(index > -1) {
-            ctrl.hidden.splice(index, 1);
+            content.form.hidden.splice(index, 1);
         }
     };
 
@@ -119,8 +118,8 @@ export function view(ctrl) {
         title   : title,
         content : [
             m("div", { class : css.content },
-                m.component(head, ctrl.content),
-                m.component(contentEdit, ctrl.content)
+                m.component(head,     { content : ctrl.content }),
+                m.component(formView, { content : ctrl.content })
             )
         ]
     });

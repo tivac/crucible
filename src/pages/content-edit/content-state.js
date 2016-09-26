@@ -3,10 +3,13 @@ import format from "date-fns/format";
 import assign from "lodash.assign";
 import clone from "lodash.clone";
 import get from "lodash.get";
+import set from "lodash.set";
 import merge from "lodash.merge";
 
 import * as schedule from "./transformers/schedule.js";
 import * as snapshot from "./transformers/snapshot.js";
+// todo wrong section
+import Validator from "./delegators/validator.js";
 
 function ContentState() {
     // These are 100% unneccesary, programmatically,
@@ -30,7 +33,8 @@ function ContentState() {
 
         ui : {
             saving   : boolean,
-            schedule : boolean
+            schedule : boolean,
+            invalid  : boolean
         },
 
         user : {
@@ -66,7 +70,7 @@ function ContentState() {
         form : {
             el : formEl,
 
-            hiddenFields : array,
+            hidden : array,
 
             valid         : boolean,
             invalidFields : array
@@ -81,9 +85,14 @@ function ContentState() {
 
 export default function Content() {
     var con = this,
-        state;
+        state,
+        validator;
 
     con.state = state = new ContentState();
+    con.validator = validator = new Validator(state);
+    // TEMP
+    console.log("temp make state global for debug");
+    window.state = state;
 
     con.get = function() {
         return clone(state);
@@ -96,14 +105,7 @@ export default function Content() {
 
     con.registerForm = function(formEl) {
         con.form = state.form.el = formEl;
-    };
-    con.processServerData = function(data) {
-        state = merge(state, snapshot.toState(data, state));
-        con.assessDerivedVals();
-        con.resetInvalid();
-    };
-    con.assessDerivedVals = function() {
-        state = merge(state, schedule.fromTimestamps(state));
+        validator.attachInputHandlers(state);
     };
 
     // Data Changes
@@ -122,19 +124,39 @@ export default function Content() {
         state.form.invalidFields = [];
     };
 
+    // Transforms
+    con.processServerData = function(data) {
+        state = merge(state, snapshot.toState(data, state));
+        con.assessDerivedVals();
+        con.resetInvalid();
+    };
+
     con.setScheduleField = function(side, part, str) {
         state.schedule[side][part] = str;
+        state = merge(state, schedule.toTimestamps(state));
+        m.redraw();
+    };
 
-        state = schedule.toTimestamps(state);
+    con.setField = function(path, val) {
+        set(state, path, val);
+    };
 
+    con.assessDerivedVals = function() {
+        state = merge(state, schedule.fromTimestamps(state));
         m.redraw();
     };
 
     con.clearSchedule = function() {
-        state = schedule.clear(state);
+        state = merge(state, schedule.clear(state));
+        m.redraw();
     };
 
+    con.publish = function(options) {
+        state.form.valid = state.form.el.checkValidity();
+        console.log("TODO PUBLISH");
+    };
     con.save = function() {
+        // TODO consider :: content.form.hidden
         console.log("TODO SAVE");
     };
 }

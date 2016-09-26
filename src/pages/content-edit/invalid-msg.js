@@ -1,23 +1,6 @@
 import m from "mithril";
-import debounce from "lodash.debounce";
 
 import css from "./invalid-msg.css";
-
-function attachInputHandlers(ctrl) {
-    var form = ctrl.form;
-
-    form.querySelectorAll("input, textarea, select").forEach(function(formInput) {
-        formInput.addEventListener("invalid", function(evt) {
-            evt.target.classList.add(css.highlightInvalid);
-            ctrl.registerInvalidField(evt.target.name);
-        });
-
-        formInput.addEventListener("focus", function(evt) {
-            evt.target.classList.remove(css.highlightInvalid);
-            ctrl.onFormFocus(evt); // focus doesn't bubble, so we listen to all the inputs for this.
-        });
-    });
-}
 
 // export function controller(options) {
 //     var ctrl = this;
@@ -83,15 +66,21 @@ function attachInputHandlers(ctrl) {
 //     ctrl.init();
 // }
 
-export function view(ctrl, content) {
-    var state = content.get();
+export function view(ctrl, options) {
+    var content = options.content,
+        state = content.get();
+
+    // TEMP to find bad old code
+    var ctrl = null;
 
     if(state.form.valid) {
         return m("div", { style : "display:none;" });
     }
 
+    console.log("state.ui.invalid", state.ui.invalid);
+
     return m("div", {
-            class : !state.form.valid ? css.delayedHide : css.visible,
+            class : !state.ui.invalid ? css.delayedHide : css.visible,
 
             config : function(el, isInit) {
                 if(isInit) {
@@ -114,7 +103,7 @@ export function view(ctrl, content) {
 
                 onclick : content.resetInvalid()
             },
-            "x" // todo
+            "x" // todo, figure out how to use a unicode x here
         )
     );
 }

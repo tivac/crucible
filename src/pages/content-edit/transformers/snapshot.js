@@ -2,10 +2,8 @@ import merge from "lodash.merge";
 
 import * as schedule from "./schedule.js";
 
-export function toState(data, currState) {
-    var state = currState;
-
-    state = merge(currState, {
+export function toState(data) {
+    var result =  {
         meta : {
             name : data.name,
             slug : data.slug
@@ -28,11 +26,11 @@ export function toState(data, currState) {
         },
 
         fields : data.fields
-    });
+    };
 
-    state = schedule.fromTimestamps(currState);
+    result = merge(result, schedule.fromTimestamps(result));
 
-    return state;
+    return result;
 }
 
 export function fromState(state) {

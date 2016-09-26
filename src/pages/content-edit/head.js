@@ -230,19 +230,23 @@ function filterHidden(fields, hidden) {
 //     ctrl.init();
 // }
 
-export function view(ctrl, content) {
-    var state = content.get(),
+export function view(ctrl, options) {
+    var content = options.content,
+        state = content.get(),
         publishTs = state.dates.published_at,
         unpublishTs = state.dates.unpublished_at,
         future  = isFuture(publishTs),
         locked  = config.locked;
 
+    // TEMP to find bad old code
+    var ctrl = null;
+
     function scheduleInput(id, type, side, part) {
         
-        console.log("state.schedule.start", state.schedule.start);
-        console.log("state.schedule.end", state.schedule.end);
-        console.log("state.schedule, side, part", side, part);
-        console.log("state.schedule[side][part]", state.schedule[side][part]);
+        // console.log("state.schedule.start", state.schedule.start);
+        // console.log("state.schedule.end", state.schedule.end);
+        // console.log("state.schedule, side, part", side, part);
+        // console.log("state.schedule[side][part]", state.schedule[side][part]);
         
         return m("input", {
             class : state.schedule.valid ? css.date : css.invalidDate,
@@ -323,14 +327,16 @@ export function view(ctrl, content) {
                             disabled : locked || null,
 
                             // Events
-                            // onclick : ctrl.publish.bind(null, options)
+                            onclick : content.publish.bind(null, options)
                         },
                         m("svg", { class : css.icon },
                             m("use", { href : icons + (future ? "#schedule" : "#publish") })
                         ),
                         future ? "Schedule" : "Publish"
                     ),
-                    state.form ? m.component(invalidMsg, content) : null
+                    !state.form ?
+                        null :
+                        m.component(invalidMsg, { content : content }) 
                 ),
 
                 // Unpublish

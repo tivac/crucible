@@ -5,10 +5,14 @@ import update from "../../lib/update.js";
 import name from "./name.js";
 import * as children from "../../types/children.js";
 
-import css from "./content-edit.css";
+import css from "./form.css";
 
-export function view(ctrl, content) {
-    var state = content.get();
+export function view(ctrl, options) {
+    var content = options.content,
+        state = content.get();
+
+    // TEMP to find bad old code
+    var ctrl = null;
 
     return m("div", { class : css.body },
         m("div", { class : css.contentsContainer },
@@ -57,18 +61,21 @@ export function view(ctrl, content) {
                         contenteditable : true,
 
                         // Events
-                        oninput : m.withAttr("innerText", ctrl.titleChange)
+                        oninput : m.withAttr("innerText", content.titleChange)
                     },
-                    name(state.meta.schema, state.meta)
+                    name(state.schema, state.meta)
                 ),
                 m.component(children, {
                     class  : css.children,
                     data   : state.fields || {},
                     fields : state.schema.fields,
                     path   : [ "fields" ],
-                    root   : ctrl.ref,
+                    // root   : ctrl.ref,
                     state  : state.fields,
-                    update : update.bind(null, ctrl.data)
+                    // update : update.bind(null, ctrl.data)
+
+                    update  : content.setField.bind(content),
+                    content : content
                 })
             )
         )
