@@ -11,24 +11,25 @@ import db from "../../lib/firebase";
 import prefix from "../../lib/prefix";
 
 import * as invalidMsg from "./invalid-msg.js";
+import * as scheduler from "./scheduler.js";
 
 import css from "./head.css";
 
-function filterHidden(fields, hidden) {
-    // People can hide/unhide a field without losing work.
-    // But we don't want to persist data from hidden fields,
-    // so overwrite the data to be saved, but clone the 
-    // source data so we do not modify the form's data.
-    var filtered = clone(fields);
+// function filterHidden(fields, hidden) {
+//     // People can hide/unhide a field without losing work.
+//     // But we don't want to persist data from hidden fields,
+//     // so overwrite the data to be saved, but clone the 
+//     // source data so we do not modify the form's data.
+//     var filtered = clone(fields);
 
-    Object.keys(filtered).forEach(function(key) {
-        if(hidden.indexOf(key) > -1) {
-            filtered[key] = null;
-        }
-    });
+//     Object.keys(filtered).forEach(function(key) {
+//         if(hidden.indexOf(key) > -1) {
+//             filtered[key] = null;
+//         }
+//     });
 
-    return filtered;
-}
+//     return filtered;
+// }
 
 // export function controller(options) {
 //     var ctrl = this,
@@ -230,7 +231,7 @@ function filterHidden(fields, hidden) {
 //     ctrl.init();
 // }
 
-export function view(ctrl, options) {
+export function view(ctrl_unused, options) {
     var content = options.content,
         state = content.get(),
         publishTs = state.dates.published_at,
@@ -238,26 +239,6 @@ export function view(ctrl, options) {
         future  = isFuture(publishTs),
         locked  = config.locked;
 
-    // TEMP to find bad old code
-    var ctrl = null;
-
-    function scheduleInput(id, type, side, part) {
-        
-        // console.log("state.schedule.start", state.schedule.start);
-        // console.log("state.schedule.end", state.schedule.end);
-        // console.log("state.schedule, side, part", side, part);
-        // console.log("state.schedule[side][part]", state.schedule[side][part]);
-        
-        return m("input", {
-            class : state.schedule.valid ? css.date : css.invalidDate,
-            type  : type,
-            id    : id,
-            value : state.schedule[side][part],
-
-            // Events
-            oninput : m.withAttr("value", content.setScheduleField.bind(content, side, part))
-        });
-    }
 
     // TODO Better implementation.
     // if(ctrl.start.ts && isPast(ctrl.start.ts)) {
@@ -327,7 +308,7 @@ export function view(ctrl, options) {
                             disabled : locked || null,
 
                             // Events
-                            onclick : content.publish.bind(null, options)
+                            onclick : content.publish.bind(content, options)
                         },
                         m("svg", { class : css.icon },
                             m("use", { href : icons + (future ? "#schedule" : "#publish") })
@@ -349,7 +330,7 @@ export function view(ctrl, options) {
                         disabled : locked || null,
 
                         // Events
-                        // onclick : ctrl.unpublish
+                        onclick : content.unpublish.bind(content, options)
                     },
                     m("svg", { class : css.icon },
                         m("use", { href : icons + "#remove" })
@@ -359,33 +340,9 @@ export function view(ctrl, options) {
             ),
 
             // Schedule Pop Up
-            (!state.ui.schedule) ?
-            null :
-            m("div", { class : css.details },
-                m("div", { class : css.start },
-                    m("p", m("label", { for : "published_at_date" }, "Publish at")),
-
-                    m("p", scheduleInput("published_at_date", "date", "start", "date")),
-                    m("p", scheduleInput("published_at_time", "time", "start", "time"))
-                ),
-                m("div", { class : css.end },
-                    m("p", m("label", { for : "unpublished_at_date" }, "Until (optional)")),
-
-                    m("p", scheduleInput("unpublished_at_date", "date", "end", "date")),
-                    m("p", scheduleInput("unpublished_at_time", "time", "end", "time")),
-                    m("p",
-                        m("button", {
-                            class : css.clearSchedule,
-                            title : "Clear schedule dates",
-
-                            // Events
-                            onclick : content.clearSchedule
-                        },
-                        "clear schedule"
-                        )
-                    )
-                )
-            )
+            !state.ui.schedule ?
+                null :
+                m.component(scheduler, options)
         )
     );
 }

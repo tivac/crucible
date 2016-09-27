@@ -1,9 +1,8 @@
-import merge from "lodash.merge";
 
-import * as schedule from "./schedule.js";
+import clone from "lodash.clone";
 
 export function toState(data) {
-    var result =  {
+    return {
         meta : {
             name : data.name,
             slug : data.slug
@@ -27,30 +26,46 @@ export function toState(data) {
 
         fields : data.fields
     };
+}
 
-    result = merge(result, schedule.fromTimestamps(result));
 
-    return result;
+function filterHidden(fields, hidden) {
+    // People can hide/unhide a field without losing work.
+    // But we don't want to persist data from hidden fields,
+    // so overwrite the data to be saved, but clone the 
+    // source data so we do not modify the form's data.
+    var filtered = clone(fields);
+
+    Object.keys(filtered).forEach(function(key) {
+        if(hidden.indexOf(key) > -1) {
+            filtered[key] = null;
+        }
+    });
+
+    return filtered;
 }
 
 export function fromState(state) {
-//     var dates = state.dates,
-//         meta = state.meta;
+    var dates = state.dates,
+        user = state.user,
+        meta = state.meta;
 
-//     return {
-//         name : meta.name,
-//         slug : meta.slug,
+    return {
+        name : meta.name,
+        slug : meta.slug,
 
-//         created_at : dates.created_at,
-//         updated_at : Date.now(),
-//         published_at : dates.published_at,
-//         unpublished_at : dates.unpublished_at,
+        created_at : dates.created_at,
+        updated_at : Date.now(),
 
-//         created_by : meta.created_by,
-//         updated_by : meta.created_by,
-//         published_by : meta.published_by,
-//         unpublished_by : meta.unpublished_by,
+        published_at   : dates.published_at,
+        unpublished_at : dates.unpublished_at,
 
-//         fields : state.fields
-//     };
+        created_by : user.created_by,
+        updated_by : user.created_by,
+
+        published_by   : user.published_by,
+        unpublished_by : user.unpublished_by,
+
+        fields : filterHidden(state.fields, state.form.hidden)
+    };
 }

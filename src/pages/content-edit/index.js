@@ -38,6 +38,7 @@ export function controller() {
     ctrl.hidden = [];
 
     // New state for every page change.
+    console.log("new content instance");
     ctrl.content = content = new Content();
 
     // No sense doing any work if we don't have an id to operate on
@@ -64,7 +65,7 @@ export function controller() {
             return m.route(prefix("/content/" + m.route.param("schema")));
         }
 
-        content.processServerData(snap.val());
+        content.processServerData(snap.val(), ref);
 
         ctrl.data = assign(data, {
             fields : merge(data.fields, content.fields)

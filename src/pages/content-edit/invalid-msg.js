@@ -66,18 +66,14 @@ import css from "./invalid-msg.css";
 //     ctrl.init();
 // }
 
-export function view(ctrl, options) {
+export function view(ctrl_unused, options) {
     var content = options.content,
-        state = content.get();
+        state = content.get(),
+        invalidFields = state.form.invalidFields || [];
 
-    // TEMP to find bad old code
-    var ctrl = null;
-
-    if(state.form.valid) {
-        return m("div", { style : "display:none;" });
-    }
-
-    console.log("state.ui.invalid", state.ui.invalid);
+    // if(state.form.valid) {
+    //     return m("div", { style : "display:none;" });
+    // }
 
     return m("div", {
             class : !state.ui.invalid ? css.delayedHide : css.visible,
@@ -87,14 +83,15 @@ export function view(ctrl, options) {
                     return;
                 }
 
-                el.addEventListener("transitionend", function() {
+                el.addEventListener("transitionend", function(evt) {
                     content.resetInvalid();
+                    evt.target.style = "display:none;";
                 });
             }
         },
         "Missing required fields.",
         m("ul",
-            state.form.invalidFields.map(function(name) {
+            invalidFields.map(function(name) {
                 return m("li", name);
             })
         ),

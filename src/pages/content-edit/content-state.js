@@ -1,12 +1,11 @@
 import m from "mithril";
-import format from "date-fns/format";
-import assign from "lodash.assign";
+import isFuture from "date-fns/is_future";
+import isPast from "date-fns/is_past";
 import clone from "lodash.clone";
-import get from "lodash.get";
+import _get from "lodash.get";
 import set from "lodash.set";
 import merge from "lodash.merge";
 
-import * as schedule from "./transformers/schedule.js";
 import * as snapshot from "./transformers/snapshot.js";
 // todo wrong section
 import Validator from "./delegators/validator.js";
@@ -50,21 +49,8 @@ function ContentState() {
             updated_at : number,
 
             published_at   : number,
-            unpublished_at : number
-        },
-
-        schedule : {
-            valid : boolean,
-
-            start : {
-                date : string,
-                time : string
-            },
-
-            end : {
-                date : string,
-                time : string
-            }
+            unpublished_at : number,
+            validSchedule  : boolean
         },
 
         form : {
@@ -81,8 +67,6 @@ function ContentState() {
 }
 
 
-
-
 export default function Content() {
     var con = this,
         state,
@@ -94,8 +78,13 @@ export default function Content() {
     console.log("temp make state global for debug");
     window.state = state;
 
-    con.get = function() {
-        return clone(state);
+    con.get = function(path) {
+        if(!path) {
+            return clone(state);
+            // return state;
+        }
+
+        return _get(state, path);
     };
 
     // Setup
@@ -125,39 +114,94 @@ export default function Content() {
     };
 
     // Transforms
-    con.processServerData = function(data) {
+    con.processServerData = function(data, ref) {
+        con.ref = ref; // Firebase reference.
+
         state = merge(state, snapshot.toState(data, state));
         con.assessDerivedVals();
         con.resetInvalid();
     };
 
-    con.setScheduleField = function(side, part, str) {
-        state.schedule[side][part] = str;
-        state = merge(state, schedule.toTimestamps(state));
-        m.redraw();
-    };
-
     con.setField = function(path, val) {
-        set(state, path, val);
+        state.dates.updated_at = Date.now();
+
+        return set(state, path, val);
     };
 
     con.assessDerivedVals = function() {
-        state = merge(state, schedule.fromTimestamps(state));
+        state.dates.validSchedule = validator.validSchedule();
         m.redraw();
+    };
+
+    con.findStatus = function() {
+        var pub = state.dates.published_at,
+            unpub = state.dates.unpublished_at,
+            status = "draft";
+
+        if(isFuture(pub)) {
+            status = "scheduled";
+        } else if(isPast(pub)) {
+            status = "published";
+        } else if(isPast(unpub)) {
+            status = "unpublished";
+        }
+
+        return status;
     };
 
     con.clearSchedule = function() {
-        state = merge(state, schedule.clear(state));
+        state = merge(state, {
+            dates : {
+                published_at   : null,
+                unpublished_at : null,
+                validSchedule  : null
+            }
+        });
         m.redraw();
     };
 
-    con.publish = function(options) {
+    con.publish = function() {
         state.form.valid = state.form.el.checkValidity();
-        console.log("TODO PUBLISH");
+
+        if(!state.form.valid) {
+            return;
+        }
+
+        state = merge(state, {
+            dates : { published_at : Date.now() } 
+        });
+        state.dates.validSchedule = validator.validSchedule();
+        m.redraw();
     };
+
+    con.unpublish = function() {
+        state = merge(state, {
+            dates : { unpublished_at : Date.now() } 
+        });
+        state.dates.validSchedule = validator.validSchedule();
+        // m.redraw();
+    };
+
     con.save = function() {
+        var saveData;
+
+        if(!state.dates.validSchedule) {
+            console.log("TODO user feedback for invalid schedule.");
+            return;
+        }
+
         // TODO consider :: content.form.hidden
         console.log("TODO SAVE");
+        
+        state.ui.saving = true;
+        m.redraw();
+
+        saveData = snapshot.fromState(state);
+
+        return con.ref.update(saveData, function() {
+            state.ui.saving = false;
+            m.redraw();
+        });
     };
 }
 

@@ -60,4 +60,15 @@ export default function Validator(state) {
         state.ui.invalid = false;
         m.redraw();
     };
+
+    v.validSchedule = function() {
+        var pub = state.dates.published_at,
+            unpub = state.dates.unpublished_at;
+
+        return (!pub && !unpub) ||
+            (pub && !unpub) ||
+            (unpub && !pub) ||
+            (pub && unpub && pub < unpub);
+    };
 };
+

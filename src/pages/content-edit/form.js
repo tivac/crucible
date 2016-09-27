@@ -7,12 +7,9 @@ import * as children from "../../types/children.js";
 
 import css from "./form.css";
 
-export function view(ctrl, options) {
+export function view(ctrl_unused, options) {
     var content = options.content,
         state = content.get();
-
-    // TEMP to find bad old code
-    var ctrl = null;
 
     return m("div", { class : css.body },
         m("div", { class : css.contentsContainer },
