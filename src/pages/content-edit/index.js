@@ -82,12 +82,14 @@ export function controller() {
     watch(ref);
 
     ctrl.registerHidden = function(key, isHidden) {
-        var index = content.form.hidden.indexOf(key);
+        var index = content.getHiddenIndex(key);
 
         if(isHidden && index === -1) {
-            content.form.hidden.push(key);
+            content.addHidden(key);
+            // content.form.hidden.push(key);
         } else if(index > -1) {
-            content.form.hidden.splice(index, 1);
+            content.removeHidden(key);
+            // content.form.hidden.splice(index, 1);
         }
     };
 

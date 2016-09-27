@@ -1,6 +1,4 @@
 import m from "mithril";
-import isFuture from "date-fns/is_future";
-import isPast from "date-fns/is_past";
 import clone from "lodash.clone";
 import _get from "lodash.get";
 import set from "lodash.set";
@@ -16,9 +14,9 @@ function ContentState() {
     var string = null,
         number = null,
         boolean = null,
-        object = null,
-        array = null,
-        formEl = null;
+        formEl = null,
+        object = {},
+        array = [];
 
     return {
         meta : {
@@ -33,7 +31,7 @@ function ContentState() {
         ui : {
             saving   : boolean,
             schedule : boolean,
-            invalid  : boolean
+            invalid  : boolean // Duplication? Or needed for weird fade behavior?
         },
 
         user : {
@@ -58,7 +56,7 @@ function ContentState() {
 
             hidden : array,
 
-            valid         : boolean,
+            valid         : boolean, // Duplication? Or needed for weird fade behavior?
             invalidFields : array
         },
 
@@ -133,22 +131,6 @@ export default function Content() {
         m.redraw();
     };
 
-    con.findStatus = function() {
-        var pub = state.dates.published_at,
-            unpub = state.dates.unpublished_at,
-            status = "draft";
-
-        if(isFuture(pub)) {
-            status = "scheduled";
-        } else if(isPast(pub)) {
-            status = "published";
-        } else if(isPast(unpub)) {
-            status = "unpublished";
-        }
-
-        return status;
-    };
-
     con.clearSchedule = function() {
         state = merge(state, {
             dates : {
@@ -158,6 +140,28 @@ export default function Content() {
             }
         });
         m.redraw();
+    };
+
+
+    con.addHidden = function(key) {
+        state.form.hidden.push(key);
+    };
+
+    con.removeHidden = function(key) {
+        var index = state.form.hidden.indexOf(key);
+
+        if(index > -1) {
+            state.form.hidden.splice(index, 1);
+        }
+    };
+
+    con.checkValidSchedule = function() {
+        state.dates.validSchedule = validator.validSchedule();
+    };
+
+    con.setDateField = function(key, ts) {
+        state.dates[key] = ts;
+        con.checkValidSchedule();
     };
 
     con.publish = function() {
@@ -170,7 +174,7 @@ export default function Content() {
         state = merge(state, {
             dates : { published_at : Date.now() } 
         });
-        state.dates.validSchedule = validator.validSchedule();
+        con.checkValidSchedule();
         m.redraw();
     };
 
@@ -178,7 +182,7 @@ export default function Content() {
         state = merge(state, {
             dates : { unpublished_at : Date.now() } 
         });
-        state.dates.validSchedule = validator.validSchedule();
+        con.checkValidSchedule();
         // m.redraw();
     };
 
@@ -187,18 +191,17 @@ export default function Content() {
 
         if(!state.dates.validSchedule) {
             console.log("TODO user feedback for invalid schedule.");
+            // state.form.invalidFields = ["Invalid schedule."];
+            // state.ui.invalid = true;
             return;
         }
-
-        // TODO consider :: content.form.hidden
-        console.log("TODO SAVE");
         
         state.ui.saving = true;
         m.redraw();
 
         saveData = snapshot.fromState(state);
 
-        return con.ref.update(saveData, function() {
+        con.ref.update(saveData, function() {
             state.ui.saving = false;
             m.redraw();
         });

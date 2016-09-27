@@ -1,8 +1,26 @@
 
 import clone from "lodash.clone";
+import isFuture from "date-fns/is_future";
+import isPast from "date-fns/is_past";
+
+function findStatus(state) {
+    var pub = state.dates.published_at,
+        unpub = state.dates.unpublished_at,
+        status = "draft";
+
+    if(isFuture(pub)) {
+        status = "scheduled";
+    } else if(isPast(pub)) {
+        status = "published";
+    } else if(isPast(unpub)) {
+        status = "unpublished";
+    }
+
+    return status;
+}
 
 export function toState(data) {
-    return {
+    var result = {
         meta : {
             name : data.name,
             slug : data.slug
@@ -26,6 +44,10 @@ export function toState(data) {
 
         fields : data.fields
     };
+
+    result.meta.status = findStatus(result);
+
+    return result;
 }
 
 

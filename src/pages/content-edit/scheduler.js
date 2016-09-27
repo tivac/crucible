@@ -83,19 +83,16 @@ export function controller(options) {
     }
 
     ctrl.onChange = function(side, part, val) {
-        var path = [ "dates" ],
-            dateField,
+        var dateField,
             ts;
 
         dateField = side === "start" ? "published_at" : "unpublished_at";
-        path.push(dateField);
-
         ctrl.schedule[side][part] = val;
 
         determineTimestamps();
         ts = ctrl[dateField];
 
-        content.setField(path, ts);
+        content.setDateField(dateField, ts);
     };
 
     ctrl.init();

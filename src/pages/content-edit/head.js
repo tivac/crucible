@@ -295,7 +295,10 @@ export function view(ctrl_unused, options) {
                         onclick : content.toggleSchedule
                     },
                     m("svg", { class : css.onlyIcon },
-                        m("use", { href : icons + "#schedule" })
+                        m("use", {
+                            href : icons + "#schedule",
+                            fill : state.dates.validSchedule ? "white" : "red"
+                        })
                     )
                 ),
 
