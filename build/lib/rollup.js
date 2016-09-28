@@ -40,7 +40,7 @@ module.exports = function(options) {
 
             require("modular-css/rollup")({
                 css : "./gen/index.css",
-                map : true,
+                map : !opts.compress,
 
                 // Optional tiny exported selectors
                 namer : opts.compress ? require("modular-css-namer")() : undefined,
