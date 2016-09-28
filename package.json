@@ -11,7 +11,7 @@
     "prepublish": "in-publish && npm run export || not-in-publish",
     "preversion": "npm test",
     "start": "node build/serve.js",
-    "test": "npm run lint && mocha && npm export"
+    "test": "npm run lint && mocha && npm run export"
   },
   "keywords": [
     "cms",
