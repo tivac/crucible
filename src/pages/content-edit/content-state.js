@@ -1,13 +1,11 @@
 import m from "mithril";
-import clone from "lodash.clone";
 import _get from "lodash.get";
 import set from "lodash.set";
 import merge from "lodash.merge";
-import sluggo from "sluggo";
 
 import * as snapshot from "./lib/transformer-snapshot.js";
-// todo wrong section
 import Validator from "./lib/delegator-validator.js";
+import db from "../../lib/firebase";
 
 function ContentState() {
     // These are 100% unneccesary, programmatically,
@@ -74,6 +72,8 @@ export default function Content() {
     con.state = null;
     con.validator = null;
 
+    con.user = db.getAuth().uid;
+
     con.init = function() {
         con.state = state = new ContentState();
         con.validator = validator = new Validator(con);
@@ -85,8 +85,6 @@ export default function Content() {
 
     con.get = function(path) {
         if(!path) {
-            // Superfluous? Will this do more to obscure 
-            // potential problems more than prevent them?
             return state;
         }
 
@@ -104,11 +102,6 @@ export default function Content() {
         validator.attachInputHandlers(state);
     };
 
-    // Data Changes
-    con.titleChange = function(title) {
-        state.meta.title = title;
-        m.redraw();
-    };
 
     // UI
     con.toggleSchedule = function(evt, force) {
@@ -125,14 +118,26 @@ export default function Content() {
         con.resetInvalid();
     };
 
+    // Data Changes
+    con.titleChange = function(name) {
+        // console.log("state.meta.title", state.meta.title);
+        state.meta.name = name;
+        m.redraw();
+    };
+
     con.setField = function(path, val) {
         state.dates.updated_at = Date.now();
+        state.user.updated_by = con.user;
 
         return set(state, path, val);
     };
 
     con.clearSchedule = function() {
         state = merge(state, {
+            user : {
+                published_by   : null,
+                unpublished_by : null
+            },
             dates : {
                 published_at   : null,
                 unpublished_at : null,
@@ -161,6 +166,8 @@ export default function Content() {
 
     // Validity / Publishing
     con.addInvalid = function(name) {
+        state.form.valid = false;
+        
         if(state.form.invalidFields.indexOf(name) > -1) {
             return;
         }
@@ -177,26 +184,32 @@ export default function Content() {
     };
 
     con.setDateField = function(key, ts) {
-        state.dates[key] = ts;
+        var atKey = key + "_at",
+            byKey = key + "_by";
+
+        state.dates[atKey] = ts;
+        state.user[byKey] = con.user;
+
         con.checkValidSchedule();
     };
 
     con.publish = function() {
         state.form.valid = state.form.el.checkValidity();
 
+        console.log("state.form.valid", state.form.valid);
         if(!state.form.valid) {
             return;
         }
 
-        con.setDateField("published_at", Date.now());
+        con.setDateField("published", Date.now());
 
         if(state.dates.unpublished_at < state.dates.published_at) {
-            con.setDateField("unpublished_at", null);
+            con.setDateField("unpublished", null);
         }
     };
 
     con.unpublish = function() {
-        con.setDateField("unpublished_at", Date.now());
+        con.setDateField("unpublished", Date.now());
     };
 
     // Persist

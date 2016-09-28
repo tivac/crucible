@@ -4,18 +4,14 @@ import debounce from "lodash.debounce";
 import css from "../invalid-msg.css";
 
 export default function Validator(content) {
-    var v = this,
-        state = content.get();
-
-    v.state = state;
+    var v = this;
+        content = content;
 
     v.attachInputHandlers = function(state) {
         var form = state.form.el;
 
         form.querySelectorAll("input, textarea, select").forEach(function(formInput) {
             formInput.addEventListener("invalid", function(evt) {
-                v.state.form.invalid = true;
-                
                 evt.target.classList.add(css.highlightInvalid);
                 v.registerInvalidField(evt.target.name);
             });
@@ -34,7 +30,7 @@ export default function Validator(content) {
     };
 
     v.onFormFocus = function() {
-        if(state.form.invalidFields.length) {
+        if(!content.get().form.valid) {
             v.debounceFade();
         }
     };

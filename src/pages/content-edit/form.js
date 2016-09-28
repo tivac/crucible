@@ -36,9 +36,11 @@ export function view(ctrl_unused, options) {
                         m.redraw();
                     }
                 },
-                m("h1", {
+                m("input", {
                         // Attrs
                         class  : css.title,
+                        type   : "text",
+                        value  : name(state.schema, state.meta),
                         config : function(el, isInit) {
                             var range, selection;
 
@@ -58,9 +60,8 @@ export function view(ctrl_unused, options) {
                         contenteditable : true,
 
                         // Events
-                        oninput : m.withAttr("innerText", content.titleChange)
-                    },
-                    name(state.schema, state.meta)
+                        onchange : m.withAttr("value", content.titleChange.bind(content))
+                    }
                 ),
                 m.component(children, {
                     class  : css.children,

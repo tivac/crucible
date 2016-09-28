@@ -32,9 +32,10 @@ function timestamp(side, date, time) {
 }
 
 
-// Since everything about the scheduler is derivative from the raw timestamps
-// of "published_at", "unpublished_at", we'll give this little popup its own
-// controller to be the transformer back and forth from timestamps <-> date/time
+// Since everything about the scheduler is derivative from the
+// raw timestamps of "published_at", "unpublished_at", we'll 
+// give this little popup its own controller which acts as the 
+// two-way transformer between: timestamps <-> date/time strings
 
 export function controller(options) {
     var ctrl = this,
@@ -83,7 +84,7 @@ export function controller(options) {
         var dateField,
             ts;
 
-        dateField = side === "start" ? "published_at" : "unpublished_at";
+        dateField = side === "start" ? "published" : "unpublished";
         ctrl.schedule[side][part] = val;
 
         determineTimestamps();
