@@ -1,17 +1,13 @@
-
 import m from "mithril";
-
 import formatDate from "date-fns/format";
 
 import css from "./head.css";
-
 
 var DEFAULT_START_TIME = "00:00",
     DEFAULT_END_TIME   = "23:59",
     DATE_FORMAT = "YYYY-MM-DD",
     TIME_FORMAT = "HH:mm",
     TIMESTAMP_FORMAT = "x";
-
 
 function scheduleStr(side, date, time) {
     if(!date) {
@@ -34,6 +30,7 @@ function timestamp(side, date, time) {
 
     return str ? timestampFromStr(str) : null;
 }
+
 
 // Since everything about the scheduler is derivative from the raw timestamps
 // of "published_at", "unpublished_at", we'll give this little popup its own

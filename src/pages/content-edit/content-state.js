@@ -31,7 +31,9 @@ function ContentState() {
         ui : {
             saving   : boolean,
             schedule : boolean,
-            invalid  : boolean // Duplication? Or needed for weird fade behavior?
+            invalid  : boolean, // Duplication? Or needed for weird fade behavior?
+
+            invalidTransitioning : boolean
         },
 
         user : {
@@ -107,6 +109,7 @@ export default function Content() {
     };
 
     con.resetInvalid = function() {
+        console.log("resetInvalid");
         state.form.valid = true;
         state.form.invalidFields = [];
     };
@@ -143,12 +146,16 @@ export default function Content() {
     };
 
 
+    con.getHiddenIndex = function(key) {
+        return state.form.hidden.indexOf(key);
+    };
+
     con.addHidden = function(key) {
         state.form.hidden.push(key);
     };
 
     con.removeHidden = function(key) {
-        var index = state.form.hidden.indexOf(key);
+        var index = con.getHiddenIndex(key);
 
         if(index > -1) {
             state.form.hidden.splice(index, 1);

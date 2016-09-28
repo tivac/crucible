@@ -86,10 +86,8 @@ export function controller() {
 
         if(isHidden && index === -1) {
             content.addHidden(key);
-            // content.form.hidden.push(key);
         } else if(index > -1) {
             content.removeHidden(key);
-            // content.form.hidden.splice(index, 1);
         }
     };
 

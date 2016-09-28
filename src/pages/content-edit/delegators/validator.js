@@ -13,6 +13,8 @@ export default function Validator(state) {
 
         form.querySelectorAll("input, textarea, select").forEach(function(formInput) {
             formInput.addEventListener("invalid", function(evt) {
+                v.state.form.invalid = true;
+                
                 evt.target.classList.add(css.highlightInvalid);
                 v.registerInvalidField(evt.target.name);
             });
@@ -70,5 +72,5 @@ export default function Validator(state) {
             (unpub && !pub) ||
             (pub && unpub && pub < unpub);
     };
-};
+}
 
