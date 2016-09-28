@@ -27,6 +27,9 @@ export function view(ctrl_unused, options) {
     //     isDisabled = true;
     // }
 
+    console.log("state.schema", state.schema);
+    console.log("state.schema.key", state.schema.key);
+
     return m("div", { class : css.head },
         m("div", { class : css.main },
 
@@ -36,7 +39,7 @@ export function view(ctrl_unused, options) {
                         // Attrs
                         class  : css.back,
                         title  : "Back to Listing",
-                        href   : prefix("/listing/" + state.schema.name),
+                        href   : prefix("/listing/" + state.schema.key),
                         config : m.route
                     },
                     m("svg", { class : css.icon },

@@ -47,7 +47,6 @@ export default function Validator(state) {
     }, 100);
 
     v.show = function() {
-        console.log("v.show");
         var old = state.ui.invalid;
         state.ui.invalid = true;
 
@@ -57,7 +56,6 @@ export default function Validator(state) {
     };
 
     v.hide = function() {
-        console.log("v.hide");
         // CSS transition does the rest.
         state.ui.invalid = false;
         m.redraw();

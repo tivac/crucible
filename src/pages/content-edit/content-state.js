@@ -3,10 +3,11 @@ import clone from "lodash.clone";
 import _get from "lodash.get";
 import set from "lodash.set";
 import merge from "lodash.merge";
+import sluggo from "sluggo";
 
-import * as snapshot from "./transformers/snapshot.js";
+import * as snapshot from "./lib/transformer-snapshot.js";
 // todo wrong section
-import Validator from "./delegators/validator.js";
+import Validator from "./lib/delegator-validator.js";
 
 function ContentState() {
     // These are 100% unneccesary, programmatically,
@@ -74,22 +75,25 @@ export default function Content() {
 
     con.state = state = new ContentState();
     con.validator = validator = new Validator(state);
+
     // TEMP
     console.log("temp make state global for debug");
     window.state = state;
 
     con.get = function(path) {
         if(!path) {
+            // Superfluous? Will this do more to obscure 
+            // potential problems more than prevent them?
             return clone(state);
-            // return state;
         }
 
         return _get(state, path);
     };
 
     // Setup
-    con.setSchema = function(schema) {
+    con.setSchema = function(schema, key) {
         state.schema = schema;
+        state.schema.key = key;
     };
 
     con.registerForm = function(formEl) {
@@ -103,13 +107,13 @@ export default function Content() {
         m.redraw();
     };
 
+    // UI
     con.toggleSchedule = function(evt, force) {
-        state.ui.schedule = typeof force !== "undefined" ? Boolean(force) : !state.ui.schedule;
+        state.ui.schedule = (force != null) ? Boolean(force) : !state.ui.schedule;
         m.redraw();
     };
 
     con.resetInvalid = function() {
-        console.log("resetInvalid");
         state.form.valid = true;
         state.form.invalidFields = [];
     };
@@ -119,7 +123,7 @@ export default function Content() {
         con.ref = ref; // Firebase reference.
 
         state = merge(state, snapshot.toState(data, state));
-        con.assessDerivedVals();
+        con.checkValidSchedule();
         con.resetInvalid();
     };
 
@@ -127,11 +131,6 @@ export default function Content() {
         state.dates.updated_at = Date.now();
 
         return set(state, path, val);
-    };
-
-    con.assessDerivedVals = function() {
-        state.dates.validSchedule = validator.validSchedule();
-        m.redraw();
     };
 
     con.clearSchedule = function() {
@@ -142,10 +141,10 @@ export default function Content() {
                 validSchedule  : null
             }
         });
-        m.redraw();
+        con.checkValidSchedule();
     };
 
-
+    // Hidden / Dependent fields.
     con.getHiddenIndex = function(key) {
         return state.form.hidden.indexOf(key);
     };
@@ -162,6 +161,7 @@ export default function Content() {
         }
     };
 
+    // Validity / Publishing
     con.checkValidSchedule = function() {
         state.dates.validSchedule = validator.validSchedule();
     };
@@ -178,28 +178,23 @@ export default function Content() {
             return;
         }
 
-        state = merge(state, {
-            dates : { published_at : Date.now() } 
-        });
+        con.setDateField("published_at", Date.now());
         con.checkValidSchedule();
-        m.redraw();
     };
 
     con.unpublish = function() {
-        state = merge(state, {
-            dates : { unpublished_at : Date.now() } 
-        });
+        con.setDateField("unpublished_at", Date.now());
         con.checkValidSchedule();
-        // m.redraw();
     };
 
+    // Persist
     con.save = function() {
         var saveData;
 
         if(!state.dates.validSchedule) {
             console.log("TODO user feedback for invalid schedule.");
-            // state.form.invalidFields = ["Invalid schedule."];
-            // state.ui.invalid = true;
+            state.form.invalidFields = ["Invalid schedule."];
+            state.ui.invalid = true;
             return;
         }
         

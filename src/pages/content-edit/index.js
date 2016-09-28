@@ -32,7 +32,6 @@ export function controller() {
 
     ctrl.id     = id;
     ctrl.ref    = ref;
-    ctrl.schema = null;
     ctrl.form   = null;
     ctrl.data   = {};
     ctrl.hidden = [];
@@ -48,10 +47,7 @@ export function controller() {
 
 
     schema.on("value", function(snap) {
-        ctrl.schema = snap.val();
-        ctrl.schema.key = snap.key();
-
-        content.setSchema(snap.val());
+        content.setSchema(snap.val(), snap.key());
 
         m.redraw();
     });
@@ -102,7 +98,7 @@ export function view(ctrl) {
     var state = ctrl.content.get(),
         title;
 
-    if(!ctrl.schema) {
+    if(!state.schema) {
         return m.component(layout);
     }
 
@@ -112,7 +108,7 @@ export function view(ctrl) {
         .join(" | ");
 
     if(!ctrl.id) {
-        m.route("/listing/" + ctrl.schema.key);
+        m.route("/listing/" + state.schema.key);
     }
 
     return m.component(layout, {
