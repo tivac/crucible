@@ -10,21 +10,28 @@ export function controller(options) {
 
     ctrl.prevInvalid = false;
     ctrl.transitioning = false;
+    ctrl.tempInvalidFields = [];
+
+    ctrl.updateState = function(state) {
+        ctrl.transitioning = true;
+        ctrl.prevInvalid = state.ui.invalid;
+        ctrl.tempInvalidFields = state.form.invalidFields;
+    };
 
     ctrl.reset = function() {
         ctrl.prevInvalid = false;
         ctrl.transitioning = false;
+        ctrl.tempInvalidFields = [];
     };
 }
 
 export function view(ctrl, options) {
     var content = options.content,
         state = content.get(),
-        invalidFields = state.form.invalidFields || [];
+        invalidFields = ctrl.tempInvalidFields;
 
     if(state.ui.invalid && !ctrl.prevInvalid) {
-        ctrl.transitioning = true;
-        ctrl.prevInvalid = state.ui.invalid;
+        ctrl.updateState(state);
     }
 
     if(!ctrl.transitioning && state.form.valid) {
@@ -55,7 +62,10 @@ export function view(ctrl, options) {
         m("button", {
                 class : css.closeInvalidMessage,
 
-                onclick : content.resetInvalid()
+                onclick : function() {
+                    ctrl.reset();
+                    content.resetInvalid();
+                }
             },
             "x" // todo, figure out how to use a unicode x here
         )

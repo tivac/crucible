@@ -66,8 +66,6 @@ export function view(ctrl, options) {
                 ctrl.auth ? [
                     m("div", { class : header.schemas },
                         (ctrl.schemas || []).map(function(schema) {
-                            console.log("schema", schema);
-                            console.log("schema.key", schema.key);
                             var searchUrl = prefix("/content/" + schema.key),
                                 targetUrl = prefix("/listing/" + schema.key),
                                 active;

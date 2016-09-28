@@ -32,9 +32,7 @@ function ContentState() {
         ui : {
             saving   : boolean,
             schedule : boolean,
-            invalid  : boolean, // Duplication? Or needed for weird fade behavior?
-
-            invalidTransitioning : boolean
+            invalid  : boolean
         },
 
         user : {
@@ -59,7 +57,7 @@ function ContentState() {
 
             hidden : array,
 
-            valid         : boolean, // Duplication? Or needed for weird fade behavior?
+            valid         : boolean,
             invalidFields : array
         },
 
@@ -73,18 +71,23 @@ export default function Content() {
         state,
         validator;
 
-    con.state = state = new ContentState();
-    con.validator = validator = new Validator(state);
+    con.state = null;
+    con.validator = null;
 
-    // TEMP
-    console.log("temp make state global for debug");
-    window.state = state;
+    con.init = function() {
+        con.state = state = new ContentState();
+        con.validator = validator = new Validator(con);
+      
+        // TEMP
+        console.log("temp make state global for debug");
+        window.state = state;
+    };
 
     con.get = function(path) {
         if(!path) {
             // Superfluous? Will this do more to obscure 
             // potential problems more than prevent them?
-            return clone(state);
+            return state;
         }
 
         return _get(state, path);
@@ -111,11 +114,6 @@ export default function Content() {
     con.toggleSchedule = function(evt, force) {
         state.ui.schedule = (force != null) ? Boolean(force) : !state.ui.schedule;
         m.redraw();
-    };
-
-    con.resetInvalid = function() {
-        state.form.valid = true;
-        state.form.invalidFields = [];
     };
 
     // Transforms
@@ -162,6 +160,18 @@ export default function Content() {
     };
 
     // Validity / Publishing
+    con.addInvalid = function(name) {
+        if(state.form.invalidFields.indexOf(name) > -1) {
+            return;
+        }
+        state.form.invalidFields.push(name);
+    };
+
+    con.resetInvalid = function() {
+        state.form.valid = true;
+        state.form.invalidFields = [];
+    };
+
     con.checkValidSchedule = function() {
         state.dates.validSchedule = validator.validSchedule();
     };
@@ -179,12 +189,14 @@ export default function Content() {
         }
 
         con.setDateField("published_at", Date.now());
-        con.checkValidSchedule();
+
+        if(state.dates.unpublished_at < state.dates.published_at) {
+            con.setDateField("unpublished_at", null);
+        }
     };
 
     con.unpublish = function() {
         con.setDateField("unpublished_at", Date.now());
-        con.checkValidSchedule();
     };
 
     // Persist
@@ -208,6 +220,8 @@ export default function Content() {
             m.redraw();
         });
     };
+
+    con.init();
 }
 
 

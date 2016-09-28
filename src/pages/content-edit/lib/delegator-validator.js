@@ -3,8 +3,9 @@ import debounce from "lodash.debounce";
 
 import css from "../invalid-msg.css";
 
-export default function Validator(state) {
-    var v = this;
+export default function Validator(content) {
+    var v = this,
+        state = content.get();
 
     v.state = state;
 
@@ -27,11 +28,7 @@ export default function Validator(state) {
     };
 
     v.registerInvalidField = function(name) {
-        if(state.form.invalidFields.indexOf(name) > -1) {
-            return; // Already registered.
-        }
-        
-        state.form.invalidFields.push(name);
+        content.addInvalid(name);
         v.show();
         v.debounceFade();
     };
@@ -48,8 +45,8 @@ export default function Validator(state) {
 
     v.show = function() {
         var old = state.ui.invalid;
-        state.ui.invalid = true;
 
+        state.ui.invalid = true;
         if(old !== state.ui.invalid) {
             m.redraw(); // Only do once; avoid superfluous redraws.
         }

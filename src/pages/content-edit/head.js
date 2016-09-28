@@ -27,9 +27,6 @@ export function view(ctrl_unused, options) {
     //     isDisabled = true;
     // }
 
-    console.log("state.schema", state.schema);
-    console.log("state.schema.key", state.schema.key);
-
     return m("div", { class : css.head },
         m("div", { class : css.main },
 
