@@ -2,6 +2,9 @@ import m from "mithril";
 
 import css from "./invalid-msg.css";
 
+// A mosly-dumb controller is required here so we
+// can retain some state information about this
+// transitioning element.
 export function controller(options) {
     var ctrl = this;
 
