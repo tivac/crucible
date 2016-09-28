@@ -6,7 +6,7 @@ var assert = require("better-assert"),
     
     instructions = {};
 
-describe("Anthracite", () => {
+describe("Crucible", () => {
     before(() => require("./lib/rollup")("./src/types/instructions.js", instructions));
     
     describe("/types/instructions", function() {

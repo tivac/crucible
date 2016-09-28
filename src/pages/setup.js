@@ -2,7 +2,7 @@ import m from "mithril";
 
 export function view() {
     return [
-        m("h1", "Anthracite Setup"),
+        m("h1", "Crucible Setup"),
         
         m("ol",
             m("li", "Copy config-example.js to config.js"),
