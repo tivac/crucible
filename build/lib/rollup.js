@@ -55,7 +55,9 @@ module.exports = function(options) {
                 ],
                 
                 // Optionally compress output
-                done : opts.compress ? [ require("cssnano")() ] : [ ]
+                done : opts.compress ?
+                    [ require("cssnano")() ] :
+                    [ ]
             }),
 
             opts.compress ?
@@ -71,7 +73,9 @@ module.exports = function(options) {
                 }) :
                 {},
             
-            opts.compress ? require("rollup-plugin-uglify")() : {}
+            opts.compress ?
+                require("rollup-plugin-uglify")() :
+                {}
         ]
     };
 };
