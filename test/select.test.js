@@ -6,7 +6,7 @@ var assert = require("better-assert"),
     
     select = {};
 
-describe("Anthracite", () => {
+describe("Crucible", () => {
     before(() => require("./lib/rollup")("./src/types/select.js", select));
     
     describe.skip("/types/select", function() {
