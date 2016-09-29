@@ -9,7 +9,7 @@
     "export": "node build/build.js --compress=true",
     "lint": "eslint .",
     "prepublish": "in-publish && npm run export || not-in-publish",
-    "preversion": "npm test",
+    "preversion": "npm run lint && mocha",
     "start": "node build/serve.js",
     "test": "npm run lint && mocha && npm run export"
   },
