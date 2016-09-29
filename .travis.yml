@@ -1,13 +1,11 @@
 sudo: false
 language: node_js
 node_js:
-# Can't use nodejs 6 yet because rollup is broken
-#- node
-#- 5
-- 4
+  - node
+  - 4
 cache:
   directories:
-  - node_modules
+#  - node_modules
 deploy:
   provider: npm
   email: npm@patcavit.com
