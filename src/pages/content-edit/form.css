@@ -42,27 +42,13 @@
 .statusLabel {
     font-weight: 600;
 }
+
 .status {
     margin: 0;
 
-    border-bottom: solid 3px;
+    // border-bottom: solid 3px;
 }
 
-.draft {
-    composes : status;
-
-    border-color: #ddd;
-}
-.published {
-    composes : status;
-
-    border-color: green;
-}
-.scheduled {
-    composes : status;
-
-    border-color: orange;
-}
 
 .form {
     composes: global(pure-form), global(pure-form-stacked);
@@ -106,23 +92,53 @@
     font-weight: normal;
 }
 
-.title {
+input[type=text].title {
     margin: 0;
     padding: 2px 5px 0 5px;
-    
-    border: solid 1px transparent;
-    border-bottom: solid 2px #68A;
+
+    border: none;
+    border-bottom: solid 3px #68A;
+    border-radius: 0;
+    box-shadow: none;
+    font-size: 2em;
+    padding: 0;
+    width: 100%;
 }
 
-.title:hover {
+input[type=text].title:hover {
     border-color: #DDD;
     border-bottom-color: #68A;
 }
 
-.title:focus {
+input[type=text].title:focus {
     outline: none;
     border-color: #BBB;
     border-bottom-color: #68A;
+}
+
+
+input[type=text].draft {
+    composes: title;
+
+    border-color: #ddd;
+}
+
+input[type=text].published {
+    composes: title;
+
+    border-color: green;
+}
+
+input[type=text].scheduled {
+    composes: title;
+
+    border-color: orange;
+}
+
+input[type=text].unpublished {
+    composes: title;
+
+    border-color: red;
 }
 
 /* Form contents */

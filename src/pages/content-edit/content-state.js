@@ -142,6 +142,7 @@ export default function Content() {
     };
 
     con.clearSchedule = function() {
+        console.log("clearSchedule");
         state = merge(state, {
             user : {
                 published_by   : null,
@@ -190,15 +191,18 @@ export default function Content() {
     };
 
     con.checkValidSchedule = function() {
+        console.log("checkValidSchedule");
         state.dates.validSchedule = validator.validSchedule(state);
     };
 
     con.setDateField = function(key, ts) {
+        console.log("setDateField");
         var atKey = key + "_at",
             byKey = key + "_by";
 
         state.dates[atKey] = ts;
         state.user[byKey] = con.user;
+        state.meta.status = snapshot.findStatus(state);
 
         con.checkValidSchedule();
     };
@@ -210,7 +214,6 @@ export default function Content() {
     con.publish = function() {
         state.form.valid = validator.checkValidity();
 
-        console.log("state.form.valid", state.form.valid);
         if(!state.form.valid) {
             return;
         }
@@ -228,8 +231,7 @@ export default function Content() {
         var saveData;
 
         if(!state.dates.validSchedule) {
-            console.log("TODO user feedback for invalid schedule.");
-            state.form.invalidFields = ["Invalid schedule."];
+            state.form.invalidFields = [ "Invalid schedule." ];
             con.toggleInvalid(true);
             return;
         }

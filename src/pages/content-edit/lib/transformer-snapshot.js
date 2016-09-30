@@ -3,7 +3,7 @@ import clone from "lodash.clone";
 import isFuture from "date-fns/is_future";
 import isPast from "date-fns/is_past";
 
-function findStatus(state) {
+export function findStatus(state) {
     var pub = state.dates.published_at,
         unpub = state.dates.unpublished_at,
         status = "draft";

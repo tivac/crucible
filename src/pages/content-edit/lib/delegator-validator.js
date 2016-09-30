@@ -7,7 +7,6 @@ export default function Validator(content) {
     var v = this;
         content = content;
 
-    // I dislike this, but can't figure out a better solution.
     v.handlersAttached = false;
 
     v.attachInputHandlers = function() {

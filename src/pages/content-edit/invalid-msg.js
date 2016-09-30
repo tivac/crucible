@@ -32,8 +32,6 @@ export function view(ctrl, options) {
         state = content.get(),
         invalid = state.ui.invalid;
 
-    console.log("invalid, ctrl.transitioning", invalid, ctrl.transitioning);
-
     if(!invalid && !ctrl.transitioning) {
         return m("div", { style : "display:none;" });
     }
