@@ -3,7 +3,7 @@ import debounce from "lodash.debounce";
 
 import css from "../invalid-msg.css";
 
-export default function Validator(content) {
+export default function Validity(content) {
     var v = this;
         content = content;
 
@@ -44,6 +44,22 @@ export default function Validator(content) {
         v.show();
         v.debounceFade();
     };
+    v.addInvalidField = function(name) {
+        var state = content.get();
+
+        if(state.form.invalidFields.indexOf(name) > -1) {
+            return;
+        }
+        state.form.invalidFields.push(name);
+    };
+
+    v.resetInvalid = function() {
+        var state = content.get();
+
+        state.form.valid = true;
+        state.form.invalidFields = [];
+    };
+
 
     v.onFormFocus = function() {
         if(!content.get().form.valid) {
@@ -51,9 +67,6 @@ export default function Validator(content) {
         }
     };
 
-    v.debounceFade = debounce(function() {
-        v.hide();
-    }, 100);
 
     v.show = function() {
         var wasInvalid = content.get().ui.invalid;
@@ -70,8 +83,13 @@ export default function Validator(content) {
         m.redraw();
     };
 
-    v.validSchedule = function(state) {
-        var pub = state.dates.published_at,
+    v.debounceFade = debounce(function() {
+        v.hide();
+    }, 100);
+
+    v.checkSchedule = function() {
+        var state = content.get(),
+            pub = state.dates.published_at,
             unpub = state.dates.unpublished_at;
 
         return (!pub && !unpub) ||

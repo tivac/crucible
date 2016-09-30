@@ -105,7 +105,7 @@ export function view(ctrl_unused, options) {
                 ),
 
                 // Unpublish
-                (state.meta.status === "draft") ?
+                (unpublishTs || state.meta.status === "draft") ?
                 null :
                 m("button", {
                         // Attrs

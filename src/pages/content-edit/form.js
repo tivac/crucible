@@ -53,7 +53,9 @@ export function view(ctrl_unused, options) {
                     state  : state.fields,
 
                     update  : content.setField.bind(content),
-                    content : content
+                    content : content,
+
+                    registerHidden : content.hidden.register.bind(content.hidden)
                 })
             )
         )

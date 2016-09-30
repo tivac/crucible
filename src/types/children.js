@@ -36,7 +36,7 @@ export function view(ctrl, options) {
             wasHidden = field.show.hidden;
             field.show.hidden = checkHidden(options.state, field);
 
-            if(registerHidden && field.show.hidden !== wasHidden) {
+            if(field.show.hidden !== wasHidden) {
                 // hidden status changed, notify the controller.
                 registerHidden(field.key, field.show.hidden);
                 m.redraw();

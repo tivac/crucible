@@ -50,12 +50,12 @@ export function controller(options) {
     };
 
     ctrl.makeSchedule = function() {
-        var state = content.get(),
-            pub = state.dates.published_at,
-            unpub = state.dates.unpublished_at;
+        var dates = content.get().dates,
+            pub = dates.published_at,
+            unpub = dates.unpublished_at;
 
         ctrl.schedule = {
-            valid : state.dates.validSchedule,
+            valid : dates.validSchedule,
 
             start : {
                 date : pub ? formatDate(pub, DATE_FORMAT) : "",
@@ -97,7 +97,7 @@ export function controller(options) {
 }
 
 
-function mScheduleInput(content, ctrl, id, side, part) {
+function mScheduleInput(ctrl, id, side, part) {
     return m("input", {
         id    : id,
         type  : part,
@@ -110,7 +110,7 @@ function mScheduleInput(content, ctrl, id, side, part) {
 }
 
 export function view(ctrl, options) {
-    var content = options.content;
+    var scheduler = options.content.scheduler;
 
     // Update schedule on redraw.
     ctrl.makeSchedule();
@@ -119,21 +119,21 @@ export function view(ctrl, options) {
         m("div", { class : css.start },
             m("p", m("label", { for : "published_at_date" }, "Publish at")),
 
-            m("p", mScheduleInput(content, ctrl, "published_at_date", "start", "date")),
-            m("p", mScheduleInput(content, ctrl, "published_at_time", "start", "time"))
+            m("p", mScheduleInput(ctrl, "published_at_date", "start", "date")),
+            m("p", mScheduleInput(ctrl, "published_at_time", "start", "time"))
         ),
         m("div", { class : css.end },
             m("p", m("label", { for : "unpublished_at_date" }, "Until (optional)")),
 
-            m("p", mScheduleInput(content, ctrl, "unpublished_at_date", "end", "date")),
-            m("p", mScheduleInput(content, ctrl, "unpublished_at_time", "end", "time")),
+            m("p", mScheduleInput(ctrl, "unpublished_at_date", "end", "date")),
+            m("p", mScheduleInput(ctrl, "unpublished_at_time", "end", "time")),
             m("p",
                 m("button", {
                     class : css.clearSchedule,
                     title : "Clear schedule dates",
 
                     // Events
-                    onclick : scheduler.clearSchedule.bind(content)
+                    onclick : scheduler.clearSchedule.bind(scheduler)
                 },
                 "clear schedule"
                 )

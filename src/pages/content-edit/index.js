@@ -75,20 +75,6 @@ export function controller() {
     });
 
     watch(ref);
-
-    ctrl.registerHidden = function(key, isHidden) {
-        if(isHidden) {
-            content.addHidden(key);
-        } else {
-            content.removeHidden(key);
-        }
-    };
-
-    // Event Handlers
-    ctrl.titleChange = function(title) {
-        update(ctrl.data, [ "name" ], title);
-        update(ctrl.data, [ "slug" ], sluggo(title));
-    };
 }
 
 export function view(ctrl) {

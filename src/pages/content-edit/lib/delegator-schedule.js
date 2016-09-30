@@ -4,26 +4,26 @@ import merge from "lodash.merge";
 import isFuture from "date-fns/is_future";
 import isPast from "date-fns/is_past";
 
-export default function Scheduler(content) {
+export default function Schedule(content) {
     var sched = this,
-        con = content,
+        content = content,
         state = content.state;
 
     sched.unpublish = function() {
-        con.setDateField("unpublished", Date.now());
+        content.setDateField("unpublished", Date.now());
     };
 
     sched.publish = function() {
-        state.form.valid = con.validator.checkValidity();
+        state.form.valid = content.validator.checkValidity();
 
         if(!state.form.valid) {
             return;
         }
 
-        con.setDateField("published", Date.now());
+        content.setDateField("published", Date.now());
 
         if(state.dates.unpublished_at < state.dates.published_at) {
-            con.setDateField("unpublished", null);
+            content.setDateField("unpublished", null);
         }
     };
 
@@ -35,7 +35,7 @@ export default function Scheduler(content) {
         state.user[byKey] = con.user;
         state.meta.status = sched.findStatus(state);
 
-        con.checkValidSchedule();
+        content.checkValidSchedule();
     };
 
     sched.clearSchedule = function() {
@@ -50,7 +50,7 @@ export default function Scheduler(content) {
                 validSchedule  : null
             }
         });
-        con.checkValidSchedule();
+        content.checkValidSchedule();
     };
     
     sched.findStatus = function() {
@@ -74,7 +74,7 @@ export default function Scheduler(content) {
     };
 
     sched.checkValidSchedule = function() {
-        state.dates.validSchedule = con.validator.validSchedule(state);
-        state.meta.status = sched.findStatus(state);
+        state.dates.validSchedule = content.validity.checkSchedule();
+        state.meta.status = sched.findStatus();
     };
 }

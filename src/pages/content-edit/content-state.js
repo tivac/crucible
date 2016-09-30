@@ -5,8 +5,9 @@ import merge from "lodash.merge";
 
 import db from "../../lib/firebase";
 import * as snapshot from "./lib/transformer-snapshot.js";
-import Validator from "./lib/delegator-validator.js";
-import Scheduler from "./lib/delegator-scheduler.js";
+import Hidden from "./lib/delegator-hidden.js";
+import Schedule from "./lib/delegator-schedule.js";
+import Validity from "./lib/delegator-validity.js";
 
 function ContentState() {
     // These are 100% unneccesary, programmatically,
@@ -71,19 +72,24 @@ function ContentState() {
 export default function Content() {
     var con = this,
         state,
-        validator,
-        scheduler;
+        hidden,
+        scheduler,
+        validity;
 
     con.state = null;
-    con.ref = null; // Firebase object reference.
-    con.validator = null;
-    con.scheduler = null;
     con.user = db.getAuth().uid;
+    con.ref = null; // Firebase object reference.
+
+    con.hidden = null;
+    con.scheduler = null;
+    con.validity = null;
 
     con.init = function() {
         con.state = state = new ContentState();
-        con.validator = validator = new Validator(con);
-        con.scheduler = scheduler = new Scheduler(con);
+
+        con.hidden = hidden = new Hidden(con);
+        con.scheduler = scheduler = new Schedule(con);
+        con.validity = validity = new Validity(con);
       
         // TEMP
         console.log("temp make state global for debug");
@@ -114,8 +120,8 @@ export default function Content() {
 
         state = merge(state, snapshot.toState(data));
         state.meta.status = scheduler.findStatus();
-        con.checkValidSchedule();
-        con.resetInvalid();
+        con.validity.checkSchedule();
+        con.validity.resetInvalid();
     };
 
 
@@ -133,79 +139,6 @@ export default function Content() {
     };
 
 
-    // Scheduling
-    con.unpublish = function() {
-        con.setDateField("unpublished", Date.now());
-    };
-
-    con.publish = function() {
-        state.form.valid = validator.checkValidity();
-
-        if(!state.form.valid) {
-            return;
-        }
-
-        con.setDateField("published", Date.now());
-
-        if(state.dates.unpublished_at < state.dates.published_at) {
-            con.setDateField("unpublished", null);
-        }
-    };
-
-    con.setDateField = function(key, ts) {
-        var atKey = key + "_at",
-            byKey = key + "_by";
-
-        state.dates[atKey] = ts;
-        state.user[byKey] = con.user;
-        state.meta.status = scheduler.findStatus(state);
-
-        con.checkValidSchedule();
-    };
-
-    con.clearSchedule = function() {
-        state = merge(state, {
-            user : {
-                published_by   : null,
-                unpublished_by : null
-            },
-            dates : {
-                published_at   : null,
-                unpublished_at : null,
-                validSchedule  : null
-            }
-        });
-        con.checkValidSchedule();
-    };
-
-    con.checkValidSchedule = function() {
-        state.dates.validSchedule = validator.validSchedule(state);
-        state.meta.status = scheduler.findStatus(state);
-    };
-
-
-    // Hidden / Dependent fields.
-    function getHiddenIndex(key) {
-        return state.form.hidden.indexOf(key);
-    }
-
-    con.addHidden = function(key) {
-        var index = getHiddenIndex(key);
-
-        if(index === -1) { 
-            state.form.hidden.push(key);
-        }
-    };
-
-    con.removeHidden = function(key) {
-        var index = getHiddenIndex(key);
-
-        if(index > -1) {
-            state.form.hidden.splice(index, 1);
-        }
-    };
-
-
     // UI
     function toggleUI(key, force) {
         state.ui[key] = (force != null) ? Boolean(force) : !state.ui[key];
@@ -220,32 +153,17 @@ export default function Content() {
         toggleUI("invalid", force);
     };
 
-
-    // Validity
-    con.addInvalidField = function(name) {        
-        if(state.form.invalidFields.indexOf(name) > -1) {
-            return;
-        }
-        state.form.invalidFields.push(name);
-    };
-
-    con.resetInvalid = function() {
-        state.form.valid = true;
-        state.form.invalidFields = [];
-    };
-
-
     // Persist
     con.save = function() {
         var saveData;
 
-        con.checkValidSchedule();
+        con.validity.checkSchedule();
         con.toggleSchedule(false);
 
         if(!state.dates.validSchedule) {
             state.form.invalidFields = [ "Invalid schedule." ];
             con.toggleInvalid(true);
-            validator.debounceFade();
+            validity.debounceFade();
 
             return null;
         }
