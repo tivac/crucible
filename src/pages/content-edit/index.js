@@ -78,11 +78,9 @@ export function controller() {
     watch(ref);
 
     ctrl.registerHidden = function(key, isHidden) {
-        var index = content.getHiddenIndex(key);
-
-        if(isHidden && index === -1) {
+        if(isHidden) {
             content.addHidden(key);
-        } else if(index > -1) {
+        } else {
             content.removeHidden(key);
         }
     };

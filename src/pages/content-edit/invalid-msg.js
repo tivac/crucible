@@ -8,43 +8,49 @@ import css from "./invalid-msg.css";
 export function controller(options) {
     var ctrl = this;
 
-    ctrl.prevInvalid = false;
+    ctrl.invalidFields = [];
+    ctrl.wasInvalid = false;
     ctrl.transitioning = false;
-    ctrl.tempInvalidFields = [];
 
     ctrl.updateState = function(state) {
+        // We need to retain our own copy of the invalid fields,
+        // because they get cleared out from state very quickly.
+        ctrl.invalidFields = state.form.invalidFields;
+        ctrl.wasInvalid = state.ui.invalid;
         ctrl.transitioning = true;
-        ctrl.prevInvalid = state.ui.invalid;
-        ctrl.tempInvalidFields = state.form.invalidFields;
     };
 
     ctrl.reset = function() {
-        ctrl.prevInvalid = false;
+        ctrl.invalidFields = [];
+        ctrl.wasInvalid = false;
         ctrl.transitioning = false;
-        ctrl.tempInvalidFields = [];
     };
 }
 
 export function view(ctrl, options) {
     var content = options.content,
         state = content.get(),
-        invalidFields = ctrl.tempInvalidFields;
+        invalid = state.ui.invalid;
 
-    if(state.ui.invalid && !ctrl.prevInvalid) {
-        ctrl.updateState(state);
-    }
+    console.log("invalid, ctrl.transitioning", invalid, ctrl.transitioning);
 
-    if(!ctrl.transitioning && state.form.valid) {
+    if(!invalid && !ctrl.transitioning) {
         return m("div", { style : "display:none;" });
     }
 
+    if(invalid && !ctrl.wasInvalid) {
+        ctrl.updateState(state);
+    }
+
     return m("div", {
-            class : !state.ui.invalid ? css.delayedHide : css.visible,
+            class : invalid ? css.visible : css.delayedHide,
 
             config : function(el, isInit) {
                 if(isInit) {
                     return;
                 }
+
+                ctrl.transitioning = true;
 
                 el.addEventListener("transitionend", function(evt) {
                     content.resetInvalid();
@@ -55,7 +61,7 @@ export function view(ctrl, options) {
         },
         "Missing required fields.",
         m("ul",
-            invalidFields.map(function(name) {
+            ctrl.invalidFields.map(function(name) {
                 return m("li", name);
             })
         ),

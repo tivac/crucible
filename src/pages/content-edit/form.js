@@ -57,7 +57,7 @@ export function view(ctrl_unused, options) {
                             selection.addRange(range);
                         },
 
-                        contenteditable : true,
+                        // contenteditable : true,
 
                         // Events
                         onchange : m.withAttr("value", content.titleChange.bind(content))

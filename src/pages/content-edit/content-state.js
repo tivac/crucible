@@ -17,12 +17,15 @@ function ContentState() {
         object = {},
         array = [];
 
+    // A few values are set to defaults to avoid 
+    // UI jitter on firebase response.
+
     return {
         meta : {
             id     : string,
             name   : string,
             slug   : string,
-            status : string
+            status : "draft"
         },
 
         schema : object,
@@ -47,7 +50,7 @@ function ContentState() {
 
             published_at   : number,
             unpublished_at : number,
-            validSchedule  : boolean
+            validSchedule  : true
         },
 
         form : {
@@ -99,14 +102,21 @@ export default function Content() {
 
     con.registerForm = function(formEl) {
         con.form = state.form.el = formEl;
-        validator.attachInputHandlers(state);
     };
 
 
     // UI
-    con.toggleSchedule = function(evt, force) {
-        state.ui.schedule = (force != null) ? Boolean(force) : !state.ui.schedule;
+    con.toggleUI = function(key, force) {
+        state.ui[key] = (force != null) ? Boolean(force) : !state.ui[key];
         m.redraw();
+    };
+
+    con.toggleSchedule = function(force) {
+        con.toggleUI("schedule", force);
+    };
+
+    con.toggleInvalid = function(force) {
+        con.toggleUI("invalid", force);
     };
 
     // Transforms
@@ -120,7 +130,6 @@ export default function Content() {
 
     // Data Changes
     con.titleChange = function(name) {
-        // console.log("state.meta.title", state.meta.title);
         state.meta.name = name;
         m.redraw();
     };
@@ -148,16 +157,20 @@ export default function Content() {
     };
 
     // Hidden / Dependent fields.
-    con.getHiddenIndex = function(key) {
+    function getHiddenIndex(key) {
         return state.form.hidden.indexOf(key);
-    };
+    }
 
     con.addHidden = function(key) {
-        state.form.hidden.push(key);
+        var index = getHiddenIndex(key);
+
+        if(index === -1) { 
+            state.form.hidden.push(key);
+        }
     };
 
     con.removeHidden = function(key) {
-        var index = con.getHiddenIndex(key);
+        var index = getHiddenIndex(key);
 
         if(index > -1) {
             state.form.hidden.splice(index, 1);
@@ -165,9 +178,7 @@ export default function Content() {
     };
 
     // Validity / Publishing
-    con.addInvalid = function(name) {
-        state.form.valid = false;
-        
+    con.addInvalidField = function(name) {        
         if(state.form.invalidFields.indexOf(name) > -1) {
             return;
         }
@@ -175,12 +186,11 @@ export default function Content() {
     };
 
     con.resetInvalid = function() {
-        state.form.valid = true;
         state.form.invalidFields = [];
     };
 
     con.checkValidSchedule = function() {
-        state.dates.validSchedule = validator.validSchedule();
+        state.dates.validSchedule = validator.validSchedule(state);
     };
 
     con.setDateField = function(key, ts) {
@@ -193,8 +203,12 @@ export default function Content() {
         con.checkValidSchedule();
     };
 
+    con.unpublish = function() {
+        con.setDateField("unpublished", Date.now());
+    };
+
     con.publish = function() {
-        state.form.valid = state.form.el.checkValidity();
+        state.form.valid = validator.checkValidity();
 
         console.log("state.form.valid", state.form.valid);
         if(!state.form.valid) {
@@ -208,9 +222,6 @@ export default function Content() {
         }
     };
 
-    con.unpublish = function() {
-        con.setDateField("unpublished", Date.now());
-    };
 
     // Persist
     con.save = function() {
@@ -219,7 +230,7 @@ export default function Content() {
         if(!state.dates.validSchedule) {
             console.log("TODO user feedback for invalid schedule.");
             state.form.invalidFields = ["Invalid schedule."];
-            state.ui.invalid = true;
+            con.toggleInvalid(true);
             return;
         }
         

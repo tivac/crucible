@@ -7,9 +7,20 @@ export default function Validator(content) {
     var v = this;
         content = content;
 
-    v.attachInputHandlers = function(state) {
-        var form = state.form.el;
+    // I dislike this, but can't figure out a better solution.
+    v.handlersAttached = false;
 
+    v.attachInputHandlers = function() {
+        var form = content.get().form.el;
+
+        if(v.handlersAttached) {
+            return;
+        }
+        v.handlersAttached = true;
+
+        // Irritatingly, this attachment had to be delayed like this because the 
+        // form's `config` function was running before the whole DOM tree was rendered,
+        // so we were getting an incomplete list of inputs previously.
         form.querySelectorAll("input, textarea, select").forEach(function(formInput) {
             formInput.addEventListener("invalid", function(evt) {
                 evt.target.classList.add(css.highlightInvalid);
@@ -23,8 +34,14 @@ export default function Validator(content) {
         });
     };
 
+    v.checkValidity = function() {
+        v.attachInputHandlers();
+
+        return content.get().form.el.checkValidity();
+    };
+
     v.registerInvalidField = function(name) {
-        content.addInvalid(name);
+        content.addInvalidField(name);
         v.show();
         v.debounceFade();
     };
@@ -40,21 +57,21 @@ export default function Validator(content) {
     }, 100);
 
     v.show = function() {
-        var old = state.ui.invalid;
+        var wasInvalid = content.get().ui.invalid;
 
-        state.ui.invalid = true;
-        if(old !== state.ui.invalid) {
+        content.toggleInvalid(true);
+        if(!wasInvalid) {
             m.redraw(); // Only do once; avoid superfluous redraws.
         }
     };
 
-    v.hide = function() {
+    v.hide = function() {            
         // CSS transition does the rest.
-        state.ui.invalid = false;
+        content.toggleInvalid(false);
         m.redraw();
     };
 
-    v.validSchedule = function() {
+    v.validSchedule = function(state) {
         var pub = state.dates.published_at,
             unpub = state.dates.unpublished_at;
 

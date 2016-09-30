@@ -70,7 +70,9 @@ export function view(ctrl_unused, options) {
                         title : "Schedule a publish",
 
                         // Events
-                        onclick : content.toggleSchedule
+                        onclick : function() {
+                            content.toggleSchedule();
+                        }
                     },
                     m("svg", { class : css.onlyIcon },
                         m("use", {
