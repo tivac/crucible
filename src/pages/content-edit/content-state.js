@@ -3,9 +3,10 @@ import _get from "lodash.get";
 import set from "lodash.set";
 import merge from "lodash.merge";
 
+import db from "../../lib/firebase";
 import * as snapshot from "./lib/transformer-snapshot.js";
 import Validator from "./lib/delegator-validator.js";
-import db from "../../lib/firebase";
+import Scheduler from "./lib/delegator-scheduler.js";
 
 function ContentState() {
     // These are 100% unneccesary, programmatically,
@@ -18,7 +19,7 @@ function ContentState() {
         array = [];
 
     // A few values are set to defaults to avoid 
-    // UI jitter on firebase response.
+    // UI jitter before firebase response.
 
     return {
         meta : {
@@ -70,16 +71,19 @@ function ContentState() {
 export default function Content() {
     var con = this,
         state,
-        validator;
+        validator,
+        scheduler;
 
     con.state = null;
+    con.ref = null; // Firebase object reference.
     con.validator = null;
-
+    con.scheduler = null;
     con.user = db.getAuth().uid;
 
     con.init = function() {
         con.state = state = new ContentState();
         con.validator = validator = new Validator(con);
+        con.scheduler = scheduler = new Scheduler(con);
       
         // TEMP
         console.log("temp make state global for debug");
@@ -94,6 +98,7 @@ export default function Content() {
         return _get(state, path);
     };
 
+
     // Setup
     con.setSchema = function(schema, key) {
         state.schema = schema;
@@ -104,41 +109,58 @@ export default function Content() {
         con.form = state.form.el = formEl;
     };
 
-
-    // UI
-    con.toggleUI = function(key, force) {
-        state.ui[key] = (force != null) ? Boolean(force) : !state.ui[key];
-        m.redraw();
-    };
-
-    con.toggleSchedule = function(force) {
-        con.toggleUI("schedule", force);
-    };
-
-    con.toggleInvalid = function(force) {
-        con.toggleUI("invalid", force);
-    };
-
-    // Transforms
     con.processServerData = function(data, ref) {
         con.ref = ref; // Firebase reference.
 
-        state = merge(state, snapshot.toState(data, state));
+        state = merge(state, snapshot.toState(data));
+        state.meta.status = scheduler.findStatus();
         con.checkValidSchedule();
         con.resetInvalid();
     };
 
-    // Data Changes
-    con.titleChange = function(name) {
-        state.meta.name = name;
-        m.redraw();
-    };
 
+    // Data Changes
     con.setField = function(path, val) {
         state.dates.updated_at = Date.now();
         state.user.updated_by = con.user;
 
         return set(state, path, val);
+    };
+
+    con.titleChange = function(name) {
+        state.meta.name = name;
+        m.redraw();
+    };
+
+
+    // Scheduling
+    con.unpublish = function() {
+        con.setDateField("unpublished", Date.now());
+    };
+
+    con.publish = function() {
+        state.form.valid = validator.checkValidity();
+
+        if(!state.form.valid) {
+            return;
+        }
+
+        con.setDateField("published", Date.now());
+
+        if(state.dates.unpublished_at < state.dates.published_at) {
+            con.setDateField("unpublished", null);
+        }
+    };
+
+    con.setDateField = function(key, ts) {
+        var atKey = key + "_at",
+            byKey = key + "_by";
+
+        state.dates[atKey] = ts;
+        state.user[byKey] = con.user;
+        state.meta.status = scheduler.findStatus(state);
+
+        con.checkValidSchedule();
     };
 
     con.clearSchedule = function() {
@@ -155,6 +177,12 @@ export default function Content() {
         });
         con.checkValidSchedule();
     };
+
+    con.checkValidSchedule = function() {
+        state.dates.validSchedule = validator.validSchedule(state);
+        state.meta.status = scheduler.findStatus(state);
+    };
+
 
     // Hidden / Dependent fields.
     function getHiddenIndex(key) {
@@ -177,7 +205,23 @@ export default function Content() {
         }
     };
 
-    // Validity / Publishing
+
+    // UI
+    function toggleUI(key, force) {
+        state.ui[key] = (force != null) ? Boolean(force) : !state.ui[key];
+        m.redraw();
+    }
+
+    con.toggleSchedule = function(force) {
+        toggleUI("schedule", force);
+    };
+
+    con.toggleInvalid = function(force) {
+        toggleUI("invalid", force);
+    };
+
+
+    // Validity
     con.addInvalidField = function(name) {        
         if(state.form.invalidFields.indexOf(name) > -1) {
             return;
@@ -186,47 +230,17 @@ export default function Content() {
     };
 
     con.resetInvalid = function() {
+        state.form.valid = true;
         state.form.invalidFields = [];
-    };
-
-    con.checkValidSchedule = function() {
-        state.dates.validSchedule = validator.validSchedule(state);
-        state.meta.status = snapshot.findStatus(state);
-    };
-
-    con.setDateField = function(key, ts) {
-        var atKey = key + "_at",
-            byKey = key + "_by";
-
-        state.dates[atKey] = ts;
-        state.user[byKey] = con.user;
-        state.meta.status = snapshot.findStatus(state);
-
-        con.checkValidSchedule();
-    };
-
-    con.unpublish = function() {
-        con.setDateField("unpublished", Date.now());
-    };
-
-    con.publish = function() {
-        state.form.valid = validator.checkValidity();
-
-        if(!state.form.valid) {
-            return;
-        }
-
-        con.setDateField("published", Date.now());
-
-        if(state.dates.unpublished_at < state.dates.published_at) {
-            con.setDateField("unpublished", null);
-        }
     };
 
 
     // Persist
     con.save = function() {
         var saveData;
+
+        con.checkValidSchedule();
+        con.toggleSchedule(false);
 
         if(!state.dates.validSchedule) {
             state.form.invalidFields = [ "Invalid schedule." ];

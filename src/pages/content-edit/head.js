@@ -6,12 +6,13 @@ import config, { icons } from "../../config";
 import prefix from "../../lib/prefix";
 
 import * as invalidMsg from "./invalid-msg.js";
-import * as scheduler from "./scheduler.js";
+import * as scheduleBox from "./schedule-box.js";
 
 import css from "./head.css";
 
 export function view(ctrl_unused, options) {
     var content = options.content,
+        scheduler = content.scheduler,
         state = content.get(),
         publishTs = state.dates.published_at,
         unpublishTs = state.dates.unpublished_at,
@@ -91,7 +92,7 @@ export function view(ctrl_unused, options) {
                             disabled : locked || null,
 
                             // Events
-                            onclick : content.publish.bind(content, options)
+                            onclick : scheduler.publish.bind(content, options)
                         },
                         m("svg", { class : css.icon },
                             m("use", { href : icons + (future ? "#schedule" : "#publish") })
@@ -113,7 +114,7 @@ export function view(ctrl_unused, options) {
                         disabled : locked || null,
 
                         // Events
-                        onclick : content.unpublish.bind(content, options)
+                        onclick : scheduler.unpublish.bind(content, options)
                     },
                     m("svg", { class : css.icon },
                         m("use", { href : icons + "#remove" })
@@ -125,7 +126,7 @@ export function view(ctrl_unused, options) {
             // Schedule Pop Up
             !state.ui.schedule ?
                 null :
-                m.component(scheduler, options)
+                m.component(scheduleBox, options)
         )
     );
 }

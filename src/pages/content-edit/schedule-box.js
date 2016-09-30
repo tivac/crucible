@@ -32,14 +32,14 @@ function timestamp(side, date, time) {
 }
 
 
-// Since everything about the scheduler is derivative from the
-// raw timestamps of "published_at", "unpublished_at", we'll 
-// give this little popup its own controller which acts as the 
-// two-way transformer between: timestamps <-> date/time strings
+// All data in and out of the `scheduler` is in the form of timestamps.
+// All transformations to and from the date+time input fields will be
+// handled by this controller.
 
 export function controller(options) {
     var ctrl = this,
-        content = options.content;
+        content = options.content,
+        scheduler = content.scheduler;
 
     ctrl.schedule = null;
     ctrl.published_at = null;
@@ -90,7 +90,7 @@ export function controller(options) {
         determineTimestamps();
         ts = ctrl[dateField + "_at"];
 
-        content.setDateField(dateField, ts);
+        scheduler.setDateField(dateField, ts);
     };
 
     ctrl.init();
@@ -133,7 +133,7 @@ export function view(ctrl, options) {
                     title : "Clear schedule dates",
 
                     // Events
-                    onclick : content.clearSchedule.bind(content)
+                    onclick : scheduler.clearSchedule.bind(content)
                 },
                 "clear schedule"
                 )

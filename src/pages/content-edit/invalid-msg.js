@@ -2,9 +2,10 @@ import m from "mithril";
 
 import css from "./invalid-msg.css";
 
-// A mosly-dumb controller is required here so we
-// can retain some state information about this
-// transitioning element.
+// A mosly-dumb controller is required here so we can retain some state 
+// information about this transitioning element. Mithril makes it pretty
+// tricky to do this sort of a transition over time or after a delay.
+
 export function controller(options) {
     var ctrl = this;
 
