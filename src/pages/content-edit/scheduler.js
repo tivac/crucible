@@ -54,8 +54,6 @@ export function controller(options) {
             pub = state.dates.published_at,
             unpub = state.dates.unpublished_at;
 
-        console.log("pub, unpub", pub, unpub);
-
         ctrl.schedule = {
             valid : state.dates.validSchedule,
 
@@ -83,7 +81,6 @@ export function controller(options) {
     }
 
     ctrl.onChange = function(side, part, val) {
-        console.log("onChange");
         var dateField,
             ts;
 

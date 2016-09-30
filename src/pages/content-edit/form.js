@@ -28,17 +28,15 @@ export function view(ctrl_unused, options) {
                             return;
                         }
 
-                        // content.registerForm(el);
+                        content.registerForm(el);
 
                         // force a redraw so publishing component can get
                         // new args w/ actual validity
                         m.redraw();
-                        content.registerForm(el);
                     }
                 },
                 m("input", {
                         // Attrs
-                        // class  : css.title,
                         class  : css[status],
                         type   : "text",
                         value  : name(state.schema, state.meta),
@@ -58,8 +56,6 @@ export function view(ctrl_unused, options) {
                             selection.addRange(range);
                         },
 
-                        // contenteditable : true,
-
                         // Events
                         onchange : m.withAttr("value", content.titleChange.bind(content))
                     }
@@ -69,9 +65,7 @@ export function view(ctrl_unused, options) {
                     data   : state.fields || {},
                     fields : state.schema.fields,
                     path   : [ "fields" ],
-                    // root   : ctrl.ref,
                     state  : state.fields,
-                    // update : update.bind(null, ctrl.data)
 
                     update  : content.setField.bind(content),
                     content : content

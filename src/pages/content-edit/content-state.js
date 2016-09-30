@@ -142,7 +142,6 @@ export default function Content() {
     };
 
     con.clearSchedule = function() {
-        console.log("clearSchedule");
         state = merge(state, {
             user : {
                 published_by   : null,
@@ -191,12 +190,10 @@ export default function Content() {
     };
 
     con.checkValidSchedule = function() {
-        console.log("checkValidSchedule");
         state.dates.validSchedule = validator.validSchedule(state);
     };
 
     con.setDateField = function(key, ts) {
-        console.log("setDateField");
         var atKey = key + "_at",
             byKey = key + "_by";
 
