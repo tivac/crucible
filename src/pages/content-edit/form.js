@@ -37,24 +37,9 @@ export function view(ctrl_unused, options) {
                 },
                 m("input", {
                         // Attrs
-                        class  : css[status],
-                        type   : "text",
-                        value  : name(state.schema, state.meta),
-                        config : function(el, isInit) {
-                            var range, selection;
-
-                            // if(isInit || ctrl.data.name) {
-                            if(isInit) {
-                                return;
-                            }
-
-                            // Select the text contents
-                            range = document.createRange();
-                            range.selectNodeContents(el);
-                            selection = window.getSelection();
-                            selection.removeAllRanges();
-                            selection.addRange(range);
-                        },
+                        class : css[status],
+                        type  : "text",
+                        value : name(state.schema, state.meta),
 
                         // Events
                         onchange : m.withAttr("value", content.titleChange.bind(content))

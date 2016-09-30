@@ -191,6 +191,7 @@ export default function Content() {
 
     con.checkValidSchedule = function() {
         state.dates.validSchedule = validator.validSchedule(state);
+        state.meta.status = snapshot.findStatus(state);
     };
 
     con.setDateField = function(key, ts) {
@@ -230,7 +231,9 @@ export default function Content() {
         if(!state.dates.validSchedule) {
             state.form.invalidFields = [ "Invalid schedule." ];
             con.toggleInvalid(true);
-            return;
+            validator.debounceFade();
+
+            return null;
         }
         
         state.ui.saving = true;
@@ -238,7 +241,7 @@ export default function Content() {
 
         saveData = snapshot.fromState(state);
 
-        con.ref.update(saveData, function() {
+        return con.ref.update(saveData, function() {
             state.ui.saving = false;
             m.redraw();
         });

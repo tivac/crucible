@@ -8,12 +8,16 @@ export function findStatus(state) {
         unpub = state.dates.unpublished_at,
         status = "draft";
 
-    if(isFuture(pub)) {
-        status = "scheduled";
-    } else if(isPast(pub)) {
-        status = "published";
-    } else if(isPast(unpub)) {
+    if(!pub) {
+        return status;
+    }
+
+    if(unpub && isPast(unpub)) {
         status = "unpublished";
+    } else if(pub && isFuture(pub)) {
+        status = "scheduled";
+    } else if(pub && isPast(pub)) {
+        status = "published";
     }
 
     return status;
