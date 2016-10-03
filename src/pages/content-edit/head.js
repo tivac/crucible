@@ -15,15 +15,11 @@ export function view(ctrl_unused, options) {
         schedule = content.schedule,
         state = content.get(),
 
-        pub = state.dates.published_at,
-        unpub = state.dates.unpublished_at,
+        // pub = state.dates.published_at,
+        // unpub = state.dates.unpublished_at,
 
-        future  = pub && isFuture(pub),
-        locked  = config.locked,
-
-        disablePub = (state.meta.status === "published"),
-        disableUnpub = (state.meta.status === "draft" || (!pub && !unpub));
-
+        // future  = pub && isFuture(pub),
+        locked  = config.locked;
 
     // TODO Better implementation.
     // if(ctrl.start.ts && isPast(ctrl.start.ts)) {
@@ -94,8 +90,8 @@ export function view(ctrl_unused, options) {
                     m("button", {
                             // Attrs
                             class    : css.publish,
-                            title    : disablePub ? "Already Published" : "",
-                            disabled : locked || disablePub || null,
+                            title    : (state.meta.status === "published") ? "Already Published" : "",
+                            disabled : locked || null,
 
                             // Events
                             onclick : schedule.publish.bind(schedule, options)
@@ -114,7 +110,7 @@ export function view(ctrl_unused, options) {
                 m("button", {
                         // Attrs
                         class    : css.unpublish,
-                        disabled : locked || disableUnpub || null,
+                        disabled : locked || null,
 
                         // Events
                         onclick : schedule.unpublish.bind(schedule, options)

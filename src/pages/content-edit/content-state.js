@@ -178,8 +178,8 @@ export default function Content() {
         }
         
         state.ui.saving = true;
-        m.redraw();
         state.meta.dirty = false;
+        m.redraw();
 
         saveData = snapshot.fromState(state);
         
