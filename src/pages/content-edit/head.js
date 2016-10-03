@@ -56,7 +56,7 @@ export function view(ctrl_unused, options) {
                         // Attrs
                         class    : css.save,
                         title    : "Save your changes",
-                        disabled : locked || null,
+                        disabled : locked || !state.meta.dirty || null,
 
                         // Events
                         onclick : state.ui.saving ? null : content.save.bind(null, state)

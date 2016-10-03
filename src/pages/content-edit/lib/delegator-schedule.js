@@ -18,10 +18,15 @@ export default function Schedule(content) {
 
     sched.STATUS = STATUS;
 
+    sched.dirty = function() {
+        state.meta.dirty = true;
+    };
+
     sched.unpublish = function() {
         var pub = state.dates.published_at,
             unpub = Date.now();
 
+        sched.dirty();
         sched.setDateField("unpublished", unpub);
         if(unpub < pub) {
             sched.setDateField("published", null);
@@ -33,6 +38,7 @@ export default function Schedule(content) {
         var pub = Date.now(),
             unpub = state.dates.unpublished_at;
 
+        sched.dirty();
         state.form.valid = content.validity.checkForm();
         sched.setDateField("published", pub);
 
@@ -46,6 +52,7 @@ export default function Schedule(content) {
         var atKey = key + "_at",
             byKey = key + "_by";
 
+        sched.dirty();
         state.dates[atKey] = ts;
         state.user[byKey] = content.user;
         state.meta.status = sched.findStatus(state);
@@ -54,6 +61,7 @@ export default function Schedule(content) {
     };
 
     sched.clearSchedule = function() {
+        state.meta.dirty = true;
         state = merge(state, {
             user : {
                 published_by   : null,

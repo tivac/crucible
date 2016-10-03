@@ -27,6 +27,7 @@ function ContentState() {
             id     : string,
             name   : string,
             slug   : string,
+            dirty  : boolean,
             status : "draft"
         },
 
@@ -104,6 +105,12 @@ export default function Content() {
         return _get(state, path);
     };
 
+    // TODO ? Make and use a .set(path, value) so we can always
+    //        track unsaved changes & warn on attempt to exit?
+    //        + Disable save button if there is nothing to save.
+    // However, set with a path introduces possible string typo issues.
+    // "Why the hell isn't my -- oh because it's getting 'unperblished_at'" 
+
 
     // Setup
     con.setSchema = function(schema, key) {
@@ -128,6 +135,7 @@ export default function Content() {
     con.setField = function(path, val) {
         state.dates.updated_at = Date.now();
         state.user.updated_by = con.user;
+        state.meta.dirty = true;
 
         return set(state, path, val);
     };
@@ -171,9 +179,10 @@ export default function Content() {
         
         state.ui.saving = true;
         m.redraw();
+        state.meta.dirty = false;
 
         saveData = snapshot.fromState(state);
-
+        
         return con.ref.update(saveData, function() {
             state.ui.saving = false;
             m.redraw();
