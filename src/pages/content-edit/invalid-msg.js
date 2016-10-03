@@ -36,8 +36,6 @@ export function view(ctrl, options) {
         state = content.get(),
         invalid = state.ui.invalid;
 
-    console.log("state.form.invalidMessages", state.form.invalidMessages);
-
     if(!invalid && !ctrl.transitioning) {
         return m("div", { style : "display:none;" });
     }

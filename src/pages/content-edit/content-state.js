@@ -155,46 +155,13 @@ export default function Content() {
         }
     };
 
-    function isValidSave() {
-        var STATUS = schedule.STATUS,
-            invalidMessages = [],
-            requiresValid;
-
-        con.schedule.checkValidity();
-        con.toggleSchedule(false);
-
-        requiresValid = [ STATUS.SCHEDULED, STATUS.PUBLISHED ].indexOf(state.meta.status) > -1;
-
-        if(requiresValid) {
-            con.validity.checkForm();
-        }
-
-        if(!state.dates.validSchedule) {
-            invalidMessages.push("Invalid schedule.");
-        }
-
-        if(!state.form.valid && requiresValid) {
-            invalidMessages.push("Cannot publish invalid form.");
-        }
-
-        if(invalidMessages.length) {
-            invalidMessages.forEach(function(msg) {
-                con.validity.addInvalidMessage(msg);
-            });
-
-            return false;
-        }
-
-        return true;
-    }
-
     // Persist
     con.save = function() {
         var validSave,
             saveData;
 
         con.toggleSchedule(false);
-        validSave = isValidSave();
+        validSave = validity.isValidSave();
 
         if(!validSave) {
             con.toggleInvalid(true);

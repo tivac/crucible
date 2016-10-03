@@ -14,12 +14,16 @@ export function view(ctrl_unused, options) {
     var content = options.content,
         schedule = content.schedule,
         state = content.get(),
-        publishTs = state.dates.published_at,
-        unpublishTs = state.dates.unpublished_at,
-        future  = isFuture(publishTs),
+
+        pub = state.dates.published_at,
+        unpub = state.dates.unpublished_at,
+
+        future  = pub && isFuture(pub),
         locked  = config.locked,
 
-        disableUnpublishBtn = (state.meta.status === "draft" || !publishTs);
+        disablePub = (state.meta.status === "published"),
+        disableUnpub = (state.meta.status === "draft" || (!pub && !unpub));
+
 
     // TODO Better implementation.
     // if(ctrl.start.ts && isPast(ctrl.start.ts)) {
@@ -90,16 +94,16 @@ export function view(ctrl_unused, options) {
                     m("button", {
                             // Attrs
                             class    : css.publish,
-                            title    : future ? "Schedule publish" : "Already published",
-                            disabled : locked || null,
+                            title    : disablePub ? "Already Published" : "",
+                            disabled : locked || disablePub || null,
 
                             // Events
-                            onclick : schedule.publish.bind(content, options)
+                            onclick : schedule.publish.bind(schedule, options)
                         },
                         m("svg", { class : css.icon },
-                            m("use", { href : icons + (future ? "#schedule" : "#publish") })
+                            m("use", { href : icons + "#publish" })
                         ),
-                        future ? "Schedule" : "Publish"
+                        "Publish"
                     ),
                     !state.form ?
                         null :
@@ -110,11 +114,10 @@ export function view(ctrl_unused, options) {
                 m("button", {
                         // Attrs
                         class    : css.unpublish,
-                        title    : isPast(unpublishTs) ? "Already unpublished" : "Unpublish immediately",
-                        disabled : locked || disableUnpublishBtn || null,
+                        disabled : locked || disableUnpub || null,
 
                         // Events
-                        onclick : schedule.unpublish.bind(content, options)
+                        onclick : schedule.unpublish.bind(schedule, options)
                     },
                     m("svg", { class : css.icon },
                         m("use", { href : icons + "#remove" })

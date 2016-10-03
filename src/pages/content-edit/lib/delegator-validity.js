@@ -110,5 +110,37 @@ export default function Validity(content) {
             (unpub && !pub) ||
             (pub && unpub && pub < unpub);
     };
+
+    v.isValidSave = function() {
+        var STATUS = content.schedule.STATUS,
+            state = content.get(),
+            invalidMessages = [],
+            requiresValid;
+
+        requiresValid = [ STATUS.SCHEDULED, STATUS.PUBLISHED ].indexOf(state.meta.status) > -1;
+        if(requiresValid) {
+            v.checkForm();
+
+            if(!state.form.valid) {
+               invalidMessages.push("Cannot Publish with invalid or missing input.");
+            }
+        }
+
+        content.schedule.checkValidity();
+
+        if(!state.dates.validSchedule) {
+            invalidMessages.push("Invalid schedule.");
+        }
+
+        if(invalidMessages.length) {
+            invalidMessages.forEach(function(msg) {
+                v.addInvalidMessage(msg);
+            });
+
+            return false;
+        }
+
+        return true;
+    };
 }
 

@@ -19,20 +19,27 @@ export default function Schedule(content) {
     sched.STATUS = STATUS;
 
     sched.unpublish = function() {
-        content.setDateField("unpublished", Date.now());
+        var pub = state.dates.published_at,
+            unpub = Date.now();
+
+        sched.setDateField("unpublished", unpub);
+        if(unpub < pub) {
+            sched.setDateField("published", null);
+        }
+        sched.checkValidity();
     };
 
     sched.publish = function() {
-        state.form.valid = content.validity.checkForm();
-        sched.setDateField("published", Date.now());
+        var pub = Date.now(),
+            unpub = state.dates.unpublished_at;
 
-        if(state.dates.unpublished_at < state.dates.published_at) {
+        state.form.valid = content.validity.checkForm();
+        sched.setDateField("published", pub);
+
+        if(unpub < pub) {
             sched.setDateField("unpublished", null);
         }
-
-        if(!state.form.valid) {
-            return;
-        }
+        sched.checkValidity();
     };
 
     sched.setDateField = function(key, ts) {
