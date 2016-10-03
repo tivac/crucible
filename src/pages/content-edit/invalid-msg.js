@@ -71,7 +71,7 @@ export function view(ctrl, options) {
 
                 onclick : function() {
                     ctrl.reset();
-                    content.resetInvalid();
+                    content.validity.reset();
                 }
             },
             "x" // todo, figure out how to use a unicode x here
