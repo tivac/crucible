@@ -56,12 +56,11 @@ function ContentState() {
         },
 
         form : {
-            el : formEl,
-
+            el     : formEl,
             hidden : array,
+            valid  : boolean,
 
-            valid         : boolean,
-            invalidFields : array
+            invalidMessages : array
         },
 
         fields : {}
@@ -72,7 +71,6 @@ function ContentState() {
 export default function Content() {
     var con = this,
         state,
-        hidden,
         schedule,
         validity;
 
@@ -87,9 +85,11 @@ export default function Content() {
     con.init = function() {
         con.state = state = new ContentState();
 
-        con.hidden = hidden = new Hidden(con);
+        con.hidden = new Hidden(con);
         con.schedule = schedule = new Schedule(con);
         con.validity = validity = new Validity(con);
+        
+        con.validity.reset();
       
         // TEMP
         console.log("temp make state global for debug");
@@ -121,7 +121,6 @@ export default function Content() {
         state = merge(state, snapshot.toState(data));
         state.meta.status = schedule.findStatus();
         con.validity.checkSchedule();
-        con.validity.reset();
     };
 
 
@@ -151,33 +150,55 @@ export default function Content() {
 
     con.toggleInvalid = function(force) {
         toggleUI("invalid", force);
+        if(force != null && force) {
+            validity.debounceFade();
+        }
     };
 
-    // Persist
-    con.save = function() {
+    function isValidSave() {
         var STATUS = schedule.STATUS,
-            requiresValid,
-            saveData;
+            invalidMessages = [],
+            requiresValid;
 
         con.schedule.checkValidity();
         con.toggleSchedule(false);
 
-        requiresValid = [ STATUS.SCHEDULED, STATUS.PUBLISHED ].indexOf(state.meta.status) > 1;
+        requiresValid = [ STATUS.SCHEDULED, STATUS.PUBLISHED ].indexOf(state.meta.status) > -1;
+
         if(requiresValid) {
             con.validity.checkForm();
         }
 
         if(!state.dates.validSchedule) {
-            state.form.invalidFields = [ "Invalid schedule." ];
-            con.toggleInvalid(true);
-            validity.debounceFade();
-
-            return null;
+            invalidMessages.push("Invalid schedule.");
         }
 
-        console.log("requiresValid", requiresValid);
-        console.log("state.form.valid", state.form.valid);
         if(!state.form.valid && requiresValid) {
+            invalidMessages.push("Cannot publish invalid form.");
+        }
+
+        if(invalidMessages.length) {
+            invalidMessages.forEach(function(msg) {
+                con.validity.addInvalidMessage(msg);
+            });
+
+            return false;
+        }
+
+        return true;
+    }
+
+    // Persist
+    con.save = function() {
+        var validSave,
+            saveData;
+
+        con.toggleSchedule(false);
+        validSave = isValidSave();
+
+        if(!validSave) {
+            con.toggleInvalid(true);
+
             return null;
         }
         

@@ -10,14 +10,14 @@ export function controller(options) {
     var ctrl = this,
         content = options.content;
 
-    ctrl.invalidFields = [];
+    ctrl.invalidMessages = [];
     ctrl.wasInvalid = false;
     ctrl.transitioning = false;
 
     ctrl.updateState = function(state) {
         // We need to retain our own copy of the invalid fields,
         // because they get cleared out from state very quickly.
-        ctrl.invalidFields = state.form.invalidFields;
+        ctrl.invalidMessages = state.form.invalidMessages;
         ctrl.wasInvalid = state.ui.invalid;
         ctrl.transitioning = true;
     };
@@ -25,7 +25,7 @@ export function controller(options) {
     ctrl.reset = function() {
         content.validity.reset();
 
-        ctrl.invalidFields = [];
+        ctrl.invalidMessages = [];
         ctrl.wasInvalid = false;
         ctrl.transitioning = false;
     };
@@ -35,6 +35,8 @@ export function view(ctrl, options) {
     var content = options.content,
         state = content.get(),
         invalid = state.ui.invalid;
+
+    console.log("state.form.invalidMessages", state.form.invalidMessages);
 
     if(!invalid && !ctrl.transitioning) {
         return m("div", { style : "display:none;" });
@@ -62,7 +64,7 @@ export function view(ctrl, options) {
         },
         "The form cannot be saved.",
         m("ul",
-            ctrl.invalidFields.map(function(name) {
+            ctrl.invalidMessages.map(function(name) {
                 return m("li", name);
             })
         ),

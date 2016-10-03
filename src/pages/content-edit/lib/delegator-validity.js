@@ -58,9 +58,12 @@ export default function Validity(content) {
     };
 
     v.checkForm = function() {
-        v.attachInputHandlers();
+        var state = content.get();
 
-        return content.get().form.el.checkValidity();
+        v.attachInputHandlers();
+        state.form.valid = state.form.el.checkValidity();
+
+        return state.form.valid;
     };
 
     v.registerInvalidField = function(name) {
@@ -70,20 +73,25 @@ export default function Validity(content) {
     };
 
     v.addInvalidField = function(name) {
-        var state = content.get(),
-            prefixedName = reqPrefix(name);
+        var prefixedName = reqPrefix(name);
 
-        if(state.form.invalidFields.indexOf(prefixedName) > -1) {
+        v.addInvalidMessage(prefixedName);
+    };
+
+    v.addInvalidMessage = function(msg) {
+        var state = content.get();
+           
+        if(state.form.invalidMessages.indexOf(msg) > -1) {
             return;
         }
-        state.form.invalidFields.push(prefixedName);
+        state.form.invalidMessages.push(msg);
     };
 
     v.reset = function() {
         var state = content.get();
 
         state.form.valid = true;
-        state.form.invalidFields = [];
+        state.form.invalidMessages = [];
     };
 
     v.onFormFocus = function() {
@@ -96,8 +104,6 @@ export default function Validity(content) {
         var state = content.get(),
             pub = state.dates.published_at,
             unpub = state.dates.unpublished_at;
-
-        console.log("pub, unpub", pub, unpub);
 
         return (!pub && !unpub) ||
             (pub && !unpub) ||
