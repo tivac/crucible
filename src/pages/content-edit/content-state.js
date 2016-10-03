@@ -73,7 +73,7 @@ export default function Content() {
     var con = this,
         state,
         hidden,
-        scheduler,
+        schedule,
         validity;
 
     con.state = null;
@@ -81,14 +81,14 @@ export default function Content() {
     con.ref = null; // Firebase object reference.
 
     con.hidden = null;
-    con.scheduler = null;
+    con.schedule = null;
     con.validity = null;
 
     con.init = function() {
         con.state = state = new ContentState();
 
         con.hidden = hidden = new Hidden(con);
-        con.scheduler = scheduler = new Schedule(con);
+        con.schedule = schedule = new Schedule(con);
         con.validity = validity = new Validity(con);
       
         // TEMP
@@ -119,9 +119,9 @@ export default function Content() {
         con.ref = ref; // Firebase reference.
 
         state = merge(state, snapshot.toState(data));
-        state.meta.status = scheduler.findStatus();
+        state.meta.status = schedule.findStatus();
         con.validity.checkSchedule();
-        con.validity.resetInvalid();
+        con.validity.reset();
     };
 
 
@@ -155,16 +155,29 @@ export default function Content() {
 
     // Persist
     con.save = function() {
-        var saveData;
+        var STATUS = schedule.STATUS,
+            requiresValid,
+            saveData;
 
-        con.validity.checkSchedule();
+        con.schedule.checkValidity();
         con.toggleSchedule(false);
+
+        requiresValid = [ STATUS.SCHEDULED, STATUS.PUBLISHED ].indexOf(state.meta.status) > 1;
+        if(requiresValid) {
+            con.validity.checkForm();
+        }
 
         if(!state.dates.validSchedule) {
             state.form.invalidFields = [ "Invalid schedule." ];
             con.toggleInvalid(true);
             validity.debounceFade();
 
+            return null;
+        }
+
+        console.log("requiresValid", requiresValid);
+        console.log("state.form.valid", state.form.valid);
+        if(!state.form.valid && requiresValid) {
             return null;
         }
         

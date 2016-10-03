@@ -12,12 +12,14 @@ import css from "./head.css";
 
 export function view(ctrl_unused, options) {
     var content = options.content,
-        scheduler = content.scheduler,
+        schedule = content.schedule,
         state = content.get(),
         publishTs = state.dates.published_at,
         unpublishTs = state.dates.unpublished_at,
         future  = isFuture(publishTs),
-        locked  = config.locked;
+        locked  = config.locked,
+
+        disableUnpublishBtn = (state.meta.status === "draft" || !publishTs);
 
     // TODO Better implementation.
     // if(ctrl.start.ts && isPast(ctrl.start.ts)) {
@@ -92,7 +94,7 @@ export function view(ctrl_unused, options) {
                             disabled : locked || null,
 
                             // Events
-                            onclick : scheduler.publish.bind(content, options)
+                            onclick : schedule.publish.bind(content, options)
                         },
                         m("svg", { class : css.icon },
                             m("use", { href : icons + (future ? "#schedule" : "#publish") })
@@ -105,16 +107,14 @@ export function view(ctrl_unused, options) {
                 ),
 
                 // Unpublish
-                (unpublishTs || state.meta.status === "draft") ?
-                null :
                 m("button", {
                         // Attrs
                         class    : css.unpublish,
                         title    : isPast(unpublishTs) ? "Already unpublished" : "Unpublish immediately",
-                        disabled : locked || null,
+                        disabled : locked || disableUnpublishBtn || null,
 
                         // Events
-                        onclick : scheduler.unpublish.bind(content, options)
+                        onclick : schedule.unpublish.bind(content, options)
                     },
                     m("svg", { class : css.icon },
                         m("use", { href : icons + "#remove" })

@@ -38,12 +38,15 @@ function timestamp(side, date, time) {
 
 export function controller(options) {
     var ctrl = this,
-        content = options.content,
-        scheduler = content.scheduler;
+        content = options.content;
 
-    ctrl.schedule = null;
-    ctrl.published_at = null;
-    ctrl.unpublished_at = null;
+    ctrl.content = content;
+
+    ctrl.inputs = null;
+    ctrl.ts = {
+        published_at   : null,
+        unpublished_at : null
+    };
 
     ctrl.init = function() {
          ctrl.makeSchedule();
@@ -54,7 +57,7 @@ export function controller(options) {
             pub = dates.published_at,
             unpub = dates.unpublished_at;
 
-        ctrl.schedule = {
+        ctrl.inputs = {
             valid : dates.validSchedule,
 
             start : {
@@ -70,14 +73,14 @@ export function controller(options) {
     };
 
     ctrl.get = function(side, part) {
-        return ctrl.schedule[side][part];
+        return ctrl.inputs[side][part];
     };
 
     function determineTimestamps() {
-        var schedule = ctrl.schedule;
-
-        ctrl.published_at   = timestamp("start", schedule.start.date, schedule.start.time);
-        ctrl.unpublished_at = timestamp("end",   schedule.end.date,   schedule.end.time);
+        ctrl.ts = {
+            published_at   : timestamp("start", ctrl.inputs.start.date, ctrl.inputs.start.time),
+            unpublished_at : timestamp("end",   ctrl.inputs.end.date,   ctrl.inputs.end.time)
+        };
     }
 
     ctrl.onChange = function(side, part, val) {
@@ -85,12 +88,12 @@ export function controller(options) {
             ts;
 
         dateField = side === "start" ? "published" : "unpublished";
-        ctrl.schedule[side][part] = val;
+        ctrl.inputs[side][part] = val;
 
         determineTimestamps();
-        ts = ctrl[dateField + "_at"];
+        ts = ctrl.ts[dateField + "_at"];
 
-        scheduler.setDateField(dateField, ts);
+        content.schedule.setDateField(dateField, ts);
     };
 
     ctrl.init();
@@ -101,7 +104,7 @@ function mScheduleInput(ctrl, id, side, part) {
     return m("input", {
         id    : id,
         type  : part,
-        class : ctrl.schedule.valid ? css.date : css.invalidDate,
+        class : ctrl.content.schedule.valid ? css.date : css.invalidDate,
         value : ctrl.get(side, part),
 
         // Events
@@ -110,7 +113,7 @@ function mScheduleInput(ctrl, id, side, part) {
 }
 
 export function view(ctrl, options) {
-    var scheduler = options.content.scheduler;
+    var schedule = ctrl.content.schedule;
 
     // Update schedule on redraw.
     ctrl.makeSchedule();
@@ -133,7 +136,7 @@ export function view(ctrl, options) {
                     title : "Clear schedule dates",
 
                     // Events
-                    onclick : scheduler.clearSchedule.bind(scheduler)
+                    onclick : schedule.clearSchedule.bind(schedule)
                 },
                 "clear schedule"
                 )

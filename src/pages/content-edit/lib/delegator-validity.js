@@ -3,11 +3,35 @@ import debounce from "lodash.debounce";
 
 import css from "../invalid-msg.css";
 
+function reqPrefix(name) {
+    return "Required: " + name;
+}
+
 export default function Validity(content) {
     var v = this;
         content = content;
 
     v.handlersAttached = false;
+
+    // Private functions.
+    function show() {
+        var wasInvalid = content.get().ui.invalid;
+
+        content.toggleInvalid(true);
+        if(!wasInvalid) {
+            m.redraw(); // Only do once; avoid superfluous redraws.
+        }
+    }
+
+    function hide() {            
+        // CSS transition does the rest.
+        content.toggleInvalid(false);
+        m.redraw();
+    }
+
+    v.debounceFade = debounce(function() {
+        hide.call(v);
+    }, 100);
 
     v.attachInputHandlers = function() {
         var form = content.get().form.el;
@@ -33,33 +57,34 @@ export default function Validity(content) {
         });
     };
 
-    v.checkValidity = function() {
+    v.checkForm = function() {
         v.attachInputHandlers();
 
         return content.get().form.el.checkValidity();
     };
 
     v.registerInvalidField = function(name) {
-        content.addInvalidField(name);
-        v.show();
+        v.addInvalidField(name);
+        show();
         v.debounceFade();
     };
-    v.addInvalidField = function(name) {
-        var state = content.get();
 
-        if(state.form.invalidFields.indexOf(name) > -1) {
+    v.addInvalidField = function(name) {
+        var state = content.get(),
+            prefixedName = reqPrefix(name);
+
+        if(state.form.invalidFields.indexOf(prefixedName) > -1) {
             return;
         }
-        state.form.invalidFields.push(name);
+        state.form.invalidFields.push(prefixedName);
     };
 
-    v.resetInvalid = function() {
+    v.reset = function() {
         var state = content.get();
 
         state.form.valid = true;
         state.form.invalidFields = [];
     };
-
 
     v.onFormFocus = function() {
         if(!content.get().form.valid) {
@@ -67,30 +92,12 @@ export default function Validity(content) {
         }
     };
 
-
-    v.show = function() {
-        var wasInvalid = content.get().ui.invalid;
-
-        content.toggleInvalid(true);
-        if(!wasInvalid) {
-            m.redraw(); // Only do once; avoid superfluous redraws.
-        }
-    };
-
-    v.hide = function() {            
-        // CSS transition does the rest.
-        content.toggleInvalid(false);
-        m.redraw();
-    };
-
-    v.debounceFade = debounce(function() {
-        v.hide();
-    }, 100);
-
     v.checkSchedule = function() {
         var state = content.get(),
             pub = state.dates.published_at,
             unpub = state.dates.unpublished_at;
+
+        console.log("pub, unpub", pub, unpub);
 
         return (!pub && !unpub) ||
             (pub && !unpub) ||

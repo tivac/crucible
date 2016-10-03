@@ -7,7 +7,8 @@ import css from "./invalid-msg.css";
 // tricky to do this sort of a transition over time or after a delay.
 
 export function controller(options) {
-    var ctrl = this;
+    var ctrl = this,
+        content = options.content;
 
     ctrl.invalidFields = [];
     ctrl.wasInvalid = false;
@@ -22,6 +23,8 @@ export function controller(options) {
     };
 
     ctrl.reset = function() {
+        content.validity.reset();
+
         ctrl.invalidFields = [];
         ctrl.wasInvalid = false;
         ctrl.transitioning = false;
@@ -52,13 +55,12 @@ export function view(ctrl, options) {
                 ctrl.transitioning = true;
 
                 el.addEventListener("transitionend", function(evt) {
-                    content.resetInvalid();
                     ctrl.reset();
                     m.redraw();
                 });
             }
         },
-        "Missing required fields.",
+        "The form cannot be saved.",
         m("ul",
             ctrl.invalidFields.map(function(name) {
                 return m("li", name);

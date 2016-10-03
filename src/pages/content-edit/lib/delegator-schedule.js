@@ -4,26 +4,34 @@ import merge from "lodash.merge";
 import isFuture from "date-fns/is_future";
 import isPast from "date-fns/is_past";
 
+var STATUS = {
+    DRAFT       : "draft",
+    SCHEDULED   : "scheduled",
+    PUBLISHED   : "published",
+    UNPUBLISHED : "unpublished"
+};
+
 export default function Schedule(content) {
     var sched = this,
         content = content,
         state = content.state;
+
+    sched.STATUS = STATUS;
 
     sched.unpublish = function() {
         content.setDateField("unpublished", Date.now());
     };
 
     sched.publish = function() {
-        state.form.valid = content.validator.checkValidity();
+        state.form.valid = content.validity.checkForm();
+        sched.setDateField("published", Date.now());
+
+        if(state.dates.unpublished_at < state.dates.published_at) {
+            sched.setDateField("unpublished", null);
+        }
 
         if(!state.form.valid) {
             return;
-        }
-
-        content.setDateField("published", Date.now());
-
-        if(state.dates.unpublished_at < state.dates.published_at) {
-            content.setDateField("unpublished", null);
         }
     };
 
@@ -32,10 +40,10 @@ export default function Schedule(content) {
             byKey = key + "_by";
 
         state.dates[atKey] = ts;
-        state.user[byKey] = con.user;
+        state.user[byKey] = content.user;
         state.meta.status = sched.findStatus(state);
 
-        content.checkValidSchedule();
+        sched.checkValidity();
     };
 
     sched.clearSchedule = function() {
@@ -50,30 +58,30 @@ export default function Schedule(content) {
                 validSchedule  : null
             }
         });
-        content.checkValidSchedule();
+        content.validity.checkSchedule();
     };
     
     sched.findStatus = function() {
         var pub = state.dates.published_at,
             unpub = state.dates.unpublished_at,
-            status = "draft";
+            status = STATUS.DRAFT;
 
         if(!pub) {
             return status;
         }
 
         if(unpub && isPast(unpub)) {
-            status = "unpublished";
+            status = STATUS.UNPUBLISHED;
         } else if(pub && isFuture(pub)) {
-            status = "scheduled";
+            status = STATUS.SCHEDULED;
         } else if(pub && isPast(pub)) {
-            status = "published";
+            status = STATUS.PUBLISHED;
         }
 
         return status;
     };
 
-    sched.checkValidSchedule = function() {
+    sched.checkValidity = function() {
         state.dates.validSchedule = content.validity.checkSchedule();
         state.meta.status = sched.findStatus();
     };
