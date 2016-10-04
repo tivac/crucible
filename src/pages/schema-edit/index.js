@@ -3,8 +3,9 @@ import capitalize from "lodash.capitalize";
 
 import watch from "../../lib/watch";
 import db from "../../lib/firebase";
-import update from "../../lib/update";
 import prefix from "../../lib/prefix";
+
+import Content from "../content-edit/content-state";
 
 import * as editor from "./editor";
 import * as children from "../../types/children";
@@ -75,6 +76,9 @@ export function controller() {
 }
 
 export function view(ctrl) {
+    var content = new Content(),
+        state = content.get();
+
     if(!ctrl.schema) {
         return m.component(layout);
     }
@@ -146,10 +150,15 @@ export function view(ctrl) {
                     m("h3", "Preview"),
                     m.component(children, {
                         fields : ctrl.schema.fields,
-                        data   : ctrl.data,
-                        path   : [],
-                        state  : ctrl.data,
-                        update : update.bind(null, ctrl.data)
+                        class  : css.children,
+                        data   : state.fields || {},
+                        path   : [ "fields" ],
+                        state  : state.fields,
+
+                        update  : content.setField.bind(content),
+                        content : content,
+
+                        registerHidden : content.hidden.register.bind(content.hidden)
                     })
                 )
             )

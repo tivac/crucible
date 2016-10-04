@@ -9,10 +9,10 @@ import * as scheduleBox from "./schedule-box.js";
 import css from "./head.css";
 
 export function view(ctrl_unused, options) {
-    var content = options.content,
+    var content  = options.content,
         schedule = content.schedule,
-        state = content.get(),
-        locked  = config.locked;
+        state    = content.get(),
+        locked   = config.locked;
 
 
     return m("div", { class : css.head },
@@ -42,9 +42,7 @@ export function view(ctrl_unused, options) {
                         // Events
                         onclick : state.ui.saving ?
                             null :
-                            function() {
-                                content.save();
-                            }   
+                            content.save.bind(content)
                     },
                     m("svg", { class : css.icon },
                         m("use", { href : icons + "#save" })
@@ -62,9 +60,7 @@ export function view(ctrl_unused, options) {
                         title : "Schedule a publish",
 
                         // Events
-                        onclick : function() {
-                            content.toggleSchedule();
-                        }
+                        onclick : content.toggleSchedule.bind(content)
                     },
                     m("svg", { class : css.onlyIcon },
                         m("use", {
@@ -83,9 +79,7 @@ export function view(ctrl_unused, options) {
                             disabled : locked || null,
 
                             // Events
-                            onclick : function() {
-                                schedule.publish();
-                            }
+                            onclick : schedule.publish.bind(schedule)
                         },
                         m("svg", { class : css.icon },
                             m("use", { href : icons + "#publish" })
@@ -104,9 +98,7 @@ export function view(ctrl_unused, options) {
                         disabled : locked || null,
 
                         // Events
-                        onclick : function() {
-                            schedule.unpublish();
-                        }
+                        onclick : schedule.unpublish.bind(schedule)
                     },
                     m("svg", { class : css.icon },
                         m("use", { href : icons + "#remove" })

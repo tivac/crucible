@@ -51,7 +51,7 @@ export function controller(options) {
 
     ctrl.makeSchedule = function() {
         var dates = content.get().dates,
-            pub = dates.published_at,
+            pub   = dates.published_at,
             unpub = dates.unpublished_at;
 
         ctrl.inputs = {

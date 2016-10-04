@@ -70,115 +70,115 @@ function ContentState() {
 
 
 export default function Content() {
-    var con = this,
-        state;
+    this.state = new ContentState();
+    this.user = db.getAuth().uid;
+    this.ref = null; // Firebase object reference.
 
-    con.state = null;
-    con.user = db.getAuth().uid;
-    con.ref = null; // Firebase object reference.
+    this.hidden = null;
+    this.schedule = null;
+    this.validity = null;
+    this.init();
+}
 
-    con.hidden = null;
-    con.schedule = null;
-    con.validity = null;
+Content.prototype = {
+    init : function() {
+        this.state = new ContentState();
 
-    con.init = function() {
-        con.state = state = new ContentState();
-
-        con.hidden = new Hidden(con);
-        con.schedule = new Schedule(con);
-        con.validity = new Validity(con);
+        this.hidden = new Hidden(this);
+        this.schedule = new Schedule(this);
+        this.validity = new Validity(this);
         
-        con.validity.reset();
-    };
+        this.validity.reset();
+    },
 
-    con.get = function(path) {
+    get : function(path) {
         if(!path) {
-            return state;
+            return this.state;
         }
 
-        return _get(state, path);
-    };
+        return _get(this.state, path);
+    },
 
     // Setup
-    con.setSchema = function(schema, key) {
-        state.schema = schema;
-        state.schema.key = key;
-    };
+    setSchema : function(schema, key) {
+        this.state.schema = schema;
+        this.state.schema.key = key;
+    },
 
-    con.registerForm = function(formEl) {
-        state.form.el = formEl;
-    };
+    registerForm : function(formEl) {
+        this.state.form.el = formEl;
+    },
 
-    con.processServerData = function(data, ref) {
-        con.ref = ref; // Firebase reference.
+    processServerData : function(data, ref) {
+        this.ref = ref; // Firebase reference.
 
-        state = merge(state, snapshot.toState(data));
+        this.state = merge(this.state, snapshot.toState(data));
 
-        con.validity.checkSchedule();
-        con.schedule.updateStatus();
-    };
+        this.validity.checkSchedule();
+        this.schedule.updateStatus();
+    },
 
 
     // Data Changes
-    con.setField = function(path, val) {
-        state.dates.updated_at = Date.now();
-        state.user.updated_by = con.user;
-        state.meta.dirty = true;
+    setField : function(path, val) {
+        this.state.dates.updated_at = Date.now();
+        this.state.user.updated_by = this.user;
+        this.state.meta.dirty = true;
 
-        return set(state, path, val);
-    };
+        return set(this.state, path, val);
+    },
 
-    con.titleChange = function(name) {
-        state.meta.name = name;
+    titleChange : function(name) {
+        this.state.meta.name = name;
         m.redraw();
-    };
+    },
 
 
     // UI
-    function toggleUI(key, force) {
-        state.ui[key] = (force != null) ? Boolean(force) : !state.ui[key];
+    toggleUI : function(key, force) {
+        this.state.ui[key] = (force != null) ? Boolean(force) : !this.state.ui[key];
         m.redraw();
-    }
+    },
 
-    con.toggleSchedule = function(force) {
-        toggleUI("schedule", force);
-    };
+    toggleSchedule : function(force) {
+        this.toggleUI("schedule", force);
+    },
 
-    con.toggleInvalid = function(force) {
-        toggleUI("invalid", force);
+    toggleInvalid : function(force) {
+        this.toggleUI("invalid", force);
 
         if(force) {
-            con.validity.debounceFade();
+            this.validity.debounceFade();
         }
-    };
+    },
 
     // Persist
-    con.save = function() {
-        var validSave,
+    save : function() {
+        var self = this,
+        validSave,
             saveData;
 
-        con.toggleSchedule(false);
-        validSave = con.validity.isValidSave();
+        this.toggleSchedule(false);
+        validSave = this.validity.isValidSave();
 
+        console.log("validSave", validSave);
         if(!validSave) {
-            con.toggleInvalid(true);
+            this.toggleInvalid(true);
 
             return null;
         }
         
-        state.ui.saving = true;
-        state.meta.dirty = false;
+        this.state.ui.saving = true;
+        this.state.meta.dirty = false;
         m.redraw();
 
-        saveData = snapshot.fromState(state);
+        saveData = snapshot.fromState(this.state);
 
-        return con.ref.update(saveData, function() {
-            state.ui.saving = false;
+        return this.ref.update(saveData, function() {
+            self.state.ui.saving = false;
             m.redraw();
         });
-    };
-
-    con.init();
-}
+    }
+};
 
 

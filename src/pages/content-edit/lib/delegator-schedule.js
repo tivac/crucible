@@ -12,57 +12,63 @@ var STATUS = {
 };
 
 export default function Schedule(content) {
-    var sched = this,
-        content = content,
-        state = content.get();
+    this.content = content;
+    this.STATUS = STATUS;
+}
 
-    sched.STATUS = STATUS;
+Schedule.prototype = {
+    dirty : function() {
+        var state = this.content.get();
 
-    sched.dirty = function() {
         state.meta.dirty = true;
-    };
+    },
 
-    sched.unpublish = function() {
-        var pub = state.dates.published_at,
+    unpublish : function() {
+        var state = this.content.get(),
+            pub   = state.dates.published_at,
             unpub = Date.now();
 
-        sched.dirty();
-        sched.setDateField("unpublished", unpub);
+        this.dirty();
+        this.setDateField("unpublished", unpub);
         if(unpub < pub) {
-            sched.setDateField("published", null);
+            this.setDateField("published", null);
         }
 
-        content.save();
-    };
+        this.content.save();
+    },
 
-    sched.publish = function() {
-        var pub = Date.now(),
+    publish : function() {
+        var state = this.content.get(),
+            pub   = Date.now(),
             unpub = state.dates.unpublished_at;
 
-        sched.dirty();
-        sched.setDateField("published", pub);
+        this.dirty();
+        this.setDateField("published", pub);
         if(unpub < pub) {
-            sched.setDateField("unpublished", null);
+            this.setDateField("unpublished", null);
         }
 
-        content.save();
-    };
+        this.content.save();
+    },
 
-    sched.setDateField = function(key, ts) {
-        var atKey = key + "_at",
+    setDateField : function(key, ts) {
+        var state = this.content.get(),
+            atKey = key + "_at",
             byKey = key + "_by";
 
-        sched.dirty();
+        this.dirty();
 
         state.dates[atKey] = ts;
-        state.user[byKey] = content.user;
+        state.user[byKey] = this.content.user;
 
-        sched.updateStatus(state);
-        content.validity.checkSchedule();
-    };
+        this.updateStatus(state);
+        this.content.validity.checkSchedule();
+    },
 
-    sched.clearSchedule = function() {
-        sched.dirty();
+    clearSchedule : function() {
+        var state = this.content.get();
+            
+        this.dirty();
 
         state = merge(state, {
             user : {
@@ -76,12 +82,13 @@ export default function Schedule(content) {
             }
         });
 
-        content.validity.checkSchedule();
-    };
+        this.content.validity.checkSchedule();
+    },
     
-    sched.updateStatus = function() {
-        var pub = state.dates.published_at,
-            unpub = state.dates.unpublished_at,
+    updateStatus : function() {
+        var state  = this.content.get(),
+            pub    = state.dates.published_at,
+            unpub  = state.dates.unpublished_at,
             status = STATUS.DRAFT;
 
         if(!pub) {
@@ -99,5 +106,5 @@ export default function Schedule(content) {
         }
 
         state.meta.status = status;
-    };
-}
+    }
+};

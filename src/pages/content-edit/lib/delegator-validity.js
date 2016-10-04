@@ -8,38 +8,45 @@ function reqPrefix(name) {
 }
 
 export default function Validity(content) {
-    var v = this;
-        content = content;
+    this.handlersAttached = false;
+    this.content = content;
+}
 
-    v.handlersAttached = false;
+Validity.prototype = {
 
     // Private functions.
-    function show() {
-        var wasInvalid = content.get().ui.invalid;
+    show : function() {
+        var wasInvalid = this.content.get().ui.invalid;
 
-        content.toggleInvalid(true);
+        this.content.toggleInvalid(true);
         if(!wasInvalid) {
             m.redraw(); // Only do once; avoid superfluous redraws.
         }
-    }
+    },
 
-    function hide() {            
+    hide : function() {
         // CSS transition does the rest.
-        content.toggleInvalid(false);
+        this.content.toggleInvalid(false);
         m.redraw();
-    }
+    },
 
-    v.debounceFade = debounce(function() {
-        hide.call(v);
-    }, 100);
+    debounceFade : function() {
+        var self = this;
+        
+        return debounce(
+            self.hide.bind(self), 
+            100
+        );
+    },
 
-    v.attachInputHandlers = function() {
-        var form = content.get().form.el;
+    attachInputHandlers : function() {
+        var self = this,
+            form = this.content.get().form.el;
 
-        if(v.handlersAttached) {
+        if(self.handlersAttached) {
             return;
         }
-        v.handlersAttached = true;
+        self.handlersAttached = true;
 
         // Irritatingly, this attachment had to be delayed like this because the 
         // form's `config` function was running before the whole DOM tree was rendered,
@@ -47,61 +54,61 @@ export default function Validity(content) {
         form.querySelectorAll("input, textarea, select").forEach(function(formInput) {
             formInput.addEventListener("invalid", function(evt) {
                 evt.target.classList.add(css.highlightInvalid);
-                v.registerInvalidField(evt.target.name);
+                self.registerInvalidField(evt.target.name);
             });
 
             formInput.addEventListener("focus", function(evt) {
                 evt.target.classList.remove(css.highlightInvalid);
-                v.onFormFocus(evt); // focus doesn't bubble, so we listen to all the inputs for this.
+                self.onFormFocus(evt); // focus doesn't bubble, so we listen to all the inputs for this.
             });
         });
-    };
+    },
 
-    v.checkForm = function() {
-        var state = content.get();
+    checkForm : function() {
+        var state = this.content.get();
 
-        v.attachInputHandlers();
+        this.attachInputHandlers();
         state.form.valid = state.form.el.checkValidity();
 
         return state.form.valid;
-    };
+    },
 
-    v.registerInvalidField = function(name) {
-        v.addInvalidField(name);
-        show();
-        v.debounceFade();
-    };
+    registerInvalidField : function(name) {
+        this.addInvalidField(name);
+        this.show();
+        this.debounceFade();
+    },
 
-    v.addInvalidField = function(name) {
+    addInvalidField : function(name) {
         var prefixedName = reqPrefix(name);
 
-        v.addInvalidMessage(prefixedName);
-    };
+        this.addInvalidMessage(prefixedName);
+    },
 
-    v.addInvalidMessage = function(msg) {
-        var state = content.get();
+    addInvalidMessage : function(msg) {
+        var state = this.content.get();
            
         if(state.form.invalidMessages.indexOf(msg) > -1) {
             return;
         }
         state.form.invalidMessages.push(msg);
-    };
+    },
 
-    v.reset = function() {
-        var state = content.get();
+    reset : function() {
+        var state = this.content.get();
 
         state.form.valid = true;
         state.form.invalidMessages = [];
-    };
+    },
 
-    v.onFormFocus = function() {
-        if(!content.get().form.valid) {
-            v.debounceFade();
+    onFormFocus : function() {
+        if(!this.content.get().form.valid) {
+            this.debounceFade();
         }
-    };
+    },
 
-    v.checkSchedule = function() {
-        var state = content.get(),
+    checkSchedule : function() {
+        var state = this.content.get(),
             pub = state.dates.published_at,
             unpub = state.dates.unpublished_at,
             valid;
@@ -112,29 +119,29 @@ export default function Validity(content) {
             (pub && unpub && pub < unpub);
 
         state.dates.validSchedule = valid;
-    };
+    },
 
-    v.isValidSave = function() {
-        var STATUS = content.schedule.STATUS,
-            state = content.get(),
+    isValidSave : function() {
+        var STATUS = this.content.schedule.STATUS,
+            state = this.content.get(),
             isValid = true,
             requiresValid;
 
-        content.schedule.updateStatus();
+        this.content.schedule.updateStatus();
 
         requiresValid = [ STATUS.SCHEDULED, STATUS.PUBLISHED ].indexOf(state.meta.status) > -1;
         if(requiresValid) {
-            v.checkForm();
+            this.checkForm();
 
             if(!state.form.valid) {
-                v.addInvalidMessage("Cannot Publish with invalid or missing input.");
+                this.addInvalidMessage("Cannot Publish with invalid or missing input.");
             }
         }
 
-        v.checkSchedule();
+        this.checkSchedule();
         if(!state.dates.validSchedule) {
             isValid = false;
-            v.addInvalidMessage("Invalid schedule.");
+            this.addInvalidMessage("Invalid schedule.");
         }
 
         if(!state.form.valid || !isValid) {
@@ -142,6 +149,6 @@ export default function Validity(content) {
         }
 
         return true;
-    };
-}
+    }
+};
 

@@ -53,6 +53,7 @@ export function view(ctrl, options) {
                 }
 
                 ctrl.transitioning = true;
+                content.toggleInvalid(false);
 
                 el.addEventListener("transitionend", function(evt) {
                     ctrl.reset();
