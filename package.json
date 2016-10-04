@@ -1,6 +1,6 @@
 {
   "name": "crucible",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Serverless CMS backed by Firebase",
   "main": "index.js",
   "repository": "tivac/crucible",
@@ -9,9 +9,9 @@
     "export": "node build/build.js --compress=true",
     "lint": "eslint .",
     "prepublish": "in-publish && npm run export || not-in-publish",
-    "preversion": "npm test",
+    "preversion": "npm run lint && mocha",
     "start": "node build/serve.js",
-    "test": "npm run lint && mocha"
+    "test": "npm run lint && mocha && npm run export"
   },
   "keywords": [
     "cms",
@@ -53,10 +53,10 @@
     "lodash.times": "^4.0.0",
     "minimist": "^1.2.0",
     "mithril": "^0.2.0",
-    "mithril-objectify": "2.0.0",
+    "mithril-objectify": "^3.1.0",
     "mithril-query": "^1.0.0",
     "mocha": "^3.0.2",
-    "modular-css": "^0.27.1",
+    "modular-css": "^0.27.2",
     "modular-css-namer": "^1.0.1",
     "morgan": "^1.6.1",
     "postcss-import": "^8.0.2",
@@ -64,7 +64,7 @@
     "pretty-bytes": "^4.0.2",
     "purecss": "^0.6.0",
     "remarkable": "^1.6.2",
-    "rollup": "^0.34.8",
+    "rollup": "^0.36.1",
     "rollup-plugin-babel": "^2.6.1",
     "rollup-plugin-commonjs": "^4.1.0",
     "rollup-plugin-json": "^2.0.1",
@@ -89,11 +89,12 @@
       "browser": true
     },
     "parserOptions": {
-      "ecmaVersion": 6,
+      "ecmaVersion": 5,
       "sourceType": "module"
     },
     "rules": {
-      "prefer-template": "off"
+      "prefer-template": "off",
+      "consistent-this": "off"
     }
   }
 }

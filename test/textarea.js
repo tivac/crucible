@@ -6,7 +6,7 @@ var assert = require("better-assert"),
     
     textarea = {};
 
-describe("Anthracite", () => {
+describe("Crucible", () => {
     before(() => require("./lib/rollup")("./src/types/textarea.js", textarea));
     
     describe("/types/textarea", function() {
