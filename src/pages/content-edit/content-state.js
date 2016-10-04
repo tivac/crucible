@@ -1,5 +1,5 @@
 import m from "mithril";
-import _get from "lodash.get";
+import get from "lodash.get";
 import set from "lodash.set";
 import merge from "lodash.merge";
 
@@ -78,6 +78,9 @@ export default function Content() {
     this.schedule = null;
     this.validity = null;
     this.init();
+
+    // temp
+    window.content = this;
 }
 
 Content.prototype = {
@@ -96,7 +99,7 @@ Content.prototype = {
             return this.state;
         }
 
-        return _get(this.state, path);
+        return get(this.state, path);
     },
 
     // Setup
@@ -162,6 +165,7 @@ Content.prototype = {
         validSave = this.validity.isValidSave();
 
         console.log("validSave", validSave);
+
         if(!validSave) {
             this.toggleInvalid(true);
 

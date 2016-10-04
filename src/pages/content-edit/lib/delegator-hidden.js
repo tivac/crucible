@@ -1,36 +1,36 @@
 
 export default function Hidden(content) {
-    var h = this,
-        content = content;
-
+    this.content = content;
+}
+Hidden.prototype = {
     // Hidden / Dependent fields.
-    function getHiddenIndex(key) {
-        return content.get().form.hidden.indexOf(key);
-    }
+    getHiddenIndex : function(key) {
+        return this.content.get().form.hidden.indexOf(key);
+    },
 
-    h.register = function(key, isHidden) {
+    register : function(key, isHidden) {
         if(isHidden) {
-            h.add(key);
+            this.add(key);
         } else {
-            h.remove(key);
+            this.remove(key);
         }
-    };
+    },
 
-    h.add = function(key) {
-        var state = content.get(),
-            index = getHiddenIndex(key);
+    add : function(key) {
+        var state = this.content.get(),
+            index = this.getHiddenIndex(key);
 
         if(index === -1) { 
             state.form.hidden.push(key);
         }
-    };
+    },
 
-    h.remove = function(key) {
-        var state = content.get(),
-            index = getHiddenIndex(key);
+    remove : function(key) {
+        var state = this.content.get(),
+            index = this.getHiddenIndex(key);
 
         if(index > -1) {
             state.form.hidden.splice(index, 1);
         }
-    };
-}
+    }
+};

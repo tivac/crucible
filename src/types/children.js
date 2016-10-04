@@ -48,7 +48,7 @@ export function view(ctrl, options) {
         result = m.component(component, assign({}, options, {
             field   : field,
             content : content,
-            update  : content.setField,
+            update  : content.setField.bind(content),
 
             class : addClasses(field, css[index ? "field" : "first"]),
             data  : get(options.data, field.key),
