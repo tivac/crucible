@@ -6,7 +6,7 @@ import * as children from "../../types/children.js";
 
 import css from "./form.css";
 
-export function view(ctrl_unused, options) {
+export function view(ctrl, options) {
     var content = options.content,
         state = content.get(),
         status = state.meta.status;

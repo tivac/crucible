@@ -8,7 +8,7 @@ import * as scheduleBox from "./schedule-box.js";
 
 import css from "./head.css";
 
-export function view(ctrl_unused, options) {
+export function view(ctrl, options) {
     var content  = options.content,
         schedule = content.schedule,
         state    = content.get(),

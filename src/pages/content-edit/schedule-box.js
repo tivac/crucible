@@ -37,10 +37,9 @@ function timestamp(side, date, time) {
 // handled by this controller.
 
 export function controller(options) {
-    var ctrl = this,
-        content = options.content;
+    var ctrl = this;
 
-    ctrl.content = content;
+    ctrl.content = options.content;
 
     ctrl.inputs = null;
     ctrl.ts = null;
@@ -50,7 +49,7 @@ export function controller(options) {
     };
 
     ctrl.makeSchedule = function() {
-        var dates = content.get().dates,
+        var dates = ctrl.content.get().dates,
             pub   = dates.published_at,
             unpub = dates.unpublished_at;
 
@@ -90,7 +89,7 @@ export function controller(options) {
         determineTimestamps();
         ts = ctrl.ts[dateField + "_at"];
 
-        content.schedule.setDateField(dateField, ts);
+        ctrl.content.schedule.setDateField(dateField, ts);
     };
 
     ctrl.init();
