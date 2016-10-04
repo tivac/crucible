@@ -114,29 +114,27 @@ export default function Validity(content) {
     v.isValidSave = function() {
         var STATUS = content.schedule.STATUS,
             state = content.get(),
-            invalidMessages = [],
+            isValid = true,
             requiresValid;
+
+        state.meta.status = content.schedule.findStatus();
 
         requiresValid = [ STATUS.SCHEDULED, STATUS.PUBLISHED ].indexOf(state.meta.status) > -1;
         if(requiresValid) {
             v.checkForm();
 
             if(!state.form.valid) {
-               invalidMessages.push("Cannot Publish with invalid or missing input.");
+                v.addInvalidMessage("Cannot Publish with invalid or missing input.");
             }
         }
 
         content.schedule.checkValidity();
-
         if(!state.dates.validSchedule) {
-            invalidMessages.push("Invalid schedule.");
+            isValid = false;
+            v.addInvalidMessage("Invalid schedule.");
         }
 
-        if(invalidMessages.length) {
-            invalidMessages.forEach(function(msg) {
-                v.addInvalidMessage(msg);
-            });
-
+        if(!state.form.valid || !isValid) {
             return false;
         }
 

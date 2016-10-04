@@ -5,9 +5,7 @@ export default function Hidden(content) {
 
     // Hidden / Dependent fields.
     function getHiddenIndex(key) {
-        var state = content.get();
-
-        return state.form.hidden.indexOf(key);
+        return content.get().form.hidden.indexOf(key);
     }
 
     h.register = function(key, isHidden) {

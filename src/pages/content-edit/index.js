@@ -1,15 +1,12 @@
 import m from "mithril";
 
 import sluggo from "sluggo";
-import isFuture from "date-fns/is_future";
-import isPast from "date-fns/is_past";
 import get from "lodash.get";
 import merge from "lodash.merge";
 import assign from "lodash.assign";
 import capitalize from "lodash.capitalize";
 
 import db from "../../lib/firebase.js";
-import update from "../../lib/update.js";
 import watch from "../../lib/watch.js";
 import prefix from "../../lib/prefix.js";
 

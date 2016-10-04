@@ -71,9 +71,7 @@ function ContentState() {
 
 export default function Content() {
     var con = this,
-        state,
-        schedule,
-        validity;
+        state;
 
     con.state = null;
     con.user = db.getAuth().uid;
@@ -87,8 +85,8 @@ export default function Content() {
         con.state = state = new ContentState();
 
         con.hidden = new Hidden(con);
-        con.schedule = schedule = new Schedule(con);
-        con.validity = validity = new Validity(con);
+        con.schedule = new Schedule(con);
+        con.validity = new Validity(con);
         
         con.validity.reset();
       
@@ -105,13 +103,6 @@ export default function Content() {
         return _get(state, path);
     };
 
-    // TODO ? Make and use a .set(path, value) so we can always
-    //        track unsaved changes & warn on attempt to exit?
-    //        + Disable save button if there is nothing to save.
-    // However, set with a path introduces possible string typo issues.
-    // "Why the hell isn't my -- oh because it's getting 'unperblished_at'" 
-
-
     // Setup
     con.setSchema = function(schema, key) {
         state.schema = schema;
@@ -119,14 +110,15 @@ export default function Content() {
     };
 
     con.registerForm = function(formEl) {
-        con.form = state.form.el = formEl;
+        state.form.el = formEl;
     };
 
     con.processServerData = function(data, ref) {
         con.ref = ref; // Firebase reference.
 
         state = merge(state, snapshot.toState(data));
-        state.meta.status = schedule.findStatus();
+        state.meta.status = con.schedule.findStatus();
+
         con.validity.checkSchedule();
     };
 
@@ -158,8 +150,9 @@ export default function Content() {
 
     con.toggleInvalid = function(force) {
         toggleUI("invalid", force);
-        if(force != null && force) {
-            validity.debounceFade();
+
+        if(force) {
+            con.validity.debounceFade();
         }
     };
 
@@ -169,9 +162,10 @@ export default function Content() {
             saveData;
 
         con.toggleSchedule(false);
-        validSave = validity.isValidSave();
+        validSave = con.validity.isValidSave();
 
         if(!validSave) {
+                console.log("toggleInvalid");
             con.toggleInvalid(true);
 
             return null;
@@ -182,7 +176,7 @@ export default function Content() {
         m.redraw();
 
         saveData = snapshot.fromState(state);
-        
+
         return con.ref.update(saveData, function() {
             state.ui.saving = false;
             m.redraw();

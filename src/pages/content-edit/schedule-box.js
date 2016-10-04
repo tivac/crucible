@@ -43,10 +43,7 @@ export function controller(options) {
     ctrl.content = content;
 
     ctrl.inputs = null;
-    ctrl.ts = {
-        published_at   : null,
-        unpublished_at : null
-    };
+    ctrl.ts = null;
 
     ctrl.init = function() {
          ctrl.makeSchedule();
@@ -104,7 +101,7 @@ function mScheduleInput(ctrl, id, side, part) {
     return m("input", {
         id    : id,
         type  : part,
-        class : ctrl.content.schedule.valid ? css.date : css.invalidDate,
+        class : ctrl.inputs.valid ? css.date : css.invalidDate,
         value : ctrl.get(side, part),
 
         // Events

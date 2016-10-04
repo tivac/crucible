@@ -31,7 +31,8 @@ export default function Schedule(content) {
         if(unpub < pub) {
             sched.setDateField("published", null);
         }
-        sched.checkValidity();
+
+        content.save();
     };
 
     sched.publish = function() {
@@ -39,13 +40,12 @@ export default function Schedule(content) {
             unpub = state.dates.unpublished_at;
 
         sched.dirty();
-        state.form.valid = content.validity.checkForm();
         sched.setDateField("published", pub);
-
         if(unpub < pub) {
             sched.setDateField("unpublished", null);
         }
-        sched.checkValidity();
+
+        content.save();
     };
 
     sched.setDateField = function(key, ts) {
@@ -53,6 +53,7 @@ export default function Schedule(content) {
             byKey = key + "_by";
 
         sched.dirty();
+
         state.dates[atKey] = ts;
         state.user[byKey] = content.user;
         state.meta.status = sched.findStatus(state);
