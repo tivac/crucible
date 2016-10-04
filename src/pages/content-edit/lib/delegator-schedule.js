@@ -56,13 +56,14 @@ export default function Schedule(content) {
 
         state.dates[atKey] = ts;
         state.user[byKey] = content.user;
-        state.meta.status = sched.findStatus(state);
 
-        sched.checkValidity();
+        sched.updateStatus(state);
+        content.validity.checkSchedule();
     };
 
     sched.clearSchedule = function() {
-        state.meta.dirty = true;
+        sched.dirty();
+        
         state = merge(state, {
             user : {
                 published_by   : null,
@@ -74,16 +75,19 @@ export default function Schedule(content) {
                 validSchedule  : null
             }
         });
+
         content.validity.checkSchedule();
     };
     
-    sched.findStatus = function() {
+    sched.updateStatus = function() {
         var pub = state.dates.published_at,
             unpub = state.dates.unpublished_at,
             status = STATUS.DRAFT;
 
         if(!pub) {
-            return status;
+            state.meta.status = status;
+
+            return;
         }
 
         if(unpub && isPast(unpub)) {
@@ -94,11 +98,6 @@ export default function Schedule(content) {
             status = STATUS.PUBLISHED;
         }
 
-        return status;
-    };
-
-    sched.checkValidity = function() {
-        state.dates.validSchedule = content.validity.checkSchedule();
-        state.meta.status = sched.findStatus();
+        state.meta.status = status;
     };
 }

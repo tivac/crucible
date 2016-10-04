@@ -117,9 +117,9 @@ export default function Content() {
         con.ref = ref; // Firebase reference.
 
         state = merge(state, snapshot.toState(data));
-        state.meta.status = con.schedule.findStatus();
-
+        
         con.validity.checkSchedule();
+        con.schedule.updateStatus();
     };
 
 
@@ -165,7 +165,6 @@ export default function Content() {
         validSave = con.validity.isValidSave();
 
         if(!validSave) {
-                console.log("toggleInvalid");
             con.toggleInvalid(true);
 
             return null;

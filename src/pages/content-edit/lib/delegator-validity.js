@@ -103,12 +103,15 @@ export default function Validity(content) {
     v.checkSchedule = function() {
         var state = content.get(),
             pub = state.dates.published_at,
-            unpub = state.dates.unpublished_at;
+            unpub = state.dates.unpublished_at,
+            valid;
 
-        return (!pub && !unpub) ||
+        valid = (!pub && !unpub) ||
             (pub && !unpub) ||
             (unpub && !pub) ||
             (pub && unpub && pub < unpub);
+
+        state.dates.validSchedule = valid;
     };
 
     v.isValidSave = function() {
@@ -117,7 +120,7 @@ export default function Validity(content) {
             isValid = true,
             requiresValid;
 
-        state.meta.status = content.schedule.findStatus();
+        content.schedule.updateStatus();
 
         requiresValid = [ STATUS.SCHEDULED, STATUS.PUBLISHED ].indexOf(state.meta.status) > -1;
         if(requiresValid) {
@@ -128,7 +131,7 @@ export default function Validity(content) {
             }
         }
 
-        content.schedule.checkValidity();
+        v.checkSchedule();
         if(!state.dates.validSchedule) {
             isValid = false;
             v.addInvalidMessage("Invalid schedule.");
