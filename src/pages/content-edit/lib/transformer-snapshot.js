@@ -49,8 +49,8 @@ function filterHidden(fields, hidden) {
 
 export function fromState(state) {
     var dates = state.dates,
-        user = state.user,
-        meta = state.meta;
+        user  = state.user,
+        meta  = state.meta;
 
     return {
         name : meta.name,

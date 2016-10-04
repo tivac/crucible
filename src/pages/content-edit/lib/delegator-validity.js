@@ -109,7 +109,7 @@ Validity.prototype = {
 
     checkSchedule : function() {
         var state = this.content.get(),
-            pub = state.dates.published_at,
+            pub   = state.dates.published_at,
             unpub = state.dates.unpublished_at,
             valid;
 
@@ -122,8 +122,8 @@ Validity.prototype = {
     },
 
     isValidSave : function() {
-        var STATUS = this.content.schedule.STATUS,
-            state = this.content.get(),
+        var STATUS  = this.content.schedule.STATUS,
+            state   = this.content.get(),
             isValid = true,
             requiresValid;
 

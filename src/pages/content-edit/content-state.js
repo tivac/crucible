@@ -71,12 +71,13 @@ function ContentState() {
 
 export default function Content() {
     this.state = new ContentState();
-    this.user = db.getAuth().uid;
-    this.ref = null; // Firebase object reference.
+    this.user  = db.getAuth().uid;
+    this.ref   = null; // Firebase object reference.
 
-    this.hidden = null;
-    this.schedule = null;
-    this.validity = null;
+    this.hidden   = new Hidden(this);
+    this.schedule = new Schedule(this);
+    this.validity = new Validity(this);
+
     this.init();
 
     // temp
@@ -84,13 +85,7 @@ export default function Content() {
 }
 
 Content.prototype = {
-    init : function() {
-        this.state = new ContentState();
-
-        this.hidden = new Hidden(this);
-        this.schedule = new Schedule(this);
-        this.validity = new Validity(this);
-        
+    init : function() {        
         this.validity.reset();
     },
 
@@ -125,7 +120,8 @@ Content.prototype = {
     // Data Changes
     setField : function(path, val) {
         this.state.dates.updated_at = Date.now();
-        this.state.user.updated_by = this.user;
+        this.state.user.updated_by  = this.user;
+
         this.state.meta.dirty = true;
 
         return set(this.state, path, val);
@@ -158,13 +154,11 @@ Content.prototype = {
     // Persist
     save : function() {
         var self = this,
-        validSave,
+            validSave,
             saveData;
 
         this.toggleSchedule(false);
         validSave = this.validity.isValidSave();
-
-        console.log("validSave", validSave);
 
         if(!validSave) {
             this.toggleInvalid(true);
@@ -172,7 +166,7 @@ Content.prototype = {
             return null;
         }
         
-        this.state.ui.saving = true;
+        this.state.ui.saving  = true;
         this.state.meta.dirty = false;
         m.redraw();
 

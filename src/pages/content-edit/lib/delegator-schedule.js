@@ -4,19 +4,18 @@ import merge from "lodash.merge";
 import isFuture from "date-fns/is_future";
 import isPast from "date-fns/is_past";
 
-var STATUS = {
-    DRAFT       : "draft",
-    SCHEDULED   : "scheduled",
-    PUBLISHED   : "published",
-    UNPUBLISHED : "unpublished"
-};
-
 export default function Schedule(content) {
     this.content = content;
-    this.STATUS = STATUS;
 }
 
 Schedule.prototype = {
+    STATUS : {
+        DRAFT       : "draft",
+        SCHEDULED   : "scheduled",
+        PUBLISHED   : "published",
+        UNPUBLISHED : "unpublished"
+    },
+
     dirty : function() {
         var state = this.content.get();
 
@@ -30,6 +29,7 @@ Schedule.prototype = {
 
         this.dirty();
         this.setDateField("unpublished", unpub);
+
         if(unpub < pub) {
             this.setDateField("published", null);
         }
@@ -44,6 +44,7 @@ Schedule.prototype = {
 
         this.dirty();
         this.setDateField("published", pub);
+        
         if(unpub < pub) {
             this.setDateField("unpublished", null);
         }

@@ -8,8 +8,8 @@ import css from "./form.css";
 
 export function view(ctrl, options) {
     var content = options.content,
-        state = content.get(),
-        status = state.meta.status;
+        state   = content.get(),
+        status  = state.meta.status;
 
     return m("div", { class : css.body },
         m("div", { class : css.contentsContainer },

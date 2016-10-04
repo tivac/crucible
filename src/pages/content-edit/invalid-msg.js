@@ -7,7 +7,7 @@ import css from "./invalid-msg.css";
 // tricky to do this sort of a transition over time or after a delay.
 
 export function controller(options) {
-    var ctrl = this,
+    var ctrl    = this,
         content = options.content;
 
     ctrl.invalidMessages = [];
@@ -33,7 +33,7 @@ export function controller(options) {
 
 export function view(ctrl, options) {
     var content = options.content,
-        state = content.get(),
+        state   = content.get(),
         invalid = state.ui.invalid;
 
     if(!invalid && !ctrl.transitioning) {
