@@ -89,10 +89,6 @@ export default function Content() {
         con.validity = new Validity(con);
         
         con.validity.reset();
-      
-        // TEMP
-        console.log("temp make state global for debug");
-        window.state = state;
     };
 
     con.get = function(path) {
@@ -117,7 +113,7 @@ export default function Content() {
         con.ref = ref; // Firebase reference.
 
         state = merge(state, snapshot.toState(data));
-        
+
         con.validity.checkSchedule();
         con.schedule.updateStatus();
     };

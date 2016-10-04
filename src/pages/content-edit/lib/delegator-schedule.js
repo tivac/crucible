@@ -14,7 +14,7 @@ var STATUS = {
 export default function Schedule(content) {
     var sched = this,
         content = content,
-        state = content.state;
+        state = content.get();
 
     sched.STATUS = STATUS;
 
@@ -63,7 +63,7 @@ export default function Schedule(content) {
 
     sched.clearSchedule = function() {
         sched.dirty();
-        
+
         state = merge(state, {
             user : {
                 published_by   : null,
