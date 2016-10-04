@@ -12,7 +12,7 @@ var md = new Remarkable();
 import "codemirror/mode/markdown/markdown";
 
 export default {
-    controller (options) {
+    controller : function(options) {
         var ctrl = this;
         
         ctrl.id       = id(options);
