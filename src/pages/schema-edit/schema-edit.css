@@ -10,6 +10,12 @@
     padding-bottom: 5em;
 }
 
+.content {
+    composes: content from layout_css;
+
+    padding: 0 0 0 20px;
+}
+
 .meta {
     /* ??? */
 }
@@ -48,7 +54,6 @@
     composes: hbox from flexCss;
     
     flex: 4;
-    overflow-y: auto;
 }
 
 .panes {
@@ -81,6 +86,6 @@
 /* Override codemirror styling to make it expannnnd */
 .editor :global(.CodeMirror) {
     composes: input from "../../form.css";
-    
-    height: 100% !important;
+
+    height: auto;
 }
