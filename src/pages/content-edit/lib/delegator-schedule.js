@@ -90,7 +90,7 @@ Schedule.prototype = {
         var state  = this.content.get(),
             pub    = state.dates.published_at,
             unpub  = state.dates.unpublished_at,
-            status = STATUS.DRAFT;
+            status = this.STATUS.DRAFT;
 
         if(!pub) {
             state.meta.status = status;
@@ -99,11 +99,11 @@ Schedule.prototype = {
         }
 
         if(unpub && isPast(unpub)) {
-            status = STATUS.UNPUBLISHED;
+            status = this.STATUS.UNPUBLISHED;
         } else if(pub && isFuture(pub)) {
-            status = STATUS.SCHEDULED;
+            status = this.STATUS.SCHEDULED;
         } else if(pub && isPast(pub)) {
-            status = STATUS.PUBLISHED;
+            status = this.STATUS.PUBLISHED;
         }
 
         state.meta.status = status;
