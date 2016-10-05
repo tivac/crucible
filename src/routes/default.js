@@ -22,16 +22,15 @@ export default function() {
 
         "/content/new" : auth(schemaNew),
 
+        // Screw it. Support both.
+        "/content/:schema/edit" : auth(schemaEdit),
+        "/listing/:schema/edit" : auth(schemaEdit),
+
         "/content/:schema/:id" : auth(edit),
-        "/content/:schema"     : auth(edit),
 
         "/listing/:schema" : auth(listing),
         "/listing/"        : auth(listing),
 
-        // Screw it, support both.
-        "/content/:schema/edit" : auth(schemaEdit),
-        "/listing/:schema/edit" : auth(schemaEdit),
-        
         "/..." : {
             view : function() {
                 return m("h1", "404");

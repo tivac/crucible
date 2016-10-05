@@ -117,7 +117,7 @@ export function view(ctrl) {
     return m.component(layout, {
         title   : title,
         content : [
-            m("div", { class : css.content },
+            m("div", { class : layout.css.content },
                 m.component(head, ctrl),
                 m("div", { class : css.body },
                     m("div", { class : css.contentsContainer },
