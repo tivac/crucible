@@ -90,6 +90,16 @@
     font-weight: normal;
 }
 
+/* Form contents */
+
+.children {
+    margin-top: 20px;
+}
+
+
+
+/* Inputs
+    * Specificity war with `pure-css` */
 input[type=text].title {
     margin: 0;
     padding: 2px 5px 0 5px;
@@ -137,10 +147,4 @@ input[type=text].unpublished {
     composes: title;
 
     border-color: red;
-}
-
-/* Form contents */
-
-.children {
-    margin-top: 20px;
 }
