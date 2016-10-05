@@ -81,15 +81,7 @@ export function view(ctrl) {
     
     return m.component(layout, {
         title   : "Edit - " + capitalize(ctrl.schema.name),
-        content : 
-
-
-        // m("div", { class : css.content },
-        //     m.component(head, ctrl),
-        //     m("div", { class : css.body },
-        //         m("div", { class : css.contentsContainer },
-            
-        m("div", { class : layout.css.content },
+        content : m("div", { class : layout.css.content },
             ctrl.error ?
                 m("p", { class : css.error }, ctrl.error) :
                 null,
