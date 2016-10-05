@@ -22,12 +22,14 @@ export default function() {
 
         "/content/new" : auth(schemaNew),
 
+        // Screw it. Support both.
+        "/content/:schema/edit" : auth(schemaEdit),
+        "/listing/:schema/edit" : auth(schemaEdit),
+
         "/content/:schema/:id" : auth(edit),
 
         "/listing/:schema" : auth(listing),
         "/listing/"        : auth(listing),
-        
-        "/listing/:schema/edit" : auth(schemaEdit),
 
         "/..." : {
             view : function() {
