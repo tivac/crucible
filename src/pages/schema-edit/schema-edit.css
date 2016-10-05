@@ -1,9 +1,13 @@
 @import "../../../node_modules/codemirror/lib/codemirror.css";
 
+@value layout_css:  "../layout/layout.css";
 @value flexCss: "../../flex.css";
 
 .body {
-    composes: body from "../layout/layout.css";
+    composes: body from layout_css;
+    composes: contentWidth from layout_css;
+
+    padding-bottom: 5em;
 }
 
 .meta {
