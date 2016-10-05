@@ -2,12 +2,6 @@
 @value icons_css:   "../../icons.css";
 @value buttons_css: "../../buttons.css";
 
-.content {
-    composes: section from layout_css;
-    position: relative;
-
-    flex: 1 1 100%;
-}
 
 .head {
     composes: head from layout_css;
@@ -56,7 +50,7 @@
 
 /* No item selected */
 .empty {
-    composes: content;
+    composes: content from layout_css;
     
     text-align: center;
     justify-content: center;

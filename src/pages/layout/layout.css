@@ -4,6 +4,19 @@
     height: 100%;
 }
 
+.section {
+    composes: vertical;
+
+    width: 100%;
+}
+
+.content {
+    composes: section;
+    position: relative;
+
+    flex: 1 1 100%;
+}
+
 .contentWidth {
     max-width: 1170px;
     min-width: 720px;
@@ -30,11 +43,6 @@
     min-height: 100%;
 }
 
-.section {
-    composes: vertical;
-
-    width: 100%;
-}
 
 .padding {
     padding: 1em 20px;
