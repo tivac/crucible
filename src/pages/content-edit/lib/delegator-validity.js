@@ -126,12 +126,13 @@ Validity.prototype = {
 
     isValidSave : function() {
         var STATUS  = this.content.schedule.STATUS,
-            state   = this.content.get(),            
-            requiresValid = state.meta.status === STATUS.SCHEDULED || state.meta.status === STATUS.PUBLISHED,
-            isValid = true;
+            state   = this.content.get(),
+            isValid = true,
+            requiresValid;
 
         this.content.schedule.updateStatus();
 
+        requiresValid = [ STATUS.SCHEDULED, STATUS.PUBLISHED ].indexOf(state.meta.status) > -1;
         if(requiresValid) {
             this.checkForm();
 

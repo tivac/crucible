@@ -132,7 +132,6 @@ Content.prototype = {
         m.redraw();
     },
 
-
     // UI
     toggleUI : function(key, force) {
         this.state.ui[key] = (force != null) ? Boolean(force) : !this.state.ui[key];
