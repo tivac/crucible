@@ -1,7 +1,7 @@
-
 export default function Hidden(content) {
     this.content = content;
 }
+
 Hidden.prototype = {
     // Hidden / Dependent fields.
     getHiddenIndex : function(key) {

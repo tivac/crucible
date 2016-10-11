@@ -2,7 +2,6 @@
 @value icons_css:   "../../icons.css";
 @value buttons_css: "../../buttons.css";
 
-
 .head {
     composes: head from layout_css;
     
@@ -20,7 +19,6 @@
 
     padding-bottom: 5em;
 }
-
 
 .contentsContainer {
     composes: textContentWidth from layout_css;
@@ -40,7 +38,6 @@
 .status {
     margin: 0;
 }
-
 
 .form {
     composes: global(pure-form), global(pure-form-stacked);
@@ -90,8 +87,6 @@
     margin-top: 20px;
 }
 
-
-
 /* Inputs
     * Specificity war with `pure-css` */
 input[type=text].title {
@@ -117,7 +112,6 @@ input[type=text].title:focus {
     border-color: #BBB;
     border-bottom-color: #68A;
 }
-
 
 input[type=text].draft {
     composes: title;

@@ -15,7 +15,7 @@ export default function Validity(content) {
 Validity.prototype = {
 
     // Private functions.
-    show : function() {
+    _show : function() {
         var wasInvalid = this.content.get().ui.invalid;
 
         this.content.toggleInvalid(true);
@@ -24,17 +24,18 @@ Validity.prototype = {
         }
     },
 
-    hide : function() {
+    _hide : function() {
         // CSS transition does the rest.
         this.content.toggleInvalid(false);
         m.redraw();
     },
 
+    // Public
     debounceFade : function() {
         var self = this;
         
         return debounce(
-            self.hide.bind(self), 
+            self._hide.bind(self), 
             100
         );
     },
@@ -46,6 +47,7 @@ Validity.prototype = {
         if(self.handlersAttached) {
             return;
         }
+
         self.handlersAttached = true;
 
         // Irritatingly, this attachment had to be delayed like this because the 
@@ -75,7 +77,7 @@ Validity.prototype = {
 
     registerInvalidField : function(name) {
         this.addInvalidField(name);
-        this.show();
+        this._show();
         this.debounceFade();
     },
 
@@ -91,6 +93,7 @@ Validity.prototype = {
         if(state.form.invalidMessages.indexOf(msg) > -1) {
             return;
         }
+
         state.form.invalidMessages.push(msg);
     },
 
@@ -113,23 +116,22 @@ Validity.prototype = {
             unpub = state.dates.unpublished_at,
             valid;
 
-        valid = (!pub && !unpub) ||
-            (pub && !unpub) ||
-            (unpub && !pub) ||
-            (pub && unpub && pub < unpub);
+        valid = (!pub && !unpub) || // No schedule.
+            (pub && !unpub)      || // Only have a pub date,
+            (unpub && !pub)      || // Only have an unpub date.
+            (pub && unpub && pub < unpub); // Have a valid pair of timestamps..
 
         state.dates.validSchedule = valid;
     },
 
     isValidSave : function() {
         var STATUS  = this.content.schedule.STATUS,
-            state   = this.content.get(),
-            isValid = true,
-            requiresValid;
+            state   = this.content.get(),            
+            requiresValid = state.meta.status === STATUS.SCHEDULED || state.meta.status === STATUS.PUBLISHED,
+            isValid = true;
 
         this.content.schedule.updateStatus();
 
-        requiresValid = [ STATUS.SCHEDULED, STATUS.PUBLISHED ].indexOf(state.meta.status) > -1;
         if(requiresValid) {
             this.checkForm();
 

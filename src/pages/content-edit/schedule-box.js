@@ -5,9 +5,11 @@ import css from "./head.css";
 
 var DEFAULT_START_TIME = "00:00",
     DEFAULT_END_TIME   = "23:59",
+
     DATE_FORMAT = "YYYY-MM-DD",
     TIME_FORMAT = "HH:mm",
-    TIMESTAMP_FORMAT = "x";
+
+    TIMESTAMP_FORMAT   = "x";
 
 function scheduleStr(side, date, time) {
     if(!date) {
@@ -31,7 +33,6 @@ function timestamp(side, date, time) {
     return str ? timestampFromStr(str) : null;
 }
 
-
 // All data in and out of the `scheduler` is in the form of timestamps.
 // All transformations to and from the date+time input fields will be
 // handled by this controller.
@@ -42,11 +43,7 @@ export function controller(options) {
     ctrl.content = options.content;
 
     ctrl.inputs = null;
-    ctrl.ts = null;
-
-    ctrl.init = function() {
-         ctrl.makeSchedule();
-    };
+    ctrl.ts     = null;
 
     ctrl.makeSchedule = function() {
         var dates = ctrl.content.get().dates,
@@ -66,10 +63,6 @@ export function controller(options) {
                 time : unpub ? formatDate(unpub, TIME_FORMAT) : DEFAULT_END_TIME
             }
         };
-    };
-
-    ctrl.get = function(side, part) {
-        return ctrl.inputs[side][part];
     };
 
     function determineTimestamps() {
@@ -92,23 +85,23 @@ export function controller(options) {
         ctrl.content.schedule.setDateField(dateField, ts);
     };
 
-    ctrl.init();
+    // Init
+    ctrl.makeSchedule();
 }
-
 
 function mScheduleInput(ctrl, id, side, part) {
     return m("input", {
         id    : id,
         type  : part,
         class : ctrl.inputs.valid ? css.date : css.invalidDate,
-        value : ctrl.get(side, part),
+        value : ctrl.inputs[side][part],
 
         // Events
         oninput : m.withAttr("value", ctrl.onChange.bind(ctrl, side, part))
     });
 }
 
-export function view(ctrl, options) {
+export function view(ctrl) {
     var schedule = ctrl.content.schedule;
 
     // Update schedule on redraw.
@@ -128,13 +121,13 @@ export function view(ctrl, options) {
             m("p", mScheduleInput(ctrl, "unpublished_at_time", "end", "time")),
             m("p",
                 m("button", {
-                    class : css.clearSchedule,
-                    title : "Clear schedule dates",
+                        class : css.clearSchedule,
+                        title : "Clear schedule dates",
 
-                    // Events
-                    onclick : schedule.clearSchedule.bind(schedule)
-                },
-                "clear schedule"
+                        // Events
+                        onclick : schedule.clearSchedule.bind(schedule)
+                    },
+                    "clear schedule"
                 )
             )
         )

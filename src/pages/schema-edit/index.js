@@ -77,7 +77,7 @@ export function controller() {
 
 export function view(ctrl) {
     var content = new Content(),
-        state = content.get();
+        state   = content.get();
 
     if(!ctrl.schema) {
         return m.component(layout);

@@ -1,4 +1,3 @@
-
 import merge from "lodash.merge";
 
 import isFuture from "date-fns/is_future";

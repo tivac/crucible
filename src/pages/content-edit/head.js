@@ -51,7 +51,6 @@ export function view(ctrl, options) {
                 )
             ]),
 
-            // Publishing
             m("div", { class : css.publishing },
                 // Schedule
                 m("button", {
@@ -70,7 +69,6 @@ export function view(ctrl, options) {
                     )
                 ),
 
-                // Publish
                 m("div", { class : css.publishContainer },
                     m("button", {
                             // Attrs
@@ -91,7 +89,6 @@ export function view(ctrl, options) {
                         m.component(invalidMsg, { content : content }) 
                 ),
 
-                // Unpublish
                 m("button", {
                         // Attrs
                         class    : css.unpublish,

@@ -14,12 +14,12 @@ export function view(ctrl, options) {
     return m("div", { class : css.body },
         m("div", { class : css.contentsContainer },
             m("div", { class : css.itemStatus },
-                m("p", { class : css.status }, [
+                m("p", { class : css.status },
                     m("span", { class : css.statusLabel },
                         "Status: "
                     ),
                     capitalize(state.meta.status)
-                ])
+                )
             ),
             m("form", {
                     class  : css.form,

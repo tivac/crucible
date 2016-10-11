@@ -1,4 +1,3 @@
-
 import clone from "lodash.clone";
 
 export function toState(data) {

@@ -10,9 +10,9 @@ import css from "./types.css";
 export default function(type) {
     return {
         controller : function(options) {
-            var ctrl = this,
+            var ctrl    = this,
                 content = options.content,
-                val  = get(options.field, "attrs.value");
+                val     = get(options.field, "attrs.value");
                 
             ctrl.id = id(options);
             

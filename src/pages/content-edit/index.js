@@ -41,7 +41,6 @@ export function controller() {
         return;
     }
 
-
     schema.on("value", function(snap) {
         content.setSchema(snap.val(), snap.key());
 
