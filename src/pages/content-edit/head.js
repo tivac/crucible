@@ -2,7 +2,6 @@ import m from "mithril";
 import format from "date-fns/format";
 import isFuture from "date-fns/is_future";
 import isPast from "date-fns/is_past";
-import subSeconds from "date-fns/sub_seconds";
 import get from "lodash.get";
 import clone from "lodash.clone";
 
@@ -21,9 +20,9 @@ var DEFAULT_START_TIME = "00:00",
 
 
 function makeScheduleObj(ts) {
-     return {
-        date : format(ts, DATE_FORMAT),
-        time : format(ts, TIME_FORMAT),
+    return {
+        date : format(new Date(ts), DATE_FORMAT),
+        time : format(new Date(ts), TIME_FORMAT),
         ts   : ts
     };
 }
@@ -116,7 +115,7 @@ export function controller(options) {
         ctrl.saving = true;
         m.redraw();
 
-        startTs = subSeconds(Date.now(), 10);
+        startTs = Date.now() - (10 * 1000); // Minus ten seconds.
         ctrl.start = makeScheduleObj(startTs);
 
         updated = {
@@ -183,7 +182,7 @@ export function controller(options) {
         m.redraw();
 
         updated = {
-            fields : filterHidden( opts.data.fields, opts.hidden ),
+            fields : filterHidden(opts.data.fields, opts.hidden),
             name   : opts.data.name,
             slug   : opts.data.slug || null
         };
