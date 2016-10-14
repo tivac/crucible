@@ -18,6 +18,8 @@ module.exports = function(options) {
         format    : "iife",
         sourceMap : true,
 
+        context : "window",
+
         banner : firebase,
 
         external : [
