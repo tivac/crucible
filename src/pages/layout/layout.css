@@ -1,5 +1,5 @@
-:global(html),
-:global(body) {
+html,
+body {
     width: 100%;
     height: 100%;
 }
@@ -48,16 +48,21 @@
     padding: 1em 20px;
 }
 
+.content {
+    composes: padding;
+}
 
 .head {
     composes: vertical;
+    composes: padding;
 
     justify-content: space-between;
     align-items: stretch;
 
     flex: 0 0 48px;
 
-    padding: 0.3em 20px;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
 }
 
 .body {
