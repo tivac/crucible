@@ -10,8 +10,9 @@ import css from "./types.css";
 export default function(type) {
     return {
         controller : function(options) {
-            var ctrl = this,
-                val  = get(options.field, "attrs.value");
+            var ctrl    = this,
+                content = options.content,
+                val     = get(options.field, "attrs.value");
                 
             ctrl.id = id(options);
             
@@ -25,7 +26,7 @@ export default function(type) {
                         return;
                     }
                     
-                    options.update(options.path, val);
+                    content.setField(options.path, val);
                     
                     m.redraw();
                 });
@@ -33,7 +34,8 @@ export default function(type) {
         },
 
         view : function(ctrl, options) {
-            var field  = options.field;
+            var content = options.content,
+                field  = options.field;
             
             return m("div", { class : options.class },
                 label(ctrl, options),
@@ -47,7 +49,7 @@ export default function(type) {
                         required : options.required,
 
                         // events
-                        oninput : m.withAttr("value", options.update(options.path))
+                        oninput : m.withAttr("value", content.setField.bind(content, options.path))
                     }
                 ))
             );

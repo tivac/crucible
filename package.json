@@ -41,7 +41,7 @@
     "lodash.assign": "^4.0.0",
     "lodash.capitalize": "^4.0.1",
     "lodash.clamp": "^4.0.3",
-    "lodash.clone": "^4.4.1",
+    "lodash.clone": "^4.5.0",
     "lodash.debounce": "^4.0.0",
     "lodash.filter": "^4.2.1",
     "lodash.foreach": "^4.3.0",

@@ -12,7 +12,8 @@ import css from "./lib/types.css";
 var types;
 
 export function view(ctrl, options) {
-    var fields = options.fields || [],
+    var content = options.content,
+        fields = options.fields || [],
         registerHidden = options.registerHidden,
         mFields = [];
 
@@ -35,7 +36,7 @@ export function view(ctrl, options) {
             wasHidden = field.show.hidden;
             field.show.hidden = checkHidden(options.state, field);
 
-            if(registerHidden && field.show.hidden !== wasHidden) {
+            if(field.show.hidden !== wasHidden) {
                 // hidden status changed, notify the controller.
                 registerHidden(field.key, field.show.hidden);
                 m.redraw();
@@ -45,7 +46,10 @@ export function view(ctrl, options) {
         isHidden = get(field, "show.hidden");
 
         result = m.component(component, assign({}, options, {
-            field : field,
+            field   : field,
+            content : content,
+            update  : content.setField.bind(content),
+
             class : addClasses(field, css[index ? "field" : "first"]),
             data  : get(options.data, field.key),
             path  : options.path.concat(field.key),
