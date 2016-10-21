@@ -1,0 +1,7 @@
+.content {
+    composes: content from "./layout/layout.css";
+}
+
+.header {
+    margin-top: 0;
+}

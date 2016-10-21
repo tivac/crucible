@@ -5,6 +5,7 @@ import db from "../lib/firebase";
 import prefix from "../lib/prefix";
 
 import * as layout from "./layout/index";
+import css from "./schema-new.css";
 
 export function controller() {
     var ctrl  = this;
@@ -33,8 +34,10 @@ export function controller() {
 export function view(ctrl) {
     return m.component(layout, {
         title   : "Create a Schema",
-        content : m("div", { class : layout.css.content },
+        content : m("div", { class : css.content },
+            m("h1", { class : css.header }, "New Schema"),
             m("form", { onsubmit : ctrl.onsubmit },
+                m("label", "Name: "),
                 m("input[name=name]", {
                     oninput : m.withAttr("value", ctrl.oninput),
                     value   : ctrl.name
