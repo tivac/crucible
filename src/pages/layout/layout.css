@@ -22,7 +22,7 @@ body {
 
 .content {
     composes: vbox from flex_css;
-    flex: 1 0 auto;
+    flex: 1 0 calc(100% - 320px);
     position: relative;
 
     background: #fafafa;
@@ -36,6 +36,12 @@ body {
 .textContentWidth {
     max-width: 850px;
     min-width: 550px;
+}
+
+.ellipsisOverflow {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .padding {

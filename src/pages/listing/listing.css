@@ -10,12 +10,6 @@
 @value anchor: #446;
 @value iconTransition: color 0.2s ease-in;
 
-.ellipsisOverflow {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
 .contentHd {
     composes: head from layout_css;
     composes: lightSep from layout_css;
@@ -25,7 +19,6 @@
     composes: body from layout_css;
     composes: contentWidth from layout_css;
 
-    padding: 20px 0 0 20px;
     min-width: 600px;
 }
 
@@ -62,8 +55,6 @@
 }
 
 .manage {
-    composes: ellipsisOverflow;
-
     flex: 0 0 40%;
 
     text-align: right;
@@ -86,8 +77,6 @@
 }
 
 .pages {
-    composes: ellipsisOverflow;
-
     flex: 0 0 66.6%
 }
 
@@ -112,7 +101,6 @@
 
 .add {
     composes: add from buttons_css;
-    composes: ellipsisOverflow;
 }
 
 .showingResults {
@@ -133,12 +121,15 @@
 
 .col {
     padding: 0.5em pad;
+    max-width: 0; /* needed for ellipsis overflow on <td> */
 
     text-align: center;
 }
 
 .colName {
     composes: col;
+
+    width: 40%;
 
     border-left: solid 3px color_draft;
 
@@ -148,7 +139,7 @@
 .colState {
     composes: col;
 
-    width: 14%;
+    width: 16%;
 
     text-align: left;
 }
@@ -156,13 +147,13 @@
 .colDate {
     composes: col;
 
-    width: 14%;
+    width: 16%;
 }
 
 .colActions {
     composes: col;
 
-    width: 11%;
+    width: 12%;
 
     text-align: right;
 }
@@ -226,15 +217,17 @@
 .headerUpdated,
 .headerScheduled {
     composes: colDate;
+    composes: ellipsisOverflow from layout_css;
 }
 
 .headerActions {
     composes: colActions;
+    composes: ellipsisOverflow from layout_css;
 }
 
 .itemName {
     composes: colName;
-    composes: ellipsisOverflow;
+    composes: ellipsisOverflow from layout_css;
 
     color: anchor;
     font-size: 1.2em;

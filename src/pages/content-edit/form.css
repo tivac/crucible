@@ -7,28 +7,8 @@
 @value color_published: green;
 @value color_unpublished: red;
 
-
-.head {
-    composes: head from layout_css;
-    
-    flex-direction: row;
-    
-    padding-left: 10px;
-    padding-right: 10px;
-    
-    align-items: center;
-}
-
-.body {
-    composes: body from layout_css;
-    composes: contentWidth from layout_css;
-
-    padding-bottom: 5em;
-}
-
 .contentsContainer {
     composes: textContentWidth from layout_css;
-    composes: padding from layout_css;
 
     width: 100%;
 }
@@ -97,15 +77,17 @@
     * Specificity war with `pure-css` */
 input[type=text].title {
     margin: 0;
-    padding: 2px 5px 0 5px;
-
-    border: none;
-    border-bottom: solid 3px #68A;
-    border-radius: 0;
-    box-shadow: none;
-    font-size: 2em;
     padding: 0;
     width: 100%;
+
+    border: none;
+    border-radius: 0;
+    border-bottom: solid 3px #68A;
+
+    font-size: 2em;
+
+    box-shadow: none;
+    background: transparent;
 }
 
 input[type=text].title:hover {

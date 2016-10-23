@@ -17,7 +17,7 @@
 }
 
 .primary {
-    composes: button, global(pure-button-primary);
+    composes: global(pure-button), global(pure-button-primary);
 }
 
 .add {

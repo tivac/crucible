@@ -7,7 +7,8 @@
 
 .header {
     composes: vbox from flex_css;
-    flex: 0 0 250px;
+    flex: 0 1 320px;
+    min-width: 180px;
     z-index: 1;
 
     color: #FFF;
