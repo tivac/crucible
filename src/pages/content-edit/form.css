@@ -5,10 +5,21 @@
 @value color_draft: #ddd;
 @value color_scheduled: orange;
 @value color_published: green;
-@value color_unpublished: #666;
-@value color_unpublished: #666;
+@value color_unpublished: red;
 
-.contentBd {
+
+.head {
+    composes: head from layout_css;
+    
+    flex-direction: row;
+    
+    padding-left: 10px;
+    padding-right: 10px;
+    
+    align-items: center;
+}
+
+.body {
     composes: body from layout_css;
     composes: contentWidth from layout_css;
 
@@ -32,32 +43,6 @@
 
 .status {
     margin: 0;
-
-    border-bottom: solid 3px;
-}
-
-.draft {
-    composes: status;
-
-    border-color: color_draft;
-}
-
-.scheduled {
-    composes: status;
-
-    border-color: color_scheduled;
-}
-
-.published {
-    composes: status;
-
-    border-color: color_published;
-}
-
-.unpublished {
-    composes: status;
-
-    border-color: unpublished
 }
 
 .form {

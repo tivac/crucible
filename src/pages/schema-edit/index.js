@@ -150,10 +150,15 @@ export function view(ctrl) {
                     m("h3", "Preview"),
                     m.component(children, {
                         fields : ctrl.schema.fields,
-                        data   : ctrl.data,
-                        path   : [],
-                        state  : ctrl.data,
-                        update : update.bind(null, ctrl.data)
+                        class  : css.children,
+                        data   : state.fields || {},
+                        path   : [ "fields" ],
+                        state  : state.fields,
+
+                        update  : content.setField.bind(content),
+                        content : content,
+
+                        registerHidden : content.hidden.register.bind(content.hidden)
                     })
                 )
             )
