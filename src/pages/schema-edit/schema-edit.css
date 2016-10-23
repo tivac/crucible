@@ -5,21 +5,6 @@
 
 @value pad from "../layout/layout.css";
 
-.schemaEdit {
-    composes: hbox from flex_css;
-}
-
-.schema {
-    flex: 0 0 50%;
-}
-
-.preview {
-    composes: global(pure-form), global(pure-form-stacked);
-
-    flex: 0 0 50%;
-    padding-left: pad;
-}
-
 .error {
     position: absolute;
     top: 0;
@@ -33,11 +18,21 @@
     color: whitesmoke;
 }
 
+.contentWidth {
+    composes: hbox from flex_css;
+    composes: contentWidth from layout_css;
+
+    flex-wrap: wrap;
+}
+
+.definitions {
+    flex: 0 0 50%;
+}
+
 .editor {
     composes: input from "../../form.css";
 
     min-height: 360px;
-
     background: #fff;
 }
 
@@ -46,40 +41,58 @@
     height: auto;
 }
 
+.preview {
+    flex: 0 0 50%;
+    padding-left: pad;
+}
+
+.fields {
+    composes: global(pure-form), global(pure-form-stacked);
+}
+
 .details {
     composes: global(pure-form);
+
+    flex: 0 0 100%;
     margin-top: pad;
+}
+
+/* specificity with Pure */
+.genSlugs {
+    display: block;
+    margin-bottom: pad !important;
 }
 
 .slug {
-    margin-left: pad;
+    margin-left: 10px;
     transform: scale(1.2);
 }
 
-.url {
+.urlBase {
     composes: hbox from flex_css;
+}
 
-    flex-wrap: wrap;
-    margin-top: pad;
+.url {
+    flex: 1 0 auto;
+    padding-left: 10px;
 }
 
 .urlInputPreview {
-    flex: 1 0 auto;
-    margin-left: pad;
-}
-
-.urlInput {
     width: 100%;
 }
 
 /* specificity with Pure */
 .urlInputError {
+    composes: urlInputPreview;
+
     color: #b94a48;
     border-color: #e9322d !important;
 }
 
 .previewUrl {
     flex: 0 0 100%;
+    margin-top: 0.6em;
+
     font-style: italic;
     font-size: 80%;
     color: #666;
