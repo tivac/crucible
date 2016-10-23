@@ -87,7 +87,7 @@ export function controller() {
         overflow = (hasOverflow) ? content.splice(0, 1)[0] : null;
         ctrl.content = content;
 
-        if(!isLastPage && overflow) {        
+        if(!isLastPage && overflow) {
             ctrl.pg.limits.push(oldestTs);
         }
     }
@@ -124,7 +124,7 @@ export function controller() {
     }
 
     // Go get initial data
-    ctrl.init = function() {        
+    ctrl.init = function() {
         ctrl.pg = new PageState();
 
         schema = db.child("schemas/" + m.route.param("schema"));
@@ -162,7 +162,7 @@ export function controller() {
         }
 
         if(nextTs) {
-            // This is safer in the case that firebase updates 
+            // This is safer in the case that firebase updates
             // because of another user's acitvity.
             ctrl.queryRef = ctrl.contentLoc
                 .orderByChild(DB_ORDER_BY)
@@ -174,7 +174,7 @@ export function controller() {
             return;
         }
 
-        // Firebase orders Ascending, so the 
+        // Firebase orders Ascending, so the
         // lowest/oldest entry will be first in the snapshot.
         // We want items in descneding, so we slice our
         // query from the other end via .endAt/.limitToLast
@@ -199,8 +199,10 @@ export function controller() {
         m.route(prefix("/content/" + ctrl.schema.key + "/" + result.key()));
     };
 
-    ctrl.remove = function(data) {
+    ctrl.remove = function(data, e) {
         var ref;
+
+        e.stopPropagation();
 
         ref = db.child("content")
             .child(ctrl.schema.key)
@@ -297,8 +299,7 @@ export function controller() {
 
 
 export function view(ctrl) {
-    var current = m.route(),
-        content = ctrl.results || ctrl.content || [],
+    var content = ctrl.results || ctrl.content || [],
         locked  = config.locked,
         isSearchResults = Boolean(ctrl.results);
 
@@ -310,8 +311,8 @@ export function view(ctrl) {
         title   : get(ctrl, "schema.name") || "...",
         content : [
 
-            m("div", { class : css.listing },
-                m("div", { class : css.contentHead },
+            m("div", { class : layout.css.content },
+                m("div", { class : css.contentHd },
                     m("button", {
                             onclick  : ctrl.add,
                             class    : css.add,
@@ -320,7 +321,7 @@ export function view(ctrl) {
                         "+ Add " + (ctrl.schema && ctrl.schema.name || "...")
                     )
                 ),
-                m("div", { class : css.body }, [
+                m("div", { class : css.contentBd }, [
                     m("div", { class : css.metas },
                         m("div", {
                                 class : css.search
@@ -367,10 +368,10 @@ export function view(ctrl) {
                                                 // disabled : locked ||  || ctrl.pg.page === 1 || null // TODO
                                             },
                                             "Search All"
-                                        ) 
+                                        )
                                     ];
                                 }
-                                
+
                                 return m("div", { class : css.showingResults },
                                     searchContents
                                 );
@@ -399,17 +400,18 @@ export function view(ctrl) {
                             ]);
                         }())
                     ),
-                    m("div", { class : css.listContainer }, 
-                        m("ul", { class : css.list },
-                            [
-                                m("li", { class : css.listHeader }, [
-                                    m("div", { class : css.listCol1 }, "Name"),
-                                    m("div", { class : css.listCol2 }, "State"),
-                                    m("div", { class : css.listCol3 }, "Updated"),
-                                    m("div", { class : css.listCol4 }, "Scheduled"),
-                                    m("div", { class : css.listCol5 }, "Actions")
-                                ])
-                            ].concat(
+                    m("div", { class : css.entriesContainer },
+                        m("table", { class : css.table },
+                            m("thead", { class : css.tableHeader },
+                                m("tr",
+                                    m("th", { class : css.headerName }, "Name"),
+                                    m("th", { class : css.headerState }, "State"),
+                                    m("th", { class : css.headerUpdated }, "Updated"),
+                                    m("th", { class : css.headerScheduled }, "Scheduled"),
+                                    m("th", { class : css.headerActions }, "Actions")
+                                )
+                            ),
+                            m("tbody",
                                 content
                                 .sort(function(a, b) {
                                     var aTime = a.order_by,
@@ -419,20 +421,24 @@ export function view(ctrl) {
                                     return bTime - aTime;
                                 })
                                 .map(function(data) {
-                                    var url      = "/content/" + ctrl.schema.key + "/" + data.key,
-                                        cssClasses = css.item,
+                                    var entryStatus = css.row,
+                                        now = Date.now(),
 
                                         itemName,
                                         itemStatus,
                                         itemUpdated,
                                         itemSchedule;
 
-                                    if(data.published_at && current.indexOf(url) === 0) {
-                                        cssClasses = css.activePublished;
-                                    } else if(current.indexOf(url) === 0) {
-                                        cssClasses = css.active;
-                                    } else if(data.published_at) {
-                                        cssClasses = css.published_at;
+                                    if(data.published_at) {
+                                        entryStatus = css.published_at;
+                                    }
+
+                                    if(data.published_at > now) {
+                                        entryStatus = css.scheduled_at;
+                                    }
+
+                                    if(data.unpublished_at < now) {
+                                        entryStatus = css.unpublished_at;
                                     }
 
                                     itemStatus = getItemStatus(data);
@@ -441,55 +447,61 @@ export function view(ctrl) {
                                     itemUpdated = data.updated_at ? format(data.updated_at, dateFormat) : "--/--/----";
                                     itemSchedule = data.published_at ? format(data.published_at, dateFormat) : "--/--/----";
 
-                                    return m("li", { class : cssClasses },
-                                        m("a", {
-                                                class  : css.anchor,
-                                                config : m.route,
-                                                href   : prefix("/content/" + ctrl.schema.key + "/" + data.key)
-                                            }, ""
-                                        ),
-                                        m("span", { class : [ css.listCol1, css.itemTitle ].join(" "),
-                                            title : itemName },
+                                    return m("tr", {
+                                            class   : entryStatus,
+                                            onclick : function() {
+                                                m.route(prefix("/content/" + ctrl.schema.key + "/" + data.key));
+                                            }
+                                        },
+                                        m("td", {
+                                                class : css.itemName,
+                                                title : itemName
+                                            },
                                             itemName
                                         ),
-                                        m("span", { class : [ css.listCol2, css.date ].join(" "),
-                                            title : itemStatus },
+                                        m("td", {
+                                                class : css.itemState,
+                                                title : itemStatus
+                                            },
                                             itemStatus
                                         ),
-                                        m("span", { class : [ css.listCol3, css.status ].join(" "),
-                                            title : itemUpdated },
-                                            itemUpdated  
+                                        m("td", {
+                                                class : css.itemUpdated,
+                                                title : itemUpdated
+                                            },
+                                            itemUpdated
                                         ),
-                                        m("span", { class : [ css.listCol4, css.status ].join(" "),
-                                            title : itemSchedule },
-                                            itemSchedule  
+                                        m("td", {
+                                                class : css.itemScheduled,
+                                                title : itemSchedule
+                                            },
+                                            itemSchedule
                                         ),
-                                        m("div", { class : [ css.listCol5, css.actions ].join(" ") },
-                                            m("button", {
-                                                    // Attrs
-                                                    class    : [ css.remove, css.action ].join(" "),
-                                                    title    : "Remove: " + itemName,
-                                                    disabled : locked || null,
-
-                                                    // Events
-                                                    onclick : ctrl.remove.bind(ctrl, data)
-                                                },
-                                                m("svg", { class : css.icon },
-                                                    m("use", { href : icons + "#remove" })
-                                                )
-                                            ),
-                                            ctrl.schema.preview ?
-                                                m("a", {
-                                                        class  : [ css.preview, css.action ].join(" "),
-                                                        title  : "Preview: " + itemName,
-                                                        href   : ctrl.schema.preview + data.key,
-                                                        target : "_blank"
+                                        m("td", { class : css.itemActions },
+                                            m("div", { class : css.actionsPanel },
+                                                m("button", {
+                                                        class    : css.remove,
+                                                        title    : "Remove: " + itemName,
+                                                        disabled : locked || null,
+                                                        onclick  : ctrl.remove.bind(ctrl, data)
                                                     },
                                                     m("svg", { class : css.icon },
-                                                        m("use", { href : icons + "#preview" })
+                                                        m("use", { href : icons + "#remove" })
                                                     )
-                                                ) :
-                                            null
+                                                ),
+                                                ctrl.schema.preview ?
+                                                    m("a", {
+                                                            class  : css.preview,
+                                                            title  : "Preview: " + itemName,
+                                                            href   : ctrl.schema.preview + data.key,
+                                                            target : "_blank"
+                                                        },
+                                                        m("svg", { class : css.icon },
+                                                            m("use", { href : icons + "#preview" })
+                                                        )
+                                                    ) :
+                                                null
+                                            )
                                         )
                                     );
                                 })

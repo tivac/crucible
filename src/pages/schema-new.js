@@ -34,18 +34,30 @@ export function controller() {
 export function view(ctrl) {
     return m.component(layout, {
         title   : "Create a Schema",
-        content : m("div", { class : css.content },
-            m("h1", { class : css.header }, "New Schema"),
-            m("form", { onsubmit : ctrl.onsubmit },
-                m("label", "Name: "),
-                m("input[name=name]", {
-                    oninput : m.withAttr("value", ctrl.oninput),
-                    value   : ctrl.name
-                }),
-                m("p",
-                    "Slug: " + (ctrl.slug || "???")
-                ),
-                m("input[type=submit]", { value : "Add" })
+        content : m("div", { class : layout.css.content },
+            m("div", { class : layout.css.body },
+                m("h1", { class : layout.css.title }, "New Schema"),
+                m("form", {
+                        class    : css.form,
+                        onsubmit : ctrl.onsubmit
+                    },
+                    m("div", { class : css.row },
+                        m("label", { class : css.label }, "Name: "),
+                        m("input[name=name]", {
+                            class   : css.name,
+                            oninput : m.withAttr("value", ctrl.oninput),
+                            value   : ctrl.name
+                        })
+                    ),
+                    m("div", { class : css.row },
+                        m("span", { class : css.label }, "Slug: "),
+                        m("span", { class : css.slug }, (ctrl.slug || "???"))
+                    ),
+                    m("input[type=submit]", {
+                        class : css.add,
+                        value : "Add schema"
+                    })
+                )
             )
         )
     });

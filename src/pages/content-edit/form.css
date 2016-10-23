@@ -2,18 +2,13 @@
 @value icons_css:   "../../icons.css";
 @value buttons_css: "../../buttons.css";
 
-.head {
-    composes: head from layout_css;
-    
-    flex-direction: row;
-    
-    padding-left: 10px;
-    padding-right: 10px;
-    
-    align-items: center;
-}
+@value color_draft: #ddd;
+@value color_scheduled: orange;
+@value color_published: green;
+@value color_unpublished: #666;
+@value color_unpublished: #666;
 
-.body {
+.contentBd {
     composes: body from layout_css;
     composes: contentWidth from layout_css;
 
@@ -37,6 +32,32 @@
 
 .status {
     margin: 0;
+
+    border-bottom: solid 3px;
+}
+
+.draft {
+    composes: status;
+
+    border-color: color_draft;
+}
+
+.scheduled {
+    composes: status;
+
+    border-color: color_scheduled;
+}
+
+.published {
+    composes: status;
+
+    border-color: color_published;
+}
+
+.unpublished {
+    composes: status;
+
+    border-color: unpublished
 }
 
 .form {
@@ -48,7 +69,7 @@
 /* No item selected */
 .empty {
     composes: content from layout_css;
-    
+
     text-align: center;
     justify-content: center;
     align-content: center;
@@ -65,7 +86,7 @@
 
 .save {
     composes: primary from buttons_css;
-    
+
     margin-left: 10px;
 }
 
@@ -116,23 +137,23 @@ input[type=text].title:focus {
 input[type=text].draft {
     composes: title;
 
-    border-color: #ddd;
+    border-color: color_draft;
 }
 
 input[type=text].published {
     composes: title;
 
-    border-color: green;
+    border-color: color_published;
 }
 
 input[type=text].scheduled {
     composes: title;
 
-    border-color: orange;
+    border-color: color_scheduled;
 }
 
 input[type=text].unpublished {
     composes: title;
 
-    border-color: red;
+    border-color: color_unpublished;
 }

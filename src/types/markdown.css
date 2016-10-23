@@ -2,12 +2,12 @@
 
 .input {
     composes: input from form_css;
-    
+
     min-height: 50px;
     max-height: 400px;
-    
+
     overflow: auto;
-    
+
     background: #FFF;
 }
 
@@ -16,6 +16,8 @@
 }
 
 .button {
+    composes: button from "../buttons.css";
+
     margin-top: 5px;
 }
 

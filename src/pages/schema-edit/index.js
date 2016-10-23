@@ -27,7 +27,7 @@ export function controller() {
         valid : true,
         value : ""
     };
-    
+
     // Get Firebase data
     ref.on("value", function(snap) {
         ctrl.schema = snap.val();
@@ -35,7 +35,7 @@ export function controller() {
         if(!ctrl.preview.value) {
             ctrl.preview.value = ctrl.schema.preview || "";
         }
-        
+
         // Ensure that we run it through the worker asap
         if(ctrl.schema.source) {
             worker.postMessage(ctrl.schema.source);
@@ -53,22 +53,22 @@ export function controller() {
 
         ref.child("preview").set(el.value);
     };
-    
+
     ctrl.slugChanged = function(value) {
         ref.child("slug").set(value);
     };
-    
+
     // Listen for the worker to finish and update firebase
     worker.addEventListener("message", function(e) {
         var data = JSON.parse(e.data);
-        
+
         if(data.error) {
             ctrl.error = true;
         } else {
             ref.child("fields").set(data.config);
             ctrl.error = false;
         }
-        
+
         m.redraw();
     });
 
@@ -82,10 +82,10 @@ export function view(ctrl) {
     if(!ctrl.schema) {
         return m.component(layout);
     }
-    
+
     return m.component(layout, {
-        title   : "Edit - " + capitalize(ctrl.schema.name),
-        content : m("div", { class : css.content },
+        title   : capitalize(ctrl.schema.name) + " Metadata",
+        content : m("div", { class : layout.css.content },
             ctrl.error ?
                 m("p", { class : css.error }, ctrl.error) :
                 null,
@@ -150,15 +150,10 @@ export function view(ctrl) {
                     m("h3", "Preview"),
                     m.component(children, {
                         fields : ctrl.schema.fields,
-                        class  : css.children,
-                        data   : state.fields || {},
-                        path   : [ "fields" ],
-                        state  : state.fields,
-
-                        update  : content.setField.bind(content),
-                        content : content,
-
-                        registerHidden : content.hidden.register.bind(content.hidden)
+                        data   : ctrl.data,
+                        path   : [],
+                        state  : ctrl.data,
+                        update : update.bind(null, ctrl.data)
                     })
                 )
             )

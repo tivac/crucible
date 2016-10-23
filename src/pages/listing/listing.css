@@ -1,9 +1,12 @@
 @value pure: "../../_pure.css";
 @value icons_css: "../../icons.css";
+@value flex_css: "../../flex.css";
 @value layout_css: "../layout/layout.css";
 @value buttons_css: "../../buttons.css";
 @value header: "../layout/header.css";
 
+@value pad from "../layout/layout.css";
+@value color_draft, color_scheduled, color_published, color_unpublished from "../content-edit/form.css";
 @value anchor: #446;
 @value iconTransition: color 0.2s ease-in;
 
@@ -13,36 +16,22 @@
     white-space: nowrap;
 }
 
-.listing {
-    width: 100%;
-
-    border-right: solid 1px #CCC;
-    background: #EEE;
+.contentHd {
+    composes: head from layout_css;
+    composes: lightSep from layout_css;
 }
 
-.contentHead {
-    composes: lightsep from header;
-    overflow: hidden;
-
-    height: 48px;
-
-    position: relative;
-    padding: 0.3em 20px;
-}
-
-.body {
+.contentBd {
     composes: body from layout_css;
     composes: contentWidth from layout_css;
-    
+
     padding: 20px 0 0 20px;
     min-width: 600px;
-    width: 96%;
 }
 
 /* Metadata controls */
 .search {
-    composes: global(pure-u-3-5);
-    position: relative;
+    flex: 0 0 60%;
     margin-bottom: 1em;
 }
 
@@ -73,8 +62,9 @@
 }
 
 .manage {
-    composes: global(pure-u-2-5);
     composes: ellipsisOverflow;
+
+    flex: 0 0 40%;
 
     text-align: right;
 }
@@ -88,19 +78,17 @@
 }
 
 .metas {
-    composes: global(pure-g);
-    position: relative;
+    composes: hbox from flex_css;
+    composes: global(pure-form);
 
-    margin: 0 auto;
-    padding: 0 0 1em 0;
-
-    border-bottom: solid 1px #CCC;
-    width: 100%;
+    flex-wrap: wrap;
+    padding-bottom: pad;
 }
 
 .pages {
-    composes: global(pure-u-16-24);
     composes: ellipsisOverflow;
+
+    flex: 0 0 66.6%
 }
 
 .pages *:not(:first-child) {
@@ -118,8 +106,8 @@
 }
 
 .currPage {
-    font-size: 18px;
     vertical-align: middle;
+    font-size: 18px;
 }
 
 .add {
@@ -131,157 +119,147 @@
     composes: global(pure-u-1-1);
 }
 
-.listContainer {
-    composes: global(pure-g);
+.entriesContainer {
+    composes: lightSepTop from layout_css;
 
     width: 100%;
     margin: 0 auto;
 }
 
-.list {
-    list-style: none;
-    margin: 0 auto;
-    padding: 0 0 4em 0;
+.table {
     width: 100%;
+    margin: 0 0 4em 0;
 }
 
-.listHeader {
-    composes: global(pure-g);
+.col {
+    padding: 0.5em pad;
 
-    border-bottom: solid 1px #AAA;
-    padding-top: 0.6em;
-    font-size: 1.1em;
+    text-align: center;
 }
 
-.listHeader .listCell {
-    padding-top: 0;
+.colName {
+    composes: col;
+
+    border-left: solid 3px color_draft;
+
+    text-align: left;
 }
 
-.listCell {
-    composes: ellipsisOverflow;
+.colState {
+    composes: col;
 
-    margin: 0;
-    padding: 8px 2%;
-    line-height: 24px;
+    width: 14%;
+
+    text-align: left;
 }
 
-.listCol1 {
-    composes: global(pure-u-9-24);
-    composes: listCell;
+.colDate {
+    composes: col;
+
+    width: 14%;
 }
 
-.listCol2 {
-    composes: global(pure-u-4-24);
-    composes: listCell;
-}
+.colActions {
+    composes: col;
 
-.listCol3 {
-    composes: global(pure-u-4-24);
-    composes: listCell;
-}
-
-.listCol4 {
-    composes: global(pure-u-4-24);
-    composes: listCell;
-}
-
-.listCol5 {
-    composes: global(pure-u-3-24);
-    composes: listCell;
+    width: 11%;
 
     text-align: right;
 }
 
-.listHeader,
-.list .item:nth-child(odd) {
-    background: rgba(0,0,0,0.025);
-}
-
-.item {
-    composes: global(pure-g);
-
-    position: relative;
-
-    padding-left: 4px;
+.row {
+    cursor: pointer;
     border-bottom: solid 1px #CCC;
 
-    transition: background-color 0.2s ease-in;
+    transition: background-color 0.1s ease-in;
 }
 
-.item:hover {
+.row:nth-child(even) {
+    background: rgba(0, 0, 0, 0.025);
+}
+
+.row:hover {
     background: #DFDFDF;
-
-    transition: background-color 0.2s ease-in;
 }
 
-.item .anchor {
-    position: absolute;;
-    top: 0;
-    left: 0;
-    z-index: 2;
+.published_at {
+    composes: row;
 
-    width: 100%;
-    height: 100%;
+    td:first-child {
+        border-left-color: color_published;
+    }
 }
 
-.item .actions {
-    z-index: 3;
+.scheduled_at {
+    composes: row;
+
+    td:first-child {
+        border-left-color: color_scheduled;
+    }
 }
 
-.itemTitle {
+.unpublished_at {
+    composes: row;
+
+    td:first-child {
+        border-left-color: color_unpublished;
+    }
+}
+
+.tableHeader {
+    font-size: 1.1em;
+
+    border-bottom: solid 1px #AAA;
+    background: rgba(0, 0, 0, 0.025);
+}
+
+.headerName {
+    composes: colName;
+
+    border-left-color: transparent;
+}
+
+.headerState {
+    composes: colState;
+}
+
+.headerUpdated,
+.headerScheduled {
+    composes: colDate;
+}
+
+.headerActions {
+    composes: colActions;
+}
+
+.itemName {
+    composes: colName;
     composes: ellipsisOverflow;
 
     color: anchor;
     font-size: 1.2em;
 }
 
-.published_at {
-    composes: item;
+.itemState {
+    composes: colState;
 
-    padding-left: 0;
-    border-left: solid 4px #68A;
-}
-
-.active {
-    composes: item;
-    background: #FFF;
-}
-
-.activePublished {
-    composes: published_at;
-    composes: active;
-}
-
-.anchor {
-    text-decoration: none;
-    color: anchor;
-}
-
-.heading {
-    margin: 0 0 0.2em;
-}
-
-.date {
     color: #888;
     font-size: 0.8em;
 }
 
-.status {
-    composes: date;
-}
+.itemUpdated,
+.itemScheduled {
+    composes: colDate;
 
-.excerpt {
-    margin: 0;
-
+    color: #888;
     font-size: 0.8em;
 }
 
-.actions {
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 1423;
+.itemActions {
+    composes: colActions;
+}
 
+.actionsPanel {
     display: flex;
     flex-direction: row-reverse;
 
@@ -290,45 +268,37 @@
 }
 
 .action {
+    flex: 1 1 auto;
+    text-align: right;
+}
+
+.remove {
+    composes: plain from buttons_css;
+    composes: action;
+}
+
+.preview {
+    composes: action;
+}
+
+.icon {
     composes: icon from icons_css;
 
-    flex: 1 1 auto;
+    max-height: 100%;
 
     color: anchor;
     text-align: right;
-    vertical-align: top;
 
     transition: iconTransition;
 }
 
-.action:hover {
+.icon:hover {
     color: #2F343C;
 
     transition: iconTransition;
 }
 
-.icon {
-    composes: action;
-}
-
-.remove {
-    composes: plain from buttons_css;
-}
-
-.removeIcon {
-    composes: icon;
-}
-
-.removeIcon:hover {
-    color: colorRemove from buttons_css;
-}
-
 .hidden {
-    overflow: visible;
-    flex: 0 1 0;
-}
-
-.hidden .filter {
     padding: 0;
     overflow: visible;
 }
