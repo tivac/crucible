@@ -1,7 +1,18 @@
-.content {
-    composes: content from "./layout/layout.css";
+@value pad from "./layout/layout.css";
+
+.form {
+    composes: global(pure-form);
 }
 
-.header {
-    margin-top: 0;
+.row {
+    margin-bottom: pad;
+}
+
+.label {
+    display: inline-block;
+    min-width: 60px;
+}
+
+.add {
+    composes: button from "../buttons.css";
 }

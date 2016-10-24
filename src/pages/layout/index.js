@@ -11,7 +11,7 @@ import progress from "./progress.css";
 
 // exporting so others can use it more easily
 export { layout as css };
-    
+
 export function controller() {
     var ctrl = this;
 
@@ -44,25 +44,23 @@ export function view(ctrl, options) {
     if(!options) {
         options = false;
     }
-    
+
     document.title = (options.title || "Loading...") + " | " + title;
 
     return m("div", { class : layout.container },
         options.content ? null : m("div", { class : progress.bar }),
 
-        m("div", { class : header.container },
+        m("div", { class : header.header },
 
-            m("div", { class : header.top },
-                m("a", {
-                        class  : header.heading,
-                        href   : prefix("/"),
-                        config : m.route
-                    },
-                    m("h1", { class : header.title }, title)
-                )
+            m("a", {
+                    class  : header.headerHd,
+                    href   : prefix("/"),
+                    config : m.route
+                },
+                m("h1", { class : header.title }, title)
             ),
 
-            m("div", { class : header.body },
+            m("div", { class : header.headerBd },
                 ctrl.auth ? [
                     m("div", { class : header.schemas },
                         (ctrl.schemas || []).map(function(schema) {
@@ -86,11 +84,11 @@ export function view(ctrl, options) {
                         // Attrs
                         class    : header.add,
                         disabled : locked || null,
-                        
+
                         // Events
                         onclick : ctrl.add
                     }, "New Schema"),
-                    
+
                     m("a", {
                         class  : header.logout,
                         href   : prefix("/logout"),

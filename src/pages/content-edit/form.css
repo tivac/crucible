@@ -2,27 +2,13 @@
 @value icons_css:   "../../icons.css";
 @value buttons_css: "../../buttons.css";
 
-.head {
-    composes: head from layout_css;
-    
-    flex-direction: row;
-    
-    padding-left: 10px;
-    padding-right: 10px;
-    
-    align-items: center;
-}
-
-.body {
-    composes: body from layout_css;
-    composes: contentWidth from layout_css;
-
-    padding-bottom: 5em;
-}
+@value color_draft: #ddd;
+@value color_scheduled: orange;
+@value color_published: green;
+@value color_unpublished: red;
 
 .contentsContainer {
     composes: textContentWidth from layout_css;
-    composes: padding from layout_css;
 
     width: 100%;
 }
@@ -48,7 +34,7 @@
 /* No item selected */
 .empty {
     composes: content from layout_css;
-    
+
     text-align: center;
     justify-content: center;
     align-content: center;
@@ -65,7 +51,7 @@
 
 .save {
     composes: primary from buttons_css;
-    
+
     margin-left: 10px;
 }
 
@@ -91,15 +77,17 @@
     * Specificity war with `pure-css` */
 input[type=text].title {
     margin: 0;
-    padding: 2px 5px 0 5px;
-
-    border: none;
-    border-bottom: solid 3px #68A;
-    border-radius: 0;
-    box-shadow: none;
-    font-size: 2em;
     padding: 0;
     width: 100%;
+
+    border: none;
+    border-radius: 0;
+    border-bottom: solid 3px #68A;
+
+    font-size: 2em;
+
+    box-shadow: none;
+    background: transparent;
 }
 
 input[type=text].title:hover {
@@ -116,23 +104,23 @@ input[type=text].title:focus {
 input[type=text].draft {
     composes: title;
 
-    border-color: #ddd;
+    border-color: color_draft;
 }
 
 input[type=text].published {
     composes: title;
 
-    border-color: green;
+    border-color: color_published;
 }
 
 input[type=text].scheduled {
     composes: title;
 
-    border-color: orange;
+    border-color: color_scheduled;
 }
 
 input[type=text].unpublished {
     composes: title;
 
-    border-color: red;
+    border-color: color_unpublished;
 }

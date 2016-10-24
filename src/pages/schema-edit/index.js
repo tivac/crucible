@@ -12,6 +12,7 @@ import * as children from "../../types/children";
 import * as layout from "../layout/index";
 
 import css from "./schema-edit.css";
+import flexCss from "../../flex.css";
 
 export function controller() {
     var ctrl   = this,
@@ -27,7 +28,7 @@ export function controller() {
         valid : true,
         value : ""
     };
-    
+
     // Get Firebase data
     ref.on("value", function(snap) {
         ctrl.schema = snap.val();
@@ -35,7 +36,7 @@ export function controller() {
         if(!ctrl.preview.value) {
             ctrl.preview.value = ctrl.schema.preview || "";
         }
-        
+
         // Ensure that we run it through the worker asap
         if(ctrl.schema.source) {
             worker.postMessage(ctrl.schema.source);
@@ -53,22 +54,22 @@ export function controller() {
 
         ref.child("preview").set(el.value);
     };
-    
+
     ctrl.slugChanged = function(value) {
         ref.child("slug").set(value);
     };
-    
+
     // Listen for the worker to finish and update firebase
     worker.addEventListener("message", function(e) {
         var data = JSON.parse(e.data);
-        
+
         if(data.error) {
             ctrl.error = true;
         } else {
             ref.child("fields").set(data.config);
             ctrl.error = false;
         }
-        
+
         m.redraw();
     });
 
@@ -82,84 +83,92 @@ export function view(ctrl) {
     if(!ctrl.schema) {
         return m.component(layout);
     }
-    
+
     return m.component(layout, {
-        title   : "Edit - " + capitalize(ctrl.schema.name),
-        content : m("div", { class : css.content },
+        title   : "Edit Metadata - " + capitalize(ctrl.schema.name),
+        content : m("div", { class : layout.css.content },
             ctrl.error ?
                 m("p", { class : css.error }, ctrl.error) :
                 null,
 
-            m("div", { class : css.meta },
-                m("h3", "Metadata"),
-                m("div", { class : css.sections },
-                    m("div", { class : css.section },
-                        m("label", { class : css.label, for : "preview" }, "Preview URL Base"),
-                        m("input", {
-                            // Attrs
-                            id    : "preview",
-                            class : css[ctrl.preview.valid ? "preview" : "previewError"],
-                            type  : "url",
-                            value : ctrl.preview.value || "",
-                            
-                            // Events
-                            oninput : ctrl.previewChanged,
-                            
-                            // Config Fn
-                            config : function(el, init) {
-                                if(init) {
-                                    return;
-                                }
+            m("div", { class : layout.css.body },
+                m("h1", { class : layout.css.title }, "Edit Metadata - " + capitalize(ctrl.schema.name)),
 
-                                ctrl.preview.valid = el.validity.valid;
-                            }
-                        }),
-                        m("p", { class : css.note },
-                            ctrl.preview.value ?
-                                ctrl.preview.value + "-0IhUBgUFfhyLQ2m6s5x" :
-                                null
+                m("div", { class : css.contentWidth },
+
+                    m("div", { class : css.definitions },
+                        m("h2", "Field Definitions"),
+                        m("div", { class : css.editor },
+                            m.component(editor, {
+                                ref    : ctrl.ref,
+                                worker : ctrl.worker,
+                                source : ctrl.schema.source || "{\n\n}"
+                            })
                         )
                     ),
-                    m("div", { class : css.section },
-                        m("label", { class : css.label },
+
+                    m("div", { class : css.preview },
+                        m("h2", "Preview"),
+                        m("div", { class : css.fields },
+                            m.component(children, {
+                                fields : ctrl.schema.fields,
+                                class  : css.children,
+                                data   : state.fields || {},
+                                path   : [ "fields" ],
+                                state  : state.fields,
+
+                                update  : content.setField.bind(content),
+                                content : content,
+
+                                registerHidden : content.hidden.register.bind(content.hidden)
+                            })
+                        )
+                    ),
+
+                    m("div", { class : css.details },
+                        m("h2", "Details"),
+                        m("label", { class : css.genSlugs },
+                            "Generate slugs for entries? ",
                             m("input", {
                                 // Attrs
-                                css     : css.slug,
+                                class   : css.slug,
                                 type    : "checkbox",
                                 checked : ctrl.schema.slug,
-                                
+
                                 // Events
                                 onchange : m.withAttr("checked", ctrl.slugChanged)
-                            }),
-                            " Generate slugs for entries?"
+                            })
+                        ),
+                        m("div", { class : css.urlBase },
+                            m("label", { for : "preview" }, "Preview URL base: "),
+                            m("span", { class : css.url },
+                                m("input", {
+                                    // Attrs
+                                    id    : "preview",
+                                    class : css[ctrl.preview.valid ? "urlInputPreview" : "urlInputError"],
+                                    type  : "url",
+                                    value : ctrl.preview.value || "",
+
+                                    // Events
+                                    oninput : ctrl.previewChanged,
+
+                                    // Config Fn
+                                    config : function(el, init) {
+                                        if(init) {
+                                            return;
+                                        }
+
+                                        ctrl.preview.valid = el.validity.valid;
+                                    }
+                                }),
+                                m("p", { class : css.previewUrl },
+                                    ctrl.preview.value ?
+                                        ctrl.preview.value + "-0IhUBgUFfhyLQ2m6s5x" :
+                                        null
+                                )
+                            )
                         )
                     )
-                )
-            ),
-            m("div", { class : css.contents },
-                m("div", { class : css.editor },
-                    m("h3", "Field Definitions"),
-                    m.component(editor, {
-                        ref    : ctrl.ref,
-                        worker : ctrl.worker,
-                        source : ctrl.schema.source || "{\n\n}"
-                    })
-                ),
-
-                m("div", { class : css.fields },
-                    m("h3", "Preview"),
-                    m.component(children, {
-                        fields : ctrl.schema.fields,
-                        class  : css.children,
-                        data   : state.fields || {},
-                        path   : [ "fields" ],
-                        state  : state.fields,
-
-                        update  : content.setField.bind(content),
-                        content : content,
-
-                        registerHidden : content.hidden.register.bind(content.hidden)
-                    })
                 )
             )
         )

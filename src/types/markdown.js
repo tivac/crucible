@@ -14,12 +14,12 @@ import "codemirror/mode/markdown/markdown";
 export default {
     controller : function(options) {
         var ctrl = this;
-        
+
         ctrl.id       = id(options);
         ctrl.markdown = options.data || "";
         ctrl.previewing = false;
         ctrl.previewHTML = null;
-        
+
         ctrl.options = options;
 
         ctrl.togglePreview = function(e) {
@@ -64,7 +64,7 @@ export default {
             m("div", { class : ctrl.previewing ? css.input : css.inputHidden },
                 m.trust(ctrl.previewHTML)
             ),
-            m("button.pure-button", {
+            m("button", {
                     onclick : ctrl.togglePreview,
                     class   : css.button
                 },

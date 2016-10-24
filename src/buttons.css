@@ -2,31 +2,33 @@
 @value    colorAdd: rgb(28,  184, 65);
 @value   colorWarn: rgb(223, 117, 20);
 @value colorSecondary: rgb(66, 184, 221);
- 
+
 .button {
     composes: global(pure-button);
+
+    background-color: #d8d8d8;
 }
 
 .color {
     composes: button;
-    
+
     color: #FFF;
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 
 .primary {
-    composes: button, global(pure-button-primary);
+    composes: global(pure-button), global(pure-button-primary);
 }
 
 .add {
     composes: color;
-    
+
     background: colorAdd;
 }
 
 .remove {
     composes: color;
-    
+
     background: colorRemove;
 }
 
@@ -45,7 +47,7 @@
 /* Strip <button> styling */
 .plain {
     text-align: left;
-    
+
     background: none;
     outline: none;
     border: 0;

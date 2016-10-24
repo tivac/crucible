@@ -1,91 +1,99 @@
 @import "../../../node_modules/codemirror/lib/codemirror.css";
 
 @value layout_css:  "../layout/layout.css";
-@value flexCss: "../../flex.css";
+@value flex_css: "../../flex.css";
 
-.body {
-    composes: body from layout_css;
-    composes: contentWidth from layout_css;
-
-    padding-bottom: 5em;
-}
-
-.content {
-    composes: content from layout_css;
-
-    padding: 0 0 0 20px;
-}
-
-.meta {
-    /* ??? */
-}
-
-.sections {
-    composes: hbox from flexCss;
-}
-
-.section {
-    composes: global(pure-form), global(pure-form-stacked);
-    
-    flex: 1;
-    
-    padding-right: 10px;
-}
-
-.section + .section {
-    padding-left: 10px;
-}
-
-.label {
-    font-weight: bold;
-}
-
-.preview {
-    width: 100%;
-}
-
-.note {
-    font-style: italic;
-    font-size: 80%;
-    color: #666;
-}
-
-.contents {
-    composes: hbox from flexCss;
-    
-    flex: 4;
-}
-
-.panes {
-    flex: 1;
-}
-
-.editor {
-    composes: panes;
-}
-
-.fields {
-    composes: panes, global(pure-form), global(pure-form-stacked);
-
-    padding: 0 10px 10px 10px;
-}
+@value pad from "../layout/layout.css";
 
 .error {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    
+
     margin: 0;
     padding: 5px;
-    
+
     background: red;
     color: whitesmoke;
 }
 
-/* Override codemirror styling to make it expannnnd */
-.editor :global(.CodeMirror) {
+.contentWidth {
+    composes: hbox from flex_css;
+    composes: contentWidth from layout_css;
+
+    flex-wrap: wrap;
+}
+
+.definitions {
+    flex: 0 0 50%;
+}
+
+.editor {
     composes: input from "../../form.css";
 
+    min-height: 360px;
+    background: #fff;
+}
+
+/* Override codemirror styling to make it expannnnd */
+:global(.CodeMirror) {
     height: auto;
+}
+
+.preview {
+    flex: 0 0 50%;
+    padding-left: pad;
+}
+
+.fields {
+    composes: global(pure-form), global(pure-form-stacked);
+}
+
+.details {
+    composes: global(pure-form);
+
+    flex: 0 0 100%;
+    margin-top: pad;
+}
+
+/* specificity with Pure */
+.genSlugs {
+    display: block;
+    margin-bottom: pad !important;
+}
+
+.slug {
+    margin-left: 10px;
+    transform: scale(1.2);
+}
+
+.urlBase {
+    composes: hbox from flex_css;
+}
+
+.url {
+    flex: 1 0 auto;
+    padding-left: 10px;
+}
+
+.urlInputPreview {
+    width: 100%;
+}
+
+/* specificity with Pure */
+.urlInputError {
+    composes: urlInputPreview;
+
+    color: #b94a48;
+    border-color: #e9322d !important;
+}
+
+.previewUrl {
+    flex: 0 0 100%;
+    margin-top: 0.6em;
+
+    font-style: italic;
+    font-size: 80%;
+    color: #666;
 }
