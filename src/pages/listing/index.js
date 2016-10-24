@@ -421,7 +421,7 @@ export function view(ctrl) {
                                     return bTime - aTime;
                                 })
                                 .map(function(data) {
-                                    var entryStatus = css.row,
+                                    var itemNameStatus = css.itemName,
                                         now = Date.now(),
 
                                         itemName,
@@ -430,15 +430,15 @@ export function view(ctrl) {
                                         itemSchedule;
 
                                     if(data.published_at) {
-                                        entryStatus = css.published_at;
+                                        itemNameStatus = css.itemNamePublished;
                                     }
 
                                     if(data.published_at > now) {
-                                        entryStatus = css.scheduled_at;
+                                        itemNameStatus = css.itemNameScheduled;
                                     }
 
                                     if(data.unpublished_at < now) {
-                                        entryStatus = css.unpublished_at;
+                                        itemNameStatus = css.itemNameUnpublished;
                                     }
 
                                     itemStatus = getItemStatus(data);
@@ -448,13 +448,13 @@ export function view(ctrl) {
                                     itemSchedule = data.published_at ? format(data.published_at, dateFormat) : "--/--/----";
 
                                     return m("tr", {
-                                            class   : entryStatus,
+                                            class   : css.row,
                                             onclick : function() {
                                                 m.route(prefix("/content/" + ctrl.schema.key + "/" + data.key));
                                             }
                                         },
                                         m("td", {
-                                                class : css.itemName,
+                                                class : itemNameStatus,
                                                 title : itemName
                                             },
                                             itemName
