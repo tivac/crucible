@@ -14,5 +14,5 @@
 }
 
 .add {
-    composes: button from "../buttons.css";
+    composes: primary from "../buttons.css";
 }
