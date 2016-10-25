@@ -106,6 +106,10 @@
     composes: add from buttons_css;
 }
 
+.edit {
+    composes: primary from buttons_css;
+}
+
 .showingResults {
     composes: global(pure-u-1-1);
 }

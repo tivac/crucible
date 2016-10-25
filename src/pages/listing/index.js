@@ -319,7 +319,12 @@ export function view(ctrl) {
                             disabled : locked || null
                         },
                         "+ Add " + (ctrl.schema && ctrl.schema.name || "...")
-                    )
+                    ),
+                    ctrl.schema && ctrl.schema.key ? m("a", {
+                        href   : "/listing/" + ctrl.schema.key + "/edit",
+                        config : m.route,
+                        class  : css.edit
+                    }, "Edit Schema") : null
                 ),
                 m("div", { class : css.contentBd }, [
                     m("div", { class : css.metas },
