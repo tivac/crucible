@@ -85,14 +85,14 @@ export function view(ctrl) {
     }
 
     return m.component(layout, {
-        title   : "Edit Metadata - " + capitalize(ctrl.schema.name),
+        title   : "Edit Schema: " + capitalize(ctrl.schema.name),
         content : m("div", { class : layout.css.content },
             ctrl.error ?
                 m("p", { class : css.error }, ctrl.error) :
                 null,
 
             m("div", { class : layout.css.body },
-                m("h1", { class : layout.css.title }, "Edit Metadata - " + capitalize(ctrl.schema.name)),
+                m("h1", { class : css.title }, "Edit Schema: " + capitalize(ctrl.schema.name)),
 
                 m("div", { class : css.contentWidth },
 

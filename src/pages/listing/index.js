@@ -319,7 +319,12 @@ export function view(ctrl) {
                             disabled : locked || null
                         },
                         "+ Add " + (ctrl.schema && ctrl.schema.name || "...")
-                    )
+                    ),
+                    ctrl.schema && ctrl.schema.key ? m("a", {
+                        href   : "/listing/" + ctrl.schema.key + "/edit",
+                        config : m.route,
+                        class  : css.edit
+                    }, "Edit Schema") : null
                 ),
                 m("div", { class : css.contentBd }, [
                     m("div", { class : css.metas },
@@ -405,7 +410,7 @@ export function view(ctrl) {
                             m("thead", { class : css.tableHeader },
                                 m("tr",
                                     m("th", { class : css.headerName }, "Name"),
-                                    m("th", { class : css.headerState }, "State"),
+                                    m("th", { class : css.headerStatus }, "Status"),
                                     m("th", { class : css.headerUpdated }, "Updated"),
                                     m("th", { class : css.headerScheduled }, "Scheduled"),
                                     m("th", { class : css.headerActions }, "Actions")
@@ -460,7 +465,7 @@ export function view(ctrl) {
                                             itemName
                                         ),
                                         m("td", {
-                                                class : css.itemState,
+                                                class : css.itemStatus,
                                                 title : itemStatus
                                             },
                                             itemStatus

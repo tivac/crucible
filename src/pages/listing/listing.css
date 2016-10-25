@@ -106,6 +106,10 @@
     composes: add from buttons_css;
 }
 
+.edit {
+    composes: primary from buttons_css;
+}
+
 .showingResults {
     composes: global(pure-u-1-1);
 }
@@ -136,7 +140,7 @@
     text-align: left;
 }
 
-.colState {
+.colStatus {
     composes: col;
 
     width: 16%;
@@ -184,8 +188,8 @@
     border-left-color: transparent;
 }
 
-.headerState {
-    composes: colState;
+.headerStatus {
+    composes: colStatus;
 }
 
 .headerUpdated,
@@ -228,8 +232,8 @@
     border-left-color: color_unpublished;
 }
 
-.itemState {
-    composes: colState;
+.itemStatus {
+    composes: colStatus;
 
     color: #888;
     font-size: 0.8em;

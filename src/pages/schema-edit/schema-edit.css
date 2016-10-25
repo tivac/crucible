@@ -18,6 +18,18 @@
     color: whitesmoke;
 }
 
+.preTitle {
+    font-size: 0.6em;
+    display: block;
+    opacity: 0.6;
+    font-weight: normal;
+}
+
+.title {
+    composes: title from layout_css;
+    composes: lightSep from layout_css;
+}
+
 .contentWidth {
     composes: hbox from flex_css;
     composes: contentWidth from layout_css;
