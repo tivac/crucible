@@ -92,10 +92,7 @@ export function view(ctrl) {
                 null,
 
             m("div", { class : layout.css.body },
-                m("h1", { class : css.title },
-                    m("span", { class : css.preTitle }, "Edit Schema: "),
-                    capitalize(ctrl.schema.name)
-                ),
+                m("h1", { class : css.title }, "Edit Schema: " + capitalize(ctrl.schema.name)),
 
                 m("div", { class : css.contentWidth },
 
