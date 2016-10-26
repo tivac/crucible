@@ -123,13 +123,14 @@ Content.prototype = {
         this.state.user.updated_by  = this.user;
         this.state.meta.dirty = true;
 
-        return set(this.state, path, val);
+        set(this.state, path, val);
+        m.redraw();
     },
 
     titleChange : function(name) {
         this.state.meta.name = name;
         this.state.meta.dirty = true;
-        
+
         m.redraw();
     },
 
