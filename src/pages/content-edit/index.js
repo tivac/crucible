@@ -1,6 +1,5 @@
 import m from "mithril";
 
-import sluggo from "sluggo";
 import get from "lodash.get";
 import merge from "lodash.merge";
 import assign from "lodash.assign";
@@ -57,17 +56,12 @@ export function controller() {
             return m.route(prefix("/content/" + m.route.param("schema")));
         }
 
-        content.processServerData(snap.val(), ref);
+        content.processServerData(data, ref);
 
         ctrl.data = assign(data, {
             fields : merge(data.fields, state.fields)
         });
-
-        // Create slug value if it doesnt exist already
-        if(!ctrl.data.slug && state.meta.name) {
-            ctrl.data.slug = sluggo(state.meta.name);
-        }
-
+        
         return m.redraw();
     });
 

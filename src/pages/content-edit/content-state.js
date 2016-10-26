@@ -2,6 +2,7 @@ import m from "mithril";
 import get from "lodash.get";
 import set from "lodash.set";
 import merge from "lodash.merge";
+import sluggo from "sluggo";
 
 import db from "../../lib/firebase";
 import * as snapshot from "./lib/transformer-snapshot.js";
@@ -134,6 +135,7 @@ Content.prototype = {
 
     titleChange : function(name) {
         this.state.meta.name = name;
+        this.state.meta.slug = sluggo(name);
         m.redraw();
     },
 
