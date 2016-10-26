@@ -210,6 +210,9 @@ export function controller() {
 
         if(window.confirm("Remove " + data.name + "?")) {
             ref.remove().catch(console.error.bind(console));
+
+            // Can't figure out why `ref.remove()` was redirecting to "/"
+            m.route("/listing/" + ctrl.schema.key);
         }
     };
 
