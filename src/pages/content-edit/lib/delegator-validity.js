@@ -102,6 +102,7 @@ Validity.prototype = {
 
         state.form.valid = true;
         state.form.invalidMessages = [];
+        this.content.toggleInvalid(false);
     },
 
     onFormFocus : function() {
