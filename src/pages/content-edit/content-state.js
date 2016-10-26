@@ -5,6 +5,7 @@ import merge from "lodash.merge";
 
 import db from "../../lib/firebase";
 import * as snapshot from "./lib/transformer-snapshot.js";
+import name from "./name.js";
 import Hidden from "./lib/delegator-hidden.js";
 import Schedule from "./lib/delegator-schedule.js";
 import Validity from "./lib/delegator-validity.js";
@@ -101,6 +102,10 @@ Content.prototype = {
     setSchema : function(schema, key) {
         this.state.schema = schema;
         this.state.schema.key = key;
+
+        if(!this.state.meta.name) {
+            this.state.meta.name = name(schema, {});
+        }
     },
 
     registerForm : function(formEl) {

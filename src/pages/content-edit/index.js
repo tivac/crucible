@@ -49,7 +49,8 @@ export function controller() {
 
     // On updates from firebase we need to merge in fields carefully
     ref.on("value", function(snap) {
-        var data = snap.val();
+        var data = snap.val(),
+            state = content.get();
 
         // Don't try to grab non-existent data
         if(!snap.exists()) {
@@ -59,12 +60,12 @@ export function controller() {
         content.processServerData(snap.val(), ref);
 
         ctrl.data = assign(data, {
-            fields : merge(data.fields, content.fields)
+            fields : merge(data.fields, state.fields)
         });
 
         // Create slug value if it doesnt exist already
-        if(!ctrl.data.slug) {
-            ctrl.data.slug = sluggo(content.meta.name);
+        if(!ctrl.data.slug && state.meta.name) {
+            ctrl.data.slug = sluggo(state.meta.name);
         }
 
         return m.redraw();
