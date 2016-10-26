@@ -1,36 +1,23 @@
 @value pure: "../../_pure.css";
-@value   icons_css: "../../icons.css";
-@value  layout_css: "../layout/layout.css";
+@value icons_css: "../../icons.css";
+@value layout_css: "../layout/layout.css";
+@value flex_css: "../../flex.css";
 @value buttons_css: "../../buttons.css";
 @value header: "../layout/header.css";
 
-.head {
+.contentHd {
     composes: head from layout_css;
-    composes: lightsep from header;
-    
-    position: relative;
-    width: 100%;
-
-    align-items: flex-start;
-    
-    padding-left: 0;
-    padding-right: 0;
-
-    text-align: left;
+    composes: lightSep from layout_css;
 }
 
 .main {
-    composes: global(pure-g);
     composes: textContentWidth from layout_css;
-    
-    position: relative;
 
-    flex-flow: row;
-    flex-wrap: nowrap;
+    display: flex;
+    flex-flow: row nowrap;
+    position: relative;
     width: 100%;
 
-    padding-left: 20px;
-    
     align-items: center;
 }
 
@@ -44,11 +31,11 @@
     
     padding: 20px;
     width: 75%;
-    
+
     border: 1px solid #CCC;
     border-top: 0;
     background: #FFF;
-    text-align: left;    
+    text-align: left;
 
     transform-origin: top center;
     animation: expandReveal 0.15s linear;
@@ -79,13 +66,11 @@
 }
 
 .actions {
-    composes: global(pure-u-2-5);
+    flex: 0 0 40%;
 }
 
 .publishing {
-    composes: global(pure-u-3-5);
-
-    padding-right: 20px;
+    flex: 0 0 60%;
     text-align: right;
 }
 
@@ -96,8 +81,8 @@
 
 .actions,
 .publishing {
-    composes: horizontal from layout_css;
-    
+    composes: hbox from flex_css;
+
     align-items: center;
 }
 
@@ -117,7 +102,7 @@
 .schedule {
     composes: color from buttons_css;
     composes: headButton;
-    
+
     background-color: teal;
 }
 
@@ -152,7 +137,7 @@
 }
 
 .date {
-    
+
 }
 
 .start,

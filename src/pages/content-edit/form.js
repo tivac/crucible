@@ -5,13 +5,14 @@ import name from "./name.js";
 import * as children from "../../types/children.js";
 
 import css from "./form.css";
+import layout from "../layout/layout.css";
 
 export function view(ctrl, options) {
     var content = options.content,
         state   = content.get(),
         status  = state.meta.status;
 
-    return m("div", { class : css.body },
+    return m("div", { class : layout.body },
         m("div", { class : css.contentsContainer },
             m("div", { class : css.itemStatus },
                 m("p", { class : css.status },

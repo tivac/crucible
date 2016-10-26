@@ -15,7 +15,7 @@ export function view(ctrl, options) {
         locked   = config.locked;
 
 
-    return m("div", { class : css.head },
+    return m("div", { class : css.contentHd },
         m("div", { class : css.main },
 
             // Controls

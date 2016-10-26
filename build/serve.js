@@ -4,23 +4,25 @@
 var fs   = require("fs"),
     path = require("path"),
     url  = require("url"),
-    
+
     duration = require("humanize-duration"),
     jsesc    = require("jsesc"),
     rollup   = require("rollup"),
     watch    = require("rollup-watch"),
     size     = require("filesize"),
-    
-    files   = require("./lib/files"),
-    config  = require("./lib/rollup"),
-    
-    server   = require("connect")(),
-    
+    argv     = require("minimist")(process.argv.slice(2)),
+
+    files  = require("./lib/files"),
+    config = require("./lib/rollup"),
+
+    server = require("connect")(),
+    port   = argv.p || argv.port || 9966,
+
     ecstatic = require("ecstatic")(process.cwd(), {
         cache       : 0,
         handleError : false
     }),
-    
+
     watcher, bundling, done;
 
 // Set up gen dir
@@ -38,9 +40,9 @@ server.use("/gen/index.js", function(req, res, next) {
     if(!bundling) {
         return next();
     }
-    
+
     console.log("Waiting for bundle to finish...");
-    
+
     done = next;
 });
 
@@ -50,7 +52,7 @@ server.use(ecstatic);
 // SPA support
 server.use((req, res, next) => {
     var parts = url.parse(req.url);
-    
+
     if(path.extname(parts.pathname)) {
         res.code = 404;
 
@@ -62,9 +64,9 @@ server.use((req, res, next) => {
     return ecstatic(req, res, next);
 });
 
-server.listen(9966);
+server.listen(port);
 
-console.log("Server listening at http://localhost:9966");
+console.log("Server listening at http://localhost:" + port);
 
 // Set up rollup-watch
 watcher = watch(rollup, config());
@@ -77,7 +79,7 @@ watcher.on("event", (details) => {
 
         return;
     }
-    
+
     bundling = false;
 
     if(details.code === "BUILD_END") {

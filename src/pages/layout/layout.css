@@ -1,20 +1,31 @@
+@value flex_css: "../../flex.css";
+
+@value pad: 20px;
+
 html,
 body {
     width: 100%;
     height: 100%;
 }
 
+.container {
+    composes: hbox from flex_css;
+
+    min-height: 100%;
+}
+
 .section {
-    composes: vertical;
+    composes: vbox from flex_css;
 
     width: 100%;
 }
 
 .content {
-    composes: section;
+    composes: vbox from flex_css;
+    flex: 1 0 calc(100% - 320px);
     position: relative;
 
-    flex: 1 1 100%;
+    background: #fafafa;
 }
 
 .contentWidth {
@@ -27,47 +38,55 @@ body {
     min-width: 550px;
 }
 
-.horizontal {
-    display: flex;
-    flex-direction: row;
+.ellipsisOverflow {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
-
-.vertical {
-    display: flex;
-    flex-direction: column;
-}
-
-.container {
-    composes: horizontal;
-
-    min-height: 100%;
-}
-
 
 .padding {
-    padding: 1em 20px;
+    padding: 1em pad;
 }
 
-.content {
-    composes: padding;
+.padding_x {
+    padding-right: pad;
+    padding-left: pad;
 }
 
 .head {
-    composes: vertical;
-    composes: padding;
+    composes: padding_x;
+    composes: hbox from flex_css;
 
     justify-content: space-between;
-    align-items: stretch;
+    align-items: center;
 
-    flex: 0 0 48px;
-
-    padding-top: 0.3em;
-    padding-bottom: 0.3em;
+    flex: 0 0 auto;
+    min-height: 48px;
 }
 
 .body {
-    composes: vertical;
+    composes: vbox from flex_css;
+    composes: padding;
 
+    flex: 1 0 auto;
     overflow-y: auto;
 }
 
+.title,
+.subTitle {
+    margin-top: 0;
+}
+
+.sep {
+    border-bottom: solid 1px #222;
+    box-shadow: 0 1px 0 #545454;
+}
+
+.lightSepTop {
+    border-top: solid 1px rgba(171, 171, 171, 0.75);
+}
+
+.lightSep {
+    border-bottom: solid 1px rgba(171, 171, 171, 0.75);
+    box-shadow: 0 1px 0 rgba(220, 220, 220, 0.75);
+}

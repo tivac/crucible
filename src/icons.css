@@ -1,15 +1,15 @@
 .icon {
     display: inline-block;
     vertical-align: bottom;
-    
+
     width: 20px;
     height: 20px;
-    
+
     fill: currentColor;
 }
 
 .button {
     composes: icon;
-    
+
     margin-right: 10px;
 }
