@@ -299,7 +299,7 @@ export function controller() {
 
 
 export function view(ctrl) {
-    var content = ctrl.results || ctrl.content || [],
+    var content = ctrl.results || ctrl.content,
         locked  = config.locked,
         isSearchResults = Boolean(ctrl.results);
 
@@ -309,7 +309,7 @@ export function view(ctrl) {
 
     return m.component(layout, {
         title   : get(ctrl, "schema.name") || "...",
-        content : [
+        content : !content ? null : [
 
             m("div", { class : layout.css.content },
                 m("div", { class : css.contentHd },
@@ -505,7 +505,7 @@ export function view(ctrl) {
                                                             m("use", { href : icons + "#preview" })
                                                         )
                                                     ) :
-                                                null
+                                                    null
                                             )
                                         )
                                     );
