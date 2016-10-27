@@ -6,6 +6,7 @@
     position: absolute;
     right: -5px;
     transform: translateY(3px);
+    z-index: 11; /* Ensure above content */
 
     display: block;
     height: auto;
