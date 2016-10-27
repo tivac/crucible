@@ -127,15 +127,17 @@ Content.prototype = {
     setField : function(path, val) {
         this.state.dates.updated_at = Date.now();
         this.state.user.updated_by  = this.user;
-
         this.state.meta.dirty = true;
 
-        return set(this.state, path, val);
+        set(this.state, path, val);
+        m.redraw();
     },
 
-    titleChange : function(name) {
-        this.state.meta.name = name;
-        this.state.meta.slug = sluggo(name);
+    titleChange : function(entryName) {
+        this.state.meta.name = entryName;
+        this.state.meta.slug = sluggo(entryName);
+        this.state.meta.dirty = true;
+
         m.redraw();
     },
 

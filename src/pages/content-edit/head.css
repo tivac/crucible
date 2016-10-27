@@ -27,7 +27,8 @@
     position: absolute;
     top: 42px;
     right: 0;
-
+    z-index: 10; /* Ensure schedule box is above content. */
+    
     padding: 20px;
     width: 75%;
 

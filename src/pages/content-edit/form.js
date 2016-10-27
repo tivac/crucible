@@ -43,7 +43,7 @@ export function view(ctrl, options) {
                         value : name(state.schema, state.meta),
 
                         // Events
-                        onchange : m.withAttr("value", content.titleChange.bind(content))
+                        oninput : m.withAttr("value", content.titleChange.bind(content))
                     }
                 ),
                 m.component(children, {
