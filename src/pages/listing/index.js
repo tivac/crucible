@@ -208,6 +208,8 @@ export function controller() {
             .child(ctrl.schema.key)
             .child(data.key);
 
+        ref.off(); // Ensure we don't have lingering listeners.
+
         if(window.confirm("Remove " + data.name + "?")) {
             ref.remove().catch(console.error.bind(console));
         }

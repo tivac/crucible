@@ -2,9 +2,11 @@ import m from "mithril";
 import get from "lodash.get";
 import set from "lodash.set";
 import merge from "lodash.merge";
+import sluggo from "sluggo";
 
 import db from "../../lib/firebase";
 import * as snapshot from "./lib/transformer-snapshot.js";
+import name from "./name.js";
 import Hidden from "./lib/delegator-hidden.js";
 import Schedule from "./lib/delegator-schedule.js";
 import Validity from "./lib/delegator-validity.js";
@@ -101,6 +103,10 @@ Content.prototype = {
     setSchema : function(schema, key) {
         this.state.schema = schema;
         this.state.schema.key = key;
+
+        if(!this.state.meta.name) {
+            this.state.meta.name = name(schema, {});
+        }
     },
 
     registerForm : function(formEl) {
@@ -127,8 +133,9 @@ Content.prototype = {
         m.redraw();
     },
 
-    titleChange : function(name) {
-        this.state.meta.name = name;
+    titleChange : function(entryName) {
+        this.state.meta.name = entryName;
+        this.state.meta.slug = sluggo(entryName);
         this.state.meta.dirty = true;
 
         m.redraw();

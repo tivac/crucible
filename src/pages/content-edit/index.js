@@ -1,6 +1,5 @@
 import m from "mithril";
 
-import sluggo from "sluggo";
 import get from "lodash.get";
 import merge from "lodash.merge";
 import assign from "lodash.assign";
@@ -27,6 +26,10 @@ export function controller() {
 
         content;
 
+    // Ensure we have no lingering event listeners.
+    schema.off();
+    ref.off();
+
     ctrl.id     = id;
     ctrl.ref    = ref;
     ctrl.form   = null;
@@ -47,26 +50,23 @@ export function controller() {
         m.redraw();
     });
 
+
     // On updates from firebase we need to merge in fields carefully
     ref.on("value", function(snap) {
-        var data = snap.val();
+        var data = snap.val(),
+            state = content.get();
 
         // Don't try to grab non-existent data
         if(!snap.exists()) {
-            return m.route(prefix("/content/" + m.route.param("schema")));
+            return m.route(prefix("/listing/" + m.route.param("schema")));
         }
 
-        content.processServerData(snap.val(), ref);
+        content.processServerData(data, ref);
 
         ctrl.data = assign(data, {
-            fields : merge(data.fields, content.fields)
+            fields : merge(data.fields, state.fields)
         });
-
-        // Create slug value if it doesnt exist already
-        if(!ctrl.data.slug) {
-            ctrl.data.slug = sluggo(content.meta.name);
-        }
-
+        
         return m.redraw();
     });
 
@@ -87,7 +87,7 @@ export function view(ctrl) {
         .join(" | ");
 
     if(!ctrl.id) {
-        m.route("/listing/" + state.schema.key);
+        m.route(prefix("/listing/" + state.schema.key));
     }
 
     return m.component(layout, {

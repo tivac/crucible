@@ -1,6 +1,8 @@
 import m from "mithril";
 import debounce from "lodash.debounce";
 
+import name from "../name.js";
+
 import css from "../invalid-msg.css";
 
 function reqPrefix(name) {
@@ -102,6 +104,7 @@ Validity.prototype = {
 
         state.form.valid = true;
         state.form.invalidMessages = [];
+        this.content.toggleInvalid(false);
     },
 
     onFormFocus : function() {
@@ -129,6 +132,12 @@ Validity.prototype = {
             state   = this.content.get(),
             isValid = true,
             requiresValid;
+
+        if(state.meta.name === name(state.schema, {})) {
+            // All saves must have a unique name.
+            this.addInvalidMessage("Entry must have a title/name.");
+            isValid = false;
+        }
 
         this.content.schedule.updateStatus();
 

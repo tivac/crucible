@@ -1,5 +1,5 @@
 "use strict";
 
 export default function name(schema, data) {
-    return data.name || "Untitled " + schema.name;
+    return data.name || (schema.name && "Untitled " + schema.name) || "...";
 }
