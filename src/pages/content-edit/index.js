@@ -26,6 +26,10 @@ export function controller() {
 
         content;
 
+    // Ensure we have no lingering event listeners.
+    schema.off();
+    ref.off();
+
     ctrl.id     = id;
     ctrl.ref    = ref;
     ctrl.form   = null;
@@ -46,6 +50,7 @@ export function controller() {
         m.redraw();
     });
 
+
     // On updates from firebase we need to merge in fields carefully
     ref.on("value", function(snap) {
         var data = snap.val(),
@@ -53,7 +58,7 @@ export function controller() {
 
         // Don't try to grab non-existent data
         if(!snap.exists()) {
-            return m.route(prefix("/content/" + m.route.param("schema")));
+            return m.route(prefix("/listing/" + m.route.param("schema")));
         }
 
         content.processServerData(data, ref);
@@ -82,7 +87,7 @@ export function view(ctrl) {
         .join(" | ");
 
     if(!ctrl.id) {
-        m.route("/listing/" + state.schema.key);
+        m.route(prefix("/listing/" + state.schema.key));
     }
 
     return m.component(layout, {
