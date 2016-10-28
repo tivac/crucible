@@ -81,7 +81,7 @@ export function view(ctrl) {
         state   = content.get();
 
     if(!ctrl.schema) {
-        return m.component(layout);
+        return m.component(layout, { inProgress : true });
     }
 
     return m.component(layout, {
