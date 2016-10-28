@@ -60,10 +60,12 @@ export function controller() {
     ctrl.results = null;
 
     ctrl.contentLoc = null;
-    ctrl.queryRef = null;
+    ctrl.queryRef   = null;
 
     ctrl.searchInput = null;
-    ctrl.searchMode = SEARCH_MODE_RECENT;
+    ctrl.searchMode  = SEARCH_MODE_RECENT;
+
+    ctrl.inProgress = true;
 
     // We need to check for an "overflowItem" to peek at
     // the next page's first item. This lets us grab the
@@ -118,6 +120,7 @@ export function controller() {
 
         ctrl.schema = snap.val();
         ctrl.schema.key = snap.key();
+        ctrl.inProgress = false;
 
         ctrl.contentLoc = db.child("content/" + ctrl.schema.key);
         ctrl.showPage();
@@ -301,7 +304,7 @@ export function controller() {
 
 
 export function view(ctrl) {
-    var content = ctrl.results || ctrl.content,
+    var content = ctrl.results || ctrl.content || [],
         locked  = config.locked,
         isSearchResults = Boolean(ctrl.results);
 
@@ -310,9 +313,9 @@ export function view(ctrl) {
     }
 
     return m.component(layout, {
-        title   : get(ctrl, "schema.name") || "...",
-        content : !content ? null : [
-
+        title     : get(ctrl, "schema.name") || "...",
+        inProgress : ctrl.inProgress,
+        content   : [
             m("div", { class : layout.css.content },
                 m("div", { class : css.contentHd },
                     m("button", {

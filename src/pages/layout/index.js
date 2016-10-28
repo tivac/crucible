@@ -48,7 +48,9 @@ export function view(ctrl, options) {
     document.title = (options.title || "Loading...") + " | " + title;
 
     return m("div", { class : layout.container },
-        options.content ? null : m("div", { class : progress.bar }),
+        options && options.inProgress ?
+            m("div", { class : progress.bar }) :
+            null,
 
         m("div", { class : header.header },
 
