@@ -91,8 +91,8 @@ export function view(ctrl) {
     }
 
     return m.component(layout, {
-        title     : title,
-        content   : [
+        title   : title,
+        content : [
             m("div", { class : layout.css.content },
                 m.component(head,     { content : ctrl.content }),
                 m.component(formView, { content : ctrl.content })

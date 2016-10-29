@@ -311,9 +311,9 @@ export function view(ctrl) {
     }
 
     return m.component(layout, {
-        title     : get(ctrl, "schema.name") || "...",
+        title      : get(ctrl, "schema.name") || "...",
         inProgress : ctrl.inProgress,
-        content   : [
+        content    : [
             m("div", { class : layout.css.content },
                 m("div", { class : css.contentHd },
                     m("button", {
