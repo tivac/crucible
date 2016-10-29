@@ -65,7 +65,7 @@ export function controller() {
     ctrl.searchInput = null;
     ctrl.searchMode  = SEARCH_MODE_RECENT;
 
-    ctrl.inProgress = true;
+    ctrl.loading = true;
 
     // We need to check for an "overflowItem" to peek at
     // the next page's first item. This lets us grab the
@@ -120,7 +120,7 @@ export function controller() {
 
         ctrl.schema = snap.val();
         ctrl.schema.key = snap.key();
-        ctrl.inProgress = false;
+        ctrl.loading = false;
 
         ctrl.contentLoc = db.child("content/" + ctrl.schema.key);
         ctrl.showPage();
@@ -314,7 +314,7 @@ export function view(ctrl) {
 
     return m.component(layout, {
         title      : get(ctrl, "schema.name") || "...",
-        inProgress : ctrl.inProgress,
+        loading : ctrl.loading,
         content    : [
             m("div", { class : layout.css.content },
                 m("div", { class : css.contentHd },

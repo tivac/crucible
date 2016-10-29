@@ -7,7 +7,7 @@ import prefix from "../../lib/prefix";
 
 import header from "./header.css";
 import layout from "./layout.css";
-import progress from "./progress.css";
+import loading from "./loading.css";
 
 // exporting so others can use it more easily
 export { layout as css };
@@ -48,8 +48,8 @@ export function view(ctrl, options) {
     document.title = (options.title || "Loading...") + " | " + title;
 
     return m("div", { class : layout.container },
-        options && options.inProgress ?
-            m("div", { class : progress.bar }) :
+        options && options.loading ?
+            m("div", { class : loading.bar }) :
             null,
 
         m("div", { class : header.header },
