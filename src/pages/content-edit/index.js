@@ -26,24 +26,16 @@ export function controller() {
 
         content;
 
-<<<<<<< f592b0cae7f2c1d056a4f2bb0237c9780c83360b
     // Ensure we have no lingering event listeners.
     schema.off();
     ref.off();
 
-    ctrl.id     = id;
-    ctrl.ref    = ref;
-    ctrl.form   = null;
-    ctrl.data   = {};
-    ctrl.hidden = [];
-=======
     ctrl.id      = id;
     ctrl.ref     = ref;
     ctrl.form    = null;
     ctrl.data    = {};
     ctrl.hidden  = [];
     ctrl.loading = true;
->>>>>>> Add loading to content edit
 
     // New state for every page change.
     ctrl.content = content = new Content();
