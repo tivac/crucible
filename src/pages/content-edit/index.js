@@ -27,11 +27,12 @@ export function controller() {
 
         content;
 
-    ctrl.id     = id;
-    ctrl.ref    = ref;
-    ctrl.form   = null;
-    ctrl.data   = {};
-    ctrl.hidden = [];
+    ctrl.id      = id;
+    ctrl.ref     = ref;
+    ctrl.form    = null;
+    ctrl.data    = {};
+    ctrl.hidden  = [];
+    ctrl.loading = true;
 
     // New state for every page change.
     ctrl.content = content = new Content();
@@ -43,6 +44,7 @@ export function controller() {
 
     schema.on("value", function(snap) {
         content.setSchema(snap.val(), snap.key());
+        ctrl.loading = false;
 
         m.redraw();
     });
@@ -92,8 +94,9 @@ export function view(ctrl) {
 
     return m.component(layout, {
         title   : title,
+        loading : ctrl.loading,
         content : [
-            m("div", { class : layout.css.content },
+            m("div", { class   : layout.css.content },
                 m.component(head,     { content : ctrl.content }),
                 m.component(formView, { content : ctrl.content })
             )
