@@ -21,14 +21,14 @@
 
     background: rgb(66, 184, 221);
 
-    animation: progressBefore 2s linear infinite;
+    animation: loadingBefore 2s linear infinite;
 }
 
 .bar::after {
-    animation-name: progressAfter;
+    animation-name: loadingAfter;
 }
 
-@keyframes progressBefore {
+@keyframes loadingBefore {
     0% {
         left: 0%;
         width: 0%;
@@ -45,7 +45,7 @@
     }
 }
 
-@keyframes progressAfter {
+@keyframes loadingAfter {
     0% {
         left: 0%;
         width: 0%;
