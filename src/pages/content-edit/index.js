@@ -78,7 +78,7 @@ export function view(ctrl) {
         title;
 
     if(!state.schema) {
-        return m.component(layout, { progress : true });
+        return m.component(layout, { loading : true });
     }
 
     title = [ get(state.meta, "name"), get(state.schema, "name") ]
