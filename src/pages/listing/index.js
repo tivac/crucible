@@ -109,6 +109,8 @@ export function controller() {
             onNext.call(this, snap);
         }
 
+        ctrl.loading = false;
+
         m.redraw();
     }
 
@@ -120,9 +122,8 @@ export function controller() {
 
         ctrl.schema = snap.val();
         ctrl.schema.key = snap.key();
-        ctrl.loading = false;
-
         ctrl.contentLoc = db.child("content/" + ctrl.schema.key);
+
         ctrl.showPage();
     }
 
