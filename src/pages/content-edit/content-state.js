@@ -1,6 +1,7 @@
 import m from "mithril";
 import get from "lodash.get";
 import set from "lodash.set";
+import unset from "lodash.unset";
 import merge from "lodash.merge";
 import sluggo from "sluggo";
 
@@ -129,7 +130,11 @@ Content.prototype = {
         this.state.user.updated_by  = this.user;
         this.state.meta.dirty = true;
 
-        set(this.state, path, val);
+        if(val === undefined) {
+            unset(this.state, path);
+        } else {
+            set(this.state, path, val);
+        }
         m.redraw();
     },
 

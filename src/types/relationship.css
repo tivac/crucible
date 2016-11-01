@@ -1,27 +1,68 @@
 @import "../../node_modules/awesomplete/awesomplete.css";
 
 @value buttons_css: "../buttons.css";
+@value icons_css: "../icons.css";
+@value flex_css: "../flex.css";
+
+:global(.awesomplete) {
+    display: block !important;
+}
 
 .relationships {
-    margin-left: 20px;
+    margin: 0.6em 0 0;
+    padding-left: 1em;
+}
+
+.li {
+    display: block;
+    position: relative;
+}
+
+/* Chrome is dumb with <li> and children that are flexbox */
+.li:before {
+    position: absolute;
+    left: -1em;
+    top: -50%;
+    margin-top: 1em;
+    content: "•";
 }
 
 .relationship {
-    composes: global(pure-g);
-    
-    align-items: center;
+    composes: hbox from flex_css;
 }
 
-.name {
-    composes: global(pure-u);
+.relationship:hover .actions {
+    opacity: 1;
+}
+
+.link {
+    color: #666;
+    text-decoration: none;
+    line-height: 1.6;
+}
+
+.link:hover {
+    color: #333;
+    text-decoration: underline;
 }
 
 .actions {
-    composes: global(pure-u);
- 
-    margin-left: 20px;
+    composes: hbox from flex_css;
+
+    margin-left: 10px;
+    opacity: 0;
 }
 
-.remove {
-    composes: remove from buttons_css;
+.button {
+    composes: plain from buttons_css;
+}
+
+.button:hover .removeIcon {
+    fill: red;
+}
+
+.removeIcon {
+    composes: icon from icons_css;
+
+    fill: grey;
 }

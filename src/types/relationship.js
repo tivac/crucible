@@ -8,6 +8,8 @@ import id from "./lib/id";
 import label from "./lib/label";
 import types from "./lib/types.css";
 
+import { icons } from "../config";
+
 import css from "./relationship.css";
 
 export default {
@@ -21,7 +23,8 @@ export default {
         ctrl.handle  = null;
         ctrl.related = null;
         ctrl.names   = [];
-        
+        ctrl.baseUrl = "content/" + schema + "/";
+
         ctrl.options = options;
 
         ctrl.config = function(el, init) {
@@ -91,16 +94,13 @@ export default {
         };
 
         // BREAK THE RELATIONSHIP
-        // TODO: Maybe broken?
-        ctrl.remove = function(tgt, e) {
-            var key = ctrl.lookup[e.target.value];
-
+        ctrl.remove = function(key, e) {
             e.preventDefault();
-            
-            options.update(options.path.concat(tgt), false);
-            
-            if(options.root) {
-                content.child(key + "/relationships/" + options.root.key()).remove();
+
+            ctrl.options.update(ctrl.options.path.concat(key));
+
+            if(ctrl.options.root) {
+                content.child(key + "/relationships/" + ctrl.options.root.key()).remove();
             }
         };
 
@@ -111,7 +111,7 @@ export default {
 
     view : function(ctrl, options) {
         var field  = options.field;
-        
+
         ctrl.options = options;
 
         return m("div", { class : options.class },
@@ -119,7 +119,7 @@ export default {
             m("input", assign(field.attrs || {}, {
                 // Attrs
                 id     : ctrl.id,
-                class  : types.input,
+                class  : types.relationship,
                 config : ctrl.config,
 
                 // Events
@@ -131,18 +131,29 @@ export default {
                     ctrl.autocomplete.select();
                 }
             })),
-            m("div", { class : css.relationships },
+            m("ul", { class : css.relationships },
                 options.data && Object.keys(options.data).map(function(key) {
-                    return m("div", { class : css.relationship },
-                        m("p", { class : css.name },
-                            ctrl.related ? ctrl.related[key].name : "Loading..."
-                        ),
-                        m("div", { class : css.actions },
-                            m("button", {
-                                class   : css.remove,
-                                onclick : ctrl.remove.bind(ctrl, key)
-                            }, "Remove")
-                        )
+                    return m("li", { class : css.li },
+                        ctrl.related ?
+                            m("div", { class : css.relationship },
+                                    m("a", {
+                                        href  : ctrl.baseUrl + key,
+                                        class : css.link
+                                    }, ctrl.related[key].name),
+                                m("div", { class : css.actions },
+                                    m("button", {
+                                            class   : css.button,
+                                            onclick : ctrl.remove.bind(ctrl, key),
+                                            title   : "Remove",
+                                            value   : "Remove"
+                                        },
+                                        m("svg", { class : css.removeIcon },
+                                            m("use", { href : icons + "#remove" })
+                                        )
+                                    )
+                                )
+                            ) :
+                            "Loading..."
                     );
                 })
             )

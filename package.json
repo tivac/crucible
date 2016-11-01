@@ -52,6 +52,7 @@
     "lodash.merge": "^4.0.1",
     "lodash.set": "^4.0.0",
     "lodash.times": "^4.0.0",
+    "lodash.unset": "^4.5.2",
     "minimist": "^1.2.0",
     "mithril": "^0.2.0",
     "mithril-objectify": "^3.1.0",

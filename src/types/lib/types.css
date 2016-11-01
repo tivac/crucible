@@ -39,6 +39,10 @@
     composes: text;
 }
 
+.relationship {
+    composes: text;
+}
+
 /* Types needing some special love */
 .number {
     width: 30%;
