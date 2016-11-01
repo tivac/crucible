@@ -23,6 +23,7 @@ export default {
         ctrl.handle  = null;
         ctrl.related = null;
         ctrl.names   = [];
+        ctrl.baseUrl = "content/" + schema + "/";
 
         ctrl.options = options;
 
@@ -94,15 +95,13 @@ export default {
 
         // BREAK THE RELATIONSHIP
         // TODO: Maybe broken?
-        ctrl.remove = function(tgt, e) {
-            var key = ctrl.lookup[e.target.value];
-
+        ctrl.remove = function(key, e) {
             e.preventDefault();
 
-            options.update(options.path.concat(tgt), false);
+            ctrl.options.update(ctrl.options.path.concat(key));
 
-            if(options.root) {
-                content.child(key + "/relationships/" + options.root.key()).remove();
+            if(ctrl.options.root) {
+                content.child(key + "/relationships/" + ctrl.options.root.key()).remove();
             }
         };
 
@@ -136,25 +135,26 @@ export default {
             m("ul", { class : css.relationships },
                 options.data && Object.keys(options.data).map(function(key) {
                     return m("li", { class : css.li },
-                        m("div", { class : css.relationship },
-                            ctrl.related ?
-                                m("a", {
-                                    href  : "#",
-                                    class : css.link
-                                }, ctrl.related[key].name) :
-                                "Loading...",
-                            m("div", { class : css.actions },
-                                m("button", {
-                                        class   : css.button,
-                                        onclick : ctrl.remove.bind(ctrl, key),
-                                        title   : "Remove"
-                                    },
-                                    m("svg", { class : css.removeIcon },
-                                        m("use", { href : icons + "#remove" })
+                        ctrl.related ?
+                            m("div", { class : css.relationship },
+                                    m("a", {
+                                        href  : ctrl.baseUrl + key,
+                                        class : css.link
+                                    }, ctrl.related[key].name),
+                                m("div", { class : css.actions },
+                                    m("button", {
+                                            class   : css.button,
+                                            onclick : ctrl.remove.bind(ctrl, key),
+                                            title   : "Remove",
+                                            value   : ctrl.related[key].name
+                                        },
+                                        m("svg", { class : css.removeIcon },
+                                            m("use", { href : icons + "#remove" })
+                                        )
                                     )
                                 )
-                            )
-                        )
+                            ) :
+                            "Loading..."
                     );
                 })
             )
