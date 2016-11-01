@@ -47,7 +47,6 @@ export function controller() {
 
     schema.on("value", function(snap) {
         content.setSchema(snap.val(), snap.key());
-        ctrl.loading = false;
 
         m.redraw();
     });
@@ -68,7 +67,9 @@ export function controller() {
         ctrl.data = assign(data, {
             fields : merge(data.fields, state.fields)
         });
-        
+
+        ctrl.loading = false;
+
         return m.redraw();
     });
 
