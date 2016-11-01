@@ -94,7 +94,6 @@ export default {
         };
 
         // BREAK THE RELATIONSHIP
-        // TODO: Maybe broken?
         ctrl.remove = function(key, e) {
             e.preventDefault();
 
@@ -146,7 +145,7 @@ export default {
                                             class   : css.button,
                                             onclick : ctrl.remove.bind(ctrl, key),
                                             title   : "Remove",
-                                            value   : ctrl.related[key].name
+                                            value   : "Remove"
                                         },
                                         m("svg", { class : css.removeIcon },
                                             m("use", { href : icons + "#remove" })
