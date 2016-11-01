@@ -16,34 +16,34 @@
 .li {
     display: block;
     position: relative;
+}
 
-    /* Chrome is dumb with <li> and children that are flexbox */
-    &:before {
-        position: absolute;
-        left: -1em;
-        top: -50%;
-        margin-top: 1em;
-        content: "•";
-    }
+/* Chrome is dumb with <li> and children that are flexbox */
+.li:before {
+    position: absolute;
+    left: -1em;
+    top: -50%;
+    margin-top: 1em;
+    content: "•";
 }
 
 .relationship {
     composes: hbox from flex_css;
+}
 
-    &:hover .actions {
-        opacity: 1;
-    }
+.relationship:hover .actions {
+    opacity: 1;
 }
 
 .link {
     color: #666;
     text-decoration: none;
     line-height: 1.6;
+}
 
-    &:hover {
-        color: #333;
-        text-decoration: underline;
-    }
+.link:hover {
+    color: #333;
+    text-decoration: underline;
 }
 
 .actions {
@@ -55,10 +55,10 @@
 
 .button {
     composes: plain from buttons_css;
+}
 
-    &:hover .removeIcon {
-        fill: red;
-    }
+.button:hover .removeIcon {
+    fill: red;
 }
 
 .removeIcon {
