@@ -71,13 +71,20 @@ export function controller() {
     // the next page's first item. This lets us grab the
     // next page's timestamp limit, or find we're on the last page.
     function onNext(snap) {
-        var recordCt    = Object.keys(snap.val()).length,
+        var snapVal = snap.val(),
+            recordCt    = Object.keys(snapVal || {}).length,
             isLastPage  = recordCt <= ctrl.pg.itemsPer,
             hasOverflow = !isLastPage && recordCt === ctrl.pg.itemsPer + 1,
 
             oldestTs = Number.MAX_SAFE_INTEGER,
             content  = [],
             overflow;
+
+        if(!snapVal) {
+            ctrl.loading = false;
+
+            return;
+        }
 
         snap.forEach(function(record) {
             var item = contentFromRecord(record);
@@ -117,6 +124,9 @@ export function controller() {
     function onSchema(snap) {
         if(!snap.exists()) {
             console.error("Error retrieving schema snapshot from Firebase.");
+
+            ctrl.loading = false;
+
             return;
         }
 
