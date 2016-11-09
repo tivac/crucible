@@ -59,6 +59,8 @@ function contentFromSnapshot(snap, sortBy, removeOverflow) {
 
 export function controller() {
     var ctrl = this,
+        defaultSort = sortOpts.updated,
+        sortByKey,
         schema;
 
     ctrl.schema  = null;
@@ -71,7 +73,8 @@ export function controller() {
     ctrl.searchInput = null;
     ctrl.searchMode  = SEARCH_MODE_RECENT;
 
-    ctrl.sortBy = sortOpts["updated"];
+    ctrl.sortBy = null;
+    ctrl.doSortBlink = false;
     ctrl.loading = true;
 
     // We need to check for an "overflowItem" to peek 
@@ -138,6 +141,14 @@ export function controller() {
     ctrl.init = function() {
         ctrl.pg = new PageState();
 
+        if(window.localStorage) {
+            sortByKey = window.localStorage.getItem("crucible:sortBy");
+            ctrl.sortBy = sortOpts[sortByKey];
+        }
+        if(!ctrl.sortBy) {
+            ctrl.sortBy = defaultSort;
+        }
+
         schema = db.child("schemas/" + m.route.param("schema"));
         schema.on("value", onSchema);
     };
@@ -199,7 +210,10 @@ export function controller() {
 
     ctrl.setSortBy = function(optKey) {
         ctrl.sortBy = sortOpts[optKey];
+        window.localStorage.setItem("crucible:sortBy", optKey);
+
         ctrl.pg = new PageState();
+        ctrl.doSortBlink = true;
         ctrl.showPage();
     };
 
@@ -277,7 +291,7 @@ export function controller() {
         }
 
         ctrl.queryRef = ctrl.contentLoc
-            .orderByChild(DB_ORDER_BY)
+            .orderByChild(sortOpts.updated.value)
             .endAt(Number.MAX_SAFE_INTEGER)
             .limitToLast(INITIAL_SEARCH_CHUNK_SIZE);
 
@@ -378,18 +392,16 @@ export function view(ctrl) {
                         ),
                         (function() {
                             var searchContents;
-
+                            
                             if(isSearchResults) {
                                 if(ctrl.searchMode === SEARCH_MODE_ALL) {
                                     searchContents = "Showing all results.";
-                                } else {
+                                } else if(content.length >= INITIAL_SEARCH_CHUNK_SIZE) {
                                     searchContents = [
-                                        "Showing results from most recent " + INITIAL_SEARCH_CHUNK_SIZE + " items... ",
+                                        "Showing most recent " + INITIAL_SEARCH_CHUNK_SIZE + " items... ",
                                         m("button", {
                                                 onclick : ctrl.searchAll.bind(ctrl),
-                                                class   : css.nextPage
-                                                // ,
-                                                // disabled : locked ||  || ctrl.pg.page === 1 || null // TODO
+                                                class   : css.nextPageF
                                             },
                                             "Search All"
                                         )
@@ -442,8 +454,20 @@ export function view(ctrl) {
                                 m("tr",
                                     m("th", { class : css.headerName }, "Name"),
                                     m("th", { class : css.headerStatus }, "Status"),
-                                    m("th", { class : css.headerUpdated }, ctrl.sortBy.label),
                                     m("th", { class : css.headerScheduled }, "Scheduled"),
+                                    m("th", {
+                                            class  : css.headerSortedBy,
+                                            config : function(el, isInit) {
+                                                if(el.classList.contains(css.blink)) {
+                                                    el.classList.remove(css.blink);
+                                                    m.redraw();
+                                                } else if(ctrl.doSortBlink) {
+                                                    ctrl.doSortBlink = false;
+                                                    el.classList.add(css.blink);
+                                                    m.redraw();
+                                                }
+                                            }
+                                        }, ctrl.sortBy.label),
                                     m("th", { class : css.headerActions }, "Actions")
                                 )
                             ),
@@ -453,7 +477,6 @@ export function view(ctrl) {
                                     var aTime = a.order_by,
                                         bTime = b.order_by;
 
-                                    // return aTime - bTime;
                                     return bTime - aTime;
                                 })
                                 .map(function(data) {
@@ -463,7 +486,6 @@ export function view(ctrl) {
 
                                         itemName,
                                         itemStatus,
-                                        // itemUpdated,
 
                                         itemSortedBy,
                                         itemSchedule;
@@ -483,7 +505,6 @@ export function view(ctrl) {
                                     itemStatus = getItemStatus(data);
 
                                     itemName = name(ctrl.schema, data);
-                                    // itemUpdated = data.updated_at ? format(data.updated_at, dateFormat) : "--/--/----";
                                     itemSortedBy = data[sortBy] ? format(data[sortBy], dateFormat) : "--/--/----";
                                     itemSchedule = data.published_at ? format(data.published_at, dateFormat) : "--/--/----";
 
@@ -506,16 +527,16 @@ export function view(ctrl) {
                                             itemStatus
                                         ),
                                         m("td", {
-                                                class : css.itemUpdated,
-                                                title : itemSortedBy
-                                            },
-                                            itemSortedBy
-                                        ),
-                                        m("td", {
                                                 class : css.itemScheduled,
                                                 title : itemSchedule
                                             },
                                             itemSchedule
+                                        ),
+                                        m("td", {
+                                                class : css.itemSortedBy,
+                                                title : itemSortedBy
+                                            },
+                                            itemSortedBy
                                         ),
                                         m("td", { class : css.itemActions },
                                             m("div", { class : css.actionsPanel },

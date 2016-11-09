@@ -9,6 +9,7 @@
 @value iconTransition: color 0.2s ease-in;
 @value borderWidth: 3px;
 
+@value sm, md, lg "../../shared.css";
 @value pad from "../layout/layout.css";
 @value color_draft, color_scheduled, color_published, color_unpublished from "../content-edit/form.css";
 
@@ -27,13 +28,29 @@
 
 /* Meta layout */
 .search,
-.pages {
+.pages,
+.showingResults {
     flex: 0 0 60%;
+
+    @media screen and (max-width: lg) {
+        flex: 0 0 50%;
+    }
+}
+
+.pages,
+.showingResults {
+    @media screen and (max-width: lg) {
+        font-size: 14px;
+    }
 }
 
 .manage,
 .sort {
     flex: 0 0 40%;
+
+    @media screen and (max-width: lg) {
+        flex: 0 0 50%;
+    }
 }
 
 /* Metadata controls */
@@ -90,6 +107,10 @@
 
 .pages {
     text-align: left;
+
+    @media screen and (max-width: lg) {
+        font-size: 14px;
+    }
 }
 
 .pages *:not(:first-child) {
@@ -125,10 +146,6 @@
 
 .edit {
     composes: primary from buttons_css;
-}
-
-.showingResults {
-    composes: global(pure-u-1-1);
 }
 
 .entriesContainer {
@@ -209,10 +226,20 @@
     composes: colStatus;
 }
 
-.headerUpdated,
+.headerSortedBy,
 .headerScheduled {
     composes: colDate;
     composes: ellipsisOverflow from layout_css;
+}
+
+.headerSortedBy {
+    opacity: 1;
+    transition: opacity 0.3s linear;
+}
+
+.headerSortedBy.blink {
+    opacity: 0;
+    transition: none;
 }
 
 .headerActions {
@@ -256,7 +283,7 @@
     font-size: 0.8em;
 }
 
-.itemUpdated,
+.itemSortedBy,
 .itemScheduled {
     composes: colDate;
 
