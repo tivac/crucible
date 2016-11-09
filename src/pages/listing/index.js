@@ -23,7 +23,7 @@ var DB_ORDER_BY = "updated_at",
     SEARCH_MODE_RECENT = "recent",
     SEARCH_MODE_ALL = "all",
     dateFormat = "MM/DD/YYYY",
-    sortOpts = {
+    orderOpts = {
         updated     : { label : "Updated",     value : "updated_at" },
         created     : { label : "Created",     value : "created_at" },
         published   : { label : "Published",   value : "published_at" },
@@ -59,7 +59,7 @@ function contentFromSnapshot(snap, sortBy, removeOverflow) {
 
 export function controller() {
     var ctrl = this,
-        defaultSort = sortOpts.updated,
+        defaultSort = orderOpts.updated,
         sortByKey,
         schema;
 
@@ -73,11 +73,11 @@ export function controller() {
     ctrl.searchInput = null;
     ctrl.searchMode  = SEARCH_MODE_RECENT;
 
-    ctrl.sortBy = null;
-    ctrl.doSortBlink = false;
+    ctrl.orderBy = null;
+    ctrl.doOrderBlink = false;
     ctrl.loading = true;
 
-    // We need to check for an "overflowItem" to peek 
+    // We need to check for an "overflowItem" to peek at
     // the next page's first item. This lets us grab the
     // next page's timestamp limit, or find we're on the last page.
     function onNext(snap) {
@@ -90,7 +90,7 @@ export function controller() {
             overflow;
 
         snap.forEach(function(record) {
-            var item = contentFromRecord(record, ctrl.sortBy);
+            var item = contentFromRecord(record, ctrl.orderBy);
 
             oldestTs = (item.order_by < oldestTs) ? item.order_by : oldestTs;
             content.push(item);
@@ -107,7 +107,7 @@ export function controller() {
     // When we go backward, or return to a page we've already
     // loaded, there's very little work to be done.
     function onPageReturn(snap) {
-        ctrl.content = contentFromSnapshot(snap, ctrl.sortBy, true);
+        ctrl.content = contentFromSnapshot(snap, ctrl.orderBy, true);
     }
 
     function onValue(snap) {
@@ -142,11 +142,11 @@ export function controller() {
         ctrl.pg = new PageState();
 
         if(window.localStorage) {
-            sortByKey = window.localStorage.getItem("crucible:sortBy");
-            ctrl.sortBy = sortOpts[sortByKey];
+            sortByKey = window.localStorage.getItem("crucible:orderBy");
+            ctrl.orderBy = orderOpts[sortByKey];
         }
-        if(!ctrl.sortBy) {
-            ctrl.sortBy = defaultSort;
+        if(!ctrl.orderBy) {
+            ctrl.orderBy = defaultSort;
         }
 
         schema = db.child("schemas/" + m.route.param("schema"));
@@ -187,7 +187,7 @@ export function controller() {
             // This is safer in the case that firebase updates
             // because of another user's acitvity.
             ctrl.queryRef = ctrl.contentLoc
-                .orderByChild(ctrl.sortBy.value)
+                .orderByChild(ctrl.orderBy.value)
                 .startAt(nextTs)
                 .endAt(pageTs);
 
@@ -201,19 +201,19 @@ export function controller() {
         // We want items in descneding, so we slice our
         // query from the other end via .endAt/.limitToLast
         ctrl.queryRef = ctrl.contentLoc
-            .orderByChild(ctrl.sortBy.value)
+            .orderByChild(ctrl.orderBy.value)
             .endAt(ctrl.pg.limits[ctrl.pg.page])
             .limitToLast(ctrl.pg.itemsPer + overflowItem);
 
         ctrl.queryRef.on("value", onValue);
     };
 
-    ctrl.setSortBy = function(optKey) {
-        ctrl.sortBy = sortOpts[optKey];
-        window.localStorage.setItem("crucible:sortBy", optKey);
+    ctrl.setOrderBy = function(optKey) {
+        ctrl.orderBy = orderOpts[optKey];
+        window.localStorage.setItem("crucible:orderBy", optKey);
 
         ctrl.pg = new PageState();
-        ctrl.doSortBlink = true;
+        ctrl.doOrderBlink = true;
         ctrl.showPage();
     };
 
@@ -256,7 +256,7 @@ export function controller() {
     // m.redraw calls are necessary due to debouncing, this function
     // may not be executing during a planned redraw cycle
     function onSearchResults(searchStr, snap) {
-        var contents = contentFromSnapshot(snap, ctrl.sortBy);
+        var contents = contentFromSnapshot(snap, ctrl.orderBy);
 
         ctrl.results = contents.filter(function(content) {
             return fuzzy(searchStr, content.search);
@@ -291,7 +291,7 @@ export function controller() {
         }
 
         ctrl.queryRef = ctrl.contentLoc
-            .orderByChild(sortOpts.updated.value)
+            .orderByChild(orderOpts.updated.value)
             .endAt(Number.MAX_SAFE_INTEGER)
             .limitToLast(INITIAL_SEARCH_CHUNK_SIZE);
 
@@ -440,10 +440,12 @@ export function view(ctrl) {
 
                             m("select", {
                                     class    : css.sortSelect,
-                                    onchange : m.withAttr("value", ctrl.setSortBy.bind(ctrl))
+                                    onchange : m.withAttr("value", ctrl.setOrderBy.bind(ctrl))
                                 },
-                                Object.keys(sortOpts).map(function(key) {
-                                    return m("option", { value : key }, sortOpts[key].label);
+                                Object.keys(orderOpts).map(function(key) {
+                                    var selected = ctrl.orderBy.value === orderOpts[key].value;
+
+                                    return m("option", { value : key, selected : selected }, orderOpts[key].label);
                                 })
                             )
                         )
@@ -461,13 +463,13 @@ export function view(ctrl) {
                                                 if(el.classList.contains(css.blink)) {
                                                     el.classList.remove(css.blink);
                                                     m.redraw();
-                                                } else if(ctrl.doSortBlink) {
-                                                    ctrl.doSortBlink = false;
+                                                } else if(ctrl.doOrderBlink) {
+                                                    ctrl.doOrderBlink = false;
                                                     el.classList.add(css.blink);
                                                     m.redraw();
                                                 }
                                             }
-                                        }, ctrl.sortBy.label),
+                                        }, ctrl.orderBy.label),
                                     m("th", { class : css.headerActions }, "Actions")
                                 )
                             ),
@@ -482,7 +484,7 @@ export function view(ctrl) {
                                 .map(function(data) {
                                     var itemNameStatus = css.itemName,
                                         now = Date.now(),
-                                        sortBy = ctrl.sortBy.value,
+                                        sortBy = ctrl.orderBy.value,
 
                                         itemName,
                                         itemStatus,
