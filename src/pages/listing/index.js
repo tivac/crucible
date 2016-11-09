@@ -22,24 +22,30 @@ var DB_ORDER_BY = "updated_at",
     INITIAL_SEARCH_CHUNK_SIZE = 100,
     SEARCH_MODE_RECENT = "recent",
     SEARCH_MODE_ALL = "all",
-    dateFormat = "MM/DD/YYYY";
+    dateFormat = "MM/DD/YYYY",
+    sortOpts = {
+        updated     : { label : "Updated",     value : "updated_at" },
+        created     : { label : "Created",     value : "created_at" },
+        published   : { label : "Published",   value : "published_at" },
+        unpublished : { label : "Unpublished", value : "unpublished_at" }
+    };
 
-function contentFromRecord(record) {
+function contentFromRecord(record, sortBy) {
     var data = record.val();
 
     data.key          = record.key();
     data.published_at = data.published_at;
-    data.order_by     = data[DB_ORDER_BY];
+    data.order_by     = data[sortBy.value];
     data.search       = slug(data.name, { separator : "" });
 
     return data;
 }
 
-function contentFromSnapshot(snap, removeOverflow) {
+function contentFromSnapshot(snap, sortBy, removeOverflow) {
     var content = [];
 
     snap.forEach(function(record) {
-        var item = contentFromRecord(record);
+        var item = contentFromRecord(record, sortBy);
 
         content.push(item);
     });
@@ -65,9 +71,10 @@ export function controller() {
     ctrl.searchInput = null;
     ctrl.searchMode  = SEARCH_MODE_RECENT;
 
+    ctrl.sortBy = sortOpts["updated"];
     ctrl.loading = true;
 
-    // We need to check for an "overflowItem" to peek at
+    // We need to check for an "overflowItem" to peek 
     // the next page's first item. This lets us grab the
     // next page's timestamp limit, or find we're on the last page.
     function onNext(snap) {
@@ -80,7 +87,7 @@ export function controller() {
             overflow;
 
         snap.forEach(function(record) {
-            var item = contentFromRecord(record);
+            var item = contentFromRecord(record, ctrl.sortBy);
 
             oldestTs = (item.order_by < oldestTs) ? item.order_by : oldestTs;
             content.push(item);
@@ -97,7 +104,7 @@ export function controller() {
     // When we go backward, or return to a page we've already
     // loaded, there's very little work to be done.
     function onPageReturn(snap) {
-        ctrl.content = contentFromSnapshot(snap, true);
+        ctrl.content = contentFromSnapshot(snap, ctrl.sortBy, true);
     }
 
     function onValue(snap) {
@@ -169,7 +176,7 @@ export function controller() {
             // This is safer in the case that firebase updates
             // because of another user's acitvity.
             ctrl.queryRef = ctrl.contentLoc
-                .orderByChild(DB_ORDER_BY)
+                .orderByChild(ctrl.sortBy.value)
                 .startAt(nextTs)
                 .endAt(pageTs);
 
@@ -183,11 +190,17 @@ export function controller() {
         // We want items in descneding, so we slice our
         // query from the other end via .endAt/.limitToLast
         ctrl.queryRef = ctrl.contentLoc
-            .orderByChild(DB_ORDER_BY)
+            .orderByChild(ctrl.sortBy.value)
             .endAt(ctrl.pg.limits[ctrl.pg.page])
             .limitToLast(ctrl.pg.itemsPer + overflowItem);
 
         ctrl.queryRef.on("value", onValue);
+    };
+
+    ctrl.setSortBy = function(optKey) {
+        ctrl.sortBy = sortOpts[optKey];
+        ctrl.pg = new PageState();
+        ctrl.showPage();
     };
 
 
@@ -229,7 +242,7 @@ export function controller() {
     // m.redraw calls are necessary due to debouncing, this function
     // may not be executing during a planned redraw cycle
     function onSearchResults(searchStr, snap) {
-        var contents = contentFromSnapshot(snap);
+        var contents = contentFromSnapshot(snap, ctrl.sortBy);
 
         ctrl.results = contents.filter(function(content) {
             return fuzzy(searchStr, content.search);
@@ -409,7 +422,19 @@ export function view(ctrl) {
                                     "Next Page \>"
                                 )
                             ]);
-                        }())
+                        }()),
+                        m("div", { class : css.sort },
+                            "Sort Items By: ",
+
+                            m("select", {
+                                    class    : css.sortSelect,
+                                    onchange : m.withAttr("value", ctrl.setSortBy.bind(ctrl))
+                                },
+                                Object.keys(sortOpts).map(function(key) {
+                                    return m("option", { value : key }, sortOpts[key].label);
+                                })
+                            )
+                        )
                     ),
                     m("div", { class : css.entriesContainer },
                         m("table", { class : css.table },
@@ -417,7 +442,7 @@ export function view(ctrl) {
                                 m("tr",
                                     m("th", { class : css.headerName }, "Name"),
                                     m("th", { class : css.headerStatus }, "Status"),
-                                    m("th", { class : css.headerUpdated }, "Updated"),
+                                    m("th", { class : css.headerUpdated }, ctrl.sortBy.label),
                                     m("th", { class : css.headerScheduled }, "Scheduled"),
                                     m("th", { class : css.headerActions }, "Actions")
                                 )
@@ -434,10 +459,13 @@ export function view(ctrl) {
                                 .map(function(data) {
                                     var itemNameStatus = css.itemName,
                                         now = Date.now(),
+                                        sortBy = ctrl.sortBy.value,
 
                                         itemName,
                                         itemStatus,
-                                        itemUpdated,
+                                        // itemUpdated,
+
+                                        itemSortedBy,
                                         itemSchedule;
 
                                     if(data.published_at) {
@@ -455,7 +483,8 @@ export function view(ctrl) {
                                     itemStatus = getItemStatus(data);
 
                                     itemName = name(ctrl.schema, data);
-                                    itemUpdated = data.updated_at ? format(data.updated_at, dateFormat) : "--/--/----";
+                                    // itemUpdated = data.updated_at ? format(data.updated_at, dateFormat) : "--/--/----";
+                                    itemSortedBy = data[sortBy] ? format(data[sortBy], dateFormat) : "--/--/----";
                                     itemSchedule = data.published_at ? format(data.published_at, dateFormat) : "--/--/----";
 
                                     return m("tr", {
@@ -478,9 +507,9 @@ export function view(ctrl) {
                                         ),
                                         m("td", {
                                                 class : css.itemUpdated,
-                                                title : itemUpdated
+                                                title : itemSortedBy
                                             },
-                                            itemUpdated
+                                            itemSortedBy
                                         ),
                                         m("td", {
                                                 class : css.itemScheduled,

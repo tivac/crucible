@@ -25,9 +25,20 @@
     min-width: 600px;
 }
 
+/* Meta layout */
+.search,
+.pages {
+    flex: 0 0 60%;
+}
+
+.manage,
+.sort {
+    flex: 0 0 40%;
+}
+
 /* Metadata controls */
 .search {
-    flex: 0 0 60%;
+    position: relative;
     margin-bottom: 1em;
 }
 
@@ -58,8 +69,6 @@
 }
 
 .manage {
-    flex: 0 0 40%;
-
     text-align: right;
 }
 
@@ -80,7 +89,7 @@
 }
 
 .pages {
-    flex: 0 0 66.6%
+    text-align: left;
 }
 
 .pages *:not(:first-child) {
@@ -100,6 +109,14 @@
 .currPage {
     vertical-align: middle;
     font-size: 18px;
+}
+
+.sort {
+    text-align: right;
+}
+
+.sortSelect {
+    // margin-left: 20px;
 }
 
 .add {
