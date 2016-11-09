@@ -47,6 +47,7 @@
 .manage,
 .sort {
     flex: 0 0 40%;
+    text-align: right;
 
     @media screen and (max-width: lg) {
         flex: 0 0 50%;
@@ -83,10 +84,6 @@
     display: inline-block;
     font-size: 28px;
     transform: rotate(45deg);
-}
-
-.manage {
-    text-align: right;
 }
 
 .itemsPerLabel {
@@ -130,14 +127,6 @@
 .currPage {
     vertical-align: middle;
     font-size: 18px;
-}
-
-.sort {
-    text-align: right;
-}
-
-.sortSelect {
-    // margin-left: 20px;
 }
 
 .add {
@@ -226,18 +215,18 @@
     composes: colStatus;
 }
 
-.headerSortedBy,
+.headerOrderedBy,
 .headerScheduled {
     composes: colDate;
     composes: ellipsisOverflow from layout_css;
 }
 
-.headerSortedBy {
+.headerOrderedBy {
     opacity: 1;
     transition: opacity 0.3s linear;
 }
 
-.headerSortedBy.blink {
+.headerOrderedBy.blink {
     opacity: 0;
     transition: none;
 }
@@ -283,7 +272,7 @@
     font-size: 0.8em;
 }
 
-.itemSortedBy,
+.itemOrderedBy,
 .itemScheduled {
     composes: colDate;
 

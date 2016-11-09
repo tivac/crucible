@@ -30,22 +30,22 @@ var DB_ORDER_BY = "updated_at",
         unpublished : { label : "Unpublished", value : "unpublished_at" }
     };
 
-function contentFromRecord(record, sortBy) {
+function contentFromRecord(record, orderBy) {
     var data = record.val();
 
     data.key          = record.key();
     data.published_at = data.published_at;
-    data.order_by     = data[sortBy.value];
+    data.order_by     = data[orderBy.value];
     data.search       = slug(data.name, { separator : "" });
 
     return data;
 }
 
-function contentFromSnapshot(snap, sortBy, removeOverflow) {
+function contentFromSnapshot(snap, orderBy, removeOverflow) {
     var content = [];
 
     snap.forEach(function(record) {
-        var item = contentFromRecord(record, sortBy);
+        var item = contentFromRecord(record, orderBy);
 
         content.push(item);
     });
@@ -60,7 +60,7 @@ function contentFromSnapshot(snap, sortBy, removeOverflow) {
 export function controller() {
     var ctrl = this,
         defaultSort = orderOpts.updated,
-        sortByKey,
+        orderByKey,
         schema;
 
     ctrl.schema  = null;
@@ -142,8 +142,8 @@ export function controller() {
         ctrl.pg = new PageState();
 
         if(window.localStorage) {
-            sortByKey = window.localStorage.getItem("crucible:orderBy");
-            ctrl.orderBy = orderOpts[sortByKey];
+            orderByKey = window.localStorage.getItem("crucible:orderBy");
+            ctrl.orderBy = orderOpts[orderByKey];
         }
         if(!ctrl.orderBy) {
             ctrl.orderBy = defaultSort;
@@ -391,12 +391,14 @@ export function view(ctrl) {
                             })
                         ),
                         (function() {
-                            var searchContents;
+                            var hasMoreResults = (content.length >= INITIAL_SEARCH_CHUNK_SIZE),
+                                searchContents;
                             
                             if(isSearchResults) {
                                 if(ctrl.searchMode === SEARCH_MODE_ALL) {
                                     searchContents = "Showing all results.";
-                                } else if(content.length >= INITIAL_SEARCH_CHUNK_SIZE) {
+
+                                } else if(hasMoreResults) {
                                     searchContents = [
                                         "Showing most recent " + INITIAL_SEARCH_CHUNK_SIZE + " items... ",
                                         m("button", {
@@ -417,7 +419,7 @@ export function view(ctrl) {
                                 m("button", {
                                         onclick  : ctrl.prevPage.bind(ctrl),
                                         class    : css.prevPage,
-                                        disabled : locked || isSearchResults || ctrl.pg.page === 1 || null
+                                        disabled : locked || ctrl.pg.page === 1 || null
                                     },
                                     "\< Prev Page"
                                 ),
@@ -429,7 +431,7 @@ export function view(ctrl) {
                                 m("button", {
                                         onclick  : ctrl.nextPage.bind(ctrl),
                                         class    : css.nextPage,
-                                        disabled : locked || isSearchResults || ctrl.pg.page === ctrl.pg.numPages() || null
+                                        disabled : locked || ctrl.pg.page === ctrl.pg.numPages() || null
                                     },
                                     "Next Page \>"
                                 )
@@ -458,7 +460,7 @@ export function view(ctrl) {
                                     m("th", { class : css.headerStatus }, "Status"),
                                     m("th", { class : css.headerScheduled }, "Scheduled"),
                                     m("th", {
-                                            class  : css.headerSortedBy,
+                                            class  : css.headerOrderedBy,
                                             config : function(el, isInit) {
                                                 if(el.classList.contains(css.blink)) {
                                                     el.classList.remove(css.blink);
@@ -484,12 +486,12 @@ export function view(ctrl) {
                                 .map(function(data) {
                                     var itemNameStatus = css.itemName,
                                         now = Date.now(),
-                                        sortBy = ctrl.orderBy.value,
+                                        orderBy = ctrl.orderBy.value,
 
                                         itemName,
                                         itemStatus,
 
-                                        itemSortedBy,
+                                        itemOrderedBy,
                                         itemSchedule;
 
                                     if(data.published_at) {
@@ -507,7 +509,7 @@ export function view(ctrl) {
                                     itemStatus = getItemStatus(data);
 
                                     itemName = name(ctrl.schema, data);
-                                    itemSortedBy = data[sortBy] ? format(data[sortBy], dateFormat) : "--/--/----";
+                                    itemOrderedBy = data[orderBy] ? format(data[orderBy], dateFormat) : "--/--/----";
                                     itemSchedule = data.published_at ? format(data.published_at, dateFormat) : "--/--/----";
 
                                     return m("tr", {
@@ -535,10 +537,10 @@ export function view(ctrl) {
                                             itemSchedule
                                         ),
                                         m("td", {
-                                                class : css.itemSortedBy,
-                                                title : itemSortedBy
+                                                class : css.itemOrderedBy,
+                                                title : itemOrderedBy
                                             },
-                                            itemSortedBy
+                                            itemOrderedBy
                                         ),
                                         m("td", { class : css.itemActions },
                                             m("div", { class : css.actionsPanel },
