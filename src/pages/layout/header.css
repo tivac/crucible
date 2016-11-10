@@ -5,6 +5,8 @@
 @value color_bg: #2F343C;
 @value color_hover: #346;
 
+@value sm, md, lg "../../shared.css";
+
 .header {
     composes: vbox from flex_css;
     flex: 0 1 320px;
@@ -13,6 +15,10 @@
 
     color: #FFF;
     background: color_bg;
+
+    @media screen and (max-width: lg) {
+        flex: 0 1 30%;
+    }
 }
 
 .headerHd {

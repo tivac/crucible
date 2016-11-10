@@ -9,6 +9,7 @@
 @value iconTransition: color 0.2s ease-in;
 @value borderWidth: 3px;
 
+@value sm, md, lg "../../shared.css";
 @value pad from "../layout/layout.css";
 @value color_draft, color_scheduled, color_published, color_unpublished from "../content-edit/form.css";
 
@@ -25,9 +26,37 @@
     min-width: 600px;
 }
 
+/* Meta layout */
+.search,
+.pages,
+.showingResults {
+    flex: 0 0 60%;
+
+    @media screen and (max-width: lg) {
+        flex: 0 0 50%;
+    }
+}
+
+.pages,
+.showingResults {
+    @media screen and (max-width: lg) {
+        font-size: 14px;
+    }
+}
+
+.manage,
+.sort {
+    flex: 0 0 40%;
+    text-align: right;
+
+    @media screen and (max-width: lg) {
+        flex: 0 0 50%;
+    }
+}
+
 /* Metadata controls */
 .search {
-    flex: 0 0 60%;
+    position: relative;
     margin-bottom: 1em;
 }
 
@@ -57,12 +86,6 @@
     transform: rotate(45deg);
 }
 
-.manage {
-    flex: 0 0 40%;
-
-    text-align: right;
-}
-
 .itemsPerLabel {
     padding-left: 20px;
 }
@@ -80,7 +103,11 @@
 }
 
 .pages {
-    flex: 0 0 66.6%
+    text-align: left;
+
+    @media screen and (max-width: lg) {
+        font-size: 14px;
+    }
 }
 
 .pages *:not(:first-child) {
@@ -108,10 +135,6 @@
 
 .edit {
     composes: primary from buttons_css;
-}
-
-.showingResults {
-    composes: global(pure-u-1-1);
 }
 
 .entriesContainer {
@@ -192,10 +215,20 @@
     composes: colStatus;
 }
 
-.headerUpdated,
+.headerOrderedBy,
 .headerScheduled {
     composes: colDate;
     composes: ellipsisOverflow from layout_css;
+}
+
+.headerOrderedBy {
+    opacity: 1;
+    transition: opacity 0.3s linear;
+}
+
+.headerOrderedBy.blink {
+    opacity: 0;
+    transition: none;
 }
 
 .headerActions {
@@ -239,7 +272,7 @@
     font-size: 0.8em;
 }
 
-.itemUpdated,
+.itemOrderedBy,
 .itemScheduled {
     composes: colDate;
 

@@ -22,24 +22,30 @@ var DB_ORDER_BY = "updated_at",
     INITIAL_SEARCH_CHUNK_SIZE = 100,
     SEARCH_MODE_RECENT = "recent",
     SEARCH_MODE_ALL = "all",
-    dateFormat = "MM/DD/YYYY";
+    dateFormat = "MM/DD/YYYY",
+    orderOpts = {
+        updated     : { label : "Updated",     value : "updated_at" },
+        created     : { label : "Created",     value : "created_at" },
+        published   : { label : "Published",   value : "published_at" },
+        unpublished : { label : "Unpublished", value : "unpublished_at" }
+    };
 
-function contentFromRecord(record) {
+function contentFromRecord(record, orderBy) {
     var data = record.val();
 
     data.key          = record.key();
     data.published_at = data.published_at;
-    data.order_by     = data[DB_ORDER_BY];
+    data.order_by     = data[orderBy.value];
     data.search       = slug(data.name, { separator : "" });
 
     return data;
 }
 
-function contentFromSnapshot(snap, removeOverflow) {
+function contentFromSnapshot(snap, orderBy, removeOverflow) {
     var content = [];
 
     snap.forEach(function(record) {
-        var item = contentFromRecord(record);
+        var item = contentFromRecord(record, orderBy);
 
         content.push(item);
     });
@@ -53,6 +59,8 @@ function contentFromSnapshot(snap, removeOverflow) {
 
 export function controller() {
     var ctrl = this,
+        defaultSort = orderOpts.updated,
+        orderByKey,
         schema;
 
     ctrl.schema  = null;
@@ -65,6 +73,8 @@ export function controller() {
     ctrl.searchInput = null;
     ctrl.searchMode  = SEARCH_MODE_RECENT;
 
+    ctrl.orderBy = null;
+    ctrl.doOrderBlink = false;
     ctrl.loading = true;
 
     // We need to check for an "overflowItem" to peek at
@@ -87,7 +97,7 @@ export function controller() {
         }
 
         snap.forEach(function(record) {
-            var item = contentFromRecord(record);
+            var item = contentFromRecord(record, ctrl.orderBy);
 
             oldestTs = (item.order_by < oldestTs) ? item.order_by : oldestTs;
             content.push(item);
@@ -104,7 +114,7 @@ export function controller() {
     // When we go backward, or return to a page we've already
     // loaded, there's very little work to be done.
     function onPageReturn(snap) {
-        ctrl.content = contentFromSnapshot(snap, true);
+        ctrl.content = contentFromSnapshot(snap, ctrl.orderBy, true);
     }
 
     function onValue(snap) {
@@ -140,6 +150,15 @@ export function controller() {
     // Go get initial data
     ctrl.init = function() {
         ctrl.pg = new PageState();
+
+        if(window.localStorage) {
+            orderByKey = window.localStorage.getItem("crucible:orderBy");
+            ctrl.orderBy = orderOpts[orderByKey];
+        }
+        
+        if(!ctrl.orderBy) {
+            ctrl.orderBy = defaultSort;
+        }
 
         schema = db.child("schemas/" + m.route.param("schema"));
         schema.on("value", onSchema);
@@ -179,7 +198,7 @@ export function controller() {
             // This is safer in the case that firebase updates
             // because of another user's acitvity.
             ctrl.queryRef = ctrl.contentLoc
-                .orderByChild(DB_ORDER_BY)
+                .orderByChild(ctrl.orderBy.value)
                 .startAt(nextTs)
                 .endAt(pageTs);
 
@@ -193,11 +212,20 @@ export function controller() {
         // We want items in descneding, so we slice our
         // query from the other end via .endAt/.limitToLast
         ctrl.queryRef = ctrl.contentLoc
-            .orderByChild(DB_ORDER_BY)
+            .orderByChild(ctrl.orderBy.value)
             .endAt(ctrl.pg.limits[ctrl.pg.page])
             .limitToLast(ctrl.pg.itemsPer + overflowItem);
 
         ctrl.queryRef.on("value", onValue);
+    };
+
+    ctrl.setOrderBy = function(optKey) {
+        ctrl.orderBy = orderOpts[optKey];
+        window.localStorage.setItem("crucible:orderBy", optKey);
+
+        ctrl.pg = new PageState();
+        ctrl.doOrderBlink = true;
+        ctrl.showPage();
     };
 
 
@@ -239,7 +267,7 @@ export function controller() {
     // m.redraw calls are necessary due to debouncing, this function
     // may not be executing during a planned redraw cycle
     function onSearchResults(searchStr, snap) {
-        var contents = contentFromSnapshot(snap);
+        var contents = contentFromSnapshot(snap, ctrl.orderBy);
 
         ctrl.results = contents.filter(function(content) {
             return fuzzy(searchStr, content.search);
@@ -274,7 +302,7 @@ export function controller() {
         }
 
         ctrl.queryRef = ctrl.contentLoc
-            .orderByChild(DB_ORDER_BY)
+            .orderByChild(orderOpts.updated.value)
             .endAt(Number.MAX_SAFE_INTEGER)
             .limitToLast(INITIAL_SEARCH_CHUNK_SIZE);
 
@@ -374,19 +402,19 @@ export function view(ctrl) {
                             })
                         ),
                         (function() {
-                            var searchContents;
-
+                            var hasMoreResults = (content.length >= INITIAL_SEARCH_CHUNK_SIZE),
+                                searchContents;
+                            
                             if(isSearchResults) {
                                 if(ctrl.searchMode === SEARCH_MODE_ALL) {
                                     searchContents = "Showing all results.";
-                                } else {
+
+                                } else if(hasMoreResults) {
                                     searchContents = [
-                                        "Showing results from most recent " + INITIAL_SEARCH_CHUNK_SIZE + " items... ",
+                                        "Showing most recent " + INITIAL_SEARCH_CHUNK_SIZE + " items... ",
                                         m("button", {
                                                 onclick : ctrl.searchAll.bind(ctrl),
-                                                class   : css.nextPage
-                                                // ,
-                                                // disabled : locked ||  || ctrl.pg.page === 1 || null // TODO
+                                                class   : css.nextPageF
                                             },
                                             "Search All"
                                         )
@@ -402,7 +430,7 @@ export function view(ctrl) {
                                 m("button", {
                                         onclick  : ctrl.prevPage.bind(ctrl),
                                         class    : css.prevPage,
-                                        disabled : locked || isSearchResults || ctrl.pg.page === 1 || null
+                                        disabled : locked || ctrl.pg.page === 1 || null
                                     },
                                     "\< Prev Page"
                                 ),
@@ -414,12 +442,26 @@ export function view(ctrl) {
                                 m("button", {
                                         onclick  : ctrl.nextPage.bind(ctrl),
                                         class    : css.nextPage,
-                                        disabled : locked || isSearchResults || ctrl.pg.page === ctrl.pg.numPages() || null
+                                        disabled : locked || ctrl.pg.page === ctrl.pg.numPages() || null
                                     },
                                     "Next Page \>"
                                 )
                             ]);
-                        }())
+                        }()),
+                        m("div", { class : css.sort },
+                            "Sort Items By: ",
+
+                            m("select", {
+                                    class    : css.sortSelect,
+                                    onchange : m.withAttr("value", ctrl.setOrderBy.bind(ctrl))
+                                },
+                                Object.keys(orderOpts).map(function(key) {
+                                    var selected = ctrl.orderBy.value === orderOpts[key].value;
+
+                                    return m("option", { value : key, selected : selected }, orderOpts[key].label);
+                                })
+                            )
+                        )
                     ),
                     m("div", { class : css.entriesContainer },
                         m("table", { class : css.table },
@@ -427,8 +469,20 @@ export function view(ctrl) {
                                 m("tr",
                                     m("th", { class : css.headerName }, "Name"),
                                     m("th", { class : css.headerStatus }, "Status"),
-                                    m("th", { class : css.headerUpdated }, "Updated"),
                                     m("th", { class : css.headerScheduled }, "Scheduled"),
+                                    m("th", {
+                                            class  : css.headerOrderedBy,
+                                            config : function(el, isInit) {
+                                                if(el.classList.contains(css.blink)) {
+                                                    el.classList.remove(css.blink);
+                                                    m.redraw();
+                                                } else if(ctrl.doOrderBlink) {
+                                                    ctrl.doOrderBlink = false;
+                                                    el.classList.add(css.blink);
+                                                    m.redraw();
+                                                }
+                                            }
+                                        }, ctrl.orderBy.label),
                                     m("th", { class : css.headerActions }, "Actions")
                                 )
                             ),
@@ -438,16 +492,17 @@ export function view(ctrl) {
                                     var aTime = a.order_by,
                                         bTime = b.order_by;
 
-                                    // return aTime - bTime;
                                     return bTime - aTime;
                                 })
                                 .map(function(data) {
                                     var itemNameStatus = css.itemName,
                                         now = Date.now(),
+                                        orderBy = ctrl.orderBy.value,
 
                                         itemName,
                                         itemStatus,
-                                        itemUpdated,
+
+                                        itemOrderedBy,
                                         itemSchedule;
 
                                     if(data.published_at) {
@@ -465,7 +520,7 @@ export function view(ctrl) {
                                     itemStatus = getItemStatus(data);
 
                                     itemName = name(ctrl.schema, data);
-                                    itemUpdated = data.updated_at ? format(data.updated_at, dateFormat) : "--/--/----";
+                                    itemOrderedBy = data[orderBy] ? format(data[orderBy], dateFormat) : "--/--/----";
                                     itemSchedule = data.published_at ? format(data.published_at, dateFormat) : "--/--/----";
 
                                     return m("tr", {
@@ -487,16 +542,16 @@ export function view(ctrl) {
                                             itemStatus
                                         ),
                                         m("td", {
-                                                class : css.itemUpdated,
-                                                title : itemUpdated
-                                            },
-                                            itemUpdated
-                                        ),
-                                        m("td", {
                                                 class : css.itemScheduled,
                                                 title : itemSchedule
                                             },
                                             itemSchedule
+                                        ),
+                                        m("td", {
+                                                class : css.itemOrderedBy,
+                                                title : itemOrderedBy
+                                            },
+                                            itemOrderedBy
                                         ),
                                         m("td", { class : css.itemActions },
                                             m("div", { class : css.actionsPanel },
