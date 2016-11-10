@@ -145,6 +145,7 @@ export function controller() {
             orderByKey = window.localStorage.getItem("crucible:orderBy");
             ctrl.orderBy = orderOpts[orderByKey];
         }
+        
         if(!ctrl.orderBy) {
             ctrl.orderBy = defaultSort;
         }
