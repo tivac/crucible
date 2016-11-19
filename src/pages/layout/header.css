@@ -5,10 +5,11 @@
 @value color_bg: #2F343C;
 @value color_hover: #346;
 
-@value sm, md, lg "../../shared.css";
+@value sm, md, lg from "../../shared.css";
 
 .header {
     composes: vbox from flex_css;
+    
     flex: 0 1 320px;
     min-width: 180px;
     z-index: 1;

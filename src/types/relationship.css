@@ -19,7 +19,7 @@
 }
 
 /* Chrome is dumb with <li> and children that are flexbox */
-.li:before {
+.li::before {
     position: absolute;
     left: -1em;
     top: -50%;

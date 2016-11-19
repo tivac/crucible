@@ -7,7 +7,9 @@
   "scripts": {
     "build": "node build/build.js",
     "export": "node build/build.js --compress=true",
-    "lint": "eslint .",
+    "lint": "npm run eslint && npm run stylelint",
+    "eslint": "eslint .",
+    "stylelint": "stylelint src/**/*.css",
     "prepublish": "in-publish && npm run export || not-in-publish",
     "preversion": "npm run lint && mocha",
     "start": "node build/serve.js",

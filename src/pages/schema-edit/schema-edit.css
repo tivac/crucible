@@ -14,8 +14,8 @@
     margin: 0;
     padding: 5px;
 
-    background: red;
-    color: whitesmoke;
+    background: #F00;
+    color: #F5F5F5;
 }
 
 .preTitle {
@@ -45,7 +45,7 @@
     composes: input from "../../form.css";
 
     min-height: 360px;
-    background: #fff;
+    background: #FFF;
 }
 
 /* Override codemirror styling to make it expannnnd */
@@ -97,8 +97,8 @@
 .urlInputError {
     composes: urlInputPreview;
 
-    color: #b94a48;
-    border-color: #e9322d !important;
+    color: #B94A48;
+    border-color: #E9322D !important;
 }
 
 .previewUrl {

@@ -45,6 +45,7 @@
     0% {
         transform: scaleY(0);
     }
+    
     100% {
         transform: scaleY(1);
     }
@@ -136,33 +137,28 @@
     transform: rotate(180deg);
 }
 
-.date {
-
-}
-
 .start,
 .end {
     composes: global(pure-u-1-2);
 }
 
 .invalidDate {
-    composes: date;
-    border: thin solid #e61010;
-    color: #e61010;
+    border: thin solid #E61010;
+    color: #E61010;
 }
 
 .clearSchedule {
     composes: button from buttons_css;
 
-    background: #afafaf;
+    background: #AFAFAF;
     border: none;
-    color: #fff;
+    color: #FFF;
     text-transform: capitalize;
     text-decoration: none;
 }
 
 .clearSchedule:hover {
-    background: #8f8f8f;
+    background: #8F8F8F;
     text-decoration: none;
 }
 

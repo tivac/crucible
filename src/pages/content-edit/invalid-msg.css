@@ -1,4 +1,4 @@
-/* 
+/*
    TODO Probably worth making more generic at some point,
    and maybe even adding other color options.
 */
@@ -15,13 +15,13 @@
     padding: 10px;
 
     background: rgb(222, 33, 33);
-    border: 1px solid rgb(202, 13, 13);;
+    border: 1px solid rgb(202, 13, 13);
     border-radius: 2px;
-    color: #fff;
+    color: #FFF;
     text-align: left;
 }
 
-.invalidMessage:before {
+.invalidMessage::before {
     content: '';
 
     position: absolute;
@@ -29,10 +29,9 @@
     right: 10px;
 
     border-bottom: 8px solid rgb(222, 33, 33);
-    border-left:   7px solid transparent;
-    border-right:  7px solid transparent;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
 }
-
 
 /*
     No transition if we're going from 0 -> 1,
@@ -42,7 +41,7 @@
     composes: invalidMessage;
 
     opacity: 1;
-    transition: none;    
+    transition: none;
 }
 
 .delayedHide {
@@ -68,7 +67,7 @@
 input.highlightInvalid:invalid,
 select.highlightInvalid:invalid,
 textarea.highlightInvalid:invalid {
-    background: #f5cecd;
-    border-color: #e9322d;
-    color: black;
+    background: #F5CECD;
+    border-color: #E9322D;
+    color: #000;
 }
