@@ -49,6 +49,7 @@ module.exports = function(options) {
                 
                 // lifecycle hooks
                 before : [
+                    require("stylelint")(),
                     require("postcss-nested")
                 ],
                 
