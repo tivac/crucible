@@ -1,3 +1,4 @@
+/* eslint no-console:false */
 "use strict";
 
 var fs = require("fs"),
@@ -21,4 +22,7 @@ rollup(config)
         console.log("Bundle written to ./gen/index.js in %s", duration(Date.now() - start));
         console.log("Bundle size: %s", size(fs.lstatSync(config.dest).size));
     })
-    .catch((error) => console.error(error.stack));
+    .catch((error) => {
+        console.error(error.toString());
+        console.error(error.stack)
+    });
