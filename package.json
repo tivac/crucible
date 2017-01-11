@@ -61,7 +61,7 @@
     "minimist": "^1.2.0",
     "mithril": "^0.2.0",
     "mithril-objectify": "^3.1.0",
-    "mithril-query": "^1.0.0",
+    "mithril-query": "0.9.3",
     "mocha": "^3.1.2",
     "modular-css": "^0.29.1",
     "modular-css-namer": "^1.0.1",
