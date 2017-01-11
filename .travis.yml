@@ -2,7 +2,7 @@ sudo: false
 language: node_js
 node_js:
   - node
-  - 4
+  - 6
 cache:
   directories:
   - node_modules
@@ -15,4 +15,4 @@ deploy:
     tags: true
     repo: tivac/crucible
     branch: master
-    node: 5
+    node: node
