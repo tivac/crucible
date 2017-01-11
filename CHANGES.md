@@ -1,6 +1,6 @@
 # Changes
 
-## 0.3.2
+## 0.3.3
 
 - Add option to sort by any timestamp value. (#170) (Connor Thomas Cleary)
 - Handle listing with 0 entries (#169) (Kevin Cameron)
@@ -11,6 +11,9 @@
 - UI polish (#153) (Kevin Cameron)
 - Revamp content editing with ContentState data. (#145) (Connor Thomas Cleary)
 - Add padding to left of new schema page (#151) (Kevin Cameron)
+
+## 0.3.2
+
 - Browser bundle so global context is "window"
 - Fix scheduling bugs. (#150) (Connor Thomas Cleary)
 - Fix schema-edit page and bad schema-edit route. (#148) (Connor Thomas Cleary)
