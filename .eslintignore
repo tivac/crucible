@@ -1,4 +1,5 @@
-gen
-coverage
-build
-.vscode
+gen/
+coverage/
+build/
+.vscode/
+test/
