@@ -78,7 +78,9 @@ module.exports = function(options) {
             
             opts.compress ?
                 require("rollup-plugin-uglify")() :
-                {}
+                {},
+            
+            require("rollup-plugin-filesize")()
         ]
     };
 };
