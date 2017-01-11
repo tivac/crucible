@@ -1,9 +1,7 @@
 /* eslint no-console:false */
 "use strict";
 
-var fs = require("fs"),
-    
-    rollup   = require("rollup").rollup,
+var rollup   = require("rollup").rollup,
     duration = require("humanize-duration"),
     size     = require("filesize"),
     
@@ -20,7 +18,6 @@ rollup(config)
     .then((bundle) => bundle.write(config))
     .then(() => {
         console.log("Bundle written to ./gen/index.js in %s", duration(Date.now() - start));
-        console.log("Bundle size: %s", size(fs.lstatSync(config.dest).size));
     })
     .catch((error) => {
         console.error(error.toString());

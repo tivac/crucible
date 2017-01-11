@@ -84,7 +84,6 @@ watcher.on("event", (details) => {
 
     if(details.code === "BUILD_END") {
         console.log("Bundle written to ./gen/index.js in %s", duration(details.duration));
-        console.log("Bundle size: %s", size(fs.lstatSync(config.dest).size));
 
         return done && done();
     }
