@@ -5,7 +5,7 @@ var chokidar = require("chokidar"),
 
     files = {
         "./src/pages/schema-edit/parse-schema.js" : "./gen/parse-schema.js",
-        "./src/icons.svg"                         : "./gen/icons.svg"
+        // "./src/icons.svg"                         : "./gen/icons.svg"
     };
 
 exports.watch = function() {
@@ -14,9 +14,9 @@ exports.watch = function() {
         if(event !== "add" && event !== "change") {
             return;
         }
-        
+
         file = "./" + file;
-        
+
         shell.cp(file, files[file]);
     });
 };
