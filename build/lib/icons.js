@@ -19,9 +19,9 @@ module.exports = function() {
     spriter = new Spriter({
         dest : dest,
         mode : {
-            defs : {
+            symbol : {
                 inline : true,
-                dest : dest,
+                dest   : dest,
                 defs   : true
             }
         }
@@ -47,12 +47,7 @@ module.exports = function() {
             return;
         }
 
-        // console.log(Object.keys(res.defs.sprite));
-        // console.log(res.defs.sprite);
-
-        // console.log(data.symbol);
-
-        fs.writeFile(path.join(dest, "icons.svg"), res.defs.sprite._contents, function(err) {
+        fs.writeFile(path.join(dest, "icons.svg"), res.symbol.sprite._contents, function(err) {
             if(err) {
                 console.log("Error: " + err);
 
