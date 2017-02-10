@@ -5,12 +5,14 @@ var chokidar = require("chokidar"),
     globule  = require("globule"),
     svgstore = require("svgstore"),
     fs       = require("fs"),
+    path     = require("path"),
 
     source = "./src/**/*.svg",
     dest   = "./gen/icons.svg";
 
 exports.watch = function() {
-    // Make sure icons stay up to date
+    let icons = svgstore();
+
     chokidar.watch(globule.find(source)).on("all", function(event, file) {
         if(event !== "add" && event !== "change") {
             return;
@@ -18,14 +20,16 @@ exports.watch = function() {
 
         file = "./" + file;
 
+        // icons = icons.add(path.parse(file).name, fs.readFileSync(file, "utf8"));
     });
 };
 
 exports.store = function() {
+    let icons = svgstore();
+
     globule.find(source).forEach(function(file) {
-        console.log(file);
-        svgstore().add(file, fs.readFileSync(file, "utf8"));
+        icons = icons.add(path.parse(file).name, fs.readFileSync(file, "utf8"));
     });
 
-    console.log(svgstore().toString());
+    fs.writeFileSync(dest, icons.toString());
 };

@@ -15,9 +15,9 @@ exports.watch = function() {
         if(event !== "add" && event !== "change") {
             return;
         }
-        
+
         file = "./" + file;
-        
+
         shell.cp(file, files[file]);
     });
 };
