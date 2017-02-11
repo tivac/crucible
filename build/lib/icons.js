@@ -13,21 +13,9 @@ var chokidar = require("chokidar"),
 
 exports.watch = function() {
     let icons = svgstore(),
-        debouncedWrite;
-
-    function writeStore() {
-        console.log("write file");
-
-        fs.writeFileSync(dest, icons.toString());
-
-        console.log("wrote file");
-    }
-
-    debouncedWrite = debounce(writeStore, 100, {
-        leading  : true,
-        trailing : false,
-        maxWait  : 500
-    });
+        debouncedWrite = debounce(function() {
+            fs.writeFileSync(dest, icons.toString());
+        }, 100, { maxWait : 500 });
 
     chokidar.watch(globule.find(source)).on("all", function(event, file) {
         let name = path.parse(file).name;
@@ -39,10 +27,11 @@ exports.watch = function() {
         file = "./" + file;
 
         // remove icon if already in sprite
-        icons.element(`#${name}`).remove();
+        icons.element("#" + name).remove();
         // add icon;
         icons = icons.add(path.parse(file).name, fs.readFileSync(file, "utf8"));
 
+        // on startup only write once for all icons
         debouncedWrite();
     });
 };
