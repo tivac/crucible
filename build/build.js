@@ -10,7 +10,7 @@ var rollup   = require("rollup").rollup,
     files  = require("./lib/files"),
     icons  = require("./lib/icons"),
     config = require("./lib/rollup")(argv),
-    
+
     start = Date.now();
 
 files.copy();
