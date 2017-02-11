@@ -8,14 +8,14 @@ var chokidar = require("chokidar"),
     };
 
 exports.watch = function() {
-    // Make sure parse-schema stay up to date
+    // Make sure parse-schema stays up to date
     chokidar.watch(Object.keys(files)).on("all", function(event, file) {
         if(event !== "add" && event !== "change") {
             return;
         }
-
+        
         file = "./" + file;
-
+        
         shell.cp(file, files[file]);
     });
 };
