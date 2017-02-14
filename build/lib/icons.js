@@ -1,20 +1,34 @@
 "use strict";
 
-var chokidar = require("chokidar"),
+var fs       = require("fs"),
+    path     = require("path"),
+
+    chokidar = require("chokidar"),
     shell    = require("shelljs"),
     globule  = require("globule"),
-    svgstore = require("svgstore"),
-    fs       = require("fs"),
-    path     = require("path"),
     debounce = require("lodash/debounce"),
+
+    svgstore = require("svgstore"),
+    Svgo     = require("svgo"),
+    svgo     = new Svgo({
+        plugins : [{
+            removeUselessDefs : false
+        }]
+    }),
 
     source = "./src/**/*.svg",
     dest   = "./gen/icons.svg";
 
+function optimizedWrite(iconString) {
+    svgo.optimize(iconString, function(result) {
+        fs.writeFileSync(dest, result.data);
+    });
+}
+
 exports.watch = function() {
     let icons = svgstore(),
         debouncedWrite = debounce(function() {
-            fs.writeFileSync(dest, icons.toString());
+            optimizedWrite(icons.toString());
         }, 100, { maxWait : 500 });
 
     chokidar.watch(globule.find(source)).on("all", function(event, file) {
@@ -43,5 +57,5 @@ exports.store = function() {
         icons = icons.add(path.parse(file).name, fs.readFileSync(file, "utf8"));
     });
 
-    fs.writeFileSync(dest, icons.toString());
+    optimizedWrite(icons.toString());
 };
