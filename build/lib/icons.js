@@ -12,7 +12,8 @@ var fs       = require("fs"),
     Svgo     = require("svgo"),
     svgo     = new Svgo({
         plugins : [{
-            removeUselessDefs : false,
+            removeUselessDefs : false
+        },{
             removeAttrs : {
                 attrs : [ "class" ]
             }
