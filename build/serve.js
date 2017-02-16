@@ -13,6 +13,7 @@ var fs   = require("fs"),
     argv     = require("minimist")(process.argv.slice(2)),
 
     files  = require("./lib/files"),
+    icons  = require("./lib/icons"),
     config = require("./lib/rollup"),
 
     server = require("connect")(),
@@ -30,6 +31,7 @@ require("shelljs").mkdir("-p", "./gen");
 
 // Watch for changes to static files
 files.watch();
+icons.watch();
 
 // Log HTTP requests
 server.use(require("morgan")("dev"));
