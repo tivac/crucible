@@ -12,11 +12,13 @@ var fs       = require("fs"),
     Svgo     = require("svgo"),
     svgo     = new Svgo({
         plugins : [{
-            removeUselessDefs : false
-        },{
-            removeAttrs : {
-                attrs : [ "class" ]
-            }
+                removeUselessDefs : false
+            },{
+                removeAttrs : {
+                    attrs : [ "class" ]
+                }
+            }, {
+                cleanupIDs : false
         }]
     }),
 
@@ -24,6 +26,7 @@ var fs       = require("fs"),
     dest   = "./gen/icons.svg";
 
 function optimizedWrite(iconString) {
+        // fs.writeFileSync(dest, iconString);
     svgo.optimize(iconString, function(result) {
         fs.writeFileSync(dest, result.data);
     });
@@ -36,7 +39,9 @@ exports.watch = function() {
         }, 100, { maxWait : 500 });
 
     chokidar.watch(globule.find(source)).on("all", function(event, file) {
-        let name = path.parse(file).name;
+        let name = path.parse(file).name + "asdf";
+
+        console.log(name);
 
         if(event !== "add" && event !== "change") {
             return;
