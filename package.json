@@ -30,14 +30,14 @@
     "awesomplete": "^1.1.0",
     "better-assert": "^1.0.2",
     "chokidar": "^1.5.1",
-    "codemirror": "^5.11.0",
-    "connect": "^3.4.1",
+    "codemirror": "^5.23.0",
+    "connect": "^3.6.0",
     "cssnano": "^3.7.7",
-    "date-fns": "^1.5.2",
+    "date-fns": "^1.27.2",
     "ecstatic": "^2.1.0",
-    "eslint": "^3.7.1",
-    "eslint-config-arenanet": "^3.0.1",
-    "filesize": "^3.3.0",
+    "eslint": "^3.15.0",
+    "eslint-config-arenanet": "^3.3.0",
+    "filesize": "^3.5.4",
     "firebase": "^2.4.1",
     "fuzzysearch": "^1.0.3",
     "globule": "^1.1.0",
@@ -66,33 +66,33 @@
     "mocha": "^3.1.2",
     "modular-css": "^0.29.1",
     "modular-css-namer": "^1.0.1",
-    "morgan": "^1.6.1",
+    "morgan": "^1.8.1",
     "postcss-import": "^8.0.2",
     "postcss-nested": "^1.0.0",
     "pretty-bytes": "^4.0.2",
     "purecss": "^0.6.0",
     "remarkable": "^1.7.1",
-    "rollup": "^0.36.3",
+    "rollup": "^0.41.4",
     "rollup-plugin-babel": "^2.6.1",
-    "rollup-plugin-commonjs": "^5.0.5",
+    "rollup-plugin-commonjs": "^7.0.0",
     "rollup-plugin-filesize": "^1.0.1",
     "rollup-plugin-json": "^2.0.1",
-    "rollup-plugin-node-builtins": "1.0.8",
+    "rollup-plugin-node-builtins": "^2.0.0",
     "rollup-plugin-node-resolve": "^2.0.0",
     "rollup-plugin-strip": "^1.1.1",
     "rollup-plugin-uglify": "^1.0.1",
-    "rollup-watch": "^2.4.0",
+    "rollup-watch": "^3.2.2",
     "run-parallel": "^1.1.4",
     "shelljs": "^0.7.3",
     "sluggo": "^0.2.0",
-    "stylelint": "^7.6.0",
-    "stylelint-config-standard": "^15.0.0",
+    "stylelint": "^7.8.0",
+    "stylelint-config-standard": "^16.0.0",
     "svgo": "^0.7.2",
     "svgstore": "^2.0.2",
     "unique-slug": "^2.0.0",
     "url": "^0.11.0",
     "url-join": "0.0.1",
-    "validate-commit-msg": "^2.8.2",
+    "validate-commit-msg": "^2.11.1",
     "whatwg-fetch": "^0.11.0"
   },
   "eslintConfig": {
@@ -121,7 +121,7 @@
         "always",
         {
           "except": "first-nested",
-          "ignore": "blockless-group"
+          "ignore": "blockless-after-blockless"
         }
       ],
       "property-no-unknown": [
@@ -133,11 +133,22 @@
         }
       ],
       "comment-empty-line-before": null,
-      "rule-nested-empty-line-before": null,
       "no-eol-whitespace": [
         true,
         {
           "ignore": "empty-lines"
+        }
+      ],
+      "rule-empty-line-before": [
+        "always",
+        {
+          "ignore": [
+            "after-comment",
+            "inside-block"
+          ],
+          "except": [
+            "first-nested"
+          ]
         }
       ],
       "selector-pseudo-class-no-unknown": [
