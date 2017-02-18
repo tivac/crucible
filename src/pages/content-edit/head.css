@@ -1,9 +1,7 @@
-@value pure: "../../_pure.css";
 @value icons_css: "../../icons.css";
 @value layout_css: "../layout/layout.css";
 @value flex_css: "../../flex.css";
 @value buttons_css: "../../buttons.css";
-@value header: "../layout/header.css";
 
 .contentHd {
     composes: head from layout_css;
@@ -165,4 +163,3 @@
 .clearSchedule:disabled {
     display: none;
 }
-

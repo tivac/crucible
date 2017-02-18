@@ -1,9 +1,7 @@
-@value pure: "../../_pure.css";
 @value icons_css: "../../icons.css";
 @value flex_css: "../../flex.css";
 @value layout_css: "../layout/layout.css";
 @value buttons_css: "../../buttons.css";
-@value header: "../layout/header.css";
 
 @value anchor: #446;
 @value iconTransition: color 0.2s ease-in;

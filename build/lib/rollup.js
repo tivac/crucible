@@ -40,7 +40,7 @@ module.exports = function(options) {
             
             require("rollup-plugin-commonjs")(),
 
-            require("modular-css/rollup")({
+            require("modular-css-rollup")({
                 css : "./gen/index.css",
                 map : !opts.compress,
 
