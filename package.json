@@ -9,14 +9,14 @@
     "eslint": "eslint .",
     "export": "node build/build.js --compress=true",
     "lint": "npm run eslint && npm run stylelint",
+    "preview": "changes || true",
+    "start": "node build/serve.js",
+    "stylelint": "stylelint src/**/*.css",
+    "test": "mocha",
     "posttest": "npm run lint && npm run export",
     "preversion": "npm test",
     "version": "changes",
-    "postversion": "git push --follow-tags",
-    "preview": "changes",
-    "start": "node build/serve.js",
-    "stylelint": "stylelint src/**/*.css",
-    "test": "mocha"
+    "postversion": "git push --follow-tags"
   },
   "keywords": [
     "cms",
