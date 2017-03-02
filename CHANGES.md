@@ -1,5 +1,10 @@
 # Changes
 
+## 0.3.4
+
+- fix: stop using rollup-plugin-node-builtins (#175)
+- feat: combine icons at build-time using svgstore (#174) (Kevin Cameron)
+
 ## 0.3.3
 
 - Add option to sort by any timestamp value. (#170) (Connor Thomas Cleary)
