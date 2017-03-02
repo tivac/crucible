@@ -11,37 +11,32 @@ var fs       = require("fs"),
     svgstore = require("svgstore"),
     Svgo     = require("svgo"),
     svgo     = new Svgo({
-        plugins : [{
+        plugins : [
+            {
                 removeUselessDefs : false
-            },{
+            }, {
                 removeAttrs : {
                     attrs : [ "class" ]
                 }
             }, {
                 cleanupIDs : false
-        }]
+            }
+        ]
     }),
 
     source = "./src/**/*.svg",
     dest   = "./gen/icons.svg";
 
 function optimizedWrite(iconString) {
-        // fs.writeFileSync(dest, iconString);
-    svgo.optimize(iconString, function(result) {
-        fs.writeFileSync(dest, result.data);
-    });
+    svgo.optimize(iconString, (result) => fs.writeFileSync(dest, result.data));
 }
 
-exports.watch = function() {
-    let icons = svgstore(),
-        debouncedWrite = debounce(function() {
-            optimizedWrite(icons.toString());
-        }, 100, { maxWait : 500 });
+exports.watch = () => {
+    var icons = svgstore(),
+        write = debounce(() => optimizedWrite(icons.toString()), 100, { maxWait : 500 });
 
-    chokidar.watch(globule.find(source)).on("all", function(event, file) {
-        let name = path.parse(file).name + "asdf";
-
-        console.log(name);
+    chokidar.watch(globule.find(source)).on("all", (event, file) => {
+        var name = path.parse(file).name;
 
         if(event !== "add" && event !== "change") {
             return;
@@ -51,18 +46,19 @@ exports.watch = function() {
 
         // remove icon if already in sprite
         icons.element("#" + name).remove();
+        
         // add icon;
         icons = icons.add(path.parse(file).name, fs.readFileSync(file, "utf8"));
 
         // on startup only write once for all icons
-        debouncedWrite();
+        write();
     });
 };
 
-exports.store = function() {
-    let icons = svgstore();
+exports.store = () => {
+    var icons = svgstore();
 
-    globule.find(source).forEach(function(file) {
+    globule.find(source).forEach((file) => {
         icons = icons.add(path.parse(file).name, fs.readFileSync(file, "utf8"));
     });
 
