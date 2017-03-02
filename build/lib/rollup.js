@@ -31,11 +31,10 @@ module.exports = function(options) {
         },
 
         plugins : [
-            require("rollup-plugin-node-builtins")(),
-            
             require("rollup-plugin-node-resolve")({
                 browser : true,
-                ignoreGlobal : true
+                ignoreGlobal : true,
+                preferBuiltins: false
             }),
             
             require("rollup-plugin-commonjs")(),

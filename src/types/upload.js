@@ -4,9 +4,6 @@ import filter from "lodash.filter";
 import each from "lodash.foreach";
 import parallel from "run-parallel";
 
-import url from "url";
-import path from "path";
-
 import join from "url-join";
     
 import { icons } from "../config";
@@ -39,7 +36,9 @@ function checkStatus(response) {
 }
 
 function name(remote) {
-    return path.basename(url.parse(remote).path);
+    var url = new URL(remote);
+
+    return url.pathname.split("/").pop();
 }
 
 export default {

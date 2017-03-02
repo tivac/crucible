@@ -77,7 +77,6 @@
     "rollup-plugin-commonjs": "^7.0.0",
     "rollup-plugin-filesize": "^1.0.1",
     "rollup-plugin-json": "^2.0.1",
-    "rollup-plugin-node-builtins": "^2.0.0",
     "rollup-plugin-node-resolve": "^2.0.0",
     "rollup-plugin-strip": "^1.1.1",
     "rollup-plugin-uglify": "^1.0.1",
