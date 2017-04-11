@@ -1,14 +1,3 @@
-/* TODO: remove when all references are removed */
-.icon {
-    display: inline-block;
-    vertical-align: bottom;
-
-    width: 20px;
-    height: 20px;
-
-    fill: currentColor;
-}
-
 svg {
     display: inline-block;
     vertical-align: bottom;

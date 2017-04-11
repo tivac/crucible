@@ -82,5 +82,4 @@
 
 .remove {
     composes: plain from buttons_css;
-    composes: icon from icons_css;
 }

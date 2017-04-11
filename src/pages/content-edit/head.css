@@ -135,10 +135,6 @@
     composes: button from icons_css;
 }
 
-.onlyIcon {
-    composes: icon from icons_css;
-}
-
 .back {
     composes: icon;
     composes: warn from buttons_css;
