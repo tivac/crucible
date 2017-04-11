@@ -8,7 +8,7 @@ import id from "./lib/id";
 import label from "./lib/label";
 import types from "./lib/types.css";
 
-import { icons } from "../config";
+import removeIcon from "../icons/remove.svg";
 
 import css from "./relationship.css";
 
@@ -147,9 +147,7 @@ export default {
                                             title   : "Remove",
                                             value   : "Remove"
                                         },
-                                        m("svg", { class : css.removeIcon },
-                                            m("use", { href : icons + "#remove" })
-                                        )
+                                        m.trust(removeIcon)
                                     )
                                 )
                             ) :

@@ -55,14 +55,13 @@
 
 .button {
     composes: plain from buttons_css;
+    composes: iconOnly from icons_css;
 }
 
-.button:hover .removeIcon {
-    fill: red;
-}
-
-.removeIcon {
-    composes: icon from icons_css;
-
+.button svg {
     fill: grey;
+}
+
+.button:hover svg {
+    fill: red;
 }

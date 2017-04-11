@@ -44,6 +44,8 @@
 .editor {
     composes: input from "../../form.css";
 
+    padding: 2px 0 0;
+
     min-height: 360px;
     background: #FFF;
 }

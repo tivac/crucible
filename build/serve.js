@@ -13,7 +13,6 @@ var fs   = require("fs"),
     argv     = require("minimist")(process.argv.slice(2)),
 
     files  = require("./lib/files"),
-    icons  = require("./lib/icons"),
     config = require("./lib/rollup"),
 
     server = require("connect")(),
@@ -31,7 +30,6 @@ require("shelljs").mkdir("-p", "./gen");
 
 // Watch for changes to static files
 files.watch();
-icons.watch();
 
 // Log HTTP requests
 server.use(require("morgan")("dev"));
@@ -85,17 +83,17 @@ watcher.on("event", (details) => {
     bundling = false;
 
     if(details.code === "BUILD_END") {
-        console.log("Bundle written to ./gen/index.js in %s", duration(details.duration));
+        console.log("Bundled in %s", duration(details.duration));
 
         return done && done();
     }
 
     if(details.code === "ERROR") {
-        console.error(details.error.stack);
+        console.error(details.error.toString());
 
         fs.writeFileSync(
             "gen/index.js",
-            "document.body.innerHTML = \"<pre style='color: red;'>" + jsesc(details.error.stack) + "</pre>\";"
+            "document.body.innerHTML = \"<pre style='color: red;'>" + jsesc(details.error.toString()) + "\n\n" + jsesc(details.error.stack) + "</pre>\";"
         );
 
         return done && done();

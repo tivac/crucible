@@ -1,3 +1,4 @@
+/* TODO: remove when all references are removed */
 .icon {
     display: inline-block;
     vertical-align: bottom;
@@ -8,8 +9,22 @@
     fill: currentColor;
 }
 
-.button {
-    composes: icon;
+svg {
+    display: inline-block;
+    vertical-align: bottom;
 
-    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+
+    fill: currentColor;
 }
+
+/* Placeholder for SVG parents so they can use the rule below */
+.button {}
+
+.button svg {
+    margin-right: 5px;
+}
+
+/* Placeholder for SVG parents */
+.iconOnly {}

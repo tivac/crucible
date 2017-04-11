@@ -2,9 +2,7 @@ import m from "mithril";
 import assign from "lodash.assign";
 import times from "lodash.times";
     
-import { icons } from "../config";
-
-import hide from "./lib/hide";
+import removeIcon from "../icons/remove.svg";
 
 import * as children from "./children";
 
@@ -18,9 +16,7 @@ function child(ctrl, options, data, idx) {
                     class   : css.remove,
                     onclick : ctrl.remove.bind(null, options, data, idx)
                 },
-                m("svg", { class : css.icon },
-                    m("use", { href : icons + "#remove" })
-                )
+                m.trust(removeIcon)
             )
         ),
         m.component(children, assign({}, options, {

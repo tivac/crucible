@@ -1,10 +1,16 @@
 import m from "mithril";
 
-import config, { icons } from "../../config";
+import config from "../../config";
 import prefix from "../../lib/prefix";
 
 import * as invalidMsg from "./invalid-msg.js";
 import * as scheduleBox from "./schedule-box.js";
+
+import arrowIcon from "../../icons/arrow.svg";
+import saveIcon from "../../icons/save.svg";
+import publishIcon from "../../icons/publish.svg";
+import scheduleIcon from "../../icons/schedule.svg";
+import removeIcon from "../../icons/remove.svg";
 
 import css from "./head.css";
 
@@ -27,9 +33,7 @@ export function view(ctrl, options) {
                         href   : prefix("/listing/" + state.schema.key),
                         config : m.route
                     },
-                    m("svg", { class : css.icon },
-                        m("use", { href : icons + "#arrow" })
-                    ),
+                    m.trust(arrowIcon),
                     "Back"
                 ),
 
@@ -44,9 +48,7 @@ export function view(ctrl, options) {
                             null :
                             content.save.bind(content)
                     },
-                    m("svg", { class : css.icon },
-                        m("use", { href : icons + "#save" })
-                    ),
+                    m.trust(saveIcon),
                     state.ui.saving ? "SAVING..." : "Save"
                 )
             ]),
@@ -55,18 +57,13 @@ export function view(ctrl, options) {
                 // Schedule
                 m("button", {
                         // Attrs
-                        class : css.schedule,
+                        class : state.dates.validSchedule ? css.schedule : css.scheduleInvalid,
                         title : "Schedule a publish",
 
                         // Events
                         onclick : content.toggleSchedule.bind(content, null)
                     },
-                    m("svg", { class : css.onlyIcon },
-                        m("use", {
-                            href : icons + "#schedule",
-                            fill : state.dates.validSchedule ? "white" : "red"
-                        })
-                    )
+                    m.trust(scheduleIcon)
                 ),
 
                 m("div", { class : css.publishContainer },
@@ -79,14 +76,12 @@ export function view(ctrl, options) {
                             // Events
                             onclick : schedule.publish.bind(schedule)
                         },
-                        m("svg", { class : css.icon },
-                            m("use", { href : icons + "#publish" })
-                        ),
+                        m.trust(publishIcon),
                         "Publish"
                     ),
                     !state.form ?
                         null :
-                        m.component(invalidMsg, { content : content }) 
+                        m.component(invalidMsg, { content : content })
                 ),
 
                 m("button", {
@@ -97,9 +92,7 @@ export function view(ctrl, options) {
                         // Events
                         onclick : schedule.unpublish.bind(schedule)
                     },
-                    m("svg", { class : css.icon },
-                        m("use", { href : icons + "#remove" })
-                    ),
+                    m.trust(removeIcon),
                     "Unpublish"
                 )
             ),
