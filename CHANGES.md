@@ -1,5 +1,9 @@
 # Changes
 
+## 0.3.5
+
+- feat: inline SVG icons to avoid referential madness (#176)
+
 ## 0.3.4
 
 - fix: stop using rollup-plugin-node-builtins (#175)
