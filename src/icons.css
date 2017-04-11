@@ -8,6 +8,7 @@ svg {
     fill: currentColor;
 }
 
+/* stylelint-disable block-no-empty */
 /* Placeholder for SVG parents so they can use the rule below */
 .button {}
 
@@ -17,3 +18,4 @@ svg {
 
 /* Placeholder for SVG parents */
 .iconOnly {}
+/* stylelint-enable */
