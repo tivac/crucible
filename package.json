@@ -10,6 +10,7 @@
     "export": "node build/build.js --compress=true",
     "lint": "npm run eslint && npm run stylelint",
     "preview": "changes || true",
+    "release": "npm version -m \"v%s\"",
     "start": "node build/serve.js",
     "stylelint": "stylelint src/**/*.css",
     "test": "mocha",
