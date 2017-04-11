@@ -5,7 +5,7 @@ import debounce from "lodash.debounce";
 import get from "lodash.get";
 import slug from "sluggo";
 
-import config, { icons } from "../../config.js";
+import config from "../../config.js";
 
 import db from "../../lib/firebase.js";
 import prefix from "../../lib/prefix.js";
@@ -14,6 +14,9 @@ import getItemStatus from "../../lib/item-status.js";
 import * as layout from "../layout/index.js";
 
 import name from "../content-edit/name.js";
+
+import removeIcon from "../../icons/remove.svg";
+import previewIcon from "../../icons/preview.svg";
 
 import PageState from "./page-state.js";
 import css from "./listing.css";
@@ -561,9 +564,7 @@ export function view(ctrl) {
                                                         disabled : locked || null,
                                                         onclick  : ctrl.remove.bind(ctrl, data)
                                                     },
-                                                    m("svg", { class : css.icon },
-                                                        m("use", { href : icons + "#remove" })
-                                                    )
+                                                    m.trust(removeIcon)
                                                 ),
                                                 ctrl.schema.preview ?
                                                     m("a", {
@@ -572,9 +573,7 @@ export function view(ctrl) {
                                                             href   : ctrl.schema.preview + data.key,
                                                             target : "_blank"
                                                         },
-                                                        m("svg", { class : css.icon },
-                                                            m("use", { href : icons + "#preview" })
-                                                        )
+                                                        m.trust(previewIcon)
                                                     ) :
                                                     null
                                             )

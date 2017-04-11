@@ -6,10 +6,10 @@ import parallel from "run-parallel";
 
 import join from "url-join";
     
-import { icons } from "../config";
-
 import id from "./lib/id";
 import label from "./lib/label";
+
+import removeIcon from "../icons/remove.svg";
 
 import css from "./upload.css";
 
@@ -293,9 +293,7 @@ export default {
                                             // Events
                                             onclick : ctrl.remove.bind(ctrl, idx)
                                         },
-                                        m("svg", { class : css.icon },
-                                            m("use", { href : icons + "#remove" })
-                                        )
+                                        m.trust(removeIcon)
                                     )
                                 )
                             );

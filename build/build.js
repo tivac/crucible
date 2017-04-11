@@ -8,18 +8,16 @@ var rollup   = require("rollup").rollup,
     argv = require("minimist")(process.argv.slice(2)),
 
     files  = require("./lib/files"),
-    icons  = require("./lib/icons"),
     config = require("./lib/rollup")(argv),
 
     start = Date.now();
 
 files.copy();
-icons.store();
 
 rollup(config)
     .then((bundle) => bundle.write(config))
     .then(() => {
-        console.log("Bundle written to ./gen/index.js in %s", duration(Date.now() - start));
+        console.log("Bundle written in %s", duration(Date.now() - start));
     })
     .catch((error) => {
         console.error(error.toString());

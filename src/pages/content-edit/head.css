@@ -95,23 +95,35 @@
 
 .save {
     composes: primary from buttons_css;
+    composes: button from icons_css;
     composes: headButton;
 }
 
 .schedule {
     composes: color from buttons_css;
+    composes: iconOnly from icons_css;
     composes: headButton;
 
     background-color: teal;
 }
 
+.scheduleInvalid {
+    composes: schedule;
+}
+
+.scheduleInvalid svg {
+    fill: red;
+}
+
 .publish {
     composes: add from buttons_css;
+    composes: button from icons_css;
     composes: headButton;
 }
 
 .unpublish {
     composes: remove from buttons_css;
+    composes: button from icons_css;
     composes: headButton;
 }
 
@@ -123,11 +135,8 @@
     composes: button from icons_css;
 }
 
-.onlyIcon {
-    composes: icon from icons_css;
-}
-
 .back {
+    composes: icon;
     composes: warn from buttons_css;
 }
 

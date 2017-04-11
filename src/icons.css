@@ -1,4 +1,4 @@
-.icon {
+svg {
     display: inline-block;
     vertical-align: bottom;
 
@@ -8,8 +8,12 @@
     fill: currentColor;
 }
 
-.button {
-    composes: icon;
+/* Placeholder for SVG parents so they can use the rule below */
+.button {}
 
-    margin-right: 10px;
+.button svg {
+    margin-right: 5px;
 }
+
+/* Placeholder for SVG parents */
+.iconOnly {}

@@ -39,6 +39,10 @@ module.exports = function(options) {
             
             require("rollup-plugin-commonjs")(),
 
+            require("rollup-plugin-string")({
+                include : "**/*.svg"
+            }),
+
             require("modular-css-rollup")({
                 css : "./gen/index.css",
                 map : !opts.compress,

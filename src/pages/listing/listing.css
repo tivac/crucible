@@ -290,6 +290,8 @@
 }
 
 .action {
+    composes: iconOnly from icons_css;
+
     flex: 1 1 auto;
     text-align: right;
 }
@@ -303,9 +305,8 @@
     composes: action;
 }
 
-.icon {
-    composes: icon from icons_css;
-
+.remove svg,
+.preview svg {
     max-height: 100%;
 
     color: anchor;
@@ -314,7 +315,8 @@
     transition: iconTransition;
 }
 
-.icon:hover {
+.remove svg:hover,
+.preview svg:hover {
     color: #2F343C;
 
     transition: iconTransition;

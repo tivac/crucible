@@ -8,7 +8,7 @@ var chokidar = require("chokidar"),
     };
 
 exports.watch = function() {
-    // Make sure parse-schema stays up to date
+    // Make sure files stay up to date in the /gen folder
     chokidar.watch(Object.keys(files)).on("all", function(event, file) {
         if(event !== "add" && event !== "change") {
             return;

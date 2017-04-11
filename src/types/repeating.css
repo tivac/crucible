@@ -63,10 +63,6 @@
     flex: 1;
 }
 
-.icon {
-    composes: icon from icons_css;
-}
-
 .remove {
     composes: plain from buttons_css;
 }
