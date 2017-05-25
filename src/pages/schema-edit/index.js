@@ -11,6 +11,8 @@ import * as editor from "./editor";
 import * as children from "../../types/children";
 import * as layout from "../layout/index";
 
+import parse from "./parse-schema.js";
+
 import css from "./schema-edit.css";
 import flexCss from "../../flex.css";
 
@@ -18,7 +20,7 @@ export function controller() {
     var ctrl   = this,
         id     = m.route.param("schema"),
         ref    = db.child("schemas/" + id),
-        worker = new Worker(prefix("/gen/parse-schema.js"));
+        worker = new Worker(parse);
 
     ctrl.ref     = ref;
     ctrl.schema  = null;

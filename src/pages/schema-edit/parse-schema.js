@@ -1,5 +1,5 @@
 /* eslint no-use-before-define: off */
-var required = /\*$/;
+var required = new RegExp("\\\\*$");
 
 function slugger(name) {
     return name.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();

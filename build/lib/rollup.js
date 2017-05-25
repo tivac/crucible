@@ -65,6 +65,10 @@ module.exports = function(options) {
                     [ require("cssnano")() ] :
                     [ ]
             }),
+            
+            require("rollup-plugin-file-as-blob")({
+                include: "**/parse-schema.js"
+            }),
 
             opts.compress ?
                 require("rollup-plugin-strip")() :
