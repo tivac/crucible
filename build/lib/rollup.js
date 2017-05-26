@@ -66,7 +66,7 @@ module.exports = function(options) {
                     [ ]
             }),
             
-            require("rollup-plugin-file-as-blob")({
+            require("../external/rollup-plugin-file-as-blob")({
                 include: "**/parse-schema.js"
             }),
 

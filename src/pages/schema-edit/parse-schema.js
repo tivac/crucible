@@ -1,4 +1,4 @@
-/* eslint no-use-before-define: off */
+/* eslint-disable */
 var required = new RegExp("\\\\*$");
 
 function slugger(name) {
@@ -52,7 +52,6 @@ function processSelected(children) {
 }
 
 function process(obj) {
-    /* eslint-disable complexity, max-statements */
     var out = [];
 
     Object.keys(obj).forEach(function(name) {
@@ -124,7 +123,6 @@ function process(obj) {
 // This worker takes the nice, human-friendly config format and turns it into
 // ugly arrays of objects for firebase
 self.onmessage = function(e) {
-    /* eslint no-eval:0, no-console:0 */
     var config, parsed;
 
     try {
