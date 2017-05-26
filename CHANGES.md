@@ -1,5 +1,9 @@
 # Changes
 
+## 0.4.0
+
+- feat: inline web worker as a blob
+
 ## 0.3.5
 
 - feat: inline SVG icons to avoid referential madness (#176)
