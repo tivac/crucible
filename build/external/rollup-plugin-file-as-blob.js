@@ -24,28 +24,18 @@ function fileAsBlob ( options ) {
                 return null;
             }
 
-            console.log("Original id", id);
-
 			id = fs.realpathSync(id);
             
-            console.log("realpathSync id", id);
-
             var type = mime.lookup(id);
             var charset = mime.charset(type).toLowerCase();
-
-            console.log("mimetype", type);
-            console.log("charset", charset);
 
             var readEncoding = 'base64';
             if (charset === 'utf-8') { readEncoding = 'utf8'; }
             if (charset.indexOf('ascii') !== -1) { readEncoding = 'ascii'; }
 
-            console.log("readencoding", readEncoding);
-
             var data = fs.readFileSync(id, readEncoding);
 
             var code;
-            
             if (readEncoding === 'base64') {
                 code = "export default __$strToBlobUri(atob(\"" + data + "\"), \"" + type + "\", true);";
             } else {
