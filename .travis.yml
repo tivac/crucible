@@ -7,6 +7,7 @@ node_js:
 # Use npm@5.x instead of 4.x for repeatable installs
 install:
   - npm install -g npm@5
+  - npm -v
   - npm install
   
 cache:
