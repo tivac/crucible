@@ -19,42 +19,52 @@ function fileAsBlob ( options ) {
 			return "function __$strToBlobUri(str, mime, isBinary) {\n\t\t\t\ttry {\n\t\t\t\t\treturn window.URL.createObjectURL(\n\t\t\t\t\t\tnew Blob([Uint8Array.from(\n\t\t\t\t\t\t\tstr.split('').map(function(c) {return c.charCodeAt(0)})\n\t\t\t\t\t\t)], {type: mime})\n\t\t\t\t\t);\n\t\t\t\t} catch (e) {\n\t\t\t\t\treturn \"data:\" + mime + (isBinary ? \";base64,\" : \",\") + str;\n\t\t\t\t}\n\t\t\t}".split('\n').map(Function.prototype.call, String.prototype.trim).join('');
 		},
 
-		load: function load ( id ) {
-			if ( !filter( id ) ) { return null; }
+		load: function load(id) {
+			if(!filter(id)) {
+                return null;
+            }
+
+            console.log("Original id", id);
 
 			id = fs.realpathSync(id);
+            
+            console.log("realpathSync id", id);
 
-			return new Promise(function (res){
-                var type = mime.contentType(id);
+            var type = mime.lookup(id);
+            var charset = mime.charset(type).toLowerCase();
 
-                var charset = type.split('; charset=')[1];
+            console.log("mimetype", type);
+            console.log("charset", charset);
 
-                console.log(type, charset);
+            var readEncoding = 'base64';
+            if (charset === 'utf-8') { readEncoding = 'utf8'; }
+            if (charset.indexOf('ascii') !== -1) { readEncoding = 'ascii'; }
 
-                var readEncoding = 'base64';
-                if (charset === 'utf-8') { readEncoding = 'utf8'; }
-                if (charset.indexOf('ascii') !== -1) { readEncoding = 'ascii'; }
+            console.log("readencoding", readEncoding);
 
-                console.log(readEncoding);
+            var data = fs.readFileSync(id, readEncoding);
 
-                var data = fs.readFileSync( id, readEncoding );
+            var code;
+            
+            if (readEncoding === 'base64') {
+                code = "export default __$strToBlobUri(atob(\"" + data + "\"), \"" + type + "\", true);";
+            } else {
+                // Unfortunately buble+rollup will create code that chokes
+                // with newlines/quotes when the contents are read from
+                // a file
+                data = data.replace(/\n/g, '\\n')
+                            .replace(/\r/g, '\\r')
+                            .replace(/"/g, '\\"')
+                            .replace(/sourceMappingURL/g, 'sourceMap" + "pingURL');
+                code = "export default __$strToBlobUri(\"" + data + "\", \"" + type + "\", false);";
+            }
 
-                var code;
-                if (readEncoding === 'base64') {
-                    code = "export default __$strToBlobUri(atob(\"" + data + "\"), \"" + type + "\", true);";
-                } else {
-                    // Unfortunately buble+rollup will create code that chokes
-                    // with newlines/quotes when the contents are read from
-                    // a file
-                    data = data.replace(/\n/g, '\\n')
-                                .replace(/\r/g, '\\r')
-                                .replace(/"/g, '\\"')
-                                .replace(/sourceMappingURL/g, 'sourceMap" + "pingURL');
-                    code = "export default __$strToBlobUri(\"" + data + "\", \"" + type + "\", false);";
+            return {
+                code,
+                map: {
+                    mappings: ''
                 }
-
-                return res({ code: code, map: { mappings: '' } });
-			});
+            };
 		}
 	};
 }
