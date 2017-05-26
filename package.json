@@ -89,6 +89,7 @@
     "shelljs": "^0.7.3",
     "sluggo": "^0.2.0",
     "stylelint": "^7.8.0",
+    "stylelint-config-arenanet": "^1.2.0",
     "stylelint-config-standard": "^16.0.0",
     "unique-slug": "^2.0.0",
     "url": "^0.11.0",
@@ -113,53 +114,6 @@
     }
   },
   "stylelint": {
-    "extends": "stylelint-config-standard",
-    "rules": {
-      "color-hex-case": "upper",
-      "indentation": 4,
-      "declaration-empty-line-before": null,
-      "at-rule-empty-line-before": [
-        "always",
-        {
-          "except": "first-nested",
-          "ignore": "blockless-after-blockless"
-        }
-      ],
-      "property-no-unknown": [
-        true,
-        {
-          "ignoreProperties": [
-            "composes"
-          ]
-        }
-      ],
-      "comment-empty-line-before": null,
-      "no-eol-whitespace": [
-        true,
-        {
-          "ignore": "empty-lines"
-        }
-      ],
-      "rule-empty-line-before": [
-        "always",
-        {
-          "ignore": [
-            "after-comment",
-            "inside-block"
-          ],
-          "except": [
-            "first-nested"
-          ]
-        }
-      ],
-      "selector-pseudo-class-no-unknown": [
-        true,
-        {
-          "ignorePseudoClasses": [
-            "global"
-          ]
-        }
-      ]
-    }
+    "extends": "stylelint-config-arenanet"
   }
 }

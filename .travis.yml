@@ -3,6 +3,12 @@ language: node_js
 node_js:
   - node
   - 6
+
+# Use npm@5.x instead of 4.x for repeatable installs
+install:
+  - npm install -g npm@5
+  - npm install
+  
 cache:
   directories:
   - node_modules
