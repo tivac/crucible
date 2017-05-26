@@ -2,7 +2,7 @@
   "name": "crucible",
   "version": "0.4.0",
   "description": "Serverless CMS backed by Firebase",
-  "main": "index.js",
+  "main": "./gen/index.js",
   "repository": "tivac/crucible",
   "scripts": {
     "build": "node build/build.js",

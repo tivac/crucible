@@ -29,9 +29,13 @@ function fileAsBlob ( options ) {
 
                 var charset = type.split('; charset=')[1];
 
+                console.log(type, charset);
+
                 var readEncoding = 'base64';
                 if (charset === 'utf-8') { readEncoding = 'utf8'; }
                 if (charset.indexOf('ascii') !== -1) { readEncoding = 'ascii'; }
+
+                console.log(readEncoding);
 
                 var data = fs.readFileSync( id, readEncoding );
 
