@@ -1,5 +1,9 @@
 # Changes
 
+## 0.4.1
+
+- chore: npm5, shared stylelint config
+
 ## 0.4.0
 
 - feat: inline web worker as a blob
